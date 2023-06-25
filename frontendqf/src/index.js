@@ -1,8 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './estilos.css';
 import App from './components/App';
-import './index.css';
+import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.querySelector('#root'));
 
-root.render(<App/>);
+/*function App(){
+}*/
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+  <App/>
+);
+
+reportWebVitals();

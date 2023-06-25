@@ -1,25 +1,26 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom"
 
 const NavBar = (props) => {
+    if (props.isHeader) {
+        return (
+            <>
+                <nav className="barraNav">
+                    <Link className="headerLink" to="/category/electronics">Electronicos</Link>
+                    <Link className="headerLink" to="/category/jewelery/">Joyeria</Link>
+                    <Link className="headerLink" to="/category/mensclothing/">Hombres</Link>
+                    <Link className="headerLink" to="/category/womensclothing/">Mujeres</Link>
 
-const { isHeader, textLinkFooter, hrefLinkFooter } = props
-    
-if (isHeader) {
-    return (
-        <nav className='header__navbar'>
-            <Link className='header__link' to='/productos/menclothing'>Ropa de Hombre</Link>
-            <Link className='header__link' to='/productos/womenclothing'>Ropa de mujer</Link>
-            <Link className='header__link' to='/productos/electronics'>Electronica</Link>
-            <Link className='header__link' to='/productos/jewelery'>Joyeria</Link>
-        </nav>
-    )
-} else {
-    return (
-        <nav className='header__navbar'>
-            <a href={hrefLinkFooter}>{textLinkFooter}</a>
-        </nav>
+                </nav>
+            </>
+        )
+    } else {
+        return (
+            <nav className="footerNav">
+                <p className="copy">{props.textLinkFooter2}</p>
+            </nav>
         )
     }
+
 }
 
 export default NavBar

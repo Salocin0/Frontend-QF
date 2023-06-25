@@ -1,0 +1,35 @@
+body {
+    background-image: url('/public/QuickFoodFondo.png');
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #272727;
+    padding: 5px 0;
+    color: #ffffff;
+    font-size: 12px;
+  }
+  
+  .footer .row {
+    align-items: center;
+  }
+  
+  .footer-link {
+    margin-right: 10px;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  .footer-icon {
+    color: #ffffff;
+    margin-right: 10px;
+  }
+  
+  .footer-text {
+    margin-bottom: 0;
+  }
