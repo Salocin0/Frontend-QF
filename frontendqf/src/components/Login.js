@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Footer from './Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -34,11 +35,17 @@ const Login = ({ onLogin }) => {
       .then(data => {
         console.log(data);
         const value = data.id_consumidor
-        // Agregar toast para code = 200 y code = 1000 Contraseña incorrecta y Email incorrecto 1010
-        // Esperar 1.5 segundos antes de navegar a la nueva ruta
-        setTimeout(() => {
-          navigate(`/consultar-usuario`, { state: { value } });
-        }, 1500);
+        if (data.codigo===200){
+          toast.success("Login correcto");
+          setTimeout(() => {
+            navigate(`/consultar-usuario`, { state: { value } });
+          }, 1500);
+        }else if(data.codigo===1010){
+          toast.error("Email no registrado");
+        }else if(data.codigo===1000){
+          toast.error("Contraseña incorrecta");
+        }
+        
       })
       .catch(error => {
         console.error(error);

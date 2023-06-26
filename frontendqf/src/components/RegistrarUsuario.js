@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const RegistroUsuario = () => {
   const [nombre, setNombre] = useState('');
@@ -12,6 +14,8 @@ const RegistroUsuario = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
+
+  const navigate = useNavigate();
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -85,7 +89,14 @@ const RegistroUsuario = () => {
     })
       .then(response => response.json()).then(data => {
         console.log(data);
-        //agregar toast para code = 200 y code = 400
+        if (data.code===200){
+          toast.success("Usuario registrado correctamente");
+          setTimeout(() => {
+            navigate(`/`);
+          }, 1500);
+        }else if(data.code===400){
+          toast.error("Error al registrar el usuario");
+        }
     })
       .catch(error => {
         console.error(error);

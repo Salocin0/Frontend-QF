@@ -4,10 +4,6 @@ import './estilos.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 
-
-/*function App(){
-}*/
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(

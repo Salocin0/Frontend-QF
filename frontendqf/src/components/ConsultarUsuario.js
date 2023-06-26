@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback} from 'react';
 import Footer from './Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { toast } from 'react-toastify';
 
 import { useLocation } from 'react-router-dom';
 
@@ -75,7 +76,12 @@ const ConsultarUsuario = () => {
         setFechaNacimiento(data1.consumidor.fechaNacimiento)
         setLocalidad(data1.consumidor.localidad)
         setTelefono(data1.consumidor.telefono)
-        // Agregar toast de carga para code = 200 y code = 1000 Contraseña incorrecta y Email incorrecto 1010
+        console.log(data1)
+        if (data1.codigo===200){
+          toast.success("Datos cargado correctamente");
+        }else if(data1.codigo===400){
+          toast.error("Error al cargar los datos");
+        }
         userid = data1.consumidor.usuario;
       } else {
         throw new Error('Error en la respuesta HTTP');
@@ -93,7 +99,11 @@ const ConsultarUsuario = () => {
         const data2 = await response2.json();
         console.log(data2);
         setUsername(data2.user.nombreDeUsuario)
-        // Agregar toast de carga para code = 200 y code = 1000 Contraseña incorrecta y Email incorrecto 1010
+        if (data2.codigo===200){
+          toast.success("Datos cargado correctamente");
+        }else if(data2.codigo===400){
+          toast.error("Error al cargar los datos");
+        }
       } else {
         throw new Error('Error en la respuesta HTTP');
       }
@@ -102,15 +112,10 @@ const ConsultarUsuario = () => {
     }
   }, [id]);
   
-  const setValores = () => {
-    //setApellido(consumidor.)
-  };
-
 
   useEffect(() => {
     const fetchData = async () => {
       await buscarDatosConsumidor();
-      setValores();
     };
   
     fetchData();
