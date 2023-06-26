@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import Footer from './Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { useNavigate } from 'react-router-dom';
 
 const Login = ({ onLogin }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
 
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
 
   const handlePasswordChange = (e) => {
@@ -19,13 +19,31 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    onLogin({
-      username,
-      password,
-    });
+  
+    const data = {
+      contraseña: password,
+      correoElectronico: email
+    }
+  
+    fetch('http://127.0.0.1:8000/user/login/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        const value = data.id_consumidor
+        // Agregar toast para code = 200 y code = 1000 Contraseña incorrecta y Email incorrecto 1010
+        // Esperar 1.5 segundos antes de navegar a la nueva ruta
+        setTimeout(() => {
+          navigate(`/consultar-usuario`, { state: { value } });
+        }, 1500);
+      })
+      .catch(error => {
+        console.error(error);
+      });
   };
-
 
   return (
     <section className="vh-100 d-flex align-items-center justify-content-center" style={{ background: 'url(QuickFoodFondo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -45,8 +63,8 @@ const Login = ({ onLogin }) => {
                       type="text"
                       className="form-control"
                       name="usuario"
-                      value={username}
-                      onChange={handleUsernameChange}
+                      value={email}
+                      onChange={handleEmailChange}
                       required
                       autoFocus
                     />

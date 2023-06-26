@@ -59,8 +59,6 @@ const RegistroUsuario = () => {
     e.preventDefault();
     console.log(nombre);
     const fecha = Date.now();
-    /*const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-    const formattedDate = fecha.toLocaleDateString('en-US', options);*/
     const usuario = {
       contraseña: password,
       fechaAlta: fecha,
@@ -86,10 +84,11 @@ const RegistroUsuario = () => {
       body: JSON.stringify(json_consumidor)
     })
       .then(response => response.json()).then(data => {
-      console.log(data);
+        console.log(data);
+        //agregar toast para code = 200 y code = 400
     })
       .catch(error => {
-      console.error(error);
+        console.error(error);
     });
   };
 

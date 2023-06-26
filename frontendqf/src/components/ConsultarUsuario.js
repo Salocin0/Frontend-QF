@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import Footer from './Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { useLocation } from 'react-router-dom';
+
+
 const ConsultarUsuario = () => {
-  const [nombre, setNombre] = useState('Nicolas');
-  const [apellido, setApellido] = useState('Durelli');
-  const [fechaNacimiento, setFechaNacimiento] = useState('2000-01-01');
-  const [dni, setDni] = useState('123456789');
-  const [localidad, setLocalidad] = useState('Bell Ville');
-  const [telefono, setTelefono] = useState('1234567890');
-  const [username, setUsername] = useState('salocin0');
+  const location = useLocation();
+  const id = location.state && location.state.value;
+  
+  const [nombre, setNombre] = useState();
+  const [apellido, setApellido] = useState();
+  const [fechaNacimiento, setFechaNacimiento] = useState();
+  const [dni, setDni] = useState();
+  const [localidad, setLocalidad] = useState();
+  const [telefono, setTelefono] = useState();
+  const [username, setUsername] = useState();
   const [editMode, setEditMode] = useState(false);
 
   const handleNombreChange = (e) => {
@@ -48,6 +54,67 @@ const ConsultarUsuario = () => {
     e.preventDefault();
     setEditMode(false);
   };
+
+  const buscarDatosConsumidor = useCallback(async () => {
+    try {
+      let userid = 0;
+      
+      // Consumidor
+      console.log("id antes: " + userid);
+      const response1 = await fetch(`http://127.0.0.1:8000/consumidor/${id}/`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (response1.ok) {
+        const data1 = await response1.json();
+        console.log(data1);
+        setApellido(data1.consumidor.apellido)
+        setNombre(data1.consumidor.nombre)
+        setDni(data1.consumidor.dni)
+        setFechaNacimiento(data1.consumidor.fechaNacimiento)
+        setLocalidad(data1.consumidor.localidad)
+        setTelefono(data1.consumidor.telefono)
+        // Agregar toast de carga para code = 200 y code = 1000 Contraseña incorrecta y Email incorrecto 1010
+        userid = data1.consumidor.usuario;
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+  
+      console.log("id: " + userid);
+      
+      // Usuario
+      const response2 = await fetch(`http://127.0.0.1:8000/user/${userid}/`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (response2.ok) {
+        const data2 = await response2.json();
+        console.log(data2);
+        setUsername(data2.user.nombreDeUsuario)
+        // Agregar toast de carga para code = 200 y code = 1000 Contraseña incorrecta y Email incorrecto 1010
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }, [id]);
+  
+  const setValores = () => {
+    //setApellido(consumidor.)
+  };
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await buscarDatosConsumidor();
+      setValores();
+    };
+  
+    fetchData();
+  }, [buscarDatosConsumidor]);
 
   return (
     <section
