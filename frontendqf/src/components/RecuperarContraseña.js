@@ -9,7 +9,25 @@ const RecuperarContraseña = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    /*fetch('http://127.0.0.1:8000/user/', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json',},
+      body: JSON.stringify(json_consumidor)
+    })
+      .then(response => response.json()).then(data => {
+        if (data.code===200){
+          toast.success("Usuario registrado correctamente");
+          setTimeout(() => {
+            navigate(`/`);
+          }, 1500);
+        }else if(data.code===400){
+          toast.error("Error al registrar el usuario");
+        }
+    })
+      .catch(error => {
+        console.error(error);
+    });
+  };*/
   };
 
   return (
@@ -44,7 +62,6 @@ const RecuperarContraseña = () => {
         </div>
       </div>
     </section>
-
   );
 };
 
