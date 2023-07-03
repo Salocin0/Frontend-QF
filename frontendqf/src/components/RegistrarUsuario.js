@@ -19,12 +19,10 @@ const RegistroUsuario = () => {
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
-    console.log(e);
   };
   
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-    console.log(e);
   };
 
   const handleApellidoChange = (e) => {
@@ -61,7 +59,6 @@ const RegistroUsuario = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(nombre);
     const fecha = Date.now();
     const usuario = {
       contraseña: password,
@@ -88,7 +85,6 @@ const RegistroUsuario = () => {
       body: JSON.stringify(json_consumidor)
     })
       .then(response => response.json()).then(data => {
-        console.log(data);
         if (data.code===200){
           toast.success("Usuario registrado correctamente");
           setTimeout(() => {

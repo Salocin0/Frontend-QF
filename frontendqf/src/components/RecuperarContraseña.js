@@ -1,33 +1,38 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const RecuperarContraseña = () => {
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
   const handleSubmit = (e) => {
-    /*fetch('http://127.0.0.1:8000/user/', {
-      method: 'POST',
+    e.preventDefault();
+    const json_recuperarEmail ={
+      correoElectronico:email
+    }
+
+    fetch('http://127.0.0.1:8000/user/recuperarcontrasenia/', {
+      method: 'PUT',
       headers: {'Content-Type': 'application/json',},
-      body: JSON.stringify(json_consumidor)
+      body: JSON.stringify(json_recuperarEmail)
     })
       .then(response => response.json()).then(data => {
         if (data.code===200){
-          toast.success("Usuario registrado correctamente");
-          setTimeout(() => {
-            navigate(`/`);
-          }, 1500);
+          toast.success("Email enviado");
+          navigate(`/`);
         }else if(data.code===400){
-          toast.error("Error al registrar el usuario");
+          toast.error("Error al recuperar contraseña");
         }
     })
       .catch(error => {
         console.error(error);
     });
-  };*/
   };
 
   return (

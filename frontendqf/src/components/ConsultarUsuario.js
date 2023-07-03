@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback} from 'react';
 import Footer from './Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
-
 import { useLocation } from 'react-router-dom';
 
 
@@ -60,7 +59,6 @@ const ConsultarUsuario = () => {
     try {
       let userid = 0;
       
-      // Consumidor
       console.log("id antes: " + userid);
       const response1 = await fetch(`http://127.0.0.1:8000/consumidor/${id}/`, {
         method: 'GET',
@@ -69,7 +67,6 @@ const ConsultarUsuario = () => {
       
       if (response1.ok) {
         const data1 = await response1.json();
-        console.log(data1);
         setApellido(data1.consumidor.apellido)
         setNombre(data1.consumidor.nombre)
         setDni(data1.consumidor.dni)
@@ -86,10 +83,7 @@ const ConsultarUsuario = () => {
       } else {
         throw new Error('Error en la respuesta HTTP');
       }
-  
-      console.log("id: " + userid);
       
-      // Usuario
       const response2 = await fetch(`http://127.0.0.1:8000/user/${userid}/`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
@@ -97,7 +91,6 @@ const ConsultarUsuario = () => {
       
       if (response2.ok) {
         const data2 = await response2.json();
-        console.log(data2);
         setUsername(data2.user.nombreDeUsuario)
         if (data2.codigo===200){
           toast.success("Datos cargado correctamente");
@@ -112,7 +105,6 @@ const ConsultarUsuario = () => {
     }
   }, [id]);
   
-
   useEffect(() => {
     const fetchData = async () => {
       await buscarDatosConsumidor();

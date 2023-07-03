@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const CambiarContraseña = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const { codigo } = useParams();
+  const navigate = useNavigate();
 
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
@@ -15,13 +20,30 @@ const CambiarContraseña = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Lógica para cambiar la contraseña
     if (newPassword === confirmPassword) {
-      // Realizar la acción de cambio de contraseña
-      console.log('Contraseña cambiada exitosamente');
+      const json_contrasenia = {
+          contraseña:newPassword
+      }
+      fetch('http://127.0.0.1:8000/user/recuperarcontrasenia/'+codigo+'/', {
+      method: 'PUT',
+      headers: {'Content-Type': 'application/json',},
+      body: JSON.stringify(json_contrasenia)
+    })
+      .then(response => response.json()).then(data => {
+        if (data.code===200){
+          toast.success("Contraseña guardada correctamente");
+          setTimeout(() => {
+            navigate(`/`);
+          }, 1500);
+        }else if(data.code===400){
+          toast.error("Error al guardar la contraseña");
+        }
+    })
+      .catch(error => {
+        console.error(error);
+    });
     } else {
-      // Mostrar un mensaje de error si las contraseñas no coinciden
-      console.log('Las contraseñas no coinciden');
+      toast.error("Las contraseñas no coinciden");
     }
   };
 
