@@ -1,4 +1,4 @@
-import NavBar from "./NavBar"
+import NavBar from "./NavBarold"
 import { Link } from "react-router-dom"
 
 const Header = () => {

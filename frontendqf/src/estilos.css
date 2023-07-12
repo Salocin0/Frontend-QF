@@ -33,3 +33,23 @@ body {
   .footer-text {
     margin-bottom: 0;
   }
+
+  .navbar{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: #272727;
+    padding: 5px 0;
+    color: #ffffff;
+    font-size: 12px;
+  }
+
+  .navbar a{
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px;
+    margin-right: 40px;
+  }
+

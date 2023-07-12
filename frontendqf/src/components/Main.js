@@ -4,7 +4,8 @@ import Login from './Login'
 import RecuperarContraseña from './RecuperarContraseña'
 import RegistrarUsuario from './RegistrarUsuario'
 import CambiarContraseña from './CambiarContraseña'
-import ConsultarUsuario from './ConsultarUsuario'
+import ConsultarUsuario from './ComponentesCosumidor/ConsultarUsuario'
+import Home from './Home'
 
 export const Main = () => {
 
@@ -15,6 +16,7 @@ export const Main = () => {
            <Route path="/recuperar" element={<RecuperarContraseña/>} />
            <Route path="/registrarse" element={<RegistrarUsuario/>} />
            <Route path="/cambiar-contrasenia/:codigo" element={<CambiarContraseña/>} />
+           <Route path="/home/:id" element={<Home/>} />
            <Route path="/consultar-usuario" element={<ConsultarUsuario/>} />
       </Routes>
     </main>

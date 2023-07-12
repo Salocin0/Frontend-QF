@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback} from 'react';
-import Footer from './Footer';
+import Footer from '../Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';

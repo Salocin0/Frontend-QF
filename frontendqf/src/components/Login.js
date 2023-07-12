@@ -38,8 +38,8 @@ const Login = ({ onLogin }) => {
         if (data.codigo===200){
           toast.success("Login correcto");
           setTimeout(() => {
-            navigate(`/consultar-usuario`, { state: { value } });
-          }, 1500);
+            navigate(`/home/${value}`);
+          }, 500);
         }else if(data.codigo===1010){
           toast.error("Email no registrado");
         }else if(data.codigo===1000){

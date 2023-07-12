@@ -1,22 +1,39 @@
-import { Link } from "react-router-dom"
+import React, { useEffect, useState } from 'react';
+import '../estilos.css';
 
-const NavBar = (props) => {
-    if (props.isHeader) {
-        return (
-            <nav className="barraNav">
-                <Link className="headerLink" to="/category/electronics">Electronicos</Link>
-                <Link className="headerLink" to="/category/jewelery/">Joyeria</Link>
-                <Link className="headerLink" to="/category/mensclothing/">Hombres</Link>
-                <Link className="headerLink" to="/category/womensclothing/">Mujeres</Link>
-            </nav>
-        )
-    } else {
-        return (
-            <nav className="footerNav">
-                <p className="copy">{props.textLinkFooter2}</p>
-            </nav>
-        )
-    }
-}
+const Navbar = ({ id, onItemClick }) => {
+  const [items, setItems] = useState([]);
 
-export default NavBar
+  const handleItemClick = (item) => {
+    onItemClick(item);
+  };
+
+  useEffect(() => {
+    fetch(`http://127.0.0.1:8000/acciones/14/`)/*${id}*/
+      .then(response => response.json())
+      .then(data => setItems(data.acciones.slice(1, -1).split(",")))
+      .catch(error => console.log(error));
+  }, [id]);
+
+  return (
+    <nav className="navbar navbar-expand-sm navbar">
+      <a className="navbar-brand ms-5" href="#">Logo</a>
+      <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span className="navbar-toggler-icon"></span>
+      </button>
+      <div className="collapse navbar-collapse text-center row" id="navbarSupportedContent">
+        <div className="d-flex justify-content-center">
+          <ul className="navbar-nav mr-auto pe-5 me-5">
+            {items.map((item, index) => (
+              <li className="nav-item" key={index}>
+                <a className="nav-link" onClick={() => handleItemClick(item)} >{item}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
