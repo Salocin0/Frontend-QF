@@ -93,6 +93,9 @@ const RegistroUsuario = () => {
         }else if(data.code===400){
           toast.error("Error al registrar el usuario");
         }
+        else if(data.code===300){
+          toast.error("Error: email usado");
+        }
     })
       .catch(error => {
         console.error(error);

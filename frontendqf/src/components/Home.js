@@ -11,7 +11,7 @@ import Notificaciones from './ComponentesCosumidor/Notificaciones';
 
 const Home = () => {
   //const { id } = useParams();
-  const [selectedItem, setSelectedItem] = useState("Inicio");
+  const [selectedItem, setSelectedItem] = useState("Perfil");
 
   const handleNavbarItemClick = (item) => {
     setSelectedItem(item);

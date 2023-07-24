@@ -1,22 +1,60 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../UserContext';
 import Footer from '../Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
 
-
 const ConsultarUsuario = () => {
+  const { user } = useContext(UserContext);
   const location = useLocation();
   const id = location.state && location.state.value;
-  
-  const [nombre, setNombre] = useState();
-  const [apellido, setApellido] = useState();
-  const [fechaNacimiento, setFechaNacimiento] = useState();
-  const [dni, setDni] = useState();
-  const [localidad, setLocalidad] = useState();
-  const [telefono, setTelefono] = useState();
-  const [username, setUsername] = useState();
+
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [fechaNacimiento, setFechaNacimiento] = useState('');
+  const [dni, setDni] = useState('');
+  const [localidad, setLocalidad] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [username, setUsername] = useState('');
   const [editMode, setEditMode] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      cargarDatos(user);
+    }
+  }, [user]);
+
+  const cargarDatos = async (user) => {
+    setUsername(user.usuario);
+
+    try {
+      const response1 = await fetch(`http://localhost:8000/consumidor/user/${user.id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response1.ok) {
+        const data1 = await response1.json();
+        setApellido(data1.data.apellido);
+        setNombre(data1.data.nombre);
+        setDni(data1.data.dni);
+        setFechaNacimiento(data1.data.fechaNacimiento);
+        setLocalidad(data1.data.localidad);
+        setTelefono(data1.data.telefono);
+        console.log(data1);
+        if (data1.codigo === 200) {
+          toast.success('Datos cargados correctamente');
+        } else if (data1.codigo === 400) {
+          toast.error('Error al cargar los datos');
+        }
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+    } catch (error) {
+      console.error('Error al cargar los datos:', error);
+    }
+  };
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -54,64 +92,6 @@ const ConsultarUsuario = () => {
     e.preventDefault();
     setEditMode(false);
   };
-
-  const buscarDatosConsumidor = useCallback(async () => {
-    try {
-      let userid = 0;
-      
-      console.log("id antes: " + userid);
-      const response1 = await fetch(`http://127.0.0.1:8000/consumidor/${id}/`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      
-      if (response1.ok) {
-        const data1 = await response1.json();
-        setApellido(data1.consumidor.apellido)
-        setNombre(data1.consumidor.nombre)
-        setDni(data1.consumidor.dni)
-        setFechaNacimiento(data1.consumidor.fechaNacimiento)
-        setLocalidad(data1.consumidor.localidad)
-        setTelefono(data1.consumidor.telefono)
-        console.log(data1)
-        if (data1.codigo===200){
-          toast.success("Datos cargado correctamente");
-        }else if(data1.codigo===400){
-          toast.error("Error al cargar los datos");
-        }
-        userid = data1.consumidor.usuario;
-      } else {
-        throw new Error('Error en la respuesta HTTP');
-      }
-      
-      const response2 = await fetch(`http://127.0.0.1:8000/user/${userid}/`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      
-      if (response2.ok) {
-        const data2 = await response2.json();
-        setUsername(data2.user.nombreDeUsuario)
-        if (data2.codigo===200){
-          toast.success("Datos cargado correctamente");
-        }else if(data2.codigo===400){
-          toast.error("Error al cargar los datos");
-        }
-      } else {
-        throw new Error('Error en la respuesta HTTP');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [id]);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      await buscarDatosConsumidor();
-    };
-  
-    fetchData();
-  }, [buscarDatosConsumidor]);
 
   return (
     <section
