@@ -14,7 +14,6 @@ import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuari
 import ConsultarUsuarioEPC from '../ComponentesEPC/ConsultarUsuarioEPC';
 
 export const Main = () => {
-
   return (
     <main>
       <Routes>

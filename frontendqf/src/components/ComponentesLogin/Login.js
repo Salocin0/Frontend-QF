@@ -8,7 +8,7 @@ import { UserContext } from '../ComponentesGenerales/UserContext';
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { setUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -38,7 +38,7 @@ const Login = ({ onLogin }) => {
         if (Number(data.code)===200){
           toast.success("Login correcto");
           setTimeout(() => {
-            setUser(data.data);
+            updateUser(data.data);
             navigate(`/home/${data.data.id}`);
           }, 1500);
         }else if(Number(data.code)===1000){
