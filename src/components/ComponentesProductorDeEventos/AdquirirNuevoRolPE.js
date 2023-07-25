@@ -20,6 +20,30 @@ const AdquirirNuevoRolPE = () => {
 
   const [documento, setDocumento] = useState('');
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/user/${id}`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setNombre(data.nombre);
+          setApellido(data.apellido);
+          setDni(data.dni);
+        } else {
+          throw new Error('Error en la respuesta HTTP');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
@@ -40,16 +64,13 @@ const AdquirirNuevoRolPE = () => {
     setRazonSocial(e.target.value);
   };
 
-
-
   const handleTelefonoChange = (e) => {
     setTelefono(e.target.value);
   };
 
   const handleDocumentoChange = (e) => {
-    setCuit(e.target.value);
+    setDocumento(e.target.value);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +83,7 @@ const AdquirirNuevoRolPE = () => {
           id: id,
           nombre: nombre,
           apellido: apellido,
-          dni:dni,
+          dni: dni,
           cuit: cuit,
           razonSocial: razonSocial,
           telefono: telefono,
@@ -77,38 +98,12 @@ const AdquirirNuevoRolPE = () => {
           toast.error('Error al adquirir el nuevo rol');
         }
       } else {
-        throw new Error('Error en la respuesta HTTP');
+        throw new Error('Error en la respuesta HTTP al adquirir el nuevo rol');
       }
     } catch (error) {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/datos_usuario/${id}`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setNombre(data.nombre);
-          setApellido(data.apellido);
-          setDni(data.dni);
-          setCuit(data.cuit);
-          setTelefono(data.telefono);
-        } else {
-          throw new Error('Error en la respuesta HTTP');
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, [id]);
 
   return (
     <>
@@ -120,8 +115,8 @@ const AdquirirNuevoRolPE = () => {
               <div className="card-body p-3 formulario">
                 <h1 className="fs-4 card-title fw-bold mb-2 text-dark">Adquirir Nuevo Rol - Productor de Eventos</h1>
                 <form onSubmit={handleSubmit} className="needs-validation">
-                  <div className="mb-2" >
-                    <label className="mb-2 text-dark" htmlFor="nombre" >
+                  <div className="mb-2">
+                    <label className="mb-2 text-dark" htmlFor="nombre">
                       Nombre
                     </label>
                     <input
@@ -130,7 +125,7 @@ const AdquirirNuevoRolPE = () => {
                       className="form-control"
                       value={nombre}
                       onChange={handleNombreChange}
-                      disabled
+                      disabled // Aquí está el atributo disabled para bloquear el campo
                     />
                   </div>
 
@@ -144,10 +139,9 @@ const AdquirirNuevoRolPE = () => {
                       className="form-control"
                       value={apellido}
                       onChange={handleApellidoChange}
-                      disabled
+                      disabled // Aquí está el atributo disabled para bloquear el campo
                     />
                   </div>
-
 
                   <div className="mb-2">
                     <label className="mb-2 text-dark" htmlFor="dni">
@@ -159,11 +153,9 @@ const AdquirirNuevoRolPE = () => {
                       className="form-control"
                       value={dni}
                       onChange={handleDniChange}
-                      disabled
+                      disabled // Aquí está el atributo disabled para bloquear el campo
                     />
                   </div>
-
-
 
                   <div className="mb-2">
                     <label className="mb-2 text-dark" htmlFor="cuit">

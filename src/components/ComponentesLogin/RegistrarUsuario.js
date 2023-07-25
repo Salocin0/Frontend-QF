@@ -22,7 +22,7 @@ const RegistroUsuario = () => {
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
-  
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -31,8 +31,8 @@ const RegistroUsuario = () => {
     setApellido(e.target.value);
   };
 
-  const handleFechaNacimientoChange = (e) => {
-    setFechaNacimiento(e.target.value);
+  const handleFechaNacimientoChange = (event) => {
+    setFechaNacimiento(event.target.value);
   };
 
   const handleDniChange = (e) => {
@@ -61,6 +61,26 @@ const RegistroUsuario = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const hoy = new Date();
+    const fechaNacimientoDate = new Date(fechaNacimiento);
+    const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
+
+    if (edad < 18) {
+      alert('Debes tener al menos 18 años para registrarte.');
+      return;
+    }
+
+    if (!password.trim()) {
+      alert('La contraseña no puede estar vacía.');
+      return;
+    }
+
+    if (password.length < 8) {
+      alert('La contraseña debe tener al menos 8 caracteres.');
+      return;
+    }
+
     const fecha = Date.now();
     const usuario = {
       contraseña: password,
@@ -77,192 +97,194 @@ const RegistroUsuario = () => {
       telefono: telefono,
       usuario: usuario
     };
-    const json_consumidor ={
-      consumidor:consumidor
+    const json_consumidor = {
+      consumidor: consumidor
     }
 
     fetch('http://127.0.0.1:8000/user/', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json',},
+      headers: { 'Content-Type': 'application/json', },
       body: JSON.stringify(json_consumidor)
     })
       .then(response => response.json()).then(data => {
-        if (data.code===200){
+        if (data.code === 200) {
           toast.success("Usuario registrado correctamente");
           setTimeout(() => {
             navigate(`/`);
           }, 1500);
-        }else if(data.code===400){
+        } else if (data.code === 400) {
           toast.error("Error al registrar el usuario");
         }
-    })
+      })
       .catch(error => {
         console.error(error);
-    });
+      });
   };
-
 
 
   return (
     <>
       <div className="containerRegistrar">
-            <div className="cardRegistrar shadow-lg">
-              <div className="cardRegistrar-body p-2 formularioRegistrar">
-                <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">Registrar Usuario</h1>
-                <form onSubmit={handleSubmit} className="needs-validation">
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="mb-2 text-black" htmlFor="nombre">
-                        Nombre
-                      </label>
-                      <input
-                        type="text"
-                        id="nombre"
-                        className="form-control"
-                        value={nombre}
-                        onChange={handleNombreChange}
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="mb-2 text-black" htmlFor="apellido">
-                        Apellido
-                      </label>
-                      <input
-                        type="text"
-                        id="apellido"
-                        className="form-control"
-                        value={apellido}
-                        onChange={handleApellidoChange}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="mb-2 text-black" htmlFor="fechaNacimiento">
-                      Fecha de Nacimiento
-                    </label>
-                    <input
-                      type="date"
-                      id="fechaNacimiento"
-                      className="form-control"
-                      value={fechaNacimiento}
-                      onChange={handleFechaNacimientoChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="mb-2 text-black" htmlFor="dni">
-                      DNI
-                    </label>
-                    <input
-                      type="text"
-                      id="dni"
-                      className="form-control"
-                      value={dni}
-                      onChange={handleDniChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="mb-2 text-black" htmlFor="localidad">
-                      Localidad
-                    </label>
-                    <input
-                      type="text"
-                      id="localidad"
-                      className="form-control"
-                      value={localidad}
-                      onChange={handleLocalidadChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="mb-2 text-black" htmlFor="telefono">
-                      Teléfono
-                    </label>
-                    <input
-                      type="text"
-                      id="telefono"
-                      className="form-control"
-                      value={telefono}
-                      onChange={handleTelefonoChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="mb-2 text-black" htmlFor="username">
-                      Nombre de Usuario
-                    </label>
-                    <input
-                      type="text"
-                      id="username"
-                      className="form-control"
-                      value={username}
-                      onChange={handleUsernameChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="mb-2 text-black" htmlFor="email">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="form-control"
-                      value={email}
-                      onChange={handleEmailChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="mb-2 text-black" htmlFor="password">
-                      Contraseña
-                    </label>
-                    <input
-                      type="password"
-                      id="password"
-                      className="form-control"
-                      value={password}
-                      onChange={handlePasswordChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label className="mb-2 text-black" htmlFor="confirmPassword">
-                      Confirmar Contraseña
-                    </label>
-                    <input
-                      type="password"
-                      id="confirmPassword"
-                      className="form-control"
-                      value={confirmPassword}
-                      onChange={handleConfirmPasswordChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="d-grid">
-                    <button type="submit" className="btn btn-success">Registrar</button>
-                  </div>
-                </form>
+        <div className="cardRegistrar shadow-lg">
+          <div className="cardRegistrar-body p-2 formularioRegistrar">
+            <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">Registrar Usuario</h1>
+            <form onSubmit={handleSubmit} className="needs-validation">
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <label className="mb-2 text-black" htmlFor="nombre">
+                    Nombre
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    className="form-control"
+                    value={nombre}
+                    onChange={handleNombreChange}
+                    required
+                  />
+                </div>
+                <div className="col-md-6 mb-3">
+                  <label className="mb-2 text-black" htmlFor="apellido">
+                    Apellido
+                  </label>
+                  <input
+                    type="text"
+                    id="apellido"
+                    className="form-control"
+                    value={apellido}
+                    onChange={handleApellidoChange}
+                    required
+                  />
+                </div>
               </div>
 
+              <div className="mb-3">
+                <label className="mb-2 text-black" htmlFor="fechaNacimiento">
+                  Fecha de Nacimiento
+                </label>
+                <input
+                  type="date"
+                  id="fechaNacimiento"
+                  className="form-control"
+                  value={fechaNacimiento}
+                  onChange={handleFechaNacimientoChange}
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="mb-2 text-black" htmlFor="dni">
+                  DNI
+                </label>
+                <input
+                  type="number"
+                  id="dni"
+                  className="form-control"
+                  min="0"
+                max="99999999"
+                value={dni}
+                onChange={handleDniChange}
+                required
+  />
+              </div>
+
+              <div className="mb-3">
+                <label className="mb-2 text-black" htmlFor="localidad">
+                  Localidad
+                </label>
+                <input
+                  type="text"
+                  id="localidad"
+                  className="form-control"
+                  value={localidad}
+                  onChange={handleLocalidadChange}
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="mb-2 text-black" htmlFor="telefono">
+                  Teléfono
+                </label>
+                <input
+                  type="number"
+                  id="telefono"
+                  className="form-control"
+                  value={telefono}
+                  onChange={handleTelefonoChange}
+                  required
+                />
+              </div>
+
+
+              <div className="mb-3">
+                <label className="mb-2 text-black" htmlFor="username">
+                  Nombre de Usuario
+                </label>
+                <input
+                  type="text"
+                  id="username"
+                  className="form-control"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="mb-2 text-black" htmlFor="email">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  className="form-control"
+                  value={email}
+                  onChange={handleEmailChange}
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="mb-2 text-black" htmlFor="password">
+                  Contraseña
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  className="form-control"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
+                <label className="mb-2 text-black" htmlFor="confirmPassword">
+                  Confirmar Contraseña
+                </label>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  className="form-control"
+                  value={confirmPassword}
+                  onChange={handleConfirmPasswordChange}
+                  required
+                />
+              </div>
+
+              <div className="d-grid">
+                <button type="submit" className="btn btn-success">Registrar</button>
+              </div>
+            </form>
           </div>
 
+        </div>
+
       </div>
-      <Footer/>
-      </>
-      );
+      <Footer />
+    </>
+  );
 };
 
 export default RegistroUsuario;

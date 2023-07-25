@@ -18,7 +18,7 @@ const RecuperarContraseña = () => {
       correoElectronico:email
     }
 
-    fetch('http://127.0.0.1:8000/user/recuperarcontrasenia/', {
+    fetch('http://127.0.0.1:8080/user/recuperarcontrasenia/', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json',},
       body: JSON.stringify(json_recuperarEmail)

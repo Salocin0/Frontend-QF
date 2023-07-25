@@ -30,6 +30,7 @@ export const Main = () => {
            <Route path="/adquirir-nuevo-rolEPC" element={<AdquirirNuevoRolEPC/>} />
            <Route path="/consultar-usuarioPE" element={<ConsultarUsuarioPE/>} />
            <Route path="/consultar-usuarioEPC" element={<ConsultarUsuarioEPC/>} />
+           <Route path="/adquierir-nuevo-rolPE/:id" element={<AdquirirNuevoRolPE/>} />
       </Routes>
     </main>
   )

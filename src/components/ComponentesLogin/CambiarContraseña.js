@@ -24,7 +24,7 @@ const CambiarContraseña = () => {
       const json_contrasenia = {
           contraseña:newPassword
       }
-      fetch('http://127.0.0.1:8000/user/recuperarcontrasenia/'+codigo+'/', {
+      fetch('http://127.0.0.1:8080/user/recuperarcontrasenia/'+codigo+'/', {
       method: 'PUT',
       headers: {'Content-Type': 'application/json',},
       body: JSON.stringify(json_contrasenia)

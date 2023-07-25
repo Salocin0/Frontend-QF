@@ -26,7 +26,7 @@ const Login = ({ onLogin }) => {
       correoElectronico: email
     }
 
-    fetch('http://127.0.0.1:8000/user/login/', {
+    fetch('http://127.0.0.1:8000/login/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -35,14 +35,15 @@ const Login = ({ onLogin }) => {
       .then(data => {
         console.log(data);
         const value = data.id_consumidor
-        if (data.codigo===200){
+        if (data.code===200){
           toast.success("Login correcto");
           setTimeout(() => {
-            navigate(`/home/${value}`);
+            //navigate(`/inicio/${value}`);
+            navigate('/inicio/')
           }, 500);
-        }else if(data.codigo===1010){
+        }else if(data.code===1010){
           toast.error("Email no registrado");
-        }else if(data.codigo===1000){
+        }else if(data.code===1000){
           toast.error("Contraseña incorrecta");
         }
 
