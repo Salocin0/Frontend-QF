@@ -1,22 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
-import Footer from '../ComponentesGenerales/Footer';
-import Sidebar from '../ComponentesGenerales/Sidebar';
-import './AdquirirNuevoRolEPC.css';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../ComponentesGenerales/UserContext';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { toast } from "react-toastify";
+import { useLocation } from "react-router-dom";
+import Footer from "../ComponentesGenerales/Footer";
+import Sidebar from "../ComponentesGenerales/Sidebar";
+import "./AdquirirNuevoRolEPC.css";
 
 const AdquirirNuevoRolEPC = () => {
+  const navigate = useNavigate();
+  const { user, updateUser } = useContext(UserContext);
   const location = useLocation();
   const id = location.state && location.state.value;
 
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [dni, setDni] = useState('');
-  const [cuit, setCuit] = useState('');
-  const [razonSocial, setRazonSocial] = useState('');
-  const [localidad, setLocalidad] = useState('');
-  const [telefono, setTelefono] = useState('');
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [dni, setDni] = useState("");
+  const [cuit, setCuit] = useState("");
+  const [razonSocial, setRazonSocial] = useState("");
+  const [localidad, setLocalidad] = useState("");
+  const [fechaBromatologica, setFechaBromatologica] = useState("");
   const [documentos, setDocumentos] = useState([]);
 
   const handleNombreChange = (e) => {
@@ -43,8 +47,8 @@ const AdquirirNuevoRolEPC = () => {
     setLocalidad(e.target.value);
   };
 
-  const handleTelefonoChange = (e) => {
-    setTelefono(e.target.value);
+  const handleFechaBromatologicaChange = (e) => {
+    setFechaBromatologica(e.target.value);
   };
 
   const handleDocumentoChange = (e) => {
@@ -54,67 +58,77 @@ const AdquirirNuevoRolEPC = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
-      const formData = new FormData();
-      formData.append('id', id);
-      formData.append('nombre', nombre);
-      formData.append('apellido', apellido);
-      formData.append('dni', dni);
-      formData.append('cuit', cuit);
-      formData.append('razonSocial', razonSocial);
-      formData.append('localidad', localidad);
-      formData.append('telefono', telefono);
-
-      for (let i = 0; i < documentos.length; i++) {
-        formData.append('documentos', documentos[i]);
-      }
-
-      const response = await fetch('http://localhost:8000/adquirir_rol_epc', {
-        method: 'POST',
-        body: formData,
+      const encargado = {
+        encargado: {
+          cuit: cuit,
+          razonSocial: razonSocial,
+          fechaBromatologica: fechaBromatologica,
+          id: user.id,
+        },
+      };
+  
+      const response = await fetch("http://localhost:8000/encargado", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(encargado), // Convert the object to a JSON string
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        if (data.codigo === 200) {
-          toast.success('Nuevo rol adquirido correctamente');
-        } else if (data.codigo === 400) {
-          toast.error('Error al adquirir el nuevo rol');
+        console.log(data)
+        if (data.code === 200) {
+          toast.success("Nuevo rol adquirido correctamente");
+          setTimeout(() => {
+            navigate(`/home/inicio`);
+          }, 1500);
+        } else if (data.code === 400) {
+          toast.error("Error al adquirir el nuevo rol: razon usada");
         }
       } else {
-        throw new Error('Error en la respuesta HTTP');
+        throw new Error("Error en la respuesta HTTP");
       }
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/datos_usuario/${id}`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
+    if (user) {
+      cargarDatos(user);
+    }
+  }, [user]);
 
-        if (response.ok) {
-          const data = await response.json();
-          setNombre(data.nombre);
-          setApellido(data.apellido);
-          setDni(data.dni);
-          setLocalidad(data.localidad);
-          setTelefono(data.telefono);
-        } else {
-          throw new Error('Error en la respuesta HTTP');
+  const cargarDatos = async (user) => {
+    try {
+      console.log(user);
+      const responseconsumidor = await fetch(
+        `http://localhost:8000/consumidor/user/${user.id}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
         }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      );
 
-    fetchData();
-  }, [id]);
+      if (responseconsumidor.ok) {
+        const consumidor = await responseconsumidor.json();
+        setApellido(consumidor.data.apellido);
+        setNombre(consumidor.data.nombre);
+        setDni(consumidor.data.dni);
+        if (consumidor.codigo === 200) {
+          toast.success("Datos cargados correctamente");
+        } else if (consumidor.codigo === 400) {
+          toast.error("Error al cargar los datos");
+        }
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -124,8 +138,14 @@ const AdquirirNuevoRolEPC = () => {
           <section className="align-items-center justify-content-center">
             <div className="card shadow-lg">
               <div className="card-body p-3 formularioAdquirirNuevoRolEPC">
-                <h1 className="fs-4 card-title fw-bold mb-2 text-dark">Adquirir Nuevo Rol - Encargado de Puesto de Comida</h1>
-                <form onSubmit={handleSubmit} className="needs-validation" encType="multipart/form-data">
+                <h1 className="fs-4 card-title fw-bold mb-2 text-dark">
+                  Adquirir Nuevo Rol - Encargado de Puesto de Comida
+                </h1>
+                <form
+                  onSubmit={handleSubmit}
+                  className="needs-validation"
+                  encType="multipart/form-data"
+                >
                   <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="nombre">
                       Nombre
@@ -196,17 +216,16 @@ const AdquirirNuevoRolEPC = () => {
                     />
                   </div>
 
-
                   <div className="mb-2">
                     <label className="mb-2 text-dark" htmlFor="telefono">
-                      Teléfono
+                      fechaBromatologica
                     </label>
                     <input
-                      type="text"
+                      type="date"
                       id="telefono"
                       className="form-control"
-                      value={telefono}
-                      onChange={handleTelefonoChange}
+                      value={fechaBromatologica}
+                      onChange={handleFechaBromatologicaChange}
                       required
                     />
                   </div>

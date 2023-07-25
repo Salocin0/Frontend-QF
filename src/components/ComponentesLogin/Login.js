@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Footer from '../ComponentesGenerales/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { UserContext } from '../ComponentesGenerales/UserContext';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { user, updateUser } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -20,12 +22,12 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const data = {
       contraseña: password,
       correoElectronico: email
     }
-
+  
     fetch('http://127.0.0.1:8000/login/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -33,20 +35,16 @@ const Login = ({ onLogin }) => {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-        const value = data.id_consumidor
-        if (data.code===200){
+        if (Number(data.code)===200){
           toast.success("Login correcto");
           setTimeout(() => {
-            //navigate(`/inicio/${value}`);
-            navigate('/inicio/')
-          }, 500);
-        }else if(data.code===1010){
-          toast.error("Email no registrado");
-        }else if(data.code===1000){
-          toast.error("Contraseña incorrecta");
+            updateUser(data.data);
+            navigate(`/home/${data.data.id}`);
+          }, 1500);
+        }else if(Number(data.code)===1000){
+          toast.error("Datos incorrectos");
         }
-
+        
       })
       .catch(error => {
         console.error(error);
@@ -54,8 +52,7 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <>
-  <section className="vh-100 d-flex align-items-center justify-content-center" style={{ background: `url('QuickFoodFondo.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <section className="vh-100 d-flex align-items-center justify-content-center" style={{ background: 'url(QuickFoodFondo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="container">
         <div className="row justify-content-sm-center">
           <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
@@ -120,15 +117,15 @@ const Login = ({ onLogin }) => {
                 </form>
               </div>
             </div>
+            <div className="text-center mt-3 text-white fixed-bottom">
+              &copy; 2023 &mdash; DDST
+            </div>
           </div>
         </div>
       </div>
       <Footer />
 
     </section>
-
-    </>
-
   );
 };
 

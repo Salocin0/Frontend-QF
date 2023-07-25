@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from '../ComponentesGenerales/UserContext';
 import '../ComponentesConsumidor/ConsultarUsuario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
@@ -8,8 +9,10 @@ import Sidebar from '../ComponentesGenerales/Sidebar';
 
 const ConsultarUsuarioEPC = () => {
   const location = useLocation();
+  const { user, updateUser } = useContext(UserContext);
   const id = location.state && location.state.value;
 
+  const [encargado, setEncargado] = useState('');
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [dni, setDni] = useState('');
@@ -58,26 +61,66 @@ const ConsultarUsuarioEPC = () => {
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
+    updateEncargado()
     setEditMode(false);
   };
 
-  const buscarDatosProductorEventos = async () => {
+  const updateEncargado = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/productor-eventos/${id}/`, {
+      const nuevoEncargado={
+        cuit:cuit,
+        razonSocial:razonSocial,
+        fechaBromatologica:encargado.fechaBromatologica
+      }
+      const response = await fetch(`http://127.0.0.1:8000/encargado/${encargado.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body:nuevoEncargado
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        if (data.code === 200) {
+          setApellido(user.apellido);
+          setNombre(user.nombre);
+          setDni(user.dni);
+          setCuit(nuevoEncargado.cuit);
+          setRazonSocial(nuevoEncargado.razonSocial);
+          setLocalidad(user.localidad);
+          setTelefono(user.telefono);
+          setDocumentos(nuevoEncargado.documento);
+          toast.success('Datos cargados correctamente');
+        } else if (data.codigo === 400) {
+          toast.error('Error al cargar los datos');
+        }
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const buscarDatosEncargado = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/encargado/user/${user.id}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
 
       if (response.ok) {
         const data = await response.json();
-        setApellido(data.productorEventos.apellido);
-        setNombre(data.productorEventos.nombre);
-        setDni(data.productorEventos.dni);
-        setCuit(data.productorEventos.cuit);
-        setRazonSocial(data.productorEventos.razonSocial);
-        setLocalidad(data.productorEventos.localidad);
-        setTelefono(data.productorEventos.telefono);
-        setDocumentos(data.productorEventos.documento);
+        console.log(data)
+        setEncargado(data)
+        setApellido(user.apellido);
+        setNombre(user.nombre);
+        setDni(user.dni);
+        setCuit(data.cuit);
+        setRazonSocial(data.razonSocial);
+        setLocalidad(user.localidad);
+        setTelefono(user.telefono);
+        setDocumentos(data.documento);
         if (data.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (data.codigo === 400) {
@@ -92,7 +135,7 @@ const ConsultarUsuarioEPC = () => {
   };
 
   useEffect(() => {
-    buscarDatosProductorEventos();
+    buscarDatosEncargado();
   }, []);
 
   return (
