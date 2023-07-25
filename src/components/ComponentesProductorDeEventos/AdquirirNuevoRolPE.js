@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../ComponentesGenerales/UserContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
@@ -7,6 +9,8 @@ import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
 
 const AdquirirNuevoRolPE = () => {
+  const navigate = useNavigate();
+  const { user, updateUser } = useContext(UserContext);
   const location = useLocation();
   const id = location.state && location.state.value;
 
@@ -19,30 +23,41 @@ const AdquirirNuevoRolPE = () => {
   const [razonSocial, setRazonSocial] = useState('');
 
   const [documento, setDocumento] = useState('');
-
+  
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`http://localhost:8000/user/${id}`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setNombre(data.nombre);
-          setApellido(data.apellido);
-          setDni(data.dni);
-        } else {
-          throw new Error('Error en la respuesta HTTP');
+    if (user) {
+      cargarDatos(user);
+    }
+  }, [user]);
+  
+  const cargarDatos = async (user) => {
+    try {
+      console.log(user);
+      const responseconsumidor = await fetch(
+        `http://localhost:8000/consumidor/user/${user.id}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
         }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      );
 
-    fetchData();
-  }, []);
+      if (responseconsumidor.ok) {
+        const consumidor = await responseconsumidor.json();
+        setApellido(consumidor.data.apellido);
+        setNombre(consumidor.data.nombre);
+        setDni(consumidor.data.dni);
+        if (consumidor.codigo === 200) {
+          toast.success("Datos cargados correctamente");
+        } else if (consumidor.codigo === 400) {
+          toast.error("Error al cargar los datos");
+        }
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -76,29 +91,33 @@ const AdquirirNuevoRolPE = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8000/adquirir_rol', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: id,
-          nombre: nombre,
-          apellido: apellido,
-          dni: dni,
+      const productor = {
+        productor: {
           cuit: cuit,
           razonSocial: razonSocial,
-          telefono: telefono,
-        }),
+          id: user.id,
+        },
+      };
+  
+      const response = await fetch("http://localhost:8000/productor", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productor),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-        if (data.codigo === 200) {
-          toast.success('Nuevo rol adquirido correctamente');
-        } else if (data.codigo === 400) {
-          toast.error('Error al adquirir el nuevo rol');
+        console.log(data)
+        if (data.code === 200) {
+          toast.success("Nuevo rol adquirido correctamente");
+          setTimeout(() => {
+            navigate(`/home/inicio`);
+          }, 1500);
+        } else if (data.code === 400) {
+          toast.error("Error al adquirir el nuevo rol: razon usada");
         }
       } else {
-        throw new Error('Error en la respuesta HTTP al adquirir el nuevo rol');
+        throw new Error("Error en la respuesta HTTP");
       }
     } catch (error) {
       console.error(error);

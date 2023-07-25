@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from '../ComponentesGenerales/UserContext';
 import '../ComponentesConsumidor/ConsultarUsuario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
@@ -7,13 +8,16 @@ import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
 
 const ConsultarUsuarioPE = () => {
+  const { user, updateUser } = useContext(UserContext);
   const location = useLocation();
   const id = location.state && location.state.value;
 
+  const [productor, setProductor] = useState('');
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [dni, setDni] = useState('');
   const [cuit, setCuit] = useState('');
+  const [razonSocial, setRazonSocial] = useState('');
   const [telefono, setTelefono] = useState('');
   const [documentos, setDocumentos] = useState([]);
   const [editMode, setEditMode] = useState(false);
@@ -34,6 +38,9 @@ const ConsultarUsuarioPE = () => {
     setCuit(e.target.value);
   };
 
+  const handleRazonSocialChange = (e) => {
+    setRazonSocial(e.target.value);
+  };
 
   const handleTelefonoChange = (e) => {
     setTelefono(e.target.value);
@@ -47,26 +54,71 @@ const ConsultarUsuarioPE = () => {
     setEditMode(!editMode);
   };
 
-  const handleSaveChanges = (e) => {
-    e.preventDefault();
-    setEditMode(false);
-  };
-
-  const buscarDatosProductorEventos = async () => {
+  const deshabilitarUsuario = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/productor-eventos/${id}/`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
+
+      const response = await fetch(`http://127.0.0.1:8000/productor/${productor.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
       });
 
       if (response.ok) {
         const data = await response.json();
-        setApellido(data.productorEventos.apellido);
-        setNombre(data.productorEventos.nombre);
-        setDni(data.productorEventos.cuit);
-        setTelefono(data.productorEventos.telefono);
-        setDocumentos(data.productorEventos.documentos);
-        if (data.codigo === 200) {
+        console.log(data)
+        if (data.code === 200) {
+          setApellido(user.apellido);
+          setNombre(user.nombre);
+          setDni(user.dni);
+          setCuit("");
+          setRazonSocial("");
+          setTelefono(user.telefono);
+          setDocumentos("");
+          toast.success('productor eliminado correctamente');
+        } else if (data.codigo === 400) {
+          toast.error('Error al eliminar');
+        }
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleDelete = () => {
+    deshabilitarUsuario();
+  };
+
+  const handleSaveChanges = (e) => {
+    e.preventDefault();
+    updateProductor()
+    setEditMode(false);
+  };
+
+  const updateProductor = async () => {
+    try {
+      const nuevoProductor={
+        cuit:cuit,
+        razonSocial:razonSocial
+      }
+
+      const response = await fetch(`http://127.0.0.1:8000/productor/${productor.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nuevoProductor)
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        if (data.code === 200) {
+          setApellido(user.apellido);
+          setNombre(user.nombre);
+          setDni(user.dni);
+          setCuit(nuevoProductor.cuit);
+          setRazonSocial(nuevoProductor.razonSocial);
+          setTelefono(user.telefono);
+          setDocumentos(nuevoProductor.documento);
           toast.success('Datos cargados correctamente');
         } else if (data.codigo === 400) {
           toast.error('Error al cargar los datos');
@@ -79,8 +131,54 @@ const ConsultarUsuarioPE = () => {
     }
   };
 
+  const buscarDatosProductor = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/productor/user/${user.id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const response2 = await fetch(`http://127.0.0.1:8000/consumidor/user/${user.id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setProductor(data.data)
+        setCuit(data.data.cuit);
+        setRazonSocial(data.data.razonSocial);
+        setDocumentos(data.data.documento);
+        if (data.codigo === 200) {
+          toast.success('Datos cargados correctamente');
+        } else if (data.codigo === 400) {
+          toast.error('Error al cargar los datos');
+        }
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+
+      if (response2.ok) {
+        const consumidor = await response2.json();
+        setApellido(consumidor.data.apellido);
+        setNombre(consumidor.data.nombre);
+        setDni(consumidor.data.dni);
+        setTelefono(consumidor.data.telefono);
+        if (consumidor.codigo === 200) {
+          toast.success('Datos cargados correctamente');
+        } else if (consumidor.codigo === 400) {
+          toast.error('Error al cargar los datos');
+        }
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
-    buscarDatosProductorEventos();
+    buscarDatosProductor();
   }, []);
 
   return (
@@ -163,7 +261,7 @@ const ConsultarUsuarioPE = () => {
                       id="razonSocial"
                       className="form-control"
                       value={dni}
-                      onChange={handleDniChange}
+                      onChange={handleRazonSocialChange}
                       readOnly={!editMode}
                       disabled={!editMode}
                     />
@@ -204,7 +302,7 @@ const ConsultarUsuarioPE = () => {
                         <button type="button" className="btn btn-primary" onClick={handleEditModeToggle}>
                           Editar
                         </button>
-                        <button type="button" className="btn btn-danger deshabilitar">
+                        <button type="button" className="btn btn-danger deshabilitar" onClick={handleDelete}>
                           Deshabilitar Usuario
                         </button>
                       </>

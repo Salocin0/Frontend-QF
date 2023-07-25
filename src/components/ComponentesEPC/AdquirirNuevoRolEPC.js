@@ -72,7 +72,7 @@ const AdquirirNuevoRolEPC = () => {
       const response = await fetch("http://localhost:8000/encargado", {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(encargado), // Convert the object to a JSON string
+        body: JSON.stringify(encargado),
       });
   
       if (response.ok) {
