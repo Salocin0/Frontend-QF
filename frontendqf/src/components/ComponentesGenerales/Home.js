@@ -1,13 +1,12 @@
 import React from 'react';
-import '../estilos.css';
-import Navbar from './Navbar';
+import '../../estilos.css';
 import Footer from './Footer';
 import { useState } from 'react';
-import ConsultarUsuario from './ComponentesCosumidor/ConsultarUsuario';
-import HacerPedido from './ComponentesCosumidor/HacerPedido';
-import HistorialPedidos from './ComponentesCosumidor/HistorialPedidos';
-import Inicio from './ComponentesCosumidor/Inicio';
-import Notificaciones from './ComponentesCosumidor/Notificaciones';
+import ConsultarUsuario from '../ComponentesConsumidor/ConsultarUsuario';
+import HacerPedido from '../ComponentesConsumidor/HacerPedido';
+import HistorialPedidos from '../ComponentesConsumidor/HistorialPedidos';
+import Inicio from '../ComponentesConsumidor/Inicio';
+import Notificaciones from '../ComponentesConsumidor/Notificaciones';
 
 const Home = () => {
   //const { id } = useParams();
@@ -19,7 +18,6 @@ const Home = () => {
 
   return (
     <div>
-      <Navbar onItemClick={handleNavbarItemClick} />
       {selectedItem === "Inicio" && <Inicio />}
       {selectedItem === "Perfil" && <ConsultarUsuario />}
       {selectedItem === "Hacer Pedidos" && <HacerPedido />}

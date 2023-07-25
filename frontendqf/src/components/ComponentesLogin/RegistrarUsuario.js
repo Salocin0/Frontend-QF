@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import './RegistrarUsuario.css';
+import Footer from '../ComponentesGenerales/Footer';
 
 const RegistroUsuario = () => {
   const [nombre, setNombre] = useState('');
@@ -93,30 +95,24 @@ const RegistroUsuario = () => {
         }else if(data.code===400){
           toast.error("Error al registrar el usuario");
         }
-        else if(data.code===300){
-          toast.error("Error: email usado");
-        }
     })
       .catch(error => {
         console.error(error);
     });
   };
 
+
+
   return (
-    <section
-      className="vh-100 d-flex align-items-center justify-content-center"
-      style={{ background: 'url(QuickFoodFondo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-    >
-      <div className="container" style={{ marginTop: '220px' }}>
-        <div className="row justify-content-sm-center">
-          <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-            <div className="card shadow-lg">
-              <div className="card-body p-5">
-                <h1 className="fs-4 card-title fw-bold mb-4 text-black">Registrar Usuario</h1>
+    <>
+      <div className="containerRegistrar">
+            <div className="cardRegistrar shadow-lg">
+              <div className="cardRegistrar-body p-2 formularioRegistrar">
+                <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">Registrar Usuario</h1>
                 <form onSubmit={handleSubmit} className="needs-validation">
                   <div className="row">
                     <div className="col-md-6 mb-3">
-                      <label className="mb-2 text-muted" htmlFor="nombre">
+                      <label className="mb-2 text-black" htmlFor="nombre">
                         Nombre
                       </label>
                       <input
@@ -129,7 +125,7 @@ const RegistroUsuario = () => {
                       />
                     </div>
                     <div className="col-md-6 mb-3">
-                      <label className="mb-2 text-muted" htmlFor="apellido">
+                      <label className="mb-2 text-black" htmlFor="apellido">
                         Apellido
                       </label>
                       <input
@@ -144,7 +140,7 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="fechaNacimiento">
+                    <label className="mb-2 text-black" htmlFor="fechaNacimiento">
                       Fecha de Nacimiento
                     </label>
                     <input
@@ -158,7 +154,7 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="dni">
+                    <label className="mb-2 text-black" htmlFor="dni">
                       DNI
                     </label>
                     <input
@@ -172,7 +168,7 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="localidad">
+                    <label className="mb-2 text-black" htmlFor="localidad">
                       Localidad
                     </label>
                     <input
@@ -186,7 +182,7 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="telefono">
+                    <label className="mb-2 text-black" htmlFor="telefono">
                       Teléfono
                     </label>
                     <input
@@ -200,7 +196,7 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="username">
+                    <label className="mb-2 text-black" htmlFor="username">
                       Nombre de Usuario
                     </label>
                     <input
@@ -214,7 +210,7 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="email">
+                    <label className="mb-2 text-black" htmlFor="email">
                       Email
                     </label>
                     <input
@@ -228,7 +224,7 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="password">
+                    <label className="mb-2 text-black" htmlFor="password">
                       Contraseña
                     </label>
                     <input
@@ -242,7 +238,7 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="confirmPassword">
+                    <label className="mb-2 text-black" htmlFor="confirmPassword">
                       Confirmar Contraseña
                     </label>
                     <input
@@ -256,16 +252,17 @@ const RegistroUsuario = () => {
                   </div>
 
                   <div className="d-grid">
-                    <button type="submit" className="btn btn-primary">Registrar</button>
+                    <button type="submit" className="btn btn-success">Registrar</button>
                   </div>
                 </form>
               </div>
-            </div>
+
           </div>
-        </div>
+
       </div>
-    </section>
-  );
+      <Footer/>
+      </>
+      );
 };
 
 export default RegistroUsuario;

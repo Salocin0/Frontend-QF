@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import Footer from './Footer';
+import Footer from '../ComponentesGenerales/Footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { UserContext } from './UserContext';
+import { UserContext } from '../ComponentesGenerales/UserContext';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Footer from '../ComponentesGenerales/Footer';
 
 const RecuperarContraseña = () => {
   const [email, setEmail] = useState('');
@@ -36,6 +37,7 @@ const RecuperarContraseña = () => {
   };
 
   return (
+    <>
     <section className="vh-100 d-flex align-items-center justify-content-center" style={{ background: 'url(QuickFoodFondo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
       <div className="container">
         <div className="row justify-content-sm-center">
@@ -67,6 +69,8 @@ const RecuperarContraseña = () => {
         </div>
       </div>
     </section>
+    <Footer/>
+    </>
   );
 };
 

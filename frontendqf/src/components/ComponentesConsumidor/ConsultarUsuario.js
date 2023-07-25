@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../UserContext';
-import Footer from '../Footer';
+import { UserContext } from '../ComponentesGenerales/UserContext';
+import './ConsultarUsuario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
+import Footer from '../ComponentesGenerales/Footer';
+import Sidebar from '../ComponentesGenerales/Sidebar';
+import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuarioPE';
 
 const ConsultarUsuario = () => {
   const { user } = useContext(UserContext);
@@ -17,7 +20,52 @@ const ConsultarUsuario = () => {
   const [localidad, setLocalidad] = useState('');
   const [telefono, setTelefono] = useState('');
   const [username, setUsername] = useState('');
+  const [documentos, setDocumentos] = useState('');
+
   const [editMode, setEditMode] = useState(false);
+  const [rolSeleccionado, setRolSeleccionado] = useState('Usuario');
+
+  const handleNombreChange = (e) => {
+    setNombre(e.target.value);
+  };
+
+  const handleApellidoChange = (e) => {
+    setApellido(e.target.value);
+  };
+
+  const handleFechaNacimientoChange = (e) => {
+    setFechaNacimiento(e.target.value);
+  };
+
+  const handleDniChange = (e) => {
+    setDni(e.target.value);
+  };
+
+  const handleLocalidadChange = (e) => {
+    setLocalidad(e.target.value);
+  };
+
+  const handleTelefonoChange = (e) => {
+    setTelefono(e.target.value);
+  };
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handleDocumentoChange = (e) => {
+    const files = e.target.files;
+    setDocumentos(files);
+  };
+
+  const handleEditModeToggle = () => {
+    setEditMode(!editMode);
+  };
+
+  const handleSaveChanges = (e) => {
+    e.preventDefault();
+    setEditMode(false);
+  };
 
   useEffect(() => {
     if (user) {
@@ -56,58 +104,66 @@ const ConsultarUsuario = () => {
     }
   };
 
-  const handleNombreChange = (e) => {
-    setNombre(e.target.value);
-  };
+  const handleRolChange = (e) => {
+    setRolSeleccionado(e.target.value);
 
-  const handleApellidoChange = (e) => {
-    setApellido(e.target.value);
-  };
+    switch (e.target.value) {
+      case 'Usuario':
+        window.location.href = '/consultar-usuario';
+        break;
+      case 'Productor de Eventos':
+        window.location.href = '/consultar-usuarioPE';
+        break;
+      case 'Encargado Puesto de Comida':
+        window.location.href = '/consultar-usuarioEPC';
+        break;
+      case 'Repartidor':
 
-  const handleFechaNacimientoChange = (e) => {
-    setFechaNacimiento(e.target.value);
-  };
-
-  const handleDniChange = (e) => {
-    setDni(e.target.value);
-  };
-
-  const handleLocalidadChange = (e) => {
-    setLocalidad(e.target.value);
-  };
-
-  const handleTelefonoChange = (e) => {
-    setTelefono(e.target.value);
-  };
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
-  };
-
-  const handleEditModeToggle = () => {
-    setEditMode(!editMode);
-  };
-
-  const handleSaveChanges = (e) => {
-    e.preventDefault();
-    setEditMode(false);
+        window.location.href = '/ruta-repartidor';
+        break;
+      default:
+        break;
+    }
   };
 
   return (
-    <section
-      className="vh-100 d-flex align-items-center justify-content-center"
-      style={{ background: 'url(QuickFoodFondo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
-    >
-        <div className="container" style={{ marginTop: '10px' }}>
-        <div className="row justify-content-sm-center">
-          <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
+    <>
+      <div className="d-flex">
+        <Sidebar />
+        <div className="flex-grow-1">
+          <section className="align-items-center justify-content-center">
             <div className="card shadow-lg">
-              <div className="card-body p-5">
-                <h1 className="fs-4 card-title fw-bold mb-4 text-dark">Perfil de Usuario</h1>
+              <div className="card-body p-3 formulario">
+                <h1 className="fs-5 card-title fw-bold mb-2 text-dark">Tu Perfil</h1>
                 <form onSubmit={handleSaveChanges} className="needs-validation">
                   <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="mb-2 text-muted" htmlFor="nombre">
+
+                    <div className="mb-2">
+                      <label className="mb-2 text-dark" htmlFor="rol">
+                        Rol
+                      </label>
+                      <select id="rol" className="form-control" value={rolSeleccionado} onChange={handleRolChange}>
+                        <option value="Usuario">Usuario</option>
+                        <option value="Productor de Eventos">Productor de Eventos</option>
+                        <option value="Encargado Puesto de Comida">Encargado Puesto de Comida</option>
+                        <option value="Repartidor" disabled>Repartidor</option>
+                      </select>
+                    </div>
+                    <div className="mb-2">
+                    <label className="mb-2 text-dark" htmlFor="username">
+                      Nombre de Usuario
+                    </label>
+                    <input
+                      type="text"
+                      id="username"
+                      className="form-control"
+                      value={username}
+                      onChange={handleUsernameChange}
+                      readOnly={!editMode}
+                    />
+                  </div>
+                    <div className="col-md-6 mb-2">
+                      <label className="mb-2 text-dark" htmlFor="nombre">
                         Nombre
                       </label>
                       <input
@@ -119,8 +175,8 @@ const ConsultarUsuario = () => {
                         readOnly={!editMode}
                       />
                     </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="mb-2 text-muted" htmlFor="apellido">
+                    <div className="col-md-6 mb-2">
+                      <label className="mb-2 text-dark" htmlFor="apellido">
                         Apellido
                       </label>
                       <input
@@ -134,8 +190,8 @@ const ConsultarUsuario = () => {
                     </div>
                   </div>
 
-                  <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="fechaNacimiento">
+                  <div className="mb-2">
+                    <label className="mb-2 text-dark" htmlFor="fechaNacimiento">
                       Fecha de Nacimiento
                     </label>
                     <input
@@ -148,8 +204,8 @@ const ConsultarUsuario = () => {
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="dni">
+                  <div className="mb-2">
+                    <label className="mb-2 text-dark" htmlFor="dni">
                       DNI
                     </label>
                     <input
@@ -162,8 +218,8 @@ const ConsultarUsuario = () => {
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="localidad">
+                  <div className="mb-2">
+                    <label className="mb-2 text-dark" htmlFor="localidad">
                       Localidad
                     </label>
                     <input
@@ -176,8 +232,8 @@ const ConsultarUsuario = () => {
                     />
                   </div>
 
-                  <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="telefono">
+                  <div className="mb-2">
+                    <label className="mb-2 text-dark" htmlFor="telefono">
                       Teléfono
                     </label>
                     <input
@@ -191,39 +247,45 @@ const ConsultarUsuario = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="username">
-                      Nombre de Usuario
+                    <label className="mb-2 text-dark" htmlFor="documentos">
+                      Documentos
                     </label>
                     <input
-                      type="text"
-                      id="username"
+                      type="file"
+                      id="documentos"
                       className="form-control"
-                      value={username}
-                      onChange={handleUsernameChange}
-                      readOnly={!editMode}
+                      onChange={handleDocumentoChange}
+                      multiple
+                      required
                     />
                   </div>
 
                   <div className="d-grid">
                     {!editMode && (
-                      <button type="button" className="btn btn-primary" onClick={handleEditModeToggle}>
-                        Editar
-                      </button>
+                      <>
+                        <button type="button" className="btn btn-primary" onClick={handleEditModeToggle} >
+                          Editar
+                        </button>
+                        <button type="button" className="btn btn-danger deshabilitar">
+                          Deshabilitar Usuario
+                        </button>
+                      </>
                     )}
                     {editMode && (
-                      <button type="submit" className="btn btn-primary">
+                      <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
                         Guardar Cambios
                       </button>
                     )}
                   </div>
+
                 </form>
               </div>
             </div>
-          </div>
+          </section>
+          <Footer />
         </div>
       </div>
-      <Footer />
-    </section>
+    </>
   );
 };
 
