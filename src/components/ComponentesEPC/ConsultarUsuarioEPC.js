@@ -58,6 +58,42 @@ const ConsultarUsuarioEPC = () => {
   const handleEditModeToggle = () => {
     setEditMode(!editMode);
   };
+  
+  const deshabilitarUsuario = async () => {
+    try {
+
+      const response = await fetch(`http://127.0.0.1:8000/encargado/${encargado.id}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        if (data.code === 200) {
+          setApellido(user.apellido);
+          setNombre(user.nombre);
+          setDni(user.dni);
+          setCuit("");
+          setRazonSocial("");
+          setLocalidad(user.localidad);
+          setTelefono(user.telefono);
+          setDocumentos("");
+          toast.success('Encargado eliminado correctamente');
+        } else if (data.codigo === 400) {
+          toast.error('Error al eliminar');
+        }
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const handleDelete = () => {
+    deshabilitarUsuario();
+  };
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
@@ -72,10 +108,11 @@ const ConsultarUsuarioEPC = () => {
         razonSocial:razonSocial,
         fechaBromatologica:encargado.fechaBromatologica
       }
+
       const response = await fetch(`http://127.0.0.1:8000/encargado/${encargado.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body:nuevoEncargado
+        body: JSON.stringify(nuevoEncargado)
       });
 
       if (response.ok) {
@@ -109,21 +146,36 @@ const ConsultarUsuarioEPC = () => {
         headers: { 'Content-Type': 'application/json' },
       });
 
+      const response2 = await fetch(`http://127.0.0.1:8000/consumidor/user/${user.id}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
-        setEncargado(data)
-        setApellido(user.apellido);
-        setNombre(user.nombre);
-        setDni(user.dni);
-        setCuit(data.cuit);
-        setRazonSocial(data.razonSocial);
-        setLocalidad(user.localidad);
-        setTelefono(user.telefono);
-        setDocumentos(data.documento);
+        setEncargado(data.data)
+        setCuit(data.data.cuit);
+        setRazonSocial(data.data.razonSocial);
+        setDocumentos(data.data.documento);
         if (data.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (data.codigo === 400) {
+          toast.error('Error al cargar los datos');
+        }
+      } else {
+        throw new Error('Error en la respuesta HTTP');
+      }
+
+      if (response2.ok) {
+        const consumidor = await response2.json();
+        setApellido(consumidor.data.apellido);
+        setNombre(consumidor.data.nombre);
+        setDni(consumidor.data.dni);
+        setLocalidad(consumidor.data.localidad);
+        setTelefono(consumidor.data.telefono);
+        if (consumidor.codigo === 200) {
+          toast.success('Datos cargados correctamente');
+        } else if (consumidor.codigo === 400) {
           toast.error('Error al cargar los datos');
         }
       } else {
@@ -266,7 +318,7 @@ const ConsultarUsuarioEPC = () => {
                         <button type="button" className="btn btn-primary" onClick={handleEditModeToggle}>
                           Editar
                         </button>
-                        <button type="button" className="btn btn-danger deshabilitar">
+                        <button type="button" className="btn btn-danger deshabilitar" onClick={handleDelete}>
                           Deshabilitar Usuario
                         </button>
                       </>
