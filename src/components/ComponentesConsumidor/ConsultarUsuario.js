@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
-import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuarioPE';
 
 const ConsultarUsuario = () => {
   const { user } = useContext(UserContext);
@@ -20,10 +19,13 @@ const ConsultarUsuario = () => {
   const [localidad, setLocalidad] = useState('');
   const [telefono, setTelefono] = useState('');
   const [username, setUsername] = useState('');
-  const [documentos, setDocumentos] = useState('');
+  const [isDisabled, setIsDisabled] = useState(true);
+
 
   const [editMode, setEditMode] = useState(false);
   const [rolSeleccionado, setRolSeleccionado] = useState('Usuario');
+
+
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -53,13 +55,9 @@ const ConsultarUsuario = () => {
     setUsername(e.target.value);
   };
 
-  const handleDocumentoChange = (e) => {
-    const files = e.target.files;
-    setDocumentos(files);
-  };
-
   const handleEditModeToggle = () => {
     setEditMode(!editMode);
+    setIsDisabled(!isDisabled);
   };
 
   const handleSaveChanges = (e) => {
@@ -87,10 +85,14 @@ const ConsultarUsuario = () => {
         setApellido(data1.data.apellido);
         setNombre(data1.data.nombre);
         setDni(data1.data.dni);
-        setFechaNacimiento(data1.data.fechaNacimiento);
+
+        // Convertir la fecha de nacimiento al formato español
+        const fechaNacimientoEspañol = new Date(data1.data.fechaNacimiento).toLocaleDateString('es-ES');
+        setFechaNacimiento(fechaNacimientoEspañol);
+
         setLocalidad(data1.data.localidad);
         setTelefono(data1.data.telefono);
-        console.log(data1);
+
         if (data1.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (data1.codigo === 400) {
@@ -118,7 +120,6 @@ const ConsultarUsuario = () => {
         window.location.href = '/consultar-usuarioEPC';
         break;
       case 'Repartidor':
-
         window.location.href = '/ruta-repartidor';
         break;
       default:
@@ -137,31 +138,38 @@ const ConsultarUsuario = () => {
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">Tu Perfil</h1>
                 <form onSubmit={handleSaveChanges} className="needs-validation">
                   <div className="row">
-
                     <div className="mb-2">
                       <label className="mb-2 text-dark" htmlFor="rol">
                         Rol
                       </label>
-                      <select id="rol" className="form-control" value={rolSeleccionado} onChange={handleRolChange}>
+                      <select
+                        id="rol"
+                        className="form-control"
+                        value={rolSeleccionado}
+                        onChange={handleRolChange}
+                      >
                         <option value="Usuario">Usuario</option>
                         <option value="Productor de Eventos">Productor de Eventos</option>
                         <option value="Encargado Puesto de Comida">Encargado Puesto de Comida</option>
-                        <option value="Repartidor" disabled>Repartidor</option>
+                        <option value="Repartidor" disabled>
+                          Repartidor
+                        </option>
                       </select>
                     </div>
                     <div className="mb-2">
-                    <label className="mb-2 text-dark" htmlFor="username">
-                      Nombre de Usuario
-                    </label>
-                    <input
-                      type="text"
-                      id="username"
-                      className="form-control"
-                      value={username}
-                      onChange={handleUsernameChange}
-                      readOnly={!editMode}
-                    />
-                  </div>
+                      <label className="mb-2 text-dark" htmlFor="username">
+                        Nombre de Usuario
+                      </label>
+                      <input
+                        type="text"
+                        id="username"
+                        className="form-control"
+                        value={username}
+                        onChange={handleUsernameChange}
+                        readOnly={!editMode}
+                        disabled={isDisabled}
+                      />
+                    </div>
                     <div className="col-md-6 mb-2">
                       <label className="mb-2 text-dark" htmlFor="nombre">
                         Nombre
@@ -173,6 +181,8 @@ const ConsultarUsuario = () => {
                         value={nombre}
                         onChange={handleNombreChange}
                         readOnly={!editMode}
+                        disabled={isDisabled}
+
                       />
                     </div>
                     <div className="col-md-6 mb-2">
@@ -186,24 +196,26 @@ const ConsultarUsuario = () => {
                         value={apellido}
                         onChange={handleApellidoChange}
                         readOnly={!editMode}
+                        disabled={isDisabled}
+
                       />
                     </div>
                   </div>
-
                   <div className="mb-2">
                     <label className="mb-2 text-dark" htmlFor="fechaNacimiento">
                       Fecha de Nacimiento
                     </label>
                     <input
-                      type="date"
+                      type="text"
                       id="fechaNacimiento"
                       className="form-control"
                       value={fechaNacimiento}
                       onChange={handleFechaNacimientoChange}
                       readOnly={!editMode}
+                      disabled={isDisabled}
+
                     />
                   </div>
-
                   <div className="mb-2">
                     <label className="mb-2 text-dark" htmlFor="dni">
                       DNI
@@ -215,9 +227,10 @@ const ConsultarUsuario = () => {
                       value={dni}
                       onChange={handleDniChange}
                       readOnly={!editMode}
+                      disabled={isDisabled}
+
                     />
                   </div>
-
                   <div className="mb-2">
                     <label className="mb-2 text-dark" htmlFor="localidad">
                       Localidad
@@ -229,9 +242,10 @@ const ConsultarUsuario = () => {
                       value={localidad}
                       onChange={handleLocalidadChange}
                       readOnly={!editMode}
+                      disabled={isDisabled}
+
                     />
                   </div>
-
                   <div className="mb-2">
                     <label className="mb-2 text-dark" htmlFor="telefono">
                       Teléfono
@@ -243,27 +257,15 @@ const ConsultarUsuario = () => {
                       value={telefono}
                       onChange={handleTelefonoChange}
                       readOnly={!editMode}
-                    />
-                  </div>
+                      disabled={isDisabled}
 
-                  <div className="mb-3">
-                    <label className="mb-2 text-dark" htmlFor="documentos">
-                      Documentos
-                    </label>
-                    <input
-                      type="file"
-                      id="documentos"
-                      className="form-control"
-                      onChange={handleDocumentoChange}
-                      multiple
-                      required
                     />
                   </div>
 
                   <div className="d-grid">
                     {!editMode && (
                       <>
-                        <button type="button" className="btn btn-primary" onClick={handleEditModeToggle} >
+                        <button type="button" className="btn btn-primary" onClick={handleEditModeToggle}>
                           Editar
                         </button>
                         <button type="button" className="btn btn-danger deshabilitar">
@@ -272,12 +274,11 @@ const ConsultarUsuario = () => {
                       </>
                     )}
                     {editMode && (
-                      <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                      <button type="submit" className="btn btn-primary" onClick={handleEditModeToggle} style={{ width: '100%' }}>
                         Guardar Cambios
                       </button>
                     )}
                   </div>
-
                 </form>
               </div>
             </div>

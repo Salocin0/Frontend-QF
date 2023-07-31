@@ -21,6 +21,8 @@ const ConsultarUsuarioPE = () => {
   const [telefono, setTelefono] = useState('');
   const [documentos, setDocumentos] = useState([]);
   const [editMode, setEditMode] = useState(false);
+  const [rolSeleccionado, setRolSeleccionado] = useState('Productor de Eventos');
+
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -88,6 +90,28 @@ const ConsultarUsuarioPE = () => {
   const handleDelete = () => {
     deshabilitarUsuario();
   };
+
+  const handleRolChange = (e) => {
+    setRolSeleccionado(e.target.value);
+
+    switch (e.target.value) {
+      case 'Usuario':
+        window.location.href = '/consultar-usuario';
+        break;
+      case 'Productor de Eventos':
+        window.location.href = '/consultar-usuarioPE';
+        break;
+      case 'Encargado Puesto de Comida':
+        window.location.href = '/consultar-usuarioEPC';
+        break;
+      case 'Repartidor':
+        window.location.href = '/ruta-repartidor';
+        break;
+      default:
+        break;
+    }
+  };
+
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
@@ -192,6 +216,24 @@ const ConsultarUsuarioPE = () => {
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">Tu Perfil - Productor de Eventos</h1>
                 <form onSubmit={handleSaveChanges} className="needs-validation">
                   <div className="row">
+                  <div className="mb-2">
+                      <label className="mb-2 text-dark" htmlFor="rol">
+                        Rol
+                      </label>
+                      <select
+                        id="rol"
+                        className="form-control"
+                        value={rolSeleccionado}
+                        onChange={handleRolChange}
+                      >
+                        <option value="Productor de Eventos">Productor de Eventos</option>
+                        <option value="Usuario">Usuario</option>
+                        <option value="Encargado Puesto de Comida">Encargado Puesto de Comida</option>
+                        <option value="Repartidor" disabled>
+                          Repartidor
+                        </option>
+                      </select>
+                    </div>
                     <div className="col-md-6 mb-2">
                       <label className="mb-2 text-dark" htmlFor="nombre">
                         Nombre

@@ -16,6 +16,9 @@ const RegistroUsuario = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -55,6 +58,14 @@ const RegistroUsuario = () => {
     setPassword(e.target.value);
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleShowConfirmPassword = () => {
+    setShowConfirmPassword(!showConfirmPassword);
+  };
+
   const handleConfirmPasswordChange = (e) => {
     setConfirmPassword(e.target.value);
   };
@@ -67,17 +78,22 @@ const RegistroUsuario = () => {
     const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
 
     if (edad < 18) {
-      alert('Debes tener al menos 18 años para registrarte.');
+      toast.error('Debes tener al menos 18 años para registrarte.');
+      return;
+    }
+
+    if (password != confirmPassword){
+      toast.error('Las contraseñas no coinciden');
       return;
     }
 
     if (!password.trim()) {
-      alert('La contraseña no puede estar vacía.');
+      toast.error('La contraseña no puede estar vacía.');
       return;
     }
 
     if (password.length < 8) {
-      alert('La contraseña debe tener al menos 8 caracteres.');
+      toast.error('La contraseña debe tener al menos 8 caracteres.');
       return;
     }
 
@@ -112,8 +128,10 @@ const RegistroUsuario = () => {
           setTimeout(() => {
             navigate(`/`);
           }, 1500);
-        } else if (data.code === 400) {
-          toast.error("Error al registrar el usuario");
+        } else if (data.code === 300) {
+          toast.error("Error el usuario ya existe");
+        } else {
+          toast.error("Error al registrar")
         }
       })
       .catch(error => {
@@ -249,28 +267,38 @@ const RegistroUsuario = () => {
                 <label className="mb-2 text-black" htmlFor="password">
                   Contraseña
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  className="form-control"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  required
-                />
+                <div className="input-group">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    className="form-control"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                  <button type="button" className="btn btn-primary" onClick={toggleShowPassword}>
+                    {showPassword ? "Ocultar" : "Mostrar"}
+                  </button>
+                </div>
               </div>
 
               <div className="mb-3">
                 <label className="mb-2 text-black" htmlFor="confirmPassword">
                   Confirmar Contraseña
                 </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  className="form-control"
-                  value={confirmPassword}
-                  onChange={handleConfirmPasswordChange}
-                  required
-                />
+                <div className="input-group">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="confirmPassword"
+                    className="form-control"
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    required
+                  />
+                  <button type="button" className="btn btn-primary" onClick={toggleShowConfirmPassword}>
+                    {showConfirmPassword ? "Ocultar" : "Mostrar"}
+                  </button>
+                </div>
               </div>
 
               <div className="d-grid">
