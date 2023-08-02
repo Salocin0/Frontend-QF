@@ -131,13 +131,6 @@ const ConsultarUsuarioPE = () => {
         const data = await response.json();
         console.log(data)
         if (data.code === 200) {
-          setApellido(user.apellido);
-          setNombre(user.nombre);
-          setDni(user.dni);
-          setCuit(nuevoProductor.cuit);
-          setRazonSocial(nuevoProductor.razonSocial);
-          setTelefono(user.telefono);
-          setDocumentos(nuevoProductor.documento);
           toast.success('Datos cargados correctamente');
         } else if (data.codigo === 400) {
           toast.error('Error al cargar los datos');
@@ -152,21 +145,21 @@ const ConsultarUsuarioPE = () => {
 
   const buscarDatosProductor = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/consumidor/user/${user.consumidoreId}`, {
+      const response = await fetch(`http://127.0.0.1:8000/consumidor/${user.consumidoreId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
 
       if (response.ok) {
         const consumidor = await response.json();
-        setProductor(consumidor.productor)
+        setProductor(consumidor.data.Productore)
         setApellido(consumidor.data.apellido);
         setNombre(consumidor.data.nombre);
         setDni(consumidor.data.dni);
         setTelefono(consumidor.data.telefono);
-        setCuit(productor.cuit);
-        setRazonSocial(productor.razonSocial);
-        setDocumentos(productor.documento);
+        setCuit(consumidor.data.Productore.cuit);
+        setRazonSocial(consumidor.data.Productore.razonSocial);
+        setDocumentos(consumidor.data.Productore.documento);
         if (consumidor.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (consumidor.codigo === 400) {
@@ -281,7 +274,7 @@ const ConsultarUsuarioPE = () => {
                       type="text"
                       id="razonSocial"
                       className="form-control"
-                      value={dni}
+                      value={razonSocial}
                       onChange={handleRazonSocialChange}
                       readOnly={!editMode}
                       disabled={!editMode}

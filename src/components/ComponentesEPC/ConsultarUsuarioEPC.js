@@ -127,8 +127,7 @@ const ConsultarUsuarioEPC = () => {
     try {
       const nuevoEncargado={
         cuit:cuit,
-        razonSocial:razonSocial,
-        fechaBromatologica:encargado.fechaBromatologica
+        razonSocial:razonSocial
       }
 
       const response = await fetch(`http://127.0.0.1:8000/encargado/${encargado.id}`, {
@@ -141,14 +140,6 @@ const ConsultarUsuarioEPC = () => {
         const data = await response.json();
         console.log(data)
         if (data.code === 200) {
-          setApellido(user.apellido);
-          setNombre(user.nombre);
-          setDni(user.dni);
-          setCuit(nuevoEncargado.cuit);
-          setRazonSocial(nuevoEncargado.razonSocial);
-          setLocalidad(user.localidad);
-          setTelefono(user.telefono);
-          setDocumentos(nuevoEncargado.documento);
           toast.success('Datos cargados correctamente');
         } else if (data.codigo === 400) {
           toast.error('Error al cargar los datos');
@@ -169,32 +160,16 @@ const ConsultarUsuarioEPC = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setEncargado(data.data)
-        setCuit(data.data.cuit);
-        setRazonSocial(data.data.razonSocial);
-        setDocumentos(data.data.documento);
-        if (data.codigo === 200) {
-          toast.success('Datos cargados correctamente');
-        } else if (data.codigo === 400) {
-          toast.error('Error al cargar los datos');
-        }
-      } else {
-        throw new Error('Error en la respuesta HTTP');
-      }
-
-      if (response.ok) {
         const consumidor = await response.json();
+        setEncargado(consumidor.data.encargadosPuesto)
         setApellido(consumidor.data.apellido);
         setNombre(consumidor.data.nombre);
         setDni(consumidor.data.dni);
-        setLocalidad(consumidor.data.localidad);
         setTelefono(consumidor.data.telefono);
-
-        setEncargado(consumidor.encargado.data)
-        setCuit(encargado.cuit);
-        setRazonSocial(encargado.razonSocial);
-        setDocumentos(encargado.documento);
+        setCuit(consumidor.data.encargadosPuesto.cuit);
+        setRazonSocial(consumidor.data.encargadosPuesto.razonSocial);
+        setLocalidad(consumidor.data.localidad)
+        setDocumentos(consumidor.data.encargadosPuesto.documento);
         if (consumidor.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (consumidor.codigo === 400) {

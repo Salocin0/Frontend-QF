@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../ComponentesGenerales/UserContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
 
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
@@ -11,11 +10,10 @@ import Sidebar from '../ComponentesGenerales/Sidebar';
 const AdquirirNuevoRolPE = () => {
   const navigate = useNavigate();
   const { user} = useContext(UserContext);
-
+  const [consumidor, setConsumidor] = useState("");
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
   const [dni, setDni] = useState('');
-
   const [cuit, setCuit] = useState('');
   const [telefono, setTelefono] = useState('');
   const [razonSocial, setRazonSocial] = useState('');
@@ -39,13 +37,15 @@ const AdquirirNuevoRolPE = () => {
       );
 
       if (responseconsumidor.ok) {
-        const consumidor = await responseconsumidor.json();
-        setApellido(consumidor.data.apellido);
-        setNombre(consumidor.data.nombre);
-        setDni(consumidor.data.dni);
-        if (consumidor.codigo === 200) {
+        const data = await responseconsumidor.json();
+        console.log(data.data)
+        setConsumidor(data.data)
+        setApellido(data.data.apellido);
+        setNombre(data.data.nombre);
+        setDni(data.data.dni);
+        if (data.data.codigo === 200) {
           toast.success("Datos cargados correctamente");
-        } else if (consumidor.codigo === 400) {
+        } else if (data.data.codigo === 400) {
           toast.error("Error al cargar los datos");
         }
       } else {
@@ -86,13 +86,11 @@ const AdquirirNuevoRolPE = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const productor = {
         productor: {
           cuit: cuit,
           razonSocial: razonSocial,
-          id: user.id,
         },
       };
   
@@ -101,17 +99,33 @@ const AdquirirNuevoRolPE = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(productor),
       });
-  
+      console.log("llego")
+
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        const consumidornuevo=consumidor;
+        console.log(consumidornuevo)
+        consumidornuevo.productorId=data.data.id;
+        setConsumidor(consumidornuevo)
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+
+      const responseGuardar = await fetch(`http://localhost:8000/consumidor/${consumidor.id}`, {
+        method: "PUT",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({consumidor}),
+      });
+
+      if (responseGuardar.ok) {
+        const data = await responseGuardar.json();
         if (data.code === 200) {
           toast.success("Nuevo rol adquirido correctamente");
           setTimeout(() => {
             navigate(`/home/inicio`);
           }, 1500);
         } else if (data.code === 400) {
-          toast.error("Error al adquirir el nuevo rol: razon usada");
+          toast.error("Error al adquirir el nuevo rol");
         }
       } else {
         throw new Error("Error en la respuesta HTTP");

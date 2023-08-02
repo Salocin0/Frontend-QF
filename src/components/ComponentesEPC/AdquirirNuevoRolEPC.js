@@ -58,26 +58,6 @@ const AdquirirNuevoRolEPC = () => {
     e.preventDefault();
   
     try {
-      const responseconsumidor = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidoreId}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      if (responseconsumidor.ok) {
-        const consumidor = await responseconsumidor.json();
-        setConsumidor(consumidor.data)
-        if (consumidor.codigo === 200) {
-          toast.success("Datos cargados correctamente");
-        } else if (consumidor.codigo === 400) {
-          toast.error("Error al cargar los datos");
-        }
-      } else {
-        throw new Error("Error en la respuesta HTTP");
-      }
-
       const encargado = {
         encargado: {
           cuit: cuit,
@@ -93,22 +73,13 @@ const AdquirirNuevoRolEPC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        //console.log(consumidor)
         const consumidornuevo=consumidor;
         consumidornuevo.encargadoId=data.data.id;
         setConsumidor(consumidornuevo)
-        if (data.code === 200) {
-          toast.success("Nuevo rol adquirido correctamente");
-          /*setTimeout(() => {
-            navigate(`/home/inicio`);
-          }, 1500);*/
-        } else if (data.code === 400) {
-          toast.error("Error al adquirir el nuevo rol: razon usada");
-        }
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
-      console.log(consumidor)
+
       const responseGuardar = await fetch(`http://localhost:8000/consumidor/${consumidor.id}`, {
         method: "PUT",
         headers: { 'Content-Type': 'application/json' },
@@ -117,15 +88,13 @@ const AdquirirNuevoRolEPC = () => {
 
       if (responseGuardar.ok) {
         const data = await responseGuardar.json();
-        
-        //
         if (data.code === 200) {
           toast.success("Nuevo rol adquirido correctamente");
-          /*setTimeout(() => {
+          setTimeout(() => {
             navigate(`/home/inicio`);
-          }, 1500);*/
+          }, 1500);
         } else if (data.code === 400) {
-          toast.error("Error al adquirir el nuevo rol: razon usada");
+          toast.error("Error al adquirir el nuevo rol");
         }
       } else {
         throw new Error("Error en la respuesta HTTP");
@@ -135,12 +104,16 @@ const AdquirirNuevoRolEPC = () => {
     }
   };
   
-  useEffect(async() => {
-    if (await user) {
-      await cargarDatos(user);
+  useEffect(() => {
+    async function fetchData() {
+      if (user) {
+        await cargarDatos(user);
+      }
     }
+  
+    fetchData();
   }, [user]);
-
+  
   const cargarDatos = async (user) => {
     try {
       console.log(user);
