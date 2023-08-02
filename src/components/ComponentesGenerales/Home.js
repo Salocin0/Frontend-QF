@@ -8,7 +8,6 @@ import Inicio from '../ComponentesConsumidor/Inicio';
 import Notificaciones from '../ComponentesConsumidor/Notificaciones';
 
 const Home = () => {
-  //const { id } = useParams();
   const [selectedItem, setSelectedItem] = useState("Perfil");
 
   const handleNavbarItemClick = (item) => {

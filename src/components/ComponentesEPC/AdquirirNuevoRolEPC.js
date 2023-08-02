@@ -3,17 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../ComponentesGenerales/UserContext';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { toast } from "react-toastify";
-import { useLocation } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./AdquirirNuevoRolEPC.css";
 
 const AdquirirNuevoRolEPC = () => {
   const navigate = useNavigate();
-  const { user, updateUser } = useContext(UserContext);
-  const location = useLocation();
-  const id = location.state && location.state.value;
+  const { user } = useContext(UserContext);
 
+  const [consumidor, setConsumidor] = useState("");
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [dni, setDni] = useState("");
@@ -60,12 +58,30 @@ const AdquirirNuevoRolEPC = () => {
     e.preventDefault();
   
     try {
+      const responseconsumidor = await fetch(
+        `http://localhost:8000/consumidor/${user.consumidoreId}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (responseconsumidor.ok) {
+        const consumidor = await responseconsumidor.json();
+        setConsumidor(consumidor.data)
+        if (consumidor.codigo === 200) {
+          toast.success("Datos cargados correctamente");
+        } else if (consumidor.codigo === 400) {
+          toast.error("Error al cargar los datos");
+        }
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+
       const encargado = {
         encargado: {
           cuit: cuit,
-          razonSocial: razonSocial,
-          fechaBromatologica: fechaBromatologica,
-          id: user.id,
+          razonSocial: razonSocial
         },
       };
   
@@ -74,15 +90,40 @@ const AdquirirNuevoRolEPC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(encargado),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        //console.log(consumidor)
+        const consumidornuevo=consumidor;
+        consumidornuevo.encargadoId=data.data.id;
+        setConsumidor(consumidornuevo)
         if (data.code === 200) {
           toast.success("Nuevo rol adquirido correctamente");
-          setTimeout(() => {
+          /*setTimeout(() => {
             navigate(`/home/inicio`);
-          }, 1500);
+          }, 1500);*/
+        } else if (data.code === 400) {
+          toast.error("Error al adquirir el nuevo rol: razon usada");
+        }
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+      console.log(consumidor)
+      const responseGuardar = await fetch(`http://localhost:8000/consumidor/${consumidor.id}`, {
+        method: "PUT",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({consumidor}),
+      });
+
+      if (responseGuardar.ok) {
+        const data = await responseGuardar.json();
+        
+        //
+        if (data.code === 200) {
+          toast.success("Nuevo rol adquirido correctamente");
+          /*setTimeout(() => {
+            navigate(`/home/inicio`);
+          }, 1500);*/
         } else if (data.code === 400) {
           toast.error("Error al adquirir el nuevo rol: razon usada");
         }
@@ -94,10 +135,9 @@ const AdquirirNuevoRolEPC = () => {
     }
   };
   
-
-  useEffect(() => {
-    if (user) {
-      cargarDatos(user);
+  useEffect(async() => {
+    if (await user) {
+      await cargarDatos(user);
     }
   }, [user]);
 
@@ -105,7 +145,7 @@ const AdquirirNuevoRolEPC = () => {
     try {
       console.log(user);
       const responseconsumidor = await fetch(
-        `http://localhost:8000/consumidor/user/${user.id}`,
+        `http://localhost:8000/consumidor/${user.consumidoreId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -113,13 +153,15 @@ const AdquirirNuevoRolEPC = () => {
       );
 
       if (responseconsumidor.ok) {
-        const consumidor = await responseconsumidor.json();
-        setApellido(consumidor.data.apellido);
-        setNombre(consumidor.data.nombre);
-        setDni(consumidor.data.dni);
-        if (consumidor.codigo === 200) {
+        const data = await responseconsumidor.json();
+        console.log(data.data)
+        setConsumidor(data.data)
+        setApellido(data.data.apellido);
+        setNombre(data.data.nombre);
+        setDni(data.data.dni);
+        if (data.data.codigo === 200) {
           toast.success("Datos cargados correctamente");
-        } else if (consumidor.codigo === 400) {
+        } else if (data.data.codigo === 400) {
           toast.error("Error al cargar los datos");
         }
       } else {

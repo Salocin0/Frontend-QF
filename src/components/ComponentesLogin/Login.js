@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { UserContext } from '../ComponentesGenerales/UserContext';
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { user, updateUser } = useContext(UserContext);
+  const { updateUser } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -124,7 +124,6 @@ const Login = ({ onLogin }) => {
         </div>
       </div>
       <Footer />
-
     </section>
   );
 };

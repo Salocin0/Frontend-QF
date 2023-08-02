@@ -3,14 +3,11 @@ import { UserContext } from '../ComponentesGenerales/UserContext';
 import '../ComponentesConsumidor/ConsultarUsuario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
 
 const ConsultarUsuarioPE = () => {
-  const { user, updateUser } = useContext(UserContext);
-  const location = useLocation();
-  const id = location.state && location.state.value;
+  const { user } = useContext(UserContext);
 
   const [productor, setProductor] = useState('');
   const [nombre, setNombre] = useState('');
@@ -22,7 +19,6 @@ const ConsultarUsuarioPE = () => {
   const [documentos, setDocumentos] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [rolSeleccionado, setRolSeleccionado] = useState('Productor de Eventos');
-
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -112,7 +108,6 @@ const ConsultarUsuarioPE = () => {
     }
   };
 
-
   const handleSaveChanges = (e) => {
     e.preventDefault();
     updateProductor()
@@ -157,37 +152,21 @@ const ConsultarUsuarioPE = () => {
 
   const buscarDatosProductor = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/productor/user/${user.id}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      const response2 = await fetch(`http://127.0.0.1:8000/consumidor/user/${user.id}`, {
+      const response = await fetch(`http://127.0.0.1:8000/consumidor/user/${user.consumidoreId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setProductor(data.data)
-        setCuit(data.data.cuit);
-        setRazonSocial(data.data.razonSocial);
-        setDocumentos(data.data.documento);
-        if (data.codigo === 200) {
-          toast.success('Datos cargados correctamente');
-        } else if (data.codigo === 400) {
-          toast.error('Error al cargar los datos');
-        }
-      } else {
-        throw new Error('Error en la respuesta HTTP');
-      }
-
-      if (response2.ok) {
-        const consumidor = await response2.json();
+        const consumidor = await response.json();
+        setProductor(consumidor.productor)
         setApellido(consumidor.data.apellido);
         setNombre(consumidor.data.nombre);
         setDni(consumidor.data.dni);
         setTelefono(consumidor.data.telefono);
+        setCuit(productor.cuit);
+        setRazonSocial(productor.razonSocial);
+        setDocumentos(productor.documento);
         if (consumidor.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (consumidor.codigo === 400) {

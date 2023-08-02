@@ -24,7 +24,6 @@ const ConsultarUsuarioEPC = () => {
   const [editMode, setEditMode] = useState(false);
   const [rolSeleccionado, setRolSeleccionado] = useState('Encargado Puesto de Comida');
 
-
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
@@ -124,7 +123,6 @@ const ConsultarUsuarioEPC = () => {
     }
   };
 
-
   const updateEncargado = async () => {
     try {
       const nuevoEncargado={
@@ -165,12 +163,7 @@ const ConsultarUsuarioEPC = () => {
 
   const buscarDatosEncargado = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/encargado/user/${user.id}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      const response2 = await fetch(`http://127.0.0.1:8000/consumidor/user/${user.id}`, {
+      const response = await fetch(`http://127.0.0.1:8000/consumidor/${user.consumidoreId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -190,13 +183,18 @@ const ConsultarUsuarioEPC = () => {
         throw new Error('Error en la respuesta HTTP');
       }
 
-      if (response2.ok) {
-        const consumidor = await response2.json();
+      if (response.ok) {
+        const consumidor = await response.json();
         setApellido(consumidor.data.apellido);
         setNombre(consumidor.data.nombre);
         setDni(consumidor.data.dni);
         setLocalidad(consumidor.data.localidad);
         setTelefono(consumidor.data.telefono);
+
+        setEncargado(consumidor.encargado.data)
+        setCuit(encargado.cuit);
+        setRazonSocial(encargado.razonSocial);
+        setDocumentos(encargado.documento);
         if (consumidor.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (consumidor.codigo === 400) {

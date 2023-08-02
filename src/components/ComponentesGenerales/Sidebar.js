@@ -2,7 +2,6 @@ import React from 'react';
 import './Sidebar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
-
 import Logo from '../QuickFoodLogo.png';
 
 const Sidebar = () => {
@@ -46,10 +45,7 @@ const Sidebar = () => {
             </ul>
           </li>
         </ul>
-        
       </div>
-
-
     </>
   );
 }

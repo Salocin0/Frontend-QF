@@ -1,24 +1,23 @@
-import React, { useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import './RegistrarUsuario.css';
-import Footer from '../ComponentesGenerales/Footer';
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "./RegistrarUsuario.css";
+import Footer from "../ComponentesGenerales/Footer";
 
 const RegistroUsuario = () => {
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
-  const [dni, setDni] = useState('');
-  const [localidad, setLocalidad] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [dni, setDni] = useState("");
+  const [localidad, setLocalidad] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
 
   const navigate = useNavigate();
 
@@ -78,22 +77,22 @@ const RegistroUsuario = () => {
     const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
 
     if (edad < 18) {
-      toast.error('Debes tener al menos 18 años para registrarte.');
+      toast.error("Debes tener al menos 18 años para registrarte.");
       return;
     }
 
-    if (password != confirmPassword){
-      toast.error('Las contraseñas no coinciden');
+    if (password != confirmPassword) {
+      toast.error("Las contraseñas no coinciden");
       return;
     }
 
     if (!password.trim()) {
-      toast.error('La contraseña no puede estar vacía.');
+      toast.error("La contraseña no puede estar vacía.");
       return;
     }
 
     if (password.length < 8) {
-      toast.error('La contraseña debe tener al menos 8 caracteres.');
+      toast.error("La contraseña debe tener al menos 8 caracteres.");
       return;
     }
 
@@ -102,7 +101,7 @@ const RegistroUsuario = () => {
       contraseña: password,
       fechaAlta: fecha,
       nombreDeUsuario: username,
-      correoElectronico: email
+      correoElectronico: email,
     };
     const consumidor = {
       nombre: nombre,
@@ -111,18 +110,19 @@ const RegistroUsuario = () => {
       dni: dni,
       localidad: localidad,
       telefono: telefono,
-      usuario: usuario
+      usuario: usuario,
     };
     const json_consumidor = {
-      consumidor: consumidor
-    }
+      consumidor: consumidor,
+    };
 
-    fetch('http://127.0.0.1:8000/user/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', },
-      body: JSON.stringify(json_consumidor)
+    fetch("http://127.0.0.1:8000/user/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(json_consumidor),
     })
-      .then(response => response.json()).then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.code === 200) {
           toast.success("Usuario registrado correctamente");
           setTimeout(() => {
@@ -131,21 +131,22 @@ const RegistroUsuario = () => {
         } else if (data.code === 300) {
           toast.error("Error el usuario ya existe");
         } else {
-          toast.error("Error al registrar")
+          toast.error("Error al registrar");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   };
-
 
   return (
     <>
       <div className="containerRegistrar">
         <div className="cardRegistrar shadow-lg">
           <div className="cardRegistrar-body p-2 formularioRegistrar">
-            <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">Registrar Usuario</h1>
+            <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">
+              Registrar Usuario
+            </h1>
             <form onSubmit={handleSubmit} className="needs-validation">
               <div className="row">
                 <div className="col-md-6 mb-3">
@@ -199,11 +200,11 @@ const RegistroUsuario = () => {
                   id="dni"
                   className="form-control"
                   min="0"
-                max="99999999"
-                value={dni}
-                onChange={handleDniChange}
-                required
-  />
+                  max="99999999"
+                  value={dni}
+                  onChange={handleDniChange}
+                  required
+                />
               </div>
 
               <div className="mb-3">
@@ -233,7 +234,6 @@ const RegistroUsuario = () => {
                   required
                 />
               </div>
-
 
               <div className="mb-3">
                 <label className="mb-2 text-black" htmlFor="username">
@@ -276,7 +276,11 @@ const RegistroUsuario = () => {
                     onChange={handlePasswordChange}
                     required
                   />
-                  <button type="button" className="btn btn-primary" onClick={toggleShowPassword}>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={toggleShowPassword}
+                  >
                     {showPassword ? "Ocultar" : "Mostrar"}
                   </button>
                 </div>
@@ -295,20 +299,24 @@ const RegistroUsuario = () => {
                     onChange={handleConfirmPasswordChange}
                     required
                   />
-                  <button type="button" className="btn btn-primary" onClick={toggleShowConfirmPassword}>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={toggleShowConfirmPassword}
+                  >
                     {showConfirmPassword ? "Ocultar" : "Mostrar"}
                   </button>
                 </div>
               </div>
 
               <div className="d-grid">
-                <button type="submit" className="btn btn-success">Registrar</button>
+                <button type="submit" className="btn btn-success">
+                  Registrar
+                </button>
               </div>
             </form>
           </div>
-
         </div>
-
       </div>
       <Footer />
     </>

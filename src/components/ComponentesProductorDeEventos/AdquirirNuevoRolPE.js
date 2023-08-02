@@ -10,9 +10,7 @@ import Sidebar from '../ComponentesGenerales/Sidebar';
 
 const AdquirirNuevoRolPE = () => {
   const navigate = useNavigate();
-  const { user, updateUser } = useContext(UserContext);
-  const location = useLocation();
-  const id = location.state && location.state.value;
+  const { user} = useContext(UserContext);
 
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
@@ -21,7 +19,6 @@ const AdquirirNuevoRolPE = () => {
   const [cuit, setCuit] = useState('');
   const [telefono, setTelefono] = useState('');
   const [razonSocial, setRazonSocial] = useState('');
-
   const [documento, setDocumento] = useState('');
   
   useEffect(() => {
@@ -34,7 +31,7 @@ const AdquirirNuevoRolPE = () => {
     try {
       console.log(user);
       const responseconsumidor = await fetch(
-        `http://localhost:8000/consumidor/user/${user.id}`,
+        `http://localhost:8000/consumidor/${user.consumidoreId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

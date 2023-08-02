@@ -21,11 +21,8 @@ const ConsultarUsuario = () => {
   const [username, setUsername] = useState('');
   const [isDisabled, setIsDisabled] = useState(true);
 
-
   const [editMode, setEditMode] = useState(false);
   const [rolSeleccionado, setRolSeleccionado] = useState('Usuario');
-
-
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -75,7 +72,7 @@ const ConsultarUsuario = () => {
     setUsername(user.usuario);
 
     try {
-      const response1 = await fetch(`http://localhost:8000/consumidor/user/${user.id}`, {
+      const response1 = await fetch(`http://localhost:8000/consumidor/${user.consumidoreId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
