@@ -1,4 +1,4 @@
-/*
+
 * {
     margin: 0;
     padding: 0;
@@ -16,10 +16,18 @@
 
   }
 
+  .background{
+    
+    background-color: white;
+  }
 
+  .imgback{
+    background-image: url("./../Inicio-12.png");
+    padding-top: 10px;
+  }
 
   .formularioAdquirirNuevoRolPE {
-    background-image: linear-gradient(to right,rgba(255, 0, 0, 0.313) , rgb(214, 24, 24));
+
     margin-bottom: 22px;
 
   }

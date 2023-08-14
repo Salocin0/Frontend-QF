@@ -191,10 +191,10 @@ const ConsultarUsuarioEPC = () => {
     <>
       <div className="d-flex">
         <Sidebar />
-        <div className="flex-grow-1">
-          <section className="align-items-center justify-content-center">
-            <div className="card shadow-lg">
-              <div className="card-body p-3 formulario">
+        <div className="flex-grow-1 background">
+          <section className="align-items-center justify-content-center col-6 offset-3 form ">
+            <div className="card shadow-lg  ">
+              <div className="card-body p-3 formulario ">
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">Tu Perfil - Productor de Eventos</h1>
                 <form onSubmit={handleSaveChanges} className="needs-validation">
                   <div className="row">

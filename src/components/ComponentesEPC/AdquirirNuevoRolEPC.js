@@ -151,8 +151,8 @@ const AdquirirNuevoRolEPC = () => {
         <Sidebar />
         <div className="flex-grow-1">
           <section className="align-items-center justify-content-center">
-            <div className="card shadow-lg">
-              <div className="card-body p-3 formularioAdquirirNuevoRolEPC">
+            <div className="card shadow-lg imgback">
+              <div className="card-body p-3 formularioAdquirirNuevoRolEPC col-6 offset-3">
                 <h1 className="fs-4 card-title fw-bold mb-2 text-dark">
                   Adquirir Nuevo Rol - Encargado de Puesto de Comida
                 </h1>

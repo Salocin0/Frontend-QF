@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { UserContext } from '../ComponentesGenerales/UserContext';
+import "./AdquirirNuevoRolPE.css";
 
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
@@ -139,14 +140,14 @@ const AdquirirNuevoRolPE = () => {
     <>
       <div className="d-flex">
         <Sidebar />
-        <div className="flex-grow-1">
-          <section className="align-items-center justify-content-center">
-            <div className="card shadow-lg bg-dark">
+        <div className="flex-grow-1 imgback">
+          <section className="align-items-center justify-content-center col-6 offset-3 form">
+            <div className="card shadow-lg">
               <div className="card-body p-3">
-                <h1 className="fs-4 card-title fw-bold mb-2 text-white">Adquirir Nuevo Rol - Productor de Eventos</h1>
+                <h1 className="fs-4 card-title fw-bold mb-2">Adquirir Nuevo Rol - Productor de Eventos</h1>
                 <form onSubmit={handleSubmit} className="needs-validation">
                   <div className="mb-2">
-                    <label className="form-label text-white" htmlFor="nombre">
+                    <label className="form-label" htmlFor="nombre">
                       Nombre
                     </label>
                     <input
