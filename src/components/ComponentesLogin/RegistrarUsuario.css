@@ -1,25 +1,41 @@
 * {
     margin: 0;
     padding: 0;
+    
   }
   
-
+  .fondo{
+    background: url('./../QuickFoodFondo.png');
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+  }
 
   .containerRegistrar {
     height: 100%;
-    background-color: white;
-    overflow-y: auto;
-    overflow-x: hidden;
-    border-radius: 10px;
-
+    width: 100%;
+    flex: 1;
   }
 
+  .footer {
+    z-index:400;
+  }
 
+  .cardRegistrar{
+    margin-top: 2%;
+  }
+
+  .needs-validation{
+    padding: 20px;
+  }
 
   .formularioRegistrar {
-    background-image: linear-gradient(to right,rgba(255, 0, 0, 0.313) , rgb(214, 24, 24));
-    margin-bottom: 22px;
-
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 25px;
   }
 
 
