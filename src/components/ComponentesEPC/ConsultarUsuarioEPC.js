@@ -161,15 +161,15 @@ const ConsultarUsuarioEPC = () => {
 
       if (response.ok) {
         const consumidor = await response.json();
-        setEncargado(consumidor.data.encargadosPuesto)
+        setEncargado(consumidor.data.encargado)
         setApellido(consumidor.data.apellido);
         setNombre(consumidor.data.nombre);
         setDni(consumidor.data.dni);
         setTelefono(consumidor.data.telefono);
-        setCuit(consumidor.data.encargadosPuesto.cuit);
-        setRazonSocial(consumidor.data.encargadosPuesto.razonSocial);
+        setCuit(consumidor.data.encargado.cuit);
+        setRazonSocial(consumidor.data.encargado.razonSocial);
         setLocalidad(consumidor.data.localidad)
-        setDocumentos(consumidor.data.encargadosPuesto.documento);
+        setDocumentos(consumidor.data.encargado.documento);
         if (consumidor.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (consumidor.codigo === 400) {

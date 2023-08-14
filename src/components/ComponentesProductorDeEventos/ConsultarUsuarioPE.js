@@ -152,14 +152,14 @@ const ConsultarUsuarioPE = () => {
 
       if (response.ok) {
         const consumidor = await response.json();
-        setProductor(consumidor.data.Productore)
+        setProductor(consumidor.data.Productor)
         setApellido(consumidor.data.apellido);
         setNombre(consumidor.data.nombre);
         setDni(consumidor.data.dni);
         setTelefono(consumidor.data.telefono);
-        setCuit(consumidor.data.Productore.cuit);
-        setRazonSocial(consumidor.data.Productore.razonSocial);
-        setDocumentos(consumidor.data.Productore.documento);
+        setCuit(consumidor.data.Productor.cuit);
+        setRazonSocial(consumidor.data.Productor.razonSocial);
+        setDocumentos(consumidor.data.Productor.documento);
         if (consumidor.codigo === 200) {
           toast.success('Datos cargados correctamente');
         } else if (consumidor.codigo === 400) {
