@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -41,13 +40,13 @@ const RecuperarContraseña = () => {
 
   return (
     <>
-      <section className="vh-100 d-flex align-items-center justify-content-center bg-black">
+    <section className="vh-100 d-flex align-items-center justify-content-center" style={{ background: 'url(QuickFoodFondo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
         <div className="container ">
           <div className="row justify-content-sm-center">
             <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9 border-0">
               <div className="card">
-                <div className="card-top bg-secondary rounded-top">
-                  <h1 className="fs-4 card-title fw-bold text-black text-center mt-3 mb-4 rounded-pill">Recuperar Contraseña</h1>
+                <div className="card-top rounded-top bg-dark">
+                  <h1 className="fs-4 card-title fw-bold text-white text-center mt-3 mb-4 rounded-pill">Recuperar Contraseña</h1>
                 </div>
               </div>
             </div>
@@ -55,17 +54,15 @@ const RecuperarContraseña = () => {
           <div className="row justify-content-center mt-3">
             <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
               <div className="card shadow-lg">
-                <div className="card-body p-4 bg-secondary rounded-lg">
+                <div className="card-body bg-dark p-4 rounded-lg">
                   <form onSubmit={handleSubmit} className="needs-validation">
                     <div className="mb-3">
                       <div className="input-group">
-                        <span className="input-group-text ">
-                        <FontAwesomeIcon icon="fa-solid fa-lock" style={{color: "#cbb315",}} />
-                        </span>
+
                         <input
                           type="email"
                           id="email"
-                          className="form-control rounded-pill input-gris"
+                          className="form-control input-contraseña"
                           value={email}
                           onChange={handleEmailChange}
                           placeholder="Ingresa tu Correo"
