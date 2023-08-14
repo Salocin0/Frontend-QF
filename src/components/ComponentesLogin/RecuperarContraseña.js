@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Footer from '../ComponentesGenerales/Footer';
-import './RecuperarContraseña.css';
+import './RecuperarContraseña.css'; // Add your custom CSS file for additional styling
 
 const RecuperarContraseña = () => {
   const [email, setEmail] = useState('');
@@ -41,45 +41,38 @@ const RecuperarContraseña = () => {
   return (
     <>
     <section className="vh-100 d-flex align-items-center justify-content-center" style={{ background: 'url(QuickFoodFondo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="container ">
+        <div className="container">
           <div className="row justify-content-sm-center">
-            <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9 border-0">
-              <div className="card">
-                <div className="card-top rounded-top bg-dark">
-                  <h1 className="fs-4 card-title fw-bold text-white text-center mt-3 mb-4 rounded-pill">Recuperar Contraseña</h1>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="row justify-content-center mt-3">
             <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
               <div className="card shadow-lg">
-                <div className="card-body bg-dark p-4 rounded-lg">
+                <div className="card-body p-3 text-center">
+                  <h1 className="fs-4 card-title fw-bold mb-1 text-black">Recuperar Contraseña</h1>
                   <form onSubmit={handleSubmit} className="needs-validation">
                     <div className="mb-3">
                       <div className="input-group">
-
+                        <span className="input-group-text bg-white text-dark">
+                          <i className="bi bi-envelope"></i>
+                        </span>
                         <input
                           type="email"
                           id="email"
-                          className="form-control input-contraseña"
+                          className="form-control"
                           value={email}
                           onChange={handleEmailChange}
-                          placeholder="Ingresa tu Correo"
+                          placeholder='Ingrese su Correo'
                           required
                         />
                       </div>
-
+                    </div>
+                    <div className="d-grid">
+                      <button type="submit" className="btn btn-warning">
+                          Enviar Mail de Recuperación
+                      </button>
                     </div>
                   </form>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="row justify-content-center mt-3">
-            <button type="submit" className="btn btn-warning botonRecuperacion">
-              Enviar Correo de Recuperación
-            </button>
           </div>
         </div>
       </section>

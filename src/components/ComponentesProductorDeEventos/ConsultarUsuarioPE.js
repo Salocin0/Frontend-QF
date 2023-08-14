@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from '../ComponentesGenerales/UserContext';
-import '../ComponentesConsumidor/ConsultarUsuario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from 'react-toastify';
+import '../ComponentesConsumidor/ConsultarUsuario.css';
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
+import { UserContext } from '../ComponentesGenerales/UserContext';
 
 const ConsultarUsuarioPE = () => {
   const { user } = useContext(UserContext);
@@ -184,7 +184,7 @@ const ConsultarUsuarioPE = () => {
         <div className="flex-grow-1">
           <section className="align-items-center justify-content-center">
             <div className="card shadow-lg">
-              <div className="card-body p-3 formulario">
+              <div className="card-body p-3" >
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">Tu Perfil - Productor de Eventos</h1>
                 <form onSubmit={handleSaveChanges} className="needs-validation">
                   <div className="row">

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../ComponentesGenerales/UserContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { UserContext } from '../ComponentesGenerales/UserContext';
 
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
@@ -141,12 +141,12 @@ const AdquirirNuevoRolPE = () => {
         <Sidebar />
         <div className="flex-grow-1">
           <section className="align-items-center justify-content-center">
-            <div className="card shadow-lg">
-              <div className="card-body p-3 formulario">
-                <h1 className="fs-4 card-title fw-bold mb-2 text-dark">Adquirir Nuevo Rol - Productor de Eventos</h1>
+            <div className="card shadow-lg bg-dark">
+              <div className="card-body p-3">
+                <h1 className="fs-4 card-title fw-bold mb-2 text-white">Adquirir Nuevo Rol - Productor de Eventos</h1>
                 <form onSubmit={handleSubmit} className="needs-validation">
                   <div className="mb-2">
-                    <label className="mb-2 text-dark" htmlFor="nombre">
+                    <label className="form-label text-white" htmlFor="nombre">
                       Nombre
                     </label>
                     <input
@@ -155,12 +155,12 @@ const AdquirirNuevoRolPE = () => {
                       className="form-control"
                       value={nombre}
                       onChange={handleNombreChange}
-                      disabled // Aquí está el atributo disabled para bloquear el campo
+                      disabled
                     />
                   </div>
 
                   <div className="mb-2">
-                    <label className="mb-2 text-dark" htmlFor="apellido">
+                    <label className="form-label text-dark" htmlFor="apellido">
                       Apellido
                     </label>
                     <input
@@ -169,12 +169,12 @@ const AdquirirNuevoRolPE = () => {
                       className="form-control"
                       value={apellido}
                       onChange={handleApellidoChange}
-                      disabled // Aquí está el atributo disabled para bloquear el campo
+                      disabled
                     />
                   </div>
 
                   <div className="mb-2">
-                    <label className="mb-2 text-dark" htmlFor="dni">
+                    <label className="form-label text-dark" htmlFor="dni">
                       DNI
                     </label>
                     <input
@@ -183,12 +183,12 @@ const AdquirirNuevoRolPE = () => {
                       className="form-control"
                       value={dni}
                       onChange={handleDniChange}
-                      disabled // Aquí está el atributo disabled para bloquear el campo
+                      disabled
                     />
                   </div>
 
                   <div className="mb-2">
-                    <label className="mb-2 text-dark" htmlFor="cuit">
+                    <label className="form-label text-dark" htmlFor="cuit">
                       CUIT
                     </label>
                     <input
@@ -202,7 +202,7 @@ const AdquirirNuevoRolPE = () => {
                   </div>
 
                   <div className="mb-2">
-                    <label className="mb-2 text-dark" htmlFor="razonSocial">
+                    <label className="form-label text-dark" htmlFor="razonSocial">
                       Razon Social
                     </label>
                     <input
@@ -216,7 +216,7 @@ const AdquirirNuevoRolPE = () => {
                   </div>
 
                   <div className="mb-2">
-                    <label className="mb-2 text-dark" htmlFor="telefono">
+                    <label className="form-label text-dark" htmlFor="telefono">
                       Teléfono
                     </label>
                     <input
@@ -230,7 +230,7 @@ const AdquirirNuevoRolPE = () => {
                   </div>
 
                   <div className="mb-2">
-                    <label className="mb-2 text-dark" htmlFor="documentos">
+                    <label className="form-label text-dark" htmlFor="documentos">
                       Documentos
                     </label>
                     <input
