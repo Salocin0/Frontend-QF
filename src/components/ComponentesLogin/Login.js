@@ -37,11 +37,9 @@ const Login = () => {
       .then(data => {
         if (Number(data.code)===200){
           toast.success("Login correcto");
-          setTimeout(() => {
             updateUser(data.data);
             navigate(`/home/${data.data.id}`);
-          }, 1500);
-        }else if(Number(data.code)===1000){
+        }else {
           toast.error("Datos incorrectos");
         }
         

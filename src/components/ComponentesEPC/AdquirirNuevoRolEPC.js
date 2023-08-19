@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../ComponentesGenerales/UserContext';
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
@@ -56,35 +56,38 @@ const AdquirirNuevoRolEPC = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const encargado = {
         encargado: {
           cuit: cuit,
-          razonSocial: razonSocial
+          razonSocial: razonSocial,
         },
       };
-  
+
       const response = await fetch("http://localhost:8000/encargado", {
         method: "POST",
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(encargado),
       });
 
       if (response.ok) {
         const data = await response.json();
-        const consumidornuevo=consumidor;
-        consumidornuevo.encargadoId=data.data.id;
-        setConsumidor(consumidornuevo)
+        const consumidornuevo = consumidor;
+        consumidornuevo.encargadoId = data.data.id;
+        setConsumidor(consumidornuevo);
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
 
-      const responseGuardar = await fetch(`http://localhost:8000/consumidor/${consumidor.id}`, {
-        method: "PUT",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({consumidor}),
-      });
+      const responseGuardar = await fetch(
+        `http://localhost:8000/consumidor/${consumidor.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ consumidor }),
+        }
+      );
 
       if (responseGuardar.ok) {
         const data = await responseGuardar.json();
@@ -103,17 +106,17 @@ const AdquirirNuevoRolEPC = () => {
       console.error(error);
     }
   };
-  
+
   useEffect(() => {
     async function fetchData() {
       if (user) {
         await cargarDatos(user);
       }
     }
-  
+
     fetchData();
   }, [user]);
-  
+
   const cargarDatos = async (user) => {
     try {
       console.log(user);
@@ -127,8 +130,8 @@ const AdquirirNuevoRolEPC = () => {
 
       if (responseconsumidor.ok) {
         const data = await responseconsumidor.json();
-        console.log(data.data)
-        setConsumidor(data.data)
+        console.log(data.data);
+        setConsumidor(data.data);
         setApellido(data.data.apellido);
         setNombre(data.data.nombre);
         setDni(data.data.dni);
@@ -148,7 +151,9 @@ const AdquirirNuevoRolEPC = () => {
   return (
     <>
       <div className="d-flex">
-        <Sidebar />
+        <div className="col-2">
+          <Sidebar />
+        </div>
         <div className="flex-grow-1">
           <section className="align-items-center justify-content-center">
             <div className="card shadow-lg imgback">

@@ -1,31 +1,31 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { UserContext } from '../ComponentesGenerales/UserContext';
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 import "./AdquirirNuevoRolPE.css";
 
-import Footer from '../ComponentesGenerales/Footer';
-import Sidebar from '../ComponentesGenerales/Sidebar';
+import Footer from "../ComponentesGenerales/Footer";
+import Sidebar from "../ComponentesGenerales/Sidebar";
 
 const AdquirirNuevoRolPE = () => {
   const navigate = useNavigate();
-  const { user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [consumidor, setConsumidor] = useState("");
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [dni, setDni] = useState('');
-  const [cuit, setCuit] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [razonSocial, setRazonSocial] = useState('');
-  const [documento, setDocumento] = useState('');
-  
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [dni, setDni] = useState("");
+  const [cuit, setCuit] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [razonSocial, setRazonSocial] = useState("");
+  const [documento, setDocumento] = useState("");
+
   useEffect(() => {
     if (user) {
       cargarDatos(user);
     }
   }, [user]);
-  
+
   const cargarDatos = async (user) => {
     try {
       console.log(user);
@@ -39,8 +39,8 @@ const AdquirirNuevoRolPE = () => {
 
       if (responseconsumidor.ok) {
         const data = await responseconsumidor.json();
-        console.log(data.data)
-        setConsumidor(data.data)
+        console.log(data.data);
+        setConsumidor(data.data);
         setApellido(data.data.apellido);
         setNombre(data.data.nombre);
         setDni(data.data.dni);
@@ -94,29 +94,32 @@ const AdquirirNuevoRolPE = () => {
           razonSocial: razonSocial,
         },
       };
-  
+
       const response = await fetch("http://localhost:8000/productor", {
         method: "POST",
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(productor),
       });
-      console.log("llego")
+      console.log("llego");
 
       if (response.ok) {
         const data = await response.json();
-        const consumidornuevo=consumidor;
-        console.log(consumidornuevo)
-        consumidornuevo.productorId=data.data.id;
-        setConsumidor(consumidornuevo)
+        const consumidornuevo = consumidor;
+        console.log(consumidornuevo);
+        consumidornuevo.productorId = data.data.id;
+        setConsumidor(consumidornuevo);
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
 
-      const responseGuardar = await fetch(`http://localhost:8000/consumidor/${consumidor.id}`, {
-        method: "PUT",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({consumidor}),
-      });
+      const responseGuardar = await fetch(
+        `http://localhost:8000/consumidor/${consumidor.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ consumidor }),
+        }
+      );
 
       if (responseGuardar.ok) {
         const data = await responseGuardar.json();
@@ -139,12 +142,16 @@ const AdquirirNuevoRolPE = () => {
   return (
     <>
       <div className="d-flex">
-        <Sidebar />
+        <div className="col-2">
+          <Sidebar />
+        </div>
         <div className="flex-grow-1 imgback">
           <section className="align-items-center justify-content-center col-6 offset-3 form">
             <div className="card shadow-lg">
               <div className="card-body p-3">
-                <h1 className="fs-4 card-title fw-bold mb-2">Adquirir Nuevo Rol - Productor de Eventos</h1>
+                <h1 className="fs-4 card-title fw-bold mb-2">
+                  Adquirir Nuevo Rol - Productor de Eventos
+                </h1>
                 <form onSubmit={handleSubmit} className="needs-validation">
                   <div className="mb-2">
                     <label className="form-label" htmlFor="nombre">
@@ -203,7 +210,10 @@ const AdquirirNuevoRolPE = () => {
                   </div>
 
                   <div className="mb-2">
-                    <label className="form-label text-dark" htmlFor="razonSocial">
+                    <label
+                      className="form-label text-dark"
+                      htmlFor="razonSocial"
+                    >
                       Razon Social
                     </label>
                     <input
@@ -231,7 +241,10 @@ const AdquirirNuevoRolPE = () => {
                   </div>
 
                   <div className="mb-2">
-                    <label className="form-label text-dark" htmlFor="documentos">
+                    <label
+                      className="form-label text-dark"
+                      htmlFor="documentos"
+                    >
                       Documentos
                     </label>
                     <input

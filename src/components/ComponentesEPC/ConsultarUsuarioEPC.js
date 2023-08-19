@@ -190,7 +190,9 @@ const ConsultarUsuarioEPC = () => {
   return (
     <>
       <div className="d-flex">
+      <div className='col-2'>
         <Sidebar />
+        </div>
         <div className="flex-grow-1 background">
           <section className="align-items-center justify-content-center col-6 offset-3 form ">
             <div className="card shadow-lg  ">
