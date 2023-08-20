@@ -1,42 +1,44 @@
 * {
-    margin: 0;
-    padding: 0;
-    
-  }
-  
-  .fondo{
-    background: url('./../QuickFoodFondo.png');
-    margin: 0;
-    padding: 0;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-  }
+  margin: 0;
+  padding: 0;
 
-  .containerRegistrar {
-    height: 100%;
-    width: 100%;
-    flex: 1;
-  }
+}
 
-  .footer {
-    z-index:400;
-  }
+.fondo {
+  background: url('./../QuickFoodFondo.png');
+  margin: 0;
+  padding: 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+}
 
-  .cardRegistrar{
-    margin-top: 2%;
-  }
+.containerRegistrar {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+}
 
-  .needs-validation{
-    padding: 20px;
-  }
+.footer {
+  z-index: 400;
+}
 
-  .formularioRegistrar {
-    background: white;
-    border-radius: 10px;
-    margin-bottom: 25px;
-  }
+.cardRegistrar {
+  margin-top: 2%;
+}
 
+.needs-validation {
+  padding: 20px;
+}
 
-  
+.formularioRegistrar {
+  background: white;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.row {
+  --bs-gutter-x: 1.5rem !important ;
+}
+

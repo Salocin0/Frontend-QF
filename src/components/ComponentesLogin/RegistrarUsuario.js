@@ -113,6 +113,8 @@ const RegistroUsuario = () => {
       usuario: usuario,
     };
     const json_consumidor = {
+      correoElectronico:email,
+      contraseña:password,
       consumidor: consumidor,
     };
 
