@@ -1,37 +1,32 @@
 import React from 'react';
+import Footer from '../ComponentesGenerales/Footer';
+import Contacto from './Contacto';
+import Confiaron from './Confiaron';
+import ComoFunciona from './ComoFunciona';
+import Imagenes from './Imagenes';
+import Navbar from './Navbar';
+import "./landingPage.css";
 
 const LandingPage = () => {
   return (
     <div className="app">
-      <header className="navbar">
-        <nav>
-          <ul className="nav-list">
-            <li className="nav-item">Ser Repartidor</li>
-            <li className="nav-item">Ser Productor</li>
-            <li className="nav-item">Ser Encargado de Puesto</li>
-            <li className="nav-item">Login</li>
-          </ul>
-        </nav>
-      </header>
+      
+      <nav className='navbar'>
+        <Navbar/>
+      </nav>
 
-      <section className="imagenes">
-        {/* Contenido de la sección de imágenes */}
-      </section>
+        <Imagenes/>
 
-      <section className="como funciona">
-        {/* Contenido de la sección "Cómo funciona" */}
-      </section>
-
-      <section className="quienes confiaron en nosotros">
-        {/* Contenido de la sección "Quienes confiaron en nosotros" */}
+      <section className="comofunciona">
+        <ComoFunciona/>
       </section>
 
       <section className="contacto">
-        {/* Contenido de la sección de contacto */}
+        <Contacto/>
       </section>
 
       <footer className="footer">
-        {/* Contenido del footer */}
+        <Footer/>
       </footer>
     </div>
   );

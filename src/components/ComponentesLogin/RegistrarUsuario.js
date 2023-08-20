@@ -81,7 +81,7 @@ const RegistroUsuario = () => {
       return;
     }
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       toast.error("Las contraseñas no coinciden");
       return;
     }
