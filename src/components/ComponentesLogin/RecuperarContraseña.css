@@ -1,0 +1,17 @@
+
+
+  .botonRecuperacion {
+    color: black;
+    font-weight: bold;
+    border-radius: 30px;
+    padding: 10px 20px;
+    width: 300px;
+  }
+
+  .input-contraseña::placeholder {
+    color: black;
+  }
+
+  .input-contraseña:focus {
+    background-color: white;
+  }

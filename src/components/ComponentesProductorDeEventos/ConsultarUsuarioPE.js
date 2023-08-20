@@ -1,24 +1,26 @@
-import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from '../ComponentesGenerales/UserContext';
-import '../ComponentesConsumidor/ConsultarUsuario.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { toast } from 'react-toastify';
-import Footer from '../ComponentesGenerales/Footer';
-import Sidebar from '../ComponentesGenerales/Sidebar';
+import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "../ComponentesConsumidor/ConsultarUsuario.css";
+import Footer from "../ComponentesGenerales/Footer";
+import Sidebar from "../ComponentesGenerales/Sidebar";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const ConsultarUsuarioPE = () => {
   const { user } = useContext(UserContext);
 
-  const [productor, setProductor] = useState('');
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [dni, setDni] = useState('');
-  const [cuit, setCuit] = useState('');
-  const [razonSocial, setRazonSocial] = useState('');
-  const [telefono, setTelefono] = useState('');
+  const [productor, setProductor] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [dni, setDni] = useState("");
+  const [cuit, setCuit] = useState("");
+  const [razonSocial, setRazonSocial] = useState("");
+  const [telefono, setTelefono] = useState("");
   const [documentos, setDocumentos] = useState([]);
   const [editMode, setEditMode] = useState(false);
-  const [rolSeleccionado, setRolSeleccionado] = useState('Productor de Eventos');
+  const [rolSeleccionado, setRolSeleccionado] = useState(
+    "Productor de Eventos"
+  );
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -54,15 +56,17 @@ const ConsultarUsuarioPE = () => {
 
   const deshabilitarUsuario = async () => {
     try {
-
-      const response = await fetch(`http://127.0.0.1:8000/productor/${productor.id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await fetch(
+        `http://127.0.0.1:8000/productor/${productor.id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         if (data.code === 200) {
           setApellido(user.apellido);
           setNombre(user.nombre);
@@ -71,17 +75,17 @@ const ConsultarUsuarioPE = () => {
           setRazonSocial("");
           setTelefono(user.telefono);
           setDocumentos("");
-          toast.success('productor eliminado correctamente');
+          toast.success("productor eliminado correctamente");
         } else if (data.codigo === 400) {
-          toast.error('Error al eliminar');
+          toast.error("Error al eliminar");
         }
       } else {
-        throw new Error('Error en la respuesta HTTP');
+        throw new Error("Error en la respuesta HTTP");
       }
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const handleDelete = () => {
     deshabilitarUsuario();
@@ -91,17 +95,17 @@ const ConsultarUsuarioPE = () => {
     setRolSeleccionado(e.target.value);
 
     switch (e.target.value) {
-      case 'Usuario':
-        window.location.href = '/consultar-usuario';
+      case "Usuario":
+        window.location.href = "/consultar-usuario";
         break;
-      case 'Productor de Eventos':
-        window.location.href = '/consultar-usuarioPE';
+      case "Productor de Eventos":
+        window.location.href = "/consultar-usuarioPE";
         break;
-      case 'Encargado Puesto de Comida':
-        window.location.href = '/consultar-usuarioEPC';
+      case "Encargado Puesto de Comida":
+        window.location.href = "/consultar-usuarioEPC";
         break;
-      case 'Repartidor':
-        window.location.href = '/ruta-repartidor';
+      case "Repartidor":
+        window.location.href = "/ruta-repartidor";
         break;
       default:
         break;
@@ -110,33 +114,36 @@ const ConsultarUsuarioPE = () => {
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
-    updateProductor()
+    updateProductor();
     setEditMode(false);
   };
 
   const updateProductor = async () => {
     try {
-      const nuevoProductor={
-        cuit:cuit,
-        razonSocial:razonSocial
-      }
+      const nuevoProductor = {
+        cuit: cuit,
+        razonSocial: razonSocial,
+      };
 
-      const response = await fetch(`http://127.0.0.1:8000/productor/${productor.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nuevoProductor)
-      });
+      const response = await fetch(
+        `http://127.0.0.1:8000/productor/${productor.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevoProductor),
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
+        console.log(data);
         if (data.code === 200) {
-          toast.success('Datos cargados correctamente');
+          toast.success("Datos cargados correctamente");
         } else if (data.codigo === 400) {
-          toast.error('Error al cargar los datos');
+          toast.error("Error al cargar los datos");
         }
       } else {
-        throw new Error('Error en la respuesta HTTP');
+        throw new Error("Error en la respuesta HTTP");
       }
     } catch (error) {
       console.error(error);
@@ -145,28 +152,31 @@ const ConsultarUsuarioPE = () => {
 
   const buscarDatosProductor = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/consumidor/${user.consumidoreId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await fetch(
+        `http://127.0.0.1:8000/consumidor/${user.consumidoreId}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response.ok) {
         const consumidor = await response.json();
-        setProductor(consumidor.data.Productore)
+        setProductor(consumidor.data.Productor);
         setApellido(consumidor.data.apellido);
         setNombre(consumidor.data.nombre);
         setDni(consumidor.data.dni);
         setTelefono(consumidor.data.telefono);
-        setCuit(consumidor.data.Productore.cuit);
-        setRazonSocial(consumidor.data.Productore.razonSocial);
-        setDocumentos(consumidor.data.Productore.documento);
+        setCuit(consumidor.data.Productor.cuit);
+        setRazonSocial(consumidor.data.Productor.razonSocial);
+        setDocumentos(consumidor.data.Productor.documento);
         if (consumidor.codigo === 200) {
-          toast.success('Datos cargados correctamente');
+          toast.success("Datos cargados correctamente");
         } else if (consumidor.codigo === 400) {
-          toast.error('Error al cargar los datos');
+          toast.error("Error al cargar los datos");
         }
       } else {
-        throw new Error('Error en la respuesta HTTP');
+        throw new Error("Error en la respuesta HTTP");
       }
     } catch (error) {
       console.error(error);
@@ -180,15 +190,19 @@ const ConsultarUsuarioPE = () => {
   return (
     <>
       <div className="d-flex">
-        <Sidebar />
-        <div className="flex-grow-1">
-          <section className="align-items-center justify-content-center">
-            <div className="card shadow-lg">
-              <div className="card-body p-3 formulario">
-                <h1 className="fs-5 card-title fw-bold mb-2 text-dark">Tu Perfil - Productor de Eventos</h1>
+        <div className="col-2">
+          <Sidebar />
+        </div>
+        <div className="flex-grow-1 background">
+          <section className="align-items-center justify-content-center col-6 offset-3 form">
+            <div className="card shadow-lg ">
+              <div className="card-body p-3 ">
+                <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                  Tu Perfil - Productor de Eventos
+                </h1>
                 <form onSubmit={handleSaveChanges} className="needs-validation">
                   <div className="row">
-                  <div className="mb-2">
+                    <div className="mb-2">
                       <label className="mb-2 text-dark" htmlFor="rol">
                         Rol
                       </label>
@@ -198,9 +212,13 @@ const ConsultarUsuarioPE = () => {
                         value={rolSeleccionado}
                         onChange={handleRolChange}
                       >
-                        <option value="Productor de Eventos">Productor de Eventos</option>
+                        <option value="Productor de Eventos">
+                          Productor de Eventos
+                        </option>
                         <option value="Usuario">Usuario</option>
-                        <option value="Encargado Puesto de Comida">Encargado Puesto de Comida</option>
+                        <option value="Encargado Puesto de Comida">
+                          Encargado Puesto de Comida
+                        </option>
                         <option value="Repartidor" disabled>
                           Repartidor
                         </option>
@@ -313,16 +331,28 @@ const ConsultarUsuarioPE = () => {
                   <div className="d-grid">
                     {!editMode && (
                       <>
-                        <button type="button" className="btn btn-primary" onClick={handleEditModeToggle}>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={handleEditModeToggle}
+                        >
                           Editar
                         </button>
-                        <button type="button" className="btn btn-danger deshabilitar" onClick={handleDelete}>
+                        <button
+                          type="button"
+                          className="btn btn-danger deshabilitar"
+                          onClick={handleDelete}
+                        >
                           Deshabilitar Usuario
                         </button>
                       </>
                     )}
                     {editMode && (
-                      <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                        style={{ width: "100%" }}
+                      >
                         Guardar Cambios
                       </button>
                     )}

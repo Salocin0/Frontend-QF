@@ -12,6 +12,7 @@ import Inicio from './Inicio';
 import AdquirirNuevoRolEPC from '../ComponentesEPC/AdquirirNuevoRolEPC';
 import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuarioPE';
 import ConsultarUsuarioEPC from '../ComponentesEPC/ConsultarUsuarioEPC';
+import LandingPage from '../ComponentesLandingPage/LandingPage';
 
 export const Main = () => {
   return (
@@ -30,6 +31,7 @@ export const Main = () => {
            <Route path="/consultar-usuarioPE" element={<ConsultarUsuarioPE/>} />
            <Route path="/consultar-usuarioEPC" element={<ConsultarUsuarioEPC/>} />
            <Route path="/adquierir-nuevo-rolPE/:id" element={<AdquirirNuevoRolPE/>} />
+           <Route path="/landingpage" element={<LandingPage/>} />
       </Routes>
     </main>
   )

@@ -8,10 +8,13 @@ body {
 
 }
 
-.formulario {
-  background-image: linear-gradient(to right,rgba(255, 0, 0, 0.313) , rgb(214, 24, 24));
+.background{
+  background-image: url("./../Inicio-12.png");
 }
-
+.form{
+  padding: 10px;
+  margin-bottom: 20px;
+}
 .card {
   width: 100%;
   margin-left:auto;

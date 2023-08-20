@@ -3,8 +3,6 @@
     padding: 0;
 
   }
-  
-
 
   .containerAdquirirNuevoRolEPC {
     height: 100%;
@@ -15,12 +13,15 @@
 
   }
 
-
+.imgback{
+  background-image: url("./../Inicio-12.png");
+}
 
   .formularioAdquirirNuevoRolEPC {
-    background-image: linear-gradient(to right,rgba(255, 0, 0, 0.313) , rgb(214, 24, 24));
+    background-color: white;
+    margin-top: 10px;
     margin-bottom: 22px;
-
+    border-radius: 10px;
   }
 
 

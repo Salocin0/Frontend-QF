@@ -81,7 +81,7 @@ const RegistroUsuario = () => {
       return;
     }
 
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       toast.error("Las contraseñas no coinciden");
       return;
     }
@@ -113,6 +113,8 @@ const RegistroUsuario = () => {
       usuario: usuario,
     };
     const json_consumidor = {
+      correoElectronico:email,
+      contraseña:password,
       consumidor: consumidor,
     };
 
@@ -123,6 +125,7 @@ const RegistroUsuario = () => {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         if (data.code === 200) {
           toast.success("Usuario registrado correctamente");
           setTimeout(() => {
@@ -141,184 +144,186 @@ const RegistroUsuario = () => {
 
   return (
     <>
-      <div className="containerRegistrar">
-        <div className="cardRegistrar shadow-lg">
-          <div className="cardRegistrar-body p-2 formularioRegistrar">
-            <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">
-              Registrar Usuario
-            </h1>
-            <form onSubmit={handleSubmit} className="needs-validation">
-              <div className="row">
-                <div className="col-md-6 mb-3">
-                  <label className="mb-2 text-black" htmlFor="nombre">
-                    Nombre
+      <div className="fondo">
+        <div className="containerRegistrar d-flex justify-content-center align-items-center">
+          <div className="cardRegistrar shadow-lg">
+            <div className="cardRegistrar-body p-2 formularioRegistrar">
+              <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">
+                Registrar Usuario
+              </h1>
+              <form onSubmit={handleSubmit} className="needs-validation">
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="mb-2 text-black" htmlFor="nombre">
+                      Nombre
+                    </label>
+                    <input
+                      type="text"
+                      id="nombre"
+                      className="form-control"
+                      value={nombre}
+                      onChange={handleNombreChange}
+                      required
+                    />
+                  </div>
+                  <div className="col-md-6 mb-3">
+                    <label className="mb-2 text-black" htmlFor="apellido">
+                      Apellido
+                    </label>
+                    <input
+                      type="text"
+                      id="apellido"
+                      className="form-control"
+                      value={apellido}
+                      onChange={handleApellidoChange}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="fechaNacimiento">
+                    Fecha de Nacimiento
+                  </label>
+                  <input
+                    type="date"
+                    id="fechaNacimiento"
+                    className="form-control"
+                    value={fechaNacimiento}
+                    onChange={handleFechaNacimientoChange}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="dni">
+                    DNI
+                  </label>
+                  <input
+                    type="number"
+                    id="dni"
+                    className="form-control"
+                    min="0"
+                    max="99999999"
+                    value={dni}
+                    onChange={handleDniChange}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="localidad">
+                    Localidad
                   </label>
                   <input
                     type="text"
-                    id="nombre"
+                    id="localidad"
                     className="form-control"
-                    value={nombre}
-                    onChange={handleNombreChange}
+                    value={localidad}
+                    onChange={handleLocalidadChange}
                     required
                   />
                 </div>
-                <div className="col-md-6 mb-3">
-                  <label className="mb-2 text-black" htmlFor="apellido">
-                    Apellido
+
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="telefono">
+                    Teléfono
+                  </label>
+                  <input
+                    type="number"
+                    id="telefono"
+                    className="form-control"
+                    value={telefono}
+                    onChange={handleTelefonoChange}
+                    required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="username">
+                    Nombre de Usuario
                   </label>
                   <input
                     type="text"
-                    id="apellido"
+                    id="username"
                     className="form-control"
-                    value={apellido}
-                    onChange={handleApellidoChange}
+                    value={username}
+                    onChange={handleUsernameChange}
                     required
                   />
                 </div>
-              </div>
 
-              <div className="mb-3">
-                <label className="mb-2 text-black" htmlFor="fechaNacimiento">
-                  Fecha de Nacimiento
-                </label>
-                <input
-                  type="date"
-                  id="fechaNacimiento"
-                  className="form-control"
-                  value={fechaNacimiento}
-                  onChange={handleFechaNacimientoChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="mb-2 text-black" htmlFor="dni">
-                  DNI
-                </label>
-                <input
-                  type="number"
-                  id="dni"
-                  className="form-control"
-                  min="0"
-                  max="99999999"
-                  value={dni}
-                  onChange={handleDniChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="mb-2 text-black" htmlFor="localidad">
-                  Localidad
-                </label>
-                <input
-                  type="text"
-                  id="localidad"
-                  className="form-control"
-                  value={localidad}
-                  onChange={handleLocalidadChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="mb-2 text-black" htmlFor="telefono">
-                  Teléfono
-                </label>
-                <input
-                  type="number"
-                  id="telefono"
-                  className="form-control"
-                  value={telefono}
-                  onChange={handleTelefonoChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="mb-2 text-black" htmlFor="username">
-                  Nombre de Usuario
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  className="form-control"
-                  value={username}
-                  onChange={handleUsernameChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="mb-2 text-black" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="form-control"
-                  value={email}
-                  onChange={handleEmailChange}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="mb-2 text-black" htmlFor="password">
-                  Contraseña
-                </label>
-                <div className="input-group">
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="email">
+                    Email
+                  </label>
                   <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
+                    type="email"
+                    id="email"
                     className="form-control"
-                    value={password}
-                    onChange={handlePasswordChange}
+                    value={email}
+                    onChange={handleEmailChange}
                     required
                   />
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={toggleShowPassword}
-                  >
-                    {showPassword ? "Ocultar" : "Mostrar"}
+                </div>
+
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="password">
+                    Contraseña
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      className="form-control"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={toggleShowPassword}
+                    >
+                      {showPassword ? "Ocultar" : "Mostrar"}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="confirmPassword">
+                    Confirmar Contraseña
+                  </label>
+                  <div className="input-group">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      id="confirmPassword"
+                      className="form-control"
+                      value={confirmPassword}
+                      onChange={handleConfirmPasswordChange}
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={toggleShowConfirmPassword}
+                    >
+                      {showConfirmPassword ? "Ocultar" : "Mostrar"}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="d-grid">
+                  <button type="submit" className="btn btn-success">
+                    Registrar
                   </button>
                 </div>
-              </div>
-
-              <div className="mb-3">
-                <label className="mb-2 text-black" htmlFor="confirmPassword">
-                  Confirmar Contraseña
-                </label>
-                <div className="input-group">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    id="confirmPassword"
-                    className="form-control"
-                    value={confirmPassword}
-                    onChange={handleConfirmPasswordChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={toggleShowConfirmPassword}
-                  >
-                    {showConfirmPassword ? "Ocultar" : "Mostrar"}
-                  </button>
-                </div>
-              </div>
-
-              <div className="d-grid">
-                <button type="submit" className="btn btn-success">
-                  Registrar
-                </button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
+        <Footer className="footer" />
       </div>
-      <Footer />
     </>
   );
 };

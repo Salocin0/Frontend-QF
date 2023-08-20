@@ -7,7 +7,9 @@ const Inicio = () => {
   return (
     <>
       <div className="d-flex">
+      <div className='col-2'>
         <Sidebar />
+        </div>
         <div className="flex-grow-1" style={{ background: `url('QuickFoodFondo.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
         </div>
       </div>
