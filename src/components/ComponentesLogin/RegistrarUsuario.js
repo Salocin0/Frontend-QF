@@ -1,16 +1,19 @@
-import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./RegistrarUsuario.css";
 import Footer from "../ComponentesGenerales/Footer";
+import "./RegistrarUsuario.css";
 
 const RegistroUsuario = () => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [dni, setDni] = useState("");
-  const [localidad, setLocalidad] = useState("");
+  const [provincias, setProvincias] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [localidad, setLocalidad] = useState([]);
+  const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [telefono, setTelefono] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +23,17 @@ const RegistroUsuario = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("https://apis.datos.gob.ar/georef/api/provincias")
+      .then((response) => response.json())
+      .then((data) => {
+        setProvincias(data.provincias);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -43,6 +57,31 @@ const RegistroUsuario = () => {
 
   const handleLocalidadChange = (e) => {
     setLocalidad(e.target.value);
+  };
+
+  const handleProvinceChange = (e) => {
+    setSelectedProvince(e.target.value);
+    setLocalidad([]);
+
+    if (e.target.value !== "") {
+      fetch(
+        `https://apis.datos.gob.ar/georef/api/municipios?provincia=${e.target.value}&campos=id,nombre&max=700`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const sortedLocalidades = data.municipios.sort((a, b) =>
+          a.nombre.localeCompare(b.nombre)
+        );
+          setLocalidad(sortedLocalidades);
+          setFilteredLocalidades(data.municipios);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      setLocalidad([]);
+      setFilteredLocalidades([]);
+    }
   };
 
   const handleTelefonoChange = (e) => {
@@ -113,8 +152,8 @@ const RegistroUsuario = () => {
       usuario: usuario,
     };
     const json_consumidor = {
-      correoElectronico:email,
-      contraseña:password,
+      correoElectronico: email,
+      contraseña: password,
       consumidor: consumidor,
     };
 
@@ -212,17 +251,47 @@ const RegistroUsuario = () => {
                 </div>
 
                 <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="provincia">
+                    Provincia
+                  </label>
+                  <select
+                    id="provincia"
+                    className="form-control"
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
+                    required
+                  >
+                    <option value="" disabled>
+                      Seleccione una provincia
+                    </option>
+                    {provincias.map((prov) => (
+                      <option key={prov.id} value={prov.id}>
+                        {prov.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-3">
                   <label className="mb-2 text-black" htmlFor="localidad">
                     Localidad
                   </label>
-                  <input
-                    type="text"
-                    id="localidad"
-                    className="form-control"
+
+                  <select
+                    className="form-control mt-2"
                     value={localidad}
                     onChange={handleLocalidadChange}
                     required
-                  />
+                  >
+                    <option value="" disabled>
+                      Seleccione una localidad
+                    </option>
+                    {filteredLocalidades.map((loc) => (
+                      <option key={loc.nombre} value={loc.nombre}>
+                        {loc.nombre}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="mb-3">
