@@ -1,0 +1,19 @@
+
+.card{
+    width: 500px;
+    height: 400px;
+
+}
+
+.card-title{
+    font-size: 60px;
+    font-weight: bold;
+}
+
+.card-custom {
+    margin: 10px 20px 15px 0px;
+}
+
+.card-position{
+    margin-top: 50px;
+}

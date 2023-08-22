@@ -3,10 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../ComponentesGenerales/Sidebar';
 import carro1 from '../QuickFoodLogo.png';
-import carro from '../img/carro.png';
-import eventos from '../img/eventos.png';
-import pedidos from '../img/pedidos.png';
-import perfil from '../img/perfil.png';
+
 
 const ListadoPuestos = () => {
     return (
@@ -52,46 +49,7 @@ const ListadoPuestos = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <Link to="/perfil" style={{ textDecoration: "none" }}>
-                                    <div className="col">
-                                        <div className="card bg-warning shadow-sm">
-                                            <img src={perfil} className="card-img-top mx-auto mt-3" style={{ width: "100px", height: "100px" }} alt="Icono de perfil" />
-                                            <div className="card-body text-center">
-                                                <h2 className="card-title">Perfil</h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link to="/perfil" style={{ textDecoration: "none" }}>
-                                    <div className="col">
-                                        <div className="card bg-warning shadow-sm">
-                                            <img src={eventos} className="card-img-top mx-auto mt-3" style={{ width: "100px", height: "100px" }} alt="Icono de perfil" />
-                                            <div className="card-body text-center">
-                                                <h2 className="card-title">Eventos</h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link to="/perfil" style={{ textDecoration: "none" }}>
-                                    <div className="col">
-                                        <div className="card bg-warning shadow-sm">
-                                            <img src={pedidos} className="card-img-top mx-auto mt-3" style={{ width: "100px", height: "100px" }} alt="Icono de perfil" />
-                                            <div className="card-body text-center">
-                                                <h2 className="card-title">Pedidos</h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                                <Link to="/perfil" style={{ textDecoration: "none" }}>
-                                    <div className="col">
-                                        <div className="card bg-warning shadow-sm">
-                                            <img src={carro} className="card-img-top mx-auto mt-3" style={{ width: "100px", height: "100px" }} alt="Icono de perfil" />
-                                            <div className="card-body text-center">
-                                                <h2 className="card-title">Puestos de Comida</h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
+
 
 
 
