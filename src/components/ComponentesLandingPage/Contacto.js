@@ -13,9 +13,9 @@ const Contacto = () => {
 
   return (
     <div className="contacto">
-      <main className="p-1">
+      <main className="w-100">
         <div className="row col-8 offset-2 center-outer-container h-100 pt-2">
-          <div className="col-12 col-md-6 d-flex justify-content-center align-items-center pe-2 ">
+          <div className="col-12 col-md-6 d-flex justify-content-center align-items-center ">
             <form className="mt-3 w-100" onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="form-nombre">Nombre</label>

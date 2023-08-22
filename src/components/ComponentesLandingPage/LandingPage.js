@@ -14,8 +14,10 @@ const LandingPage = () => {
       <nav className='navbar'>
         <Navbar/>
       </nav>
-
+      <div className='divimagenessec'>
         <Imagenes/>
+      </div>
+        
 
       <section className="comofunciona">
         <ComoFunciona/>

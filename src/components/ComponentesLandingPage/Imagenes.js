@@ -15,21 +15,21 @@ const Imagenes = () => {
             <Carousel className="carousel">
               <Carousel.Item>
                 <img
-                  className="d-block w-100"
+                  className="d-block"
                   src="./img/ejemplo.png"
                   alt="Primer slide"
                 />
               </Carousel.Item>
               <Carousel.Item>
                 <img
-                  className="d-block w-100"
+                  className="d-block"
                   src="./img/ejemplo.png"
                   alt="Segundo slide"
                 />
               </Carousel.Item>
               <Carousel.Item>
                 <img
-                  className="d-block w-100"
+                  className="d-block"
                   src="./img/ejemplo.png"
                   alt="Tercer slide"
                 />
