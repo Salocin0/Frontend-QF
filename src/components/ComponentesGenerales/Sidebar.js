@@ -1,8 +1,8 @@
-import React from "react";
-import "./Sidebar.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import React from "react";
+import "./Sidebar.css";
 
 import Logo from "../QuickFoodLogo.png";
 
@@ -37,9 +37,27 @@ const Sidebar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a href="/mis-eventos" className="nav-link text-truncate">
+              <a href="/listado-puestos" className="nav-link text-truncate">
               <i class="bi bi-1-circle-fill icono"></i>
-                <span className="ms-1 d-none d-sm-inline w-100">Mis Eventos</span>
+                <span className="ms-1 d-none d-sm-inline w-100">Mis Puestos</span>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="/crear-puesto" className="nav-link text-truncate">
+              <i class="bi bi-1-circle-fill icono"></i>
+                <span className="ms-1 d-none d-sm-inline w-100">Crear Puesto (Prov)</span>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="/consultar-puesto" className="nav-link text-truncate">
+              <i class="bi bi-1-circle-fill icono"></i>
+                <span className="ms-1 d-none d-sm-inline w-100">Consultar Puesto (Prov)</span>
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="/listado-puestos" className="nav-link text-truncate">
+              <i class="bi bi-1-circle-fill icono"></i>
+                <span className="ms-1 d-none d-sm-inline w-100">Listado Puestos (Prov)</span>
               </a>
             </li>
             <li className="nav-item dropdown especial">

@@ -16,10 +16,11 @@ body {
 }
 
 .imagenes {
-    height: 400px;
+    height: auto;
     background-color: #292C3E;
-    color: white
-}
+    color: white;
+    padding: 50px 0;
+  }
 
 .comofunciona {
     height: 550px;
@@ -69,7 +70,7 @@ body {
     height: 100%;
     background-size: cover;
     background-position: center;
-    background-image: url("./img/comida-rapida-casera.jpg");
+    background-image: url("../img/comida-rapida-casera.jpg");
 }
 
 .items-container {
@@ -102,7 +103,6 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    background-image: url("./img/contacto.jpg");
     border-radius: 10px;
   }
 
@@ -110,6 +110,7 @@ body {
     --bs-gutter-x:0;
   }
 
+<<<<<<< HEAD
   .items-container .item i {
     display: inline-block;
     width: 65px;
@@ -121,4 +122,8 @@ body {
     line-height: 60px;
     margin-right: 10px; 
     font-size: 40px;
+=======
+  .descripcion{
+    font-size: 30px;
+>>>>>>> 3f0a15d1b0836bf3ac49aab578d19128982e337a
   }

@@ -1,8 +1,7 @@
 import React from 'react';
 import Footer from '../ComponentesGenerales/Footer';
-import Contacto from './Contacto';
-import Confiaron from './Confiaron';
 import ComoFunciona from './ComoFunciona';
+import Contacto from './Contacto';
 import Imagenes from './Imagenes';
 import Navbar from './Navbar';
 import "./landingPage.css";
@@ -14,10 +13,17 @@ const LandingPage = () => {
       <nav className='navbar'>
         <Navbar/>
       </nav>
+<<<<<<< HEAD
       <div className='divimagenessec'>
         <Imagenes/>
       </div>
         
+=======
+
+      <section className="imagenes">
+        <Imagenes/>
+      </section>
+>>>>>>> 3f0a15d1b0836bf3ac49aab578d19128982e337a
 
       <section className="comofunciona">
         <ComoFunciona/>
