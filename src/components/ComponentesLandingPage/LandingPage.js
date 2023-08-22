@@ -13,17 +13,10 @@ const LandingPage = () => {
       <nav className='navbar'>
         <Navbar/>
       </nav>
-<<<<<<< HEAD
-      <div className='divimagenessec'>
-        <Imagenes/>
-      </div>
-        
-=======
 
       <section className="imagenes">
         <Imagenes/>
       </section>
->>>>>>> 3f0a15d1b0836bf3ac49aab578d19128982e337a
 
       <section className="comofunciona">
         <ComoFunciona/>

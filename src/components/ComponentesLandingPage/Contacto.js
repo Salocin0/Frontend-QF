@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import imagen from "../img/contacto.jpg";
 import "./landingPage.css";
 
 const Contacto = () => {
@@ -56,7 +57,8 @@ const Contacto = () => {
             </form>
           </div>
           <div className="col-12 mt-3 col-md-6 ps-2">
-            <div className="divcontacto h-100">
+            <div className="divcontacto">
+              <img src={imagen} alt="imagen contacto" className="img-fluid divcontacto" />
             </div>
           </div>
         </div>

@@ -19,7 +19,7 @@ body {
     height: auto;
     background-color: #292C3E;
     color: white;
-    padding: 50px 0;
+    padding: 20px 0;
   }
 
 .comofunciona {
@@ -39,9 +39,9 @@ body {
 }
 
 .nav-item.gray {
-    background-color: #d9d9d9;
-    color: black;
-    border: 1px solid black;
+    background-color: #303443;
+    color: white;
+    border: 1px solid white;
     border-radius: 10px;
     padding: 5px 10px;
     font-size: 16px;
@@ -55,8 +55,8 @@ body {
 .nav-item.yellow {
     background-color: #F7B813;
     color: black;
-    border: 1px solid black;
-    border-radius: 10px;
+    border: white;
+    border-radius: 5px;
     padding: 5px 10px;
     font-size: 16px;
     margin: auto 0;
@@ -110,20 +110,41 @@ body {
     --bs-gutter-x:0;
   }
 
-<<<<<<< HEAD
+  .descripcion{
+    font-size: 30px;
+  }
+
   .items-container .item i {
     display: inline-block;
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    background-color: #EA044E;
-    color: white;
+    background-color: #F7B813;
+    color: black;
     text-align: center;
     line-height: 60px;
     margin-right: 10px; 
     font-size: 40px;
-=======
-  .descripcion{
-    font-size: 30px;
->>>>>>> 3f0a15d1b0836bf3ac49aab578d19128982e337a
   }
+
+  .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
+
+  .imgcarrousel-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .imgcarrousel {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: 300px;
+  }
+  

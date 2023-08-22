@@ -15,6 +15,9 @@ import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuari
 import ConsultarPuesto from '../ComponentesPuesto/ConsultarPuesto';
 import CrearNuevoPuesto from '../ComponentesPuesto/CrearPuesto';
 import ListadoPuestos from '../ComponentesPuesto/ListadoPuestos';
+import RegistroEncargado from '../ComponenteRegister/RegistrarEncargado';
+import RegistroProductor from '../ComponenteRegister/RegistrarProductor';
+import RegistroRepartidor from '../ComponenteRegister/RegistrarRepartidor';
 import Home from './Home';
 import Inicio from './Inicio';
 import Sidebar from './Sidebar';
@@ -23,7 +26,7 @@ export const Main = () => {
   return (
     <main>
       <Routes>
-          <Route path="/" element={<Login/>} />
+          <Route path="/" element={<LandingPage/>} />
            <Route path="/recuperar" element={<RecuperarContraseña/>} />
            <Route path="/registrarse" element={<RegistrarUsuario/>} />
            <Route path="/cambiar-contrasenia/:codigo" element={<CambiarContraseña/>} />
@@ -45,9 +48,11 @@ export const Main = () => {
            <Route path="/adquirir-nuevo-rolR" element={<AdquirirNuevoRolR/>} />
            <Route path="/consultar-usuarioR" element={<ConsultarUsuarioR/>} />
 
+           <Route path="/ser-repartidor" element={<RegistroRepartidor/>} />
+           <Route path="/ser-productor" element={<RegistroProductor/>} />
+           <Route path="/ser-encargado" element={<RegistroEncargado/>} />
 
-
-
+           <Route path="/login" element={<Login/>} />
       </Routes>
     </main>
   )

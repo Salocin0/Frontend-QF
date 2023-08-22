@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import "./RegistrarUsuario.css";
+import "../ComponentesConsumidor/ConsultarUsuario.css"
 
-const RegistroUsuario = () => {
+const RegistroProductor = () => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
@@ -22,6 +22,9 @@ const RegistroUsuario = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [cuit, setCuit] = useState("");
+  const [razonSocial, setRazonSocial] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +37,14 @@ const RegistroUsuario = () => {
         console.error(error);
       });
   }, []);
+
+  const handleCuitChange = (e) => {
+    setCuit(e.target.value);
+  };
+
+  const handleRazonSocialChange = (e) => {
+    setRazonSocial(e.target.value);
+  };
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
@@ -141,7 +152,7 @@ const RegistroUsuario = () => {
       fechaAlta: fecha,
       nombreDeUsuario: username,
       correoElectronico: email,
-      tipoUsuario:"Consumidor"
+      tipoUsuario:"Productor"
     };
     const consumidor = {
       nombre: nombre,
@@ -157,6 +168,10 @@ const RegistroUsuario = () => {
       correoElectronico: email,
       contraseña: password,
       consumidor: consumidor,
+      productor:{
+        cuit:cuit,
+        razonSocial:razonSocial,
+      }
     };
     console.log(JSON.stringify(json_consumidor))
     fetch("http://127.0.0.1:8000/user/", {
@@ -383,7 +398,37 @@ const RegistroUsuario = () => {
                     </button>
                   </div>
                 </div>
+                
+                <hr />
+                <h3>Datos Productor de eventos</h3>
+                
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="text">
+                    Razon social
+                  </label>
+                  <input
+                    type="text"
+                    id="text"
+                    className="form-control"
+                    value={razonSocial}
+                    onChange={handleRazonSocialChange}
+                    required
+                  />
+                </div>
 
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="number">
+                    CUIT
+                  </label>
+                  <input
+                    type="number"
+                    id="number"
+                    className="form-control"
+                    value={cuit}
+                    onChange={handleCuitChange}
+                    required
+                  />
+                </div>
                 <div className="d-grid">
                   <button type="submit" className="btn btn-success">
                     Registrar
@@ -399,4 +444,4 @@ const RegistroUsuario = () => {
   );
 };
 
-export default RegistroUsuario;
+export default RegistroProductor;

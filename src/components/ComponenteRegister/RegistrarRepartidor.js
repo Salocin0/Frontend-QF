@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import "./RegistrarUsuario.css";
+import "../ComponentesConsumidor/ConsultarUsuario.css"
 
-const RegistroUsuario = () => {
+const RegistroRepartidor = () => {
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
@@ -141,7 +141,7 @@ const RegistroUsuario = () => {
       fechaAlta: fecha,
       nombreDeUsuario: username,
       correoElectronico: email,
-      tipoUsuario:"Consumidor"
+      tipoUsuario:"Repartidor"
     };
     const consumidor = {
       nombre: nombre,
@@ -157,6 +157,9 @@ const RegistroUsuario = () => {
       correoElectronico: email,
       contraseña: password,
       consumidor: consumidor,
+      repartidor:{
+        nombre:nombre
+      }
     };
     console.log(JSON.stringify(json_consumidor))
     fetch("http://127.0.0.1:8000/user/", {
@@ -399,4 +402,4 @@ const RegistroUsuario = () => {
   );
 };
 
-export default RegistroUsuario;
+export default RegistroRepartidor;

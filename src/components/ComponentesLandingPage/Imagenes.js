@@ -1,8 +1,8 @@
 import React from "react";
 import Carousel from "react-bootstrap/Carousel";
-import image3 from "../img/comida-rapida-casera.jpg";
-import image2 from "../img/contacto.jpg";
-import image1 from "../img/ejemplo.png";
+import image3 from "../img/4636599.jpg";
+import image2 from "../img/5817068.jpg";
+import image1 from "../img/6460329.jpg";
 import "./landingPage.css";
 
 const Imagenes = () => {
@@ -16,40 +16,31 @@ const Imagenes = () => {
           <div className="carousel-container">
             <Carousel className="carousel">
               <Carousel.Item>
-                <img
-<<<<<<< HEAD
-                  className="d-block"
-                  src="./img/ejemplo.png"
-=======
-                  className="d-block w-100 carousel-image"
-                  src={image1}
->>>>>>> 3f0a15d1b0836bf3ac49aab578d19128982e337a
-                  alt="Primer slide"
-                />
+                <div className="imgcarrousel-container">
+                  <img
+                    className="d-block imgcarrousel"
+                    src={image1}
+                    alt="Primer slide"
+                  />
+                </div>
               </Carousel.Item>
               <Carousel.Item>
-                <img
-<<<<<<< HEAD
-                  className="d-block"
-                  src="./img/ejemplo.png"
-=======
-                  className="d-block w-100 carousel-image"
-                  src={image2}
->>>>>>> 3f0a15d1b0836bf3ac49aab578d19128982e337a
-                  alt="Segundo slide"
-                />
+                <div className="imgcarrousel-container">
+                  <img
+                    className="d-block imgcarrousel"
+                    src={image2}
+                    alt="Segundo slide"
+                  />
+                </div>
               </Carousel.Item>
               <Carousel.Item>
-                <img
-<<<<<<< HEAD
-                  className="d-block"
-                  src="./img/ejemplo.png"
-=======
-                  className="d-block w-100 carousel-image"
-                  src={image3}
->>>>>>> 3f0a15d1b0836bf3ac49aab578d19128982e337a
-                  alt="Tercer slide"
-                />
+                <div className="imgcarrousel-container">
+                  <img
+                    className="d-block imgcarrousel"
+                    src={image3}
+                    alt="Tercer slide"
+                  />
+                </div>
               </Carousel.Item>
             </Carousel>
           </div>
@@ -57,7 +48,9 @@ const Imagenes = () => {
         <div className="col-4 h-100">
           <div className="descripcion text-center">
             <p>
-              Estos son los próximos eventos en los que trabajaremos con Quickfood para mejorar la experiencia de compra de los espectadores.
+              Estos son los próximos eventos en los que trabajaremos con
+              Quickfood para mejorar la experiencia de compra de los
+              espectadores.
             </p>
           </div>
         </div>
