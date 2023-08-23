@@ -60,6 +60,12 @@ const Sidebar = () => {
                 <span className="ms-1 d-none d-sm-inline w-100">Listado Puestos (Prov)</span>
               </a>
             </li>
+              <li className="nav-item">
+              <a href="/perfil-nuevo" className="nav-link text-truncate">
+              <i class="bi bi-1-circle-fill icono"></i>
+                <span className="ms-1 d-none d-sm-inline w-100">Provisional Profile</span>
+              </a>
+            </li>
             <li className="nav-item dropdown especial">
             <i class="bi bi-1-circle-fill icono iconoespecial"></i>
               <a

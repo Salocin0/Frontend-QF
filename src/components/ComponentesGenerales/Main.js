@@ -1,8 +1,12 @@
 import React from 'react';
 import { Route, Routes } from "react-router-dom";
+import RegistroEncargado from '../ComponenteRegister/RegistrarEncargado';
+import RegistroProductor from '../ComponenteRegister/RegistrarProductor';
+import RegistroRepartidor from '../ComponenteRegister/RegistrarRepartidor';
 import AdquirirNuevoRolR from '../ComponenteRepartidor/AdquirirNuevoRolR';
 import ConsultarUsuarioR from '../ComponenteRepartidor/ConsultarUsuarioR';
 import ConsultarUsuario from '../ComponentesConsumidor/ConsultarUsuario';
+import ConsultarUsuarioPrueba from '../ComponentesConsumidor/ConsultarUsuarioPrueba';
 import AdquirirNuevoRolEPC from '../ComponentesEPC/AdquirirNuevoRolEPC';
 import ConsultarUsuarioEPC from '../ComponentesEPC/ConsultarUsuarioEPC';
 import LandingPage from '../ComponentesLandingPage/LandingPage';
@@ -15,9 +19,6 @@ import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuari
 import ConsultarPuesto from '../ComponentesPuesto/ConsultarPuesto';
 import CrearNuevoPuesto from '../ComponentesPuesto/CrearPuesto';
 import ListadoPuestos from '../ComponentesPuesto/ListadoPuestos';
-import RegistroEncargado from '../ComponenteRegister/RegistrarEncargado';
-import RegistroProductor from '../ComponenteRegister/RegistrarProductor';
-import RegistroRepartidor from '../ComponenteRegister/RegistrarRepartidor';
 import Home from './Home';
 import Inicio from './Inicio';
 import Sidebar from './Sidebar';
@@ -51,6 +52,8 @@ export const Main = () => {
            <Route path="/ser-repartidor" element={<RegistroRepartidor/>} />
            <Route path="/ser-productor" element={<RegistroProductor/>} />
            <Route path="/ser-encargado" element={<RegistroEncargado/>} />
+
+           <Route path="/perfil-nuevo" element={<ConsultarUsuarioPrueba/>} />
 
            <Route path="/login" element={<Login/>} />
       </Routes>
