@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Footer from './Footer';
 import { useState } from 'react';
 import ConsultarUsuario from '../ComponentesConsumidor/ConsultarUsuario';
@@ -7,12 +7,16 @@ import HistorialPedidos from '../ComponentesConsumidor/HistorialPedidos';
 import Inicio from '../ComponentesConsumidor/Inicio';
 import Notificaciones from '../ComponentesConsumidor/Notificaciones';
 
-const Home = () => {
+const Home = (data) => {
   const [selectedItem, setSelectedItem] = useState("Perfil");
 
   const handleNavbarItemClick = (item) => {
     setSelectedItem(item);
   };
+
+  useEffect(() => {
+    console.log(data);
+  })
 
   return (
     <div>

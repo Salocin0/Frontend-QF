@@ -33,7 +33,7 @@ const CrearNuevoCarro = () => {
         formData.append("pdfDNI", pdfDNI);
 
         // Realizar la solicitud HTTP para enviar los datos al servidor
-        fetch("URL_DEL_ENDPOINT", {
+        fetch("http://localhost:8000/puesto", {
             method: "POST",
             body: formData,
         })

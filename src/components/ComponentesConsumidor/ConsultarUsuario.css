@@ -10,6 +10,9 @@ body {
 
 .background{
   background-image: url("./../Inicio-12.png");
+  height: 100%;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 .form{
   padding: 10px;
