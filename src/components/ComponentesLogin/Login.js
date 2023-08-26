@@ -1,13 +1,13 @@
-import React, { useState, useContext } from 'react';
-import Footer from '../ComponentesGenerales/Footer';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { UserContext } from '../ComponentesGenerales/UserContext';
+import React, { useState, useContext } from "react";
+import Footer from "../ComponentesGenerales/Footer";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const { updateUser } = useContext(UserContext);
 
   const navigate = useNavigate();
@@ -22,41 +22,50 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const data = {
       contraseña: password,
-      correoElectronico: email
-    }
-  
-    fetch('http://127.0.0.1:8000/login/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      correoElectronico: email,
+    };
+
+    fetch("http://127.0.0.1:8000/login/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
     })
-      .then(response => response.json())
-      .then(data => {
-        if (Number(data.code)===200){
+      .then((response) => response.json())
+      .then((data) => {
+        if (Number(data.code) === 200) {
+          localStorage.setItem("sessionId", data.data.sessionId);
           toast.success("Login correcto");
-            updateUser(data.data);
-            navigate(`/home`);
-        }else {
+          updateUser(data.data);
+          navigate(`/home`);
+        } else {
           toast.error("Datos incorrectos");
         }
-        
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(error);
       });
   };
 
   return (
-    <section className="vh-100 d-flex align-items-center justify-content-center" style={{ background: 'url(QuickFoodFondo.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+    <section
+      className="vh-100 d-flex align-items-center justify-content-center"
+      style={{
+        background: "url(QuickFoodFondo.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="container">
         <div className="row justify-content-sm-center">
           <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
             <div className="card shadow-lg">
               <div className="card-body p-5">
-                <h1 className="fs-4 card-title fw-bold mb-4 text-black">QuickFood</h1>
+                <h1 className="fs-4 card-title fw-bold mb-4 text-black">
+                  QuickFood
+                </h1>
                 <form onSubmit={handleSubmit} className="needs-validation">
                   <div className="mb-3">
                     <label className="mb-2 text-muted" htmlFor="usuario">
@@ -94,23 +103,35 @@ const Login = () => {
 
                   <div className="d-flex align-items-center">
                     <div className="form-check">
-                      <input type="checkbox" name="remember" id="remember" className="form-check-input" />
+                      <input
+                        type="checkbox"
+                        name="remember"
+                        id="remember"
+                        className="form-check-input"
+                      />
                       <label htmlFor="remember" className="form-check-label">
                         Recordar
                       </label>
                     </div>
-                    <button type="submit" className="btn btn-primary btn-strong ms-auto">
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-strong ms-auto"
+                    >
                       Ingresar
                     </button>
                   </div>
 
                   <div className="mt-2 text-center">
-                    <a href="/recuperar" className="text-primary">Recuperar Contraseña</a>
+                    <a href="/recuperar" className="text-primary">
+                      Recuperar Contraseña
+                    </a>
                   </div>
 
-
                   <div className="mt-2 text-center">
-                    ¿No tienes cuenta? <a href="/registrarse" className="text-primary">Registrarme</a>
+                    ¿No tienes cuenta?{" "}
+                    <a href="/registrarse" className="text-primary">
+                      Registrarme
+                    </a>
                   </div>
                 </form>
               </div>
