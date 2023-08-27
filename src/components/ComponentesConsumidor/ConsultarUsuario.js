@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../ComponentesGenerales/UserContext';
-import './ConsultarUsuario.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { toast } from 'react-toastify';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
+import { UserContext } from '../ComponentesGenerales/UserContext';
+import './ConsultarUsuario.css';
 
 const ConsultarUsuario = () => {
   const { user } = useContext(UserContext);
@@ -72,7 +72,7 @@ const ConsultarUsuario = () => {
     setUsername(user.usuario);
 
     try {
-      const response1 = await fetch(`http://localhost:8000/consumidor/${user.consumidoreId}`, {
+      const response1 = await fetch(`http://localhost:8000/consumidor/${user.consumidorId}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
