@@ -8,7 +8,8 @@ import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 
 const ListadoPuestos = () => {
-  const [carritos, setCarritos] = useState([{},{}]);
+  const [rows, setRows] = useState([]);
+  const [carritos, setCarritos] = useState([]);
   const [session, setSession] = useState(null);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ const ListadoPuestos = () => {
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
-
+  
     if (session) {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
@@ -38,33 +39,33 @@ const ListadoPuestos = () => {
         .then((response) => response.json())
         .then((data) => {
           setCarritos(data.data);
+  
+          const totalCarritos = Math.ceil(data.data.length / 4) * 4;
+          const carritosConNulos = [
+            ...data.data,
+            ...Array(totalCarritos - data.data.length).fill(null),
+          ];
+  
+          const generatedRows = [];
+          for (let i = 0; i < carritosConNulos.length; i += 4) {
+            const row = carritosConNulos.slice(i, i + 4);
+            generatedRows.push(row);
+          }
+          setRows(generatedRows);
         })
-        .catch((error) => console.error("Error fetching carritos:", error));
+        .catch((error) => console.log("no existen carritos"));
     }
   }, [session]);
-
-  const totalCarritos = Math.ceil(carritos.length / 4) * 4;
-  const carritosConNulos = [
-    ...carritos,
-    ...Array(totalCarritos - carritos.length).fill(null),
-  ];
-  const rows = [];
-
-  for (let i = 0; i < carritosConNulos.length; i += 4) {
-    const row = carritosConNulos.slice(i, i + 4);
-    rows.push(row);
-  }
+  
 
   return (
-    <div className="d-flex">
+    <div className="d-flex background">
       <div className="col-2">
         <Sidebar />
       </div>
-      <div className="flex-grow-1 background pb-5">
-        <div className="container pt-2 ">
-          {carritos.length === 0 ? (
-            <p>No hay carritos disponibles.</p>
-          ) : (
+      <div className="flex-grow-1 pb-5">
+        <div className="container pt-2 h-100">
+          {Array.isArray(carritos) && carritos.length > 0 ? (
             rows.length > 0 &&
             rows.map((row, rowIndex) => (
               <div key={rowIndex} className="row">
@@ -75,6 +76,8 @@ const ListadoPuestos = () => {
                 ))}
               </div>
             ))
+          ) : (
+            <h2 className="centered-text">No tenes ningun puesto en este momento.</h2>
           )}
         </div>
         <Link

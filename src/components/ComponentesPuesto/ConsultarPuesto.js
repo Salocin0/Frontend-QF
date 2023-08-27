@@ -60,18 +60,26 @@ const ConsultarPuesto = () => {
     // Aquí puedes realizar las validaciones y el envío de datos al servidor
     // según tu lógica de manejo de formularios y almacenamiento de archivos.
     // Ejemplo:
-    const formData = new FormData();
-    formData.append("numeroCarro", numeroCarro);
-    formData.append("nombreCarro", nombreCarro);
-    formData.append("tipoNegocio", tipoNegocio);
-    formData.append("pdfAfip", pdfAfip);
-    formData.append("pdfCuil", pdfCuil);
-    formData.append("pdfDNI", pdfDNI);
-
+    const puesto = {
+      numeroCarro: numeroCarro,
+      nombreCarro: nombreCarro,
+      tipoNegocio: tipoNegocio,
+      pdfAfip: pdfAfip,
+      pdfCuil: pdfCuil,
+      pdfDNI: pdfDNI,
+      telefonoContacto: telefonoContacto,
+      razonSocial: razonSocial,
+      cuit: cuit,
+      telefonoCarro: telefonoCarro,
+      consumidorId: session.consumidorId,
+    };
     // Realizar la solicitud HTTP para enviar los datos al servidor
-    fetch("URL_DEL_ENDPOINT", {
-      method: "POST",
-      body: formData,
+    fetch(`http://localhost:8000/puesto/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({puesto:puesto}),
     })
       .then((response) => response.json())
       .then((data) => {
