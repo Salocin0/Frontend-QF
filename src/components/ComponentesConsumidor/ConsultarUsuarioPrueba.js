@@ -31,7 +31,7 @@ const ConsultarUsuario = () => {
   const [localidadC, setLocalidadC] = useState("");
 
   const [telefono, setTelefono] = useState("");
-    const [telefonoC, setTelefonoC] = useState("");
+  const [telefonoC, setTelefonoC] = useState("");
 
   const [cuit, setCuit] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
@@ -47,10 +47,10 @@ const ConsultarUsuario = () => {
   const [isDisabledR, setIsDisabledR] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
-    const [editModeC, setEditModeC] = useState(false);
-    const [editModePE, setEditModePE] = useState(false);
-    const [editModeEPC, setEditModeEPC] = useState(false);
-    const [editModeR, setEditModeR] = useState(false);
+  const [editModeC, setEditModeC] = useState(false);
+  const [editModePE, setEditModePE] = useState(false);
+  const [editModeEPC, setEditModeEPC] = useState(false);
+  const [editModeR, setEditModeR] = useState(false);
 
   const [rolSeleccionado, setRolSeleccionado] = useState("Usuario");
 
@@ -58,7 +58,7 @@ const ConsultarUsuario = () => {
     setNombre(e.target.value);
   };
 
-    const handleNombreChangeC= (e) => {
+  const handleNombreChangeC = (e) => {
     setNombreC(e.target.value);
   };
 
@@ -75,7 +75,7 @@ const ConsultarUsuario = () => {
     setFechaNacimiento(e.target.value);
   };
 
-    const handleFechaNacimientoChangeC = (e) => {
+  const handleFechaNacimientoChangeC = (e) => {
     setFechaNacimiento(e.target.value);
   };
 
@@ -265,13 +265,13 @@ const ConsultarUsuario = () => {
           setRazonSocial(data1.data.encargado.razonSocial);
         }
 
-        /*
-                if (data1.data.repartidor.cuit || data1.data.repartidor.razonSocial) {
-                    setMostrarContenidoRepartidor(true);
 
-                    setCuit(data1.data.repartidor.cuit);
-                    setRazonSocial(data1.data.repartidor.razonSocial);
-                }*/
+        if (data1.data.repartidore.cuit || data1.data.repartidore.razonSocial) {
+          setMostrarContenidoRepartidor(true);
+
+          setCuit(data1.data.repartidore.cuit);
+          setRazonSocial(data1.data.repartidore.razonSocial);
+        }
 
         if (data1.codigo === 200) {
           toast.success("Datos cargados correctamente");
@@ -301,7 +301,7 @@ const ConsultarUsuario = () => {
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                   Tu Perfil
                 </h1>
-                <form  className="needs-validation">
+                <form className="needs-validation">
                   <div>
                     <hr />
 
@@ -312,36 +312,36 @@ const ConsultarUsuario = () => {
                     <section className="align-items-center justify-content-center col form">
                       <div className="card shadow-lg">
                         <div className="card-body p-3 formulario">
-                        <div className="d-flex justify-content-end">
-                        {editModeC ? (
-                          <>
+                          <div className="d-flex justify-content-end">
+                            {editModeC ? (
+                              <>
 
-                            <button
-                              type="button"
-                              className=" btn btn-success mr-2"
-                              onClick={handleSaveChangesC}
-                            >
-                              Guardar
-                            </button>
-                            <br/>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={handleCancelChangesC}
-                            >
-                              Cancelar
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={handleEditModeToggleC}
-                          >
-                            Editar
-                          </button>
-                        )}
-                      </div>
+                                <button
+                                  type="button"
+                                  className=" btn btn-success mr-2"
+                                  onClick={handleSaveChangesC}
+                                >
+                                  Guardar
+                                </button>
+                                <br />
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                  onClick={handleCancelChangesC}
+                                >
+                                  Cancelar
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={handleEditModeToggleC}
+                              >
+                                Editar
+                              </button>
+                            )}
+                          </div>
                           <form
                             onSubmit={handleSaveChangesC}
                             className="needs-validation"
@@ -471,7 +471,7 @@ const ConsultarUsuario = () => {
 
                   {mostrarContenidoProductor && (
                     <>
-                                      <hr />
+                      <hr />
 
                       <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                         Productor de Eventos
@@ -480,34 +480,34 @@ const ConsultarUsuario = () => {
                         <div className="card shadow-lg">
                           <div className="card-body p-3 formulario">
                             <div className="d-flex justify-content-end">
-                            {editModePE ? (
-                          <>
+                              {editModePE ? (
+                                <>
 
-                            <button
-                              type="button"
-                              className=" btn btn-success mr-2"
-                              onClick={handleSaveChangesPE}
-                            >
-                              Guardar
-                            </button>
-                            <br/>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={handleCancelChangesPE}
-                            >
-                              Cancelar
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={handleEditModeTogglePE}
-                          >
-                            Editar
-                          </button>
-                        )}
+                                  <button
+                                    type="button"
+                                    className=" btn btn-success mr-2"
+                                    onClick={handleSaveChangesPE}
+                                  >
+                                    Guardar
+                                  </button>
+                                  <br />
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={handleCancelChangesPE}
+                                  >
+                                    Cancelar
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  onClick={handleEditModeTogglePE}
+                                >
+                                  Editar
+                                </button>
+                              )}
                             </div>
                             <form
                               onSubmit={handleSaveChangesPE}
@@ -574,7 +574,7 @@ const ConsultarUsuario = () => {
                   )}
                   {mostrarContenidoEncargadoPuesto && (
                     <>
-                                          <hr />
+                      <hr />
 
                       <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                         Encargado Puesto de Comida
@@ -583,34 +583,34 @@ const ConsultarUsuario = () => {
                         <div className="card shadow-lg">
                           <div className="card-body p-3 formulario">
                             <div className="d-flex justify-content-end">
-                            {editModeEPC ? (
-                          <>
+                              {editModeEPC ? (
+                                <>
 
-                            <button
-                              type="button"
-                              className=" btn btn-success mr-2"
-                              onClick={handleSaveChangesEPC}
-                            >
-                              Guardar
-                            </button>
-                            <br/>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={handleCancelChangesEPC}
-                            >
-                              Cancelar
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={handleEditModeToggleEPC}
-                          >
-                            Editar
-                          </button>
-                        )}
+                                  <button
+                                    type="button"
+                                    className=" btn btn-success mr-2"
+                                    onClick={handleSaveChangesEPC}
+                                  >
+                                    Guardar
+                                  </button>
+                                  <br />
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={handleCancelChangesEPC}
+                                  >
+                                    Cancelar
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  onClick={handleEditModeToggleEPC}
+                                >
+                                  Editar
+                                </button>
+                              )}
                             </div>
                             <form
                               onSubmit={handleSaveChangesEPC}
@@ -679,7 +679,7 @@ const ConsultarUsuario = () => {
 
                   {mostrarContenidoRepartidor && (
                     <>
-                               <hr />
+                      <hr />
                       <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                         Repartidor
                       </h1>
@@ -687,34 +687,34 @@ const ConsultarUsuario = () => {
                         <div className="card shadow-lg">
                           <div className="card-body p-3 formulario">
                             <div className="d-flex justify-content-end">
-                            {editModeR ? (
-                          <>
+                              {editModeR ? (
+                                <>
 
-                            <button
-                              type="button"
-                              className=" btn btn-success mr-2"
-                              onClick={handleSaveChangesR}
-                            >
-                              Guardar
-                            </button>
-                            <br/>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={handleCancelChangesR}
-                            >
-                              Cancelar
-                            </button>
-                          </>
-                        ) : (
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={handleEditModeToggleR}
-                          >
-                            Editar
-                          </button>
-                        )}
+                                  <button
+                                    type="button"
+                                    className=" btn btn-success mr-2"
+                                    onClick={handleSaveChangesR}
+                                  >
+                                    Guardar
+                                  </button>
+                                  <br />
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger"
+                                    onClick={handleCancelChangesR}
+                                  >
+                                    Cancelar
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  onClick={handleEditModeToggleR}
+                                >
+                                  Editar
+                                </button>
+                              )}
                             </div>
                             <form
                               onSubmit={handleSaveChangesR}
