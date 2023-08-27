@@ -6,6 +6,7 @@ import "../ComponentesEPC/AdquirirNuevoRolEPC.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import '../ComponentesConsumidor/ConsultarUsuario.css'
 
 const AdquirirNuevoRolR = () => {
   const navigate = useNavigate();
@@ -58,23 +59,22 @@ const AdquirirNuevoRolR = () => {
     e.preventDefault();
 
     try {
-      const encargado = {
-        encargado: {
+      const repartidor = {
+        repartidor: {
           cuit: cuit,
-          razonSocial: razonSocial,
         },
       };
 
-      const response = await fetch("http://localhost:8000/encargado", {
+      const response = await fetch("http://localhost:8000/repartidor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(encargado),
+        body: JSON.stringify(repartidor),
       });
 
       if (response.ok) {
         const data = await response.json();
+        consumidor.repartidorId = data.data.id;
         const consumidornuevo = consumidor;
-        consumidornuevo.encargadoId = data.data.id;
         setConsumidor(consumidornuevo);
       } else {
         throw new Error("Error en la respuesta HTTP");
@@ -93,9 +93,7 @@ const AdquirirNuevoRolR = () => {
         const data = await responseGuardar.json();
         if (data.code === 200) {
           toast.success("Nuevo rol adquirido correctamente");
-          setTimeout(() => {
-            navigate(`/home/inicio`);
-          }, 1500);
+          navigate(`/home`);
         } else if (data.code === 400) {
           toast.error("Error al adquirir el nuevo rol");
         }
@@ -150,13 +148,13 @@ const AdquirirNuevoRolR = () => {
 
   return (
     <>
-      <div className="d-flex">
+      <div className="d-flex background">
         <div className="col-2">
           <Sidebar />
         </div>
         <div className="flex-grow-1">
           <section className="align-items-center justify-content-center">
-            <div className="card shadow-lg imgback">
+            <div className=" ">
               <div className="card-body p-3 formularioAdquirirNuevoRolEPC col-6 offset-3">
                 <h1 className="fs-4 card-title fw-bold mb-2 text-dark">
                   Adquirir Nuevo Rol - Repartidor

@@ -1,12 +1,20 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import React from "react";
+import React, { useEffect } from "react";
 import "./Sidebar.css";
 
 import Logo from "../QuickFoodLogo.png";
+import { useAccordionButton } from "react-bootstrap";
 
-const Sidebar = () => {
+const Sidebar = (tipoUsuario) => {
+  const [usuario, setUsuario] = React.useState("Consumidor");
+  const isResponsable = usuario === "Responsable";
+
+  useEffect(() => {
+    setUsuario(tipoUsuario)
+  }, []);
+
   return (
     <>
       <div className="sidebar">
@@ -17,12 +25,6 @@ const Sidebar = () => {
         </div>
         <div className="menu-container">
           <ul className="nav flex-column p-3">
-            <li className="nav-item">
-              <a href="/inicio" className="nav-link text-truncate">
-                <i class="bi bi-1-circle-fill icono"></i>
-                <span className="ms-1 d-none d-sm-inline w-100">prueba</span>
-              </a>
-            </li>
 
             <li className="nav-item">
               <a href="/inicio" className="nav-link text-truncate">
@@ -36,30 +38,14 @@ const Sidebar = () => {
                 <span className="ms-1 d-none d-sm-inline w-100">Mis Pedidos</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/listado-puestos" className="nav-link text-truncate">
-              <i class="bi bi-1-circle-fill icono"></i>
-                <span className="ms-1 d-none d-sm-inline w-100">Mis Puestos</span>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/crear-puesto" className="nav-link text-truncate">
-              <i class="bi bi-1-circle-fill icono"></i>
-                <span className="ms-1 d-none d-sm-inline w-100">Crear Puesto (Prov)</span>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/consultar-puesto" className="nav-link text-truncate">
-              <i class="bi bi-1-circle-fill icono"></i>
-                <span className="ms-1 d-none d-sm-inline w-100">Consultar Puesto (Prov)</span>
-              </a>
-            </li>
-            <li className="nav-item">
-              <a href="/listado-puestos" className="nav-link text-truncate">
-              <i class="bi bi-1-circle-fill icono"></i>
-                <span className="ms-1 d-none d-sm-inline w-100">Listado Puestos (Prov)</span>
-              </a>
-            </li>
+            {isResponsable && ( 
+              <li className="nav-item">
+                <a href="/listado-puestos" className="nav-link text-truncate">
+                  <i className="bi bi-1-circle-fill icono"></i>
+                  <span className="ms-1 d-none d-sm-inline w-100">Mis Puestos</span>
+                </a>
+              </li>
+            )}
               <li className="nav-item">
               <a href="/perfil-nuevo" className="nav-link text-truncate">
               <i class="bi bi-1-circle-fill icono"></i>
@@ -83,12 +69,17 @@ const Sidebar = () => {
               >
                 <li>
                   <a className="dropdown-item" href="/adquirir-nuevo-rolPE">
-                    ¡Quiero ser Productor de Eventos!
+                    ¡Quiero ser Productor!
                   </a>
                 </li>
                 <li>
                   <a className="dropdown-item" href="/adquirir-nuevo-rolEPC">
-                    ¡Quiero ser Encargado de Puesto de Comidas!
+                    ¡Quiero ser Encargado de Puestos!
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="/adquirir-nuevo-rolR">
+                    ¡Quiero ser Repartidor!
                   </a>
                 </li>
                 <li>
