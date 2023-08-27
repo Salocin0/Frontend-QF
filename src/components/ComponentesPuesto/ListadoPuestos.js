@@ -24,11 +24,15 @@ const ListadoPuestos = () => {
       })
         .then((response) => response.json())
         .then((data) => {
+          
+          
           setSession(data.data);
+          console.log(data.data.tipoUsuario);
+          
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
-  
+    console.log(session)
     if (session) {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
@@ -61,7 +65,7 @@ const ListadoPuestos = () => {
   return (
     <div className="d-flex background">
       <div className="col-2">
-        <Sidebar />
+      <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className="flex-grow-1 pb-5">
         <div className="container pt-2 h-100">
