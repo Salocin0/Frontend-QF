@@ -3,40 +3,50 @@ import React, { useState, useEffect } from "react";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Puesto from "./Puesto";
 import "./puestos.css";
-import '../ComponentesConsumidor/ConsultarUsuario.css'
+import "../ComponentesConsumidor/ConsultarUsuario.css";
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 
 const ListadoPuestos = () => {
-  const [carritos, setCarritos] = useState([]);
+  const [carritos, setCarritos] = useState([{},{}]);
+  const [session, setSession] = useState(null);
 
-  /*export const fetchUserData = async () => {
-    try {
-      const response = await axios.get('/api/user');
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-      throw error;
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+    if (!session) {
+      fetch("http://localhost:8000/user/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSession(data.data);
+        })
+        .catch((error) => console.error("Error fetching session:", error));
     }
-  };
 
-  /* useEffect(() => {
-    fetch("http://localhost:8000/puesto"),{
+    if (session) {
+      const headers = new Headers();
+      headers.append("ConsumidorId", session.consumidorId);
+      fetch("http://localhost:8000/puesto", {
         method: "GET",
+        headers: headers,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setCarritos(data.data);
+        })
+        .catch((error) => console.error("Error fetching carritos:", error));
     }
-      .then(response => response.json())
-      .then(data => setCarritos(data))
-      .catch(error => console.error("Error fetching carritos:", error));
-  }, []);*/
-  const carritosSimulados = Array.from({ length: 19 }, (_, index) => ({
-    id: index + 1,
-    nombre: `Puesto ${index + 1}`,
-  }));
+  }, [session]);
 
-  const totalCarritos = Math.ceil(carritosSimulados.length / 4) * 4;
+  const totalCarritos = Math.ceil(carritos.length / 4) * 4;
   const carritosConNulos = [
-    ...carritosSimulados,
-    ...Array(totalCarritos - carritosSimulados.length).fill(null),
+    ...carritos,
+    ...Array(totalCarritos - carritos.length).fill(null),
   ];
   const rows = [];
 
@@ -52,22 +62,29 @@ const ListadoPuestos = () => {
       </div>
       <div className="flex-grow-1 background pb-5">
         <div className="container pt-2 ">
-          {rows.map((row, rowIndex) => (
-            <div key={rowIndex} className="row">
-              {row.map((carrito, index) => (
-                <div key={index} className="col-md-3 pb-2">
-                  {carrito !== null ? <Puesto carrito={carrito} /> : null}
-                </div>
-              ))}
-            </div>
-          ))}
+          {carritos.length === 0 ? (
+            <p>No hay carritos disponibles.</p>
+          ) : (
+            rows.length > 0 &&
+            rows.map((row, rowIndex) => (
+              <div key={rowIndex} className="row">
+                {row.map((carrito, index) => (
+                  <div key={index} className="col-md-3 pb-2">
+                    {carrito !== null ? <Puesto carrito={carrito} /> : null}
+                  </div>
+                ))}
+              </div>
+            ))
+          )}
         </div>
-        <Link to={`/crear-puesto`} className="btn btn-primary btn-floating btn-lg">
+        <Link
+          to={`/crear-puesto`}
+          className="btn btn-primary btn-floating btn-lg"
+        >
           +
         </Link>
-        <Footer/>
+        <Footer />
       </div>
-        
     </div>
   );
 };
