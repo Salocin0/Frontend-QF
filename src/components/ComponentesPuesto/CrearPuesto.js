@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
+import { Link } from "react-router-dom";
 
 const CrearNuevoCarro = () => {
   const [numeroCarro, setNumeroCarro] = useState("");
@@ -16,53 +17,63 @@ const CrearNuevoCarro = () => {
   const [pdfAfip, setPdfAfip] = useState(null);
   const [pdfCuil, setPdfCuil] = useState(null);
   const [pdfDNI, setPdfDNI] = useState(null);
-  const [session, setSession] = useState(null);
 
+  const [session, setSession] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:8000/user/session", {
-      method: "GET",
-      body:{sessionID:localStorage.getItem("sessionId")}
-    })
-      .then((response) => response.json())
-      .then((data) => {setSession(data)
-    console.log(data)})
-      .catch((error) => console.error("Error fetching session:", error));
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (sessionId) {
+      fetch("http://localhost:8000/user/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSession(data.data);
+          console.log(data.data);
+        })
+        .catch((error) => console.error("Error fetching session:", error));
+    }
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí puedes realizar las validaciones y el envío de datos al servidor
-    // según tu lógica de manejo de formularios y almacenamiento de archivos.
-    // Ejemplo:
-    const formData = new FormData();
-    formData.append("numeroCarro", numeroCarro);
-    formData.append("nombreCarro", nombreCarro);
-    formData.append("tipoNegocio", tipoNegocio);
-    formData.append("pdfAfip", pdfAfip);
-    formData.append("pdfCuil", pdfCuil);
-    formData.append("pdfDNI", pdfDNI);
-    formData.append("telefonoContacto", telefonoContacto);
-    formData.append("razonSocial", razonSocial);
-    formData.append("cuit", cuit);
-    formData.append("telefonoCarro", telefonoCarro);
-    formData.append("consumidoreId",session.user.consumidoreId);
 
+    // Crear un objeto con los datos del formulario
+    const formData = {
+      numeroCarro,
+      nombreCarro,
+      tipoNegocio,
+      pdfAfip,
+      pdfCuil,
+      pdfDNI,
+      telefonoContacto,
+      razonSocial,
+      cuit,
+      telefonoCarro,
+      consumidorId: session.consumidorId,
+    };
     // Realizar la solicitud HTTP para enviar los datos al servidor
     fetch("http://localhost:8000/puesto", {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data.code);
         // Manejo de la respuesta del servidor
-        console.log(data);
-        // Mostrar mensaje de éxito
-        if (data.ok) {
+        if (data.code === 200) {
           toast.success("Carro de comida registrado correctamente");
         } else {
-          toast.error("Error al registrar el carro de comida");
+          toast.error("nombre existente");
         }
 
         // Redireccionar a la página deseada
@@ -234,6 +245,12 @@ const CrearNuevoCarro = () => {
                       Registrar Carro de Comida
                     </button>
                   </div>
+                  <Link
+                    to={`/listado-puestos`}
+                    className="btn btn-primary w-100 mt-1"
+                  >
+                    Volver
+                  </Link>
                 </form>
               </div>
             </div>

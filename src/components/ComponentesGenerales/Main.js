@@ -45,6 +45,7 @@ export const Main = () => {
            <Route path="/crear-puesto" element={<CrearNuevoPuesto/>} />
            <Route path="/listado-puestos" element={<ListadoPuestos/>} />
            <Route path="/consultar-puesto" element={<ConsultarPuesto/>} />
+           <Route path="/puesto/:id" element={<ConsultarPuesto/>} />
 
            <Route path="/adquirir-nuevo-rolR" element={<AdquirirNuevoRolR/>} />
            <Route path="/consultar-usuarioR" element={<ConsultarUsuarioR/>} />

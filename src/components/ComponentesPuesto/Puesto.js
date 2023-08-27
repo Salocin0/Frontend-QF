@@ -6,7 +6,7 @@ import './puestos.css'
 
 const Puesto = ({ carrito }) => {
   return (
-    <Link to={`/card/${carrito.id}`} className="card-link">
+    <Link to={`/puesto/${carrito.id}`} className="card-link">
     <div className="card shadow-sm">
       <img
         src={carrito.thumbnail || imgDefault}
@@ -14,7 +14,7 @@ const Puesto = ({ carrito }) => {
         alt="Thumbnail"
       />
       <div className="card-body">
-        <h3 className="card-text text-center">{carrito.nombre}</h3>
+        <h3 className="card-text text-center">{carrito.nombreCarro}</h3>
       </div>
     </div>
     </Link>
