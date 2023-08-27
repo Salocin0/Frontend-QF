@@ -30,7 +30,7 @@ const AdquirirNuevoRolPE = () => {
     try {
       console.log(user);
       const responseconsumidor = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidoreId}`,
+        `http://localhost:8000/consumidor/${user.consumidorId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -126,7 +126,7 @@ const AdquirirNuevoRolPE = () => {
         if (data.code === 200) {
           toast.success("Nuevo rol adquirido correctamente");
           setTimeout(() => {
-            navigate(`/home/inicio`);
+            navigate(`/home`);
           }, 1500);
         } else if (data.code === 400) {
           toast.error("Error al adquirir el nuevo rol");

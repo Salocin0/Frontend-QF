@@ -20,34 +20,71 @@ const ConsultarUsuario = () => {
 
   const [productor, setProductor] = useState("");
   const [nombre, setNombre] = useState("");
+  const [nombreC, setNombreC] = useState("");
   const [apellido, setApellido] = useState("");
+  const [apellidoC, setApellidoC] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [fechaNacimientoC, setFechaNacimientoC] = useState("");
   const [dni, setDni] = useState("");
+  const [dniC, setDniC] = useState("");
   const [localidad, setLocalidad] = useState("");
+  const [localidadC, setLocalidadC] = useState("");
+
   const [telefono, setTelefono] = useState("");
+    const [telefonoC, setTelefonoC] = useState("");
+
   const [cuit, setCuit] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
   const [documentos, setDocumentos] = useState("");
 
   const [username, setUsername] = useState("");
+  const [usernameC, setUsernameC] = useState("");
+
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isDisabledC, setIsDisabledC] = useState(true);
+  const [isDisabledPE, setIsDisabledPE] = useState(true);
+  const [isDisabledEPC, setIsDisabledEPC] = useState(true);
+  const [isDisabledR, setIsDisabledR] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
+    const [editModeC, setEditModeC] = useState(false);
+    const [editModePE, setEditModePE] = useState(false);
+    const [editModeEPC, setEditModeEPC] = useState(false);
+    const [editModeR, setEditModeR] = useState(false);
+
   const [rolSeleccionado, setRolSeleccionado] = useState("Usuario");
 
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
 
+    const handleNombreChangeC= (e) => {
+    setNombreC(e.target.value);
+  };
+
+
   const handleApellidoChange = (e) => {
     setApellido(e.target.value);
+  };
+
+  const handleApellidoChangeC = (e) => {
+    setApellidoC(e.target.value);
   };
 
   const handleFechaNacimientoChange = (e) => {
     setFechaNacimiento(e.target.value);
   };
 
+    const handleFechaNacimientoChangeC = (e) => {
+    setFechaNacimiento(e.target.value);
+  };
+
+
   const handleDniChange = (e) => {
+    setDni(e.target.value);
+  };
+
+  const handleDniChangeC = (e) => {
     setDni(e.target.value);
   };
 
@@ -55,19 +92,54 @@ const ConsultarUsuario = () => {
     setLocalidad(e.target.value);
   };
 
+  const handleLocalidadChangeC = (e) => {
+    setLocalidadC(e.target.value);
+  };
+
   const handleTelefonoChange = (e) => {
     setTelefono(e.target.value);
   };
 
-  const handleCuitChange = (e) => {
+  const handleTelefonoChangeC = (e) => {
+    setTelefonoC(e.target.value);
+  };
+
+
+
+  const handleCuitChangePE = (e) => {
     setCuit(e.target.value);
   };
 
-  const handleRazonSocialChange = (e) => {
+  const handleCuitChangeEPC = (e) => {
+    setCuit(e.target.value);
+  };
+
+  const handleCuitChangeR = (e) => {
+    setCuit(e.target.value);
+  };
+
+  const handleRazonSocialChangePE = (e) => {
     setRazonSocial(e.target.value);
   };
 
-  const handleDocumentosChange = (e) => {
+  const handleRazonSocialChangeEPC = (e) => {
+    setRazonSocial(e.target.value);
+  };
+
+  const handleRazonSocialChangeR = (e) => {
+    setRazonSocial(e.target.value);
+  };
+
+
+  const handleDocumentosChangePE = (e) => {
+    setDocumentos(e.target.files);
+  };
+
+  const handleDocumentosChangeEPC = (e) => {
+    setDocumentos(e.target.files);
+  };
+
+  const handleDocumentosChangeR = (e) => {
     setDocumentos(e.target.files);
   };
 
@@ -75,15 +147,75 @@ const ConsultarUsuario = () => {
     setUsername(e.target.value);
   };
 
-  const handleEditModeToggle = () => {
-    setEditMode(!editMode);
-    setIsDisabled(!isDisabled);
+  const handleUsernameChangeC = (e) => {
+    setUsernameC(e.target.value);
   };
 
-  const handleSaveChanges = (e) => {
-    e.preventDefault();
-    setEditMode(false);
+  const handleEditModeToggleC = () => {
+    setEditModeC(!editModeC);
+    setIsDisabledC(!isDisabledC);
   };
+
+  const handleCancelChangesC = () => {
+    setEditModeC(false);
+    setIsDisabledC(true);
+    cargarDatos(user); // Volver a cargar los datos originales
+  };
+
+  const handleSaveChangesC = (e) => {
+    e.preventDefault();
+    setEditModeC(false);
+  };
+
+  const handleEditModeTogglePE = () => {
+    setEditModePE(!editMode);
+    setIsDisabledPE(!isDisabled);
+  };
+
+  const handleCancelChangesPE = () => {
+    setEditModePE(false);
+    setIsDisabledPE(true);
+    cargarDatos(user); // Volver a cargar los datos originales
+  };
+
+  const handleSaveChangesPE = (e) => {
+    e.preventDefault();
+    setEditModePE(false);
+  };
+
+  const handleEditModeToggleEPC = () => {
+    setEditModeEPC(!editMode);
+    setIsDisabledEPC(!isDisabled);
+  };
+
+  const handleCancelChangesEPC = () => {
+    setEditModeEPC(false);
+    setIsDisabledEPC(true);
+    cargarDatos(user); // Volver a cargar los datos originales
+  };
+
+  const handleSaveChangesEPC = (e) => {
+    e.preventDefault();
+    setEditModeEPC(false);
+  };
+
+  const handleEditModeToggleR = () => {
+    setEditMode(!editModeR);
+    setIsDisabled(!isDisabledR);
+  };
+
+  const handleCancelChangesR = () => {
+    setEditModeR(false);
+    setIsDisabledR(true);
+    cargarDatos(user); // Volver a cargar los datos originales
+  };
+
+  const handleSaveChangesR = (e) => {
+    e.preventDefault();
+    setEditModeR(false);
+  };
+
+
 
   useEffect(() => {
     if (user) {
@@ -96,7 +228,7 @@ const ConsultarUsuario = () => {
 
     try {
       const response1 = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidoreId}`,
+        `http://localhost:8000/consumidor/${user.consumidorId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
@@ -154,26 +286,7 @@ const ConsultarUsuario = () => {
     }
   };
 
-  const handleRolChange = (e) => {
-    setRolSeleccionado(e.target.value);
 
-    switch (e.target.value) {
-      case "Usuario":
-        window.location.href = "/consultar-usuario";
-        break;
-      case "Productor de Eventos":
-        window.location.href = "/consultar-usuarioPE";
-        break;
-      case "Encargado Puesto de Comida":
-        window.location.href = "/consultar-usuarioEPC";
-        break;
-      case "Repartidor":
-        window.location.href = "/ruta-repartidor";
-        break;
-      default:
-        break;
-    }
-  };
 
   return (
     <>
@@ -188,7 +301,7 @@ const ConsultarUsuario = () => {
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                   Tu Perfil
                 </h1>
-                <form onSubmit={handleSaveChanges} className="needs-validation">
+                <form  className="needs-validation">
                   <div>
                     <hr />
 
@@ -199,21 +312,38 @@ const ConsultarUsuario = () => {
                     <section className="align-items-center justify-content-center col form">
                       <div className="card shadow-lg">
                         <div className="card-body p-3 formulario">
-                          <div className="d-flex justify-content-end">
+                        <div className="d-flex justify-content-end">
+                        {editModeC ? (
+                          <>
+
                             <button
                               type="button"
-                              className="btn btn-link text-primary"
-                              style={{
-                                margin: "0px 0px -25px 0px",
-                                textDecoration: "none",
-                              }}
-                              onClick={handleEditModeToggle}
+                              className=" btn btn-success mr-2"
+                              onClick={handleSaveChangesC}
                             >
-                              Editar >
+                              Guardar
                             </button>
-                          </div>
+                            <br/>
+                            <button
+                              type="button"
+                              className="btn btn-danger"
+                              onClick={handleCancelChangesC}
+                            >
+                              Cancelar
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleEditModeToggleC}
+                          >
+                            Editar
+                          </button>
+                        )}
+                      </div>
                           <form
-                            onSubmit={handleSaveChanges}
+                            onSubmit={handleSaveChangesC}
                             className="needs-validation"
                           >
                             <div className="mb-2">
@@ -228,9 +358,9 @@ const ConsultarUsuario = () => {
                                 id="username"
                                 className="form-control"
                                 value={username}
-                                onChange={handleUsernameChange}
-                                readOnly={!editMode}
-                                disabled={isDisabled}
+                                onChange={handleUsernameChangeC}
+                                readOnly={!editModeC}
+                                disabled={isDisabledC}
                               />
                             </div>
                             <div className=" mb-2">
@@ -245,9 +375,9 @@ const ConsultarUsuario = () => {
                                 id="nombre"
                                 className="form-control"
                                 value={nombre}
-                                onChange={handleNombreChange}
-                                readOnly={!editMode}
-                                disabled={isDisabled}
+                                onChange={handleNombreChangeC}
+                                readOnly={!editModeC}
+                                disabled={isDisabledC}
                               />
                             </div>
                             <div className=" mb-2">
@@ -262,9 +392,9 @@ const ConsultarUsuario = () => {
                                 id="apellido"
                                 className="form-control"
                                 value={apellido}
-                                onChange={handleApellidoChange}
-                                readOnly={!editMode}
-                                disabled={isDisabled}
+                                onChange={handleApellidoChangeC}
+                                readOnly={!editModeC}
+                                disabled={isDisabledC}
                               />
                             </div>
                             <div className="mb-2">
@@ -279,9 +409,9 @@ const ConsultarUsuario = () => {
                                 id="fechaNacimiento"
                                 className="form-control"
                                 value={fechaNacimiento}
-                                onChange={handleFechaNacimientoChange}
-                                readOnly={!editMode}
-                                disabled={isDisabled}
+                                onChange={handleFechaNacimientoChangeC}
+                                readOnly={!editModeC}
+                                disabled={isDisabledC}
                               />
                             </div>
                             <div className="mb-2">
@@ -293,9 +423,9 @@ const ConsultarUsuario = () => {
                                 id="dni"
                                 className="form-control"
                                 value={dni}
-                                onChange={handleDniChange}
-                                readOnly={!editMode}
-                                disabled={isDisabled}
+                                onChange={handleDniChangeC}
+                                readOnly={!editModeC}
+                                disabled={isDisabledC}
                               />
                             </div>
                             <div className="mb-2">
@@ -310,9 +440,9 @@ const ConsultarUsuario = () => {
                                 id="localidad"
                                 className="form-control"
                                 value={localidad}
-                                onChange={handleLocalidadChange}
-                                readOnly={!editMode}
-                                disabled={isDisabled}
+                                onChange={handleLocalidadChangeC}
+                                readOnly={!editModeC}
+                                disabled={isDisabledC}
                               />
                             </div>
                             <div className="mb-2">
@@ -327,9 +457,9 @@ const ConsultarUsuario = () => {
                                 id="telefono"
                                 className="form-control"
                                 value={telefono}
-                                onChange={handleTelefonoChange}
-                                readOnly={!editMode}
-                                disabled={isDisabled}
+                                onChange={handleTelefonoChangeC}
+                                readOnly={!editModeC}
+                                disabled={isDisabledC}
                               />
                             </div>
                           </form>
@@ -338,10 +468,11 @@ const ConsultarUsuario = () => {
                     </section>
                   </div>
 
-                  <hr />
 
                   {mostrarContenidoProductor && (
                     <>
+                                      <hr />
+
                       <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                         Productor de Eventos
                       </h1>
@@ -349,20 +480,37 @@ const ConsultarUsuario = () => {
                         <div className="card shadow-lg">
                           <div className="card-body p-3 formulario">
                             <div className="d-flex justify-content-end">
-                              <button
-                                type="button"
-                                className="btn btn-link text-primary"
-                                style={{
-                                  margin: "0px 0px -25px 0px",
-                                  textDecoration: "none",
-                                }}
-                                onClick={handleEditModeToggle}
-                              >
-                                Editar >
-                              </button>
+                            {editModePE ? (
+                          <>
+
+                            <button
+                              type="button"
+                              className=" btn btn-success mr-2"
+                              onClick={handleSaveChangesPE}
+                            >
+                              Guardar
+                            </button>
+                            <br/>
+                            <button
+                              type="button"
+                              className="btn btn-danger"
+                              onClick={handleCancelChangesPE}
+                            >
+                              Cancelar
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleEditModeTogglePE}
+                          >
+                            Editar
+                          </button>
+                        )}
                             </div>
                             <form
-                              onSubmit={handleSaveChanges}
+                              onSubmit={handleSaveChangesPE}
                               className="needs-validation"
                             >
                               {/* CUIT */}
@@ -378,9 +526,9 @@ const ConsultarUsuario = () => {
                                   id="cuit"
                                   className="form-control"
                                   value={cuit}
-                                  onChange={handleCuitChange}
-                                  readOnly={!editMode}
-                                  disabled={!editMode}
+                                  onChange={handleCuitChangePE}
+                                  readOnly={!editModePE}
+                                  disabled={!editModePE}
                                 />
                               </div>
                               {/* Razon Social */}
@@ -396,9 +544,9 @@ const ConsultarUsuario = () => {
                                   id="razonSocial"
                                   className="form-control"
                                   value={razonSocial}
-                                  onChange={handleRazonSocialChange}
-                                  readOnly={!editMode}
-                                  disabled={!editMode}
+                                  onChange={handleRazonSocialChangePE}
+                                  readOnly={!editModePE}
+                                  disabled={!editModePE}
                                 />
                               </div>
                               {/* Documentos */}
@@ -413,9 +561,9 @@ const ConsultarUsuario = () => {
                                   type="file"
                                   id="documentos"
                                   className="form-control"
-                                  onChange={handleDocumentosChange}
-                                  readOnly={!editMode}
-                                  disabled={!editMode}
+                                  onChange={handleDocumentosChangePE}
+                                  readOnly={!editModePE}
+                                  disabled={!editModePE}
                                 />
                               </div>
                             </form>
@@ -424,31 +572,48 @@ const ConsultarUsuario = () => {
                       </section>
                     </>
                   )}
-                  <hr />
                   {mostrarContenidoEncargadoPuesto && (
                     <>
+                                          <hr />
+
                       <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                         Encargado Puesto de Comida
                       </h1>
-
                       <section className="align-items-center justify-content-center col form">
                         <div className="card shadow-lg">
                           <div className="card-body p-3 formulario">
                             <div className="d-flex justify-content-end">
-                              <button
-                                type="button"
-                                className="btn btn-link text-primary"
-                                style={{
-                                  margin: "0px 0px -25px 0px",
-                                  textDecoration: "none",
-                                }} // Ajusta los valores según lo necesario
-                                onClick={handleEditModeToggle}
-                              >
-                                Editar >
-                              </button>
+                            {editModeEPC ? (
+                          <>
+
+                            <button
+                              type="button"
+                              className=" btn btn-success mr-2"
+                              onClick={handleSaveChangesEPC}
+                            >
+                              Guardar
+                            </button>
+                            <br/>
+                            <button
+                              type="button"
+                              className="btn btn-danger"
+                              onClick={handleCancelChangesEPC}
+                            >
+                              Cancelar
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleEditModeToggleEPC}
+                          >
+                            Editar
+                          </button>
+                        )}
                             </div>
                             <form
-                              onSubmit={handleSaveChanges}
+                              onSubmit={handleSaveChangesEPC}
                               className="needs-validation"
                             >
                               {/* CUIT */}
@@ -464,9 +629,9 @@ const ConsultarUsuario = () => {
                                   id="cuit"
                                   className="form-control"
                                   value={cuit}
-                                  onChange={handleCuitChange}
-                                  readOnly={!editMode}
-                                  disabled={!editMode}
+                                  onChange={handleCuitChangeEPC}
+                                  readOnly={!editModeEPC}
+                                  disabled={!editModeEPC}
                                 />
                               </div>
                               {/* Razon Social */}
@@ -482,9 +647,9 @@ const ConsultarUsuario = () => {
                                   id="razonSocial"
                                   className="form-control"
                                   value={razonSocial}
-                                  onChange={handleRazonSocialChange}
-                                  readOnly={!editMode}
-                                  disabled={!editMode}
+                                  onChange={handleRazonSocialChangeEPC}
+                                  readOnly={!editModeEPC}
+                                  disabled={!editModeEPC}
                                 />
                               </div>
                               {/* Documentos */}
@@ -499,9 +664,9 @@ const ConsultarUsuario = () => {
                                   type="file"
                                   id="documentos"
                                   className="form-control"
-                                  onChange={handleDocumentosChange}
-                                  readOnly={!editMode}
-                                  disabled={!editMode}
+                                  onChange={handleDocumentosChangeEPC}
+                                  readOnly={!editModeEPC}
+                                  disabled={!editModeEPC}
                                 />
                               </div>
                             </form>
@@ -511,9 +676,10 @@ const ConsultarUsuario = () => {
                     </>
                   )}
 
-                  <hr />
+
                   {mostrarContenidoRepartidor && (
                     <>
+                               <hr />
                       <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                         Repartidor
                       </h1>
@@ -521,20 +687,37 @@ const ConsultarUsuario = () => {
                         <div className="card shadow-lg">
                           <div className="card-body p-3 formulario">
                             <div className="d-flex justify-content-end">
-                              <button
-                                type="button"
-                                className="btn btn-link text-primary"
-                                style={{
-                                  margin: "0px 0px -25px 0px",
-                                  textDecoration: "none",
-                                }} // Ajusta los valores según lo necesario
-                                onClick={handleEditModeToggle}
-                              >
-                                Editar >
-                              </button>
+                            {editModeR ? (
+                          <>
+
+                            <button
+                              type="button"
+                              className=" btn btn-success mr-2"
+                              onClick={handleSaveChangesR}
+                            >
+                              Guardar
+                            </button>
+                            <br/>
+                            <button
+                              type="button"
+                              className="btn btn-danger"
+                              onClick={handleCancelChangesR}
+                            >
+                              Cancelar
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleEditModeToggleR}
+                          >
+                            Editar
+                          </button>
+                        )}
                             </div>
                             <form
-                              onSubmit={handleSaveChanges}
+                              onSubmit={handleSaveChangesR}
                               className="needs-validation"
                             >
                               {/* CUIT */}
@@ -552,9 +735,9 @@ const ConsultarUsuario = () => {
                                   id="cuit"
                                   className="form-control"
                                   value={cuit}
-                                  onChange={handleCuitChange}
-                                  readOnly={!editMode}
-                                  disabled={!editMode}
+                                  onChange={handleCuitChangeR}
+                                  readOnly={!editModeR}
+                                  disabled={!editModeR}
                                 />
                               </div>
 
@@ -570,9 +753,9 @@ const ConsultarUsuario = () => {
                                   type="file"
                                   id="documentos"
                                   className="form-control"
-                                  onChange={handleDocumentosChange}
-                                  readOnly={!editMode}
-                                  disabled={!editMode}
+                                  onChange={handleDocumentosChangeR}
+                                  readOnly={!editModeR}
+                                  disabled={!editModeR}
                                 />
                               </div>
                             </form>
@@ -581,35 +764,6 @@ const ConsultarUsuario = () => {
                       </section>
                     </>
                   )}
-                  <div className="d-grid">
-                    {!editMode && (
-                      <>
-                        <button
-                          type="button"
-                          className="btn btn-primary"
-                          onClick={handleEditModeToggle}
-                        >
-                          Editar
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-danger deshabilitar"
-                        >
-                          Deshabilitar Usuario
-                        </button>
-                      </>
-                    )}
-                    {editMode && (
-                      <button
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={handleEditModeToggle}
-                        style={{ width: "100%" }}
-                      >
-                        Guardar Cambios
-                      </button>
-                    )}
-                  </div>
                 </form>
               </div>
             </div>
