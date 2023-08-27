@@ -37,3 +37,11 @@
   }
 
   .card-link{text-decoration: none;}
+
+  .centered-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Opcional: Ajusta esto según tus necesidades */
+    color: white; /* Cambia esto según tu esquema de colores */
+  }

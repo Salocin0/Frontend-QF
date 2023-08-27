@@ -72,6 +72,7 @@ const CrearNuevoCarro = () => {
         // Manejo de la respuesta del servidor
         if (data.code === 200) {
           toast.success("Carro de comida registrado correctamente");
+          navigate("/listado-puestos");
         } else {
           toast.error("nombre existente");
         }
