@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserContext } from "../ComponentesGenerales/UserContext";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 import "./AdquirirNuevoRolEPC.css";
 
 const AdquirirNuevoRolEPC = () => {
@@ -94,7 +94,7 @@ const AdquirirNuevoRolEPC = () => {
         if (data.code === 200) {
           toast.success("Nuevo rol adquirido correctamente");
           setTimeout(() => {
-            navigate(`/home/inicio`);
+            navigate(`/home`);
           }, 1500);
         } else if (data.code === 400) {
           toast.error("Error al adquirir el nuevo rol");
@@ -121,7 +121,7 @@ const AdquirirNuevoRolEPC = () => {
     try {
       console.log(user);
       const responseconsumidor = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidoreId}`,
+        `http://localhost:8000/consumidor/${user.consumidorId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

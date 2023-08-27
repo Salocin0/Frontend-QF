@@ -121,7 +121,7 @@ const AdquirirNuevoRolR = () => {
     try {
       console.log(user);
       const responseconsumidor = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidoreId}`,
+        `http://localhost:8000/consumidor/${user.consumidorId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },
