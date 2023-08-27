@@ -1,8 +1,8 @@
-import React, { useState, useContext } from "react";
-import Footer from "../ComponentesGenerales/Footer";
 import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const Login = () => {
@@ -121,6 +121,8 @@ const Login = () => {
                     </button>
                   </div>
 
+
+
                   <div className="mt-2 text-center">
                     <a href="/recuperar" className="text-primary">
                       Recuperar Contraseña
@@ -133,6 +135,8 @@ const Login = () => {
                       Registrarme
                     </a>
                   </div>
+
+
                 </form>
               </div>
             </div>

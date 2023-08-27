@@ -1,15 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { UserContext } from '../ComponentesGenerales/UserContext';
 import Login from './Login';
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'),
-    useHistory: () => ({
-      push: jest.fn(),
-    }),
-  }));
+
+jest.mock('react-router-dom', () => {
+  const originalModule = jest.requireActual('react-router-dom');
+  return {
+    ...originalModule,
+    useNavigate: jest.fn(),
+  };
+});
 
 describe('Test de Login', () => {
   it('debe mostrar el campo de usuario', () => {
@@ -60,23 +62,82 @@ describe('Test de Login', () => {
     expect(recuperarContraseñaLink).toBeInTheDocument();
   });
 
- /* it('debe mostrar el enlace de Registrarme', () => {
+  it('debe redirigir a la página de recuperar contraseña al hacer clic en el enlace', () => {
 
     render(
-        <UserContext.Provider value={{ updateUser: jest.fn() }}>
+      <UserContext.Provider value={{ updateUser: jest.fn() }}>
         <MemoryRouter>
           <Login />
         </MemoryRouter>
       </UserContext.Provider>
-      );
+    );
+
+    const recuperarContraseñaLink = screen.getByText('Recuperar Contraseña');
+    expect(recuperarContraseñaLink).toBeInTheDocument();
+    expect.toHaveAttribute('href', '/recuperar');
+
+  });
+
+  it('debe redirigir a la página de registrarse al hacer clic en el enlace', () => {
+
+    render(
+      <UserContext.Provider value={{ updateUser: jest.fn() }}>
+        <MemoryRouter>
+          <Login />
+        </MemoryRouter>
+      </UserContext.Provider>
+    );
+
+
     const registrarmeLink = screen.getByText('Registrarme');
     expect(registrarmeLink).toBeInTheDocument();
+    expect(registrarmeLink).toHaveAttribute('href', '/registrarse');
 
-    fireEvent.click(registrarmeLink);
 
-    // Verificar que la URL haya cambiado correctamente
-    expect(useHistory().push).toHaveBeenCalledWith('/registrarse');
-  });*/
+
+  });
+
+  it('debe tener un boton que redirija la navegacion', () => {
+
+    render(
+      <UserContext.Provider value={{ updateUser: jest.fn() }}>
+        <MemoryRouter>
+          <Login />
+        </MemoryRouter>
+      </UserContext.Provider>
+    );
+
+    const ingresarButton = screen.getByRole('button', { name: 'Ingresar' });
+    expect (ingresarButton).toBeInTheDocument();
+
+  });
+
+  it('debe redirigir a /home al hacer clic en el botón de Ingresar con éxito', async () => {
+
+
+    // Obtener la función mockeada de useNavigate
+    const navigateMock = require('react-router-dom').useNavigate;
+
+    // Configurar el comportamiento esperado de useNavigate
+    navigateMock.mockReturnValue(() => {});
+
+    render(
+      <UserContext.Provider value={{ updateUser: jest.fn() }}>
+        <MemoryRouter>
+          <Login />
+        </MemoryRouter>
+      </UserContext.Provider>
+    );
+
+    const ingresarButton = screen.getByRole('button', { name: 'Ingresar' });
+    fireEvent.click(ingresarButton);
+
+    // Esperar a que las promesas se resuelvan
+    await Promise.resolve();
+
+    // Verificar que navigate se llamó con "/home"
+    expect(navigateMock).toHaveBeenCalledTimes(1);
+  });
 
 
 });
