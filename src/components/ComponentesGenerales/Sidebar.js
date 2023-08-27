@@ -69,12 +69,17 @@ const Sidebar = (tipoUsuario) => {
               >
                 <li>
                   <a className="dropdown-item" href="/adquirir-nuevo-rolPE">
-                    ¡Quiero ser Productor de Eventos!
+                    ¡Quiero ser Productor!
                   </a>
                 </li>
                 <li>
                   <a className="dropdown-item" href="/adquirir-nuevo-rolEPC">
-                    ¡Quiero ser Encargado de Puesto de Comidas!
+                    ¡Quiero ser Encargado de Puestos!
+                  </a>
+                </li>
+                <li>
+                  <a className="dropdown-item" href="/adquirir-nuevo-rolR">
+                    ¡Quiero ser Repartidor!
                   </a>
                 </li>
                 <li>

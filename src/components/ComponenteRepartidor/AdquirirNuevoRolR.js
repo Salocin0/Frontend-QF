@@ -6,6 +6,7 @@ import "../ComponentesEPC/AdquirirNuevoRolEPC.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import '../ComponentesConsumidor/ConsultarUsuario.css'
 
 const AdquirirNuevoRolR = () => {
   const navigate = useNavigate();
@@ -147,13 +148,13 @@ const AdquirirNuevoRolR = () => {
 
   return (
     <>
-      <div className="d-flex">
+      <div className="d-flex background">
         <div className="col-2">
           <Sidebar />
         </div>
         <div className="flex-grow-1">
           <section className="align-items-center justify-content-center">
-            <div className="card shadow-lg imgback">
+            <div className=" ">
               <div className="card-body p-3 formularioAdquirirNuevoRolEPC col-6 offset-3">
                 <h1 className="fs-4 card-title fw-bold mb-2 text-dark">
                   Adquirir Nuevo Rol - Repartidor
