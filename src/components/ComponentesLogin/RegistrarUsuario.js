@@ -158,7 +158,6 @@ const RegistroUsuario = () => {
       contraseña: password,
       consumidor: consumidor,
     };
-    console.log(JSON.stringify(json_consumidor))
     fetch("http://127.0.0.1:8000/user/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -166,7 +165,6 @@ const RegistroUsuario = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.code === 200) {
           toast.success("Usuario registrado correctamente");
           setTimeout(() => {

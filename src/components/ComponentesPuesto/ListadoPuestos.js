@@ -14,28 +14,32 @@ const ListadoPuestos = () => {
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
-    if (!session) {
-      fetch("http://localhost:8000/user/session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          
-          
-          setSession(data.data);
-          console.log(data.data.tipoUsuario);
-          
-        })
-        .catch((error) => console.error("Error fetching session:", error));
+    
+    if (!sessionId) {
+      console.error("No session ID found.");
+      return;
     }
-    console.log(session)
+  
+    fetch("http://localhost:8000/user/session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sessionID: sessionId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSession(data.data);
+        console.log(data.data.tipoUsuario);
+      })
+      .catch((error) => console.error("Error fetching session:", error));
+  }, []);
+  
+  useEffect(() => {
     if (session) {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
+      
       fetch("http://localhost:8000/puesto", {
         method: "GET",
         headers: headers,
@@ -57,9 +61,10 @@ const ListadoPuestos = () => {
           }
           setRows(generatedRows);
         })
-        .catch((error) => console.log("no existen carritos"));
+        .catch((error) => console.log("No existen carritos."));
     }
   }, [session]);
+  
   
 
   return (

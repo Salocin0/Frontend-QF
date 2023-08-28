@@ -7,14 +7,37 @@ import carro from '../img/carro.png';
 import eventos from '../img/eventos.png';
 import pedidos from '../img/pedidos.png';
 import perfil from '../img/perfil.png';
+import { useEffect,useState } from 'react';
 import './cards.css';
 
 const Inicio = () => {
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (sessionId) {
+      fetch("http://localhost:8000/user/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSession(data.data);
+          console.log(data.data);
+        })
+        .catch((error) => console.error("Error fetching session:", error));
+    }
+  }, []);
+
   return (
     <>
       <div className="d-flex">
         <div className='col-2'>
-          <Sidebar />
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1" style={{ background: `url('QuickFoodFondo.png')`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
           <section className="container py-5">

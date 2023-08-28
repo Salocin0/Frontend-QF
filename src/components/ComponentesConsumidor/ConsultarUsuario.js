@@ -24,6 +24,28 @@ const ConsultarUsuario = () => {
   const [editMode, setEditMode] = useState(false);
   const [rolSeleccionado, setRolSeleccionado] = useState('Usuario');
 
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (sessionId) {
+      fetch("http://localhost:8000/user/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSession(data.data);
+          console.log(data.data);
+        })
+        .catch((error) => console.error("Error fetching session:", error));
+    }
+  }, []);
+
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
@@ -128,7 +150,7 @@ const ConsultarUsuario = () => {
     <>
       <div className="d-flex">
         <div className='col-2'>
-        <Sidebar />
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1 background">
           <section className="align-items-center justify-content-center col-6 offset-3 form">

@@ -7,16 +7,20 @@ import "./Sidebar.css";
 import Logo from "../QuickFoodLogo.png";
 import { useAccordionButton } from "react-bootstrap";
 
-const Sidebar = (tipoUsuario) => {
+const Sidebar = ({ tipoUsuario }) => {
   const [usuario, setUsuario] = useState("Consumidor");
-  const [isResponsable, setIsResponsable] = useState(usuario==="Responsable");
-  const [isProductor, setIsProductor] = useState(usuario==="Productor");
-  const [isRepartidor, setIsRepartidor] = useState(usuario==="Repartidor");
-  const [haveRol, setHaveRol] = useState(usuario !== "Consumidor");
+  const [isResponsable, setIsResponsable] = useState(false);
+  const [isProductor, setIsProductor] = useState(false);
+  const [isRepartidor, setIsRepartidor] = useState(false);
+  const [haveRol, setHaveRol] = useState(false);
 
   useEffect(() => {
     setUsuario(tipoUsuario);
-  }, [usuario]);
+    setIsResponsable(usuario === "Responsable");
+    setIsProductor(usuario === "Productor");
+    setIsRepartidor(usuario === "Repartidor");
+    setHaveRol(usuario !== "Consumidor");
+  }, [tipoUsuario,usuario]);
 
   return (
     <>
@@ -30,13 +34,13 @@ const Sidebar = (tipoUsuario) => {
           <ul className="nav flex-column p-3">
             <li className="nav-item">
               <a href="/inicio" className="nav-link text-truncate">
-                <i class="bi bi-1-circle-fill icono"></i>
+                <i className="bi bi-1-circle-fill icono"></i>
                 <span className="ms-1 d-none d-sm-inline w-100">Inicio</span>
               </a>
             </li>
             <li className="nav-item">
               <a href="/historial-pedidos" className="nav-link text-truncate">
-                <i class="bi bi-1-circle-fill icono"></i>
+                <i className="bi bi-1-circle-fill icono"></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Mis Pedidos
                 </span>
@@ -74,14 +78,14 @@ const Sidebar = (tipoUsuario) => {
             )}
             <li className="nav-item">
               <a href="/perfil-nuevo" className="nav-link text-truncate">
-                <i class="bi bi-1-circle-fill icono"></i>
+                <i className="bi bi-1-circle-fill icono"></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Provisional Profile
                 </span>
               </a>
             </li>
             <li className="nav-item dropdown especial">
-              <i class="bi bi-1-circle-fill icono iconoespecial"></i>
+              <i className="bi bi-1-circle-fill icono iconoespecial"></i>
               <a
                 className="nav-link dropdown-toggle text-truncate"
                 id="dropdown"

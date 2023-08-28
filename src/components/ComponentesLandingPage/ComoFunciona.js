@@ -14,28 +14,28 @@ const ComoFunciona = () => {
           </p>
           <div className="items-container flex-column">
             <div className="item pt-2">
-            <i class="bi bi-balloon"></i>
+            <i className="bi bi-balloon"></i>
               <p>
                 Seleciona el evento en el que deseas realizar tu pedido
               </p>
             </div>
 
             <div className="item pt-2">
-            <i class="bi bi-shop"></i>
+            <i className="bi bi-shop"></i>
               <p>
                 Seleciona el puesto al cual quieres hacer el pedido
               </p>
             </div>
 
             <div className="item pt-2">
-            <i class="bi bi-cart"></i>
+            <i className="bi bi-cart"></i>
               <p>
                 Realiza la compra de tu pedido
               </p>
             </div>
 
             <div className="item pt-2">
-            <i class="bi bi-signpost-split bi-2x"></i>
+            <i className="bi bi-signpost-split bi-2x"></i>
               <p>
                 Recibe el pedido en cualquier parte del evento donde te encuentres
               </p>

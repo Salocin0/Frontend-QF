@@ -21,6 +21,28 @@ const AdquirirNuevoRolEPC = () => {
   const [fechaBromatologica, setFechaBromatologica] = useState("");
   const [documentos, setDocumentos] = useState([]);
 
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (sessionId) {
+      fetch("http://localhost:8000/user/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSession(data.data);
+          console.log(data.data);
+        })
+        .catch((error) => console.error("Error fetching session:", error));
+    }
+  }, []);
+
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
@@ -76,6 +98,7 @@ const AdquirirNuevoRolEPC = () => {
         const consumidornuevo = consumidor;
         consumidornuevo.encargadoId = data.data.id;
         setConsumidor(consumidornuevo);
+        console.log(consumidornuevo)
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -152,7 +175,7 @@ const AdquirirNuevoRolEPC = () => {
     <>
       <div className="d-flex">
         <div className="col-2">
-          <Sidebar />
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1">
           <section className="align-items-center justify-content-center">

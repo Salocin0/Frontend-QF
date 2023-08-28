@@ -12,11 +12,11 @@ const ConsultarUsuario = () => {
   const location = useLocation();
   const id = location.state && location.state.value;
   const [mostrarContenidoProductor, setMostrarContenidoProductor] =
-    useState(false);
+    useState(true);
   const [mostrarContenidoEncargadoPuesto, setMostrarContenidoEncargadoPuesto] =
-    useState(false);
+    useState(true);
   const [mostrarContenidoRepartidor, setMostrarContenidoRepartidor] =
-    useState(false);
+    useState(true);
 
   const [productor, setProductor] = useState("");
   const [nombre, setNombre] = useState("");
@@ -54,6 +54,28 @@ const ConsultarUsuario = () => {
 
   const [rolSeleccionado, setRolSeleccionado] = useState("Usuario");
 
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (sessionId) {
+      fetch("http://localhost:8000/user/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSession(data.data);
+          console.log(data.data);
+        })
+        .catch((error) => console.error("Error fetching session:", error));
+    }
+  }, []);
+
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
@@ -61,7 +83,6 @@ const ConsultarUsuario = () => {
   const handleNombreChangeC = (e) => {
     setNombreC(e.target.value);
   };
-
 
   const handleApellidoChange = (e) => {
     setApellido(e.target.value);
@@ -78,7 +99,6 @@ const ConsultarUsuario = () => {
   const handleFechaNacimientoChangeC = (e) => {
     setFechaNacimiento(e.target.value);
   };
-
 
   const handleDniChange = (e) => {
     setDni(e.target.value);
@@ -104,8 +124,6 @@ const ConsultarUsuario = () => {
     setTelefonoC(e.target.value);
   };
 
-
-
   const handleCuitChangePE = (e) => {
     setCuit(e.target.value);
   };
@@ -129,7 +147,6 @@ const ConsultarUsuario = () => {
   const handleRazonSocialChangeR = (e) => {
     setRazonSocial(e.target.value);
   };
-
 
   const handleDocumentosChangePE = (e) => {
     setDocumentos(e.target.files);
@@ -215,8 +232,6 @@ const ConsultarUsuario = () => {
     setEditModeR(false);
   };
 
-
-
   useEffect(() => {
     if (user) {
       cargarDatos(user);
@@ -237,7 +252,7 @@ const ConsultarUsuario = () => {
 
       if (response1.ok) {
         const data1 = await response1.json();
-        console.log(data1);
+        console.log(data1.data.encargado.cuit != undefined);
 
         setApellido(data1.data.apellido);
         setNombre(data1.data.nombre);
@@ -251,22 +266,27 @@ const ConsultarUsuario = () => {
         setLocalidad(data1.data.localidad);
         setTelefono(data1.data.telefono);
 
-        if (data1.data.Productor.cuit || data1.data.Productor.razonSocial) {
+        if (data1.data.Productor?.cuit || data1.data.Productor?.razonSocial) {
           setMostrarContenidoProductor(true);
 
           setCuit(data1.data.Productor.cuit);
           setRazonSocial(data1.data.Productor.razonSocial);
         }
 
-        if (data1.data.encargado.cuit || data1.data.encargado.razonSocial) {
+        if (
+          data1.data.encargado?.cuit !== undefined ||
+          data1.data.encargado?.razonSocial !== undefined
+        ) {
           setMostrarContenidoEncargadoPuesto(true);
 
           setCuit(data1.data.encargado.cuit);
           setRazonSocial(data1.data.encargado.razonSocial);
         }
 
-
-        if (data1.data.repartidore.cuit || data1.data.repartidore.razonSocial) {
+        if (
+          data1.data.repartidore?.cuit ||
+          data1.data.repartidore?.razonSocial
+        ) {
           setMostrarContenidoRepartidor(true);
 
           setCuit(data1.data.repartidore.cuit);
@@ -286,13 +306,11 @@ const ConsultarUsuario = () => {
     }
   };
 
-
-
   return (
     <>
       <div className="d-flex">
         <div className="col-2">
-          <Sidebar />
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1 background">
           <section className="align-items-center justify-content-center col-6 offset-3 form mt-0">
@@ -315,7 +333,6 @@ const ConsultarUsuario = () => {
                           <div className="d-flex justify-content-end">
                             {editModeC ? (
                               <>
-
                                 <button
                                   type="button"
                                   className=" btn btn-success mr-2"
@@ -468,7 +485,6 @@ const ConsultarUsuario = () => {
                     </section>
                   </div>
 
-
                   {mostrarContenidoProductor && (
                     <>
                       <hr />
@@ -482,7 +498,6 @@ const ConsultarUsuario = () => {
                             <div className="d-flex justify-content-end">
                               {editModePE ? (
                                 <>
-
                                   <button
                                     type="button"
                                     className=" btn btn-success mr-2"
@@ -585,7 +600,6 @@ const ConsultarUsuario = () => {
                             <div className="d-flex justify-content-end">
                               {editModeEPC ? (
                                 <>
-
                                   <button
                                     type="button"
                                     className=" btn btn-success mr-2"
@@ -676,7 +690,6 @@ const ConsultarUsuario = () => {
                     </>
                   )}
 
-
                   {mostrarContenidoRepartidor && (
                     <>
                       <hr />
@@ -689,7 +702,6 @@ const ConsultarUsuario = () => {
                             <div className="d-flex justify-content-end">
                               {editModeR ? (
                                 <>
-
                                   <button
                                     type="button"
                                     className=" btn btn-success mr-2"

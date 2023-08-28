@@ -10,6 +10,7 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 
 const AdquirirNuevoRolPE = () => {
   const navigate = useNavigate();
+  const [session, setSession] = useState(null);
   const { user } = useContext(UserContext);
   const [consumidor, setConsumidor] = useState("");
   const [nombre, setNombre] = useState("");
@@ -139,11 +140,31 @@ const AdquirirNuevoRolPE = () => {
     }
   };
 
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (sessionId) {
+      fetch("http://localhost:8000/user/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSession(data.data);
+          console.log(data.data);
+        })
+        .catch((error) => console.error("Error fetching session:", error));
+    }
+  }, []);
+
   return (
     <>
       <div className="d-flex">
         <div className="col-2">
-          <Sidebar />
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1 imgback">
           <section className="align-items-center justify-content-center col-6 offset-3 form">
