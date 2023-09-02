@@ -23,6 +23,7 @@ import Home from './Home';
 import Inicio from './Inicio';
 import Sidebar from './Sidebar';
 import DocumentUpload from './DocumentUpload';
+import SeleccionRegister from '../ComponenteRegister/SeleccionRegister';
 
 export const Main = () => {
   return (
@@ -60,6 +61,7 @@ export const Main = () => {
            <Route path="/login" element={<Login/>} />
 
            <Route path="/subir-archivo" element={<DocumentUpload/>} />
+           <Route path="/seleccion-perfil" element={<SeleccionRegister/>} />
       </Routes>
     </main>
   )

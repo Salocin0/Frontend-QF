@@ -1,0 +1,62 @@
+.background {
+    background-image: url("./../QuickFoodFondo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.cardPerfil {
+    background-color: #292C3E;
+    border: none;
+}
+
+hr {
+    color: white;
+}
+
+.card-header {
+    border-bottom: 1px white;
+}
+
+.card-footer {
+    border-top: 1px white;
+}
+
+
+h2 {
+    color: white;
+}
+
+.radiocheckcolor {
+    background-color: #292C3E !important;
+    border: 2px solid gray !important;
+    color: white !important;
+}
+
+.radiocheckcolor:hover {
+    background-color: gray !important;
+    border: none !important;
+    color: black !important;
+}
+
+.btn.active {
+    background-color: #F7B813 !important;
+    border: none !important;
+    color: black !important;
+}
+
+.checkcolor {
+    background-color: #F7B813 !important;
+    border: none !important;
+    color: black !important;
+}
+
+.checkcolor:hover {
+    background-color: #F7B813 !important;
+    border: none !important;
+    color: black !important;
+}

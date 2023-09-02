@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDolly, faShop, faRightToBracket, faBriefcase } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faRightToBracket} from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
   return (
@@ -12,14 +12,8 @@ const Navbar = () => {
         </div>
         <div className="col-10 d-flex justify-content-end">
           <ul className="navbar-nav">
-            <Link to="/ser-repartidor" className="btn btn-primary nav-item gray">
-              <FontAwesomeIcon icon={faDolly}/>&nbsp;Ser Repartidor
-            </Link>
-            <Link to="/ser-productor" className="btn btn-primary nav-item gray">
-              <FontAwesomeIcon icon={faBriefcase}/>&nbsp;Ser Productor
-            </Link>
-            <Link to="/ser-encargado" className="btn btn-primary nav-item gray">
-              <FontAwesomeIcon icon={faShop}/>&nbsp;Ser Encargado de Puesto
+          <Link to="/seleccion-perfil" className="btn btn-primary nav-item gray">
+              <FontAwesomeIcon icon={faUser}/>&nbsp;Registrarse
             </Link>
             <Link to="/login" className="btn btn-primary nav-item yellow">
               <FontAwesomeIcon icon={faRightToBracket}/>&nbsp;Ingresar
