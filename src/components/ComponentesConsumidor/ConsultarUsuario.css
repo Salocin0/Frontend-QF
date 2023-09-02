@@ -8,22 +8,24 @@ body {
 
 }
 
-.background{
+.background {
   background-image: url("./../Inicio-12.png");
   height: 100%;
   padding-bottom: 0;
   margin-bottom: 0;
 }
-.form{
+
+.form {
   padding: 10px;
   margin-bottom: 20px;
 }
+
 .card {
   width: 100%;
-  margin-left:auto;
+  margin-left: auto;
 }
 
-.deshabilitar{
-  margin-top:10px;
+.deshabilitar {
+  margin-top: 10px;
   margin-bottom: 10px;
 }

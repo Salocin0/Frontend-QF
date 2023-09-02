@@ -14,12 +14,12 @@ const ListadoPuestos = () => {
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
-    
+
     if (!sessionId) {
       console.error("No session ID found.");
       return;
     }
-  
+
     fetch("http://localhost:8000/user/session", {
       method: "POST",
       headers: {
@@ -34,12 +34,12 @@ const ListadoPuestos = () => {
       })
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
-  
+
   useEffect(() => {
     if (session) {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
-      
+
       fetch("http://localhost:8000/puesto", {
         method: "GET",
         headers: headers,
@@ -47,13 +47,13 @@ const ListadoPuestos = () => {
         .then((response) => response.json())
         .then((data) => {
           setCarritos(data.data);
-  
+
           const totalCarritos = Math.ceil(data.data.length / 4) * 4;
           const carritosConNulos = [
             ...data.data,
             ...Array(totalCarritos - data.data.length).fill(null),
           ];
-  
+
           const generatedRows = [];
           for (let i = 0; i < carritosConNulos.length; i += 4) {
             const row = carritosConNulos.slice(i, i + 4);
@@ -64,13 +64,11 @@ const ListadoPuestos = () => {
         .catch((error) => console.log("No existen carritos."));
     }
   }, [session]);
-  
-  
 
   return (
     <div className="d-flex background">
       <div className="col-2">
-      <Sidebar tipoUsuario={session?.tipoUsuario} />
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className="flex-grow-1 pb-5">
         <div className="container pt-2 h-100">
@@ -86,7 +84,9 @@ const ListadoPuestos = () => {
               </div>
             ))
           ) : (
-            <h2 className="centered-text">No tenes ningun puesto en este momento.</h2>
+            <h2 className="centered-text">
+              No tenes ningun puesto en este momento.
+            </h2>
           )}
         </div>
         <Link

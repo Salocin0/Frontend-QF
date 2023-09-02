@@ -121,8 +121,6 @@ const Login = () => {
                     </button>
                   </div>
 
-
-
                   <div className="mt-2 text-center">
                     <a href="/recuperar" className="text-primary">
                       Recuperar Contraseña
@@ -135,8 +133,6 @@ const Login = () => {
                       Registrarme
                     </a>
                   </div>
-
-
                 </form>
               </div>
             </div>

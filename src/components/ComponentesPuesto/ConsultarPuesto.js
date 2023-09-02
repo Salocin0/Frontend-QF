@@ -33,7 +33,7 @@ const ConsultarPuesto = () => {
   const handleDelete = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
-  
+
     fetch(`http://localhost:8000/puesto/${id}`, {
       method: "DELETE",
       headers: headers,
@@ -53,7 +53,6 @@ const ConsultarPuesto = () => {
       })
       .catch((error) => console.error("Error:", error));
   };
-  
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
@@ -79,7 +78,7 @@ const ConsultarPuesto = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({puesto:puesto}),
+      body: JSON.stringify({ puesto: puesto }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -99,7 +98,7 @@ const ConsultarPuesto = () => {
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
-  
+
     fetch("http://localhost:8000/user/session", {
       method: "POST",
       headers: {
@@ -110,10 +109,10 @@ const ConsultarPuesto = () => {
       .then((response) => response.json())
       .then((data) => {
         setSession(data.data);
-  
+
         const headers = new Headers();
         headers.append("ConsumidorId", data.data.consumidorId);
-  
+
         return fetch(`http://localhost:8000/puesto/${id}`, {
           method: "GET",
           headers: headers,
@@ -152,13 +151,12 @@ const ConsultarPuesto = () => {
         .catch((error) => console.error("Error fetching session:", error));
     }
   }, []);
-  
 
   return (
     <>
       <div className="d-flex">
         <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1 background">
           <section className="align-items-center justify-content-center col-6 offset-3 form">

@@ -164,7 +164,7 @@ const AdquirirNuevoRolPE = () => {
     <>
       <div className="d-flex">
         <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1 imgback">
           <section className="align-items-center justify-content-center col-6 offset-3 form">

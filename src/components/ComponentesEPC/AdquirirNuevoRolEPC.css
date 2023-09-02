@@ -1,28 +1,25 @@
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 
-  }
+}
 
-  .containerAdquirirNuevoRolEPC {
-    height: 100%;
-    background-color: white;
-    overflow-y: auto;
-    overflow-x: hidden;
-    border-radius: 10px;
+.containerAdquirirNuevoRolEPC {
+  height: 100%;
+  background-color: white;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: 10px;
 
-  }
+}
 
-.imgback{
+.imgback {
   background-image: url("./../Inicio-12.png");
 }
 
-  .formularioAdquirirNuevoRolEPC {
-    background-color: white;
-    margin-top: 10px;
-    margin-bottom: 22px;
-    border-radius: 10px;
-  }
-
-
-  
+.formularioAdquirirNuevoRolEPC {
+  background-color: white;
+  margin-top: 10px;
+  margin-bottom: 22px;
+  border-radius: 10px;
+}

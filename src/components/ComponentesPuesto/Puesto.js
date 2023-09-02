@@ -2,21 +2,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { Link } from "react-router-dom";
 import imgDefault from "../QuickFoodLogo.png";
-import './puestos.css'
+import "./puestos.css";
 
 const Puesto = ({ carrito }) => {
   return (
     <Link to={`/puesto/${carrito.id}`} className="card-link">
-    <div className="card shadow-sm">
-      <img
-        src={carrito.thumbnail || imgDefault}
-        className="card-img-top"
-        alt="Thumbnail"
-      />
-      <div className="card-body">
-        <h3 className="card-text text-center">{carrito.nombreCarro}</h3>
+      <div className="card shadow-sm">
+        <img
+          src={carrito.thumbnail || imgDefault}
+          className="card-img-top"
+          alt="Thumbnail"
+        />
+        <div className="card-body">
+          <h3 className="card-text text-center">{carrito.nombreCarro}</h3>
+        </div>
       </div>
-    </div>
     </Link>
   );
 };

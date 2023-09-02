@@ -70,8 +70,8 @@ const RegistroUsuario = () => {
         .then((response) => response.json())
         .then((data) => {
           const sortedLocalidades = data.municipios.sort((a, b) =>
-          a.nombre.localeCompare(b.nombre)
-        );
+            a.nombre.localeCompare(b.nombre)
+          );
           setLocalidad(sortedLocalidades);
           setFilteredLocalidades(data.municipios);
         })
@@ -141,7 +141,7 @@ const RegistroUsuario = () => {
       fechaAlta: fecha,
       nombreDeUsuario: username,
       correoElectronico: email,
-      tipoUsuario:"Consumidor"
+      tipoUsuario: "Consumidor",
     };
     const consumidor = {
       nombre: nombre,
@@ -149,7 +149,7 @@ const RegistroUsuario = () => {
       fechaDeNacimiento: fechaNacimiento,
       dni: dni,
       localidad: localidad,
-      provincia:provincias.filter(p=> p.id ===selectedProvince)[0].nombre,
+      provincia: provincias.filter((p) => p.id === selectedProvince)[0].nombre,
       telefono: telefono,
       usuario: usuario,
     };
