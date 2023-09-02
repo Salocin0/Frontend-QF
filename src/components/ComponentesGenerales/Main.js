@@ -22,6 +22,7 @@ import ListadoPuestos from '../ComponentesPuesto/ListadoPuestos';
 import Home from './Home';
 import Inicio from './Inicio';
 import Sidebar from './Sidebar';
+import DocumentUpload from './DocumentUpload';
 
 export const Main = () => {
   return (
@@ -57,6 +58,8 @@ export const Main = () => {
            <Route path="/perfil-nuevo" element={<ConsultarUsuarioPrueba/>} />
 
            <Route path="/login" element={<Login/>} />
+
+           <Route path="/subir-archivo" element={<DocumentUpload/>} />
       </Routes>
     </main>
   )

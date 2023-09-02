@@ -102,17 +102,6 @@ const Login = () => {
                   </div>
 
                   <div className="d-flex align-items-center">
-                    <div className="form-check">
-                      <input
-                        type="checkbox"
-                        name="remember"
-                        id="remember"
-                        className="form-check-input"
-                      />
-                      <label htmlFor="remember" className="form-check-label">
-                        Recordar
-                      </label>
-                    </div>
                     <button
                       type="submit"
                       className="btn btn-primary btn-strong ms-auto"
