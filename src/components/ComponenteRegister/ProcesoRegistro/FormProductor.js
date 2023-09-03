@@ -76,12 +76,12 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between mt-2">
-                    <Link
-                      to={"/seleccion-perfil"}
+                    <button
                       className="btn btn-secondary"
+                      onClick={() => backStep()}
                     >
                       Atrás
-                    </Link>
+                    </button>
                     <button type="submit" className="btn btn-success">
                       Finalizar
                     </button>

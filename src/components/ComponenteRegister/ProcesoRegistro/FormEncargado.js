@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const FormEncargado = ({ nextStep, handleRegistro }) => {
+const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
   const [encargadoData, setEncargadoData] = useState({
     cuit: "",
     razonSocial: "",
@@ -76,12 +76,12 @@ const FormEncargado = ({ nextStep, handleRegistro }) => {
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between mt-2">
-                    <Link
-                      to={"/seleccion-perfil"}
+                    <button
                       className="btn btn-secondary"
+                      onClick={() => backStep()}
                     >
                       Atrás
-                    </Link>
+                    </button>
                     <button type="submit" className="btn btn-success">
                       Finalizar
                     </button>

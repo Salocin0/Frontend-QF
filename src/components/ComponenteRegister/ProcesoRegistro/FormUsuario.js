@@ -10,7 +10,6 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     confirmPassword: "",
   });
 
-  // Función para manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({
@@ -19,15 +18,9 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     });
   };
 
-  // Función para manejar el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validación de datos aquí
-
-    // Llama a la función de registro en el componente principal
     handleRegistro(userData);
-
-    // Avanza al siguiente paso
     nextStep();
   };
 
