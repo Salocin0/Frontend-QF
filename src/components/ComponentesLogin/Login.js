@@ -118,7 +118,7 @@ const Login = () => {
 
                   <div className="mt-2 text-center">
                     ¿No tienes cuenta?{" "}
-                    <a href="/registrarse" className="text-primary">
+                    <a href="/seleccion-perfil" className="text-primary">
                       Registrarme
                     </a>
                   </div>

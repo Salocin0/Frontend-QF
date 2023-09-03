@@ -12,11 +12,11 @@ const ConsultarUsuario = () => {
   const location = useLocation();
   const id = location.state && location.state.value;
   const [mostrarContenidoProductor, setMostrarContenidoProductor] =
-    useState(true);
+    useState(false);
   const [mostrarContenidoEncargadoPuesto, setMostrarContenidoEncargadoPuesto] =
-    useState(true);
+    useState(false);
   const [mostrarContenidoRepartidor, setMostrarContenidoRepartidor] =
-    useState(true);
+    useState(false);
 
   const [productor, setProductor] = useState("");
   const [nombre, setNombre] = useState("");
@@ -33,8 +33,13 @@ const ConsultarUsuario = () => {
   const [telefono, setTelefono] = useState("");
   const [telefonoC, setTelefonoC] = useState("");
 
-  const [cuit, setCuit] = useState("");
-  const [razonSocial, setRazonSocial] = useState("");
+  const [cuitR, setCuitR] = useState("");
+  const [cuitPE, setCuitPE] = useState("");
+  const [cuitEPC, setCuitEPC] = useState("");
+
+  const [razonSocialR, setRazonSocialR] = useState("");
+  const [razonSocialEPC, setRazonSocialEPC] = useState("")
+  const [razonSocialPE, setRazonSocialPE] = useState("");
   const [documentos, setDocumentos] = useState("");
 
   const [username, setUsername] = useState("");
@@ -125,27 +130,27 @@ const ConsultarUsuario = () => {
   };
 
   const handleCuitChangePE = (e) => {
-    setCuit(e.target.value);
+    setCuitPE(e.target.value);
   };
 
   const handleCuitChangeEPC = (e) => {
-    setCuit(e.target.value);
+    setCuitEPC(e.target.value);
   };
 
   const handleCuitChangeR = (e) => {
-    setCuit(e.target.value);
+    setCuitR(e.target.value);
   };
 
   const handleRazonSocialChangePE = (e) => {
-    setRazonSocial(e.target.value);
+    setRazonSocialPE(e.target.value);
   };
 
   const handleRazonSocialChangeEPC = (e) => {
-    setRazonSocial(e.target.value);
+    setRazonSocialEPC(e.target.value);
   };
 
   const handleRazonSocialChangeR = (e) => {
-    setRazonSocial(e.target.value);
+    setRazonSocialR(e.target.value);
   };
 
   const handleDocumentosChangePE = (e) => {
@@ -252,7 +257,7 @@ const ConsultarUsuario = () => {
 
       if (response1.ok) {
         const data1 = await response1.json();
-        console.log(data1.data.encargado.cuit != undefined);
+        //console.log(data1.data.encargado.cuit != undefined);
 
         setApellido(data1.data.apellido);
         setNombre(data1.data.nombre);
@@ -268,9 +273,9 @@ const ConsultarUsuario = () => {
 
         if (data1.data.Productor?.cuit || data1.data.Productor?.razonSocial) {
           setMostrarContenidoProductor(true);
-
-          setCuit(data1.data.Productor.cuit);
-          setRazonSocial(data1.data.Productor.razonSocial);
+          console.log(data1.data.Productor.razonSocial);
+          setCuitPE(data1.data.Productor.cuit);
+          setRazonSocialPE(data1.data.Productor.razonSocial);
         }
 
         if (
@@ -278,9 +283,10 @@ const ConsultarUsuario = () => {
           data1.data.encargado?.razonSocial !== undefined
         ) {
           setMostrarContenidoEncargadoPuesto(true);
+          console.log(data1.data.encargado.razonSocial);
 
-          setCuit(data1.data.encargado.cuit);
-          setRazonSocial(data1.data.encargado.razonSocial);
+          setCuitEPC(data1.data.encargado.cuit);
+          setRazonSocialEPC(data1.data.encargado.razonSocial);
         }
 
         if (
@@ -289,8 +295,8 @@ const ConsultarUsuario = () => {
         ) {
           setMostrarContenidoRepartidor(true);
 
-          setCuit(data1.data.repartidore.cuit);
-          setRazonSocial(data1.data.repartidore.razonSocial);
+          setCuitR(data1.data.repartidore.cuit);
+          setRazonSocialR(data1.data.repartidore.razonSocial);
         }
 
         if (data1.codigo === 200) {
@@ -310,7 +316,7 @@ const ConsultarUsuario = () => {
     <>
       <div className="d-flex">
         <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1 background">
           <section className="align-items-center justify-content-center col-6 offset-3 form mt-0">
@@ -540,7 +546,7 @@ const ConsultarUsuario = () => {
                                   type="number"
                                   id="cuit"
                                   className="form-control"
-                                  value={cuit}
+                                  value={cuitPE}
                                   onChange={handleCuitChangePE}
                                   readOnly={!editModePE}
                                   disabled={!editModePE}
@@ -558,7 +564,7 @@ const ConsultarUsuario = () => {
                                   type="text"
                                   id="razonSocial"
                                   className="form-control"
-                                  value={razonSocial}
+                                  value={razonSocialPE}
                                   onChange={handleRazonSocialChangePE}
                                   readOnly={!editModePE}
                                   disabled={!editModePE}
@@ -642,7 +648,7 @@ const ConsultarUsuario = () => {
                                   type="number"
                                   id="cuit"
                                   className="form-control"
-                                  value={cuit}
+                                  value={cuitEPC}
                                   onChange={handleCuitChangeEPC}
                                   readOnly={!editModeEPC}
                                   disabled={!editModeEPC}
@@ -660,7 +666,7 @@ const ConsultarUsuario = () => {
                                   type="text"
                                   id="razonSocial"
                                   className="form-control"
-                                  value={razonSocial}
+                                  value={razonSocialEPC}
                                   onChange={handleRazonSocialChangeEPC}
                                   readOnly={!editModeEPC}
                                   disabled={!editModeEPC}
@@ -746,7 +752,7 @@ const ConsultarUsuario = () => {
                                   type="number"
                                   id="cuit"
                                   className="form-control"
-                                  value={cuit}
+                                  value={cuitR}
                                   onChange={handleCuitChangeR}
                                   readOnly={!editModeR}
                                   disabled={!editModeR}
