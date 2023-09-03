@@ -18,6 +18,13 @@ const ConsultarUsuario = () => {
   const [mostrarContenidoRepartidor, setMostrarContenidoRepartidor] =
     useState(false);
 
+    const [datosActualizados, setDatosActualizados] = useState({
+      nombre: "",
+      apellido: "",
+    });
+
+
+
   const [productor, setProductor] = useState("");
   const [nombre, setNombre] = useState("");
   const [nombreC, setNombreC] = useState("");
@@ -184,6 +191,9 @@ const ConsultarUsuario = () => {
     cargarDatos(user); // Volver a cargar los datos originales
   };
 
+
+
+
   const handleSaveChangesC = (e) => {
     e.preventDefault();
     setEditModeC(false);
@@ -220,6 +230,43 @@ const ConsultarUsuario = () => {
     e.preventDefault();
     setEditModeEPC(false);
   };
+
+  const handleSaveChangesEPCPrueba = async (e) => {
+    e.preventDefault();
+
+    const datosActualizados = {
+      razonSocialEPC,
+      cuitEPC,
+
+    };
+
+    console.log(datosActualizados);
+    console.log(user.consumidorId);
+
+    console.log(user.encargado)
+
+    try {
+      const response = await fetch(`http://localhost:8000/encargado/${user.consumidorId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosActualizados),
+      });
+
+      if (response.ok) {
+        toast.success("Datos actualizados correctamente");
+        cargarDatos(user);
+        setEditModeEPC(false);
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al actualizar los datos del repartidor:", error);
+      toast.error("Error al actualizar los datos");
+    }
+  };
+
 
   const handleEditModeToggleR = () => {
     setEditMode(!editModeR);
@@ -609,7 +656,7 @@ const ConsultarUsuario = () => {
                                   <button
                                     type="button"
                                     className=" btn btn-success mr-2"
-                                    onClick={handleSaveChangesEPC}
+                                    onClick={handleSaveChangesEPCPrueba}
                                   >
                                     Guardar
                                   </button>
