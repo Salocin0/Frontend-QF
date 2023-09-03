@@ -1,11 +1,10 @@
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Sidebar.css";
 
 import Logo from "../QuickFoodLogo.png";
-import { useAccordionButton } from "react-bootstrap";
 
 const Sidebar = ({ tipoUsuario }) => {
   const [usuario, setUsuario] = useState("Consumidor");
@@ -76,14 +75,7 @@ const Sidebar = ({ tipoUsuario }) => {
                 </a>
               </li>
             )}
-            <li className="nav-item">
-              <a href="/perfil-nuevo" className="nav-link text-truncate">
-                <i className="bi bi-1-circle-fill icono"></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Provisional Profile
-                </span>
-              </a>
-            </li>
+
             <li className="nav-item dropdown especial">
               <i className="bi bi-1-circle-fill icono iconoespecial"></i>
               <a
@@ -121,7 +113,7 @@ const Sidebar = ({ tipoUsuario }) => {
                 )}
 
                 <li>
-                  <a className="dropdown-item" href="/consultar-usuario">
+                  <a className="dropdown-item" href="/perfil-nuevo">
                     Perfil
                   </a>
                 </li>

@@ -1,8 +1,10 @@
 import React from 'react';
 import { Route, Routes } from "react-router-dom";
+import ProcesoRegistro from '../ComponenteRegister/ProcesoRegistro/ProcesoRegistro';
 import RegistroEncargado from '../ComponenteRegister/RegistrarEncargado';
 import RegistroProductor from '../ComponenteRegister/RegistrarProductor';
 import RegistroRepartidor from '../ComponenteRegister/RegistrarRepartidor';
+import SeleccionRegister from '../ComponenteRegister/SeleccionRegister';
 import AdquirirNuevoRolR from '../ComponenteRepartidor/AdquirirNuevoRolR';
 import ConsultarUsuarioR from '../ComponenteRepartidor/ConsultarUsuarioR';
 import ConsultarUsuario from '../ComponentesConsumidor/ConsultarUsuario';
@@ -13,18 +15,15 @@ import LandingPage from '../ComponentesLandingPage/LandingPage';
 import CambiarContraseña from '../ComponentesLogin/CambiarContraseña';
 import Login from '../ComponentesLogin/Login';
 import RecuperarContraseña from '../ComponentesLogin/RecuperarContraseña';
-import RegistrarUsuario from '../ComponentesLogin/RegistrarUsuario';
 import AdquirirNuevoRolPE from '../ComponentesProductorDeEventos/AdquirirNuevoRolPE';
 import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuarioPE';
 import ConsultarPuesto from '../ComponentesPuesto/ConsultarPuesto';
 import CrearNuevoPuesto from '../ComponentesPuesto/CrearPuesto';
 import ListadoPuestos from '../ComponentesPuesto/ListadoPuestos';
+import DocumentUpload from './DocumentUpload';
 import Home from './Home';
 import Inicio from './Inicio';
 import Sidebar from './Sidebar';
-import DocumentUpload from './DocumentUpload';
-import SeleccionRegister from '../ComponenteRegister/SeleccionRegister';
-import ProcesoRegistro from '../ComponenteRegister/ProcesoRegistro/ProcesoRegistro';
 
 export const Main = () => {
   return (
