@@ -1,46 +1,79 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const FormRepartidor = ({ nextStep, handleRegistro }) => {
   const [repartidorData, setRepartidorData] = useState({
-    // Campos específicos para repartidores
+    confirmacionMayorDeEdad: false,
   });
 
-  // Función para manejar cambios en los campos del formulario
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const handleCheckboxChange = (e) => {
+    const { name, checked } = e.target;
     setRepartidorData({
       ...repartidorData,
-      [name]: value,
+      [name]: checked,
     });
   };
 
-  // Función para manejar el envío del formulario
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validación de datos aquí
 
-    // Llama a la función de registro en el componente principal
-    handleRegistro(repartidorData);
-
-    // Avanza al siguiente paso
-    nextStep();
+    if (repartidorData.confirmacionMayorDeEdad) {
+      handleRegistro(repartidorData);
+      nextStep();
+    } else {
+      alert("Debes confirmar que tienes más de 18 años.");
+    }
   };
 
   return (
-    <div>
-      <h2>Datos Repartidor</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Campos específicos para repartidores */}
-        <input
-          type="text"
-          name="campoEspecifico"
-          value={repartidorData.campoEspecifico}
-          onChange={handleChange}
-          placeholder="Campo Específico"
-        />
-        {/* Agrega más campos según sea necesario */}
-        <button type="submit">Registrar</button>
-      </form>
+    <div className="background">
+      <div className="container vh-100">
+        <div className="row h-100 justify-content-center align-items-center">
+          <div className="col-md-4">
+            <div className="card">
+              <div className="card-header">
+                <h2 className="text-center">Datos Repartidor</h2>
+              </div>
+              <div className="card-body d-flex flex-column align-items-center">
+                <form onSubmit={handleSubmit}>
+                  <div className="form-check mb-4">
+                    <input
+                      type="checkbox"
+                      className="form-check-input"
+                      id="confirmacionMayorDeEdad"
+                      name="confirmacionMayorDeEdad"
+                      checked={repartidorData.confirmacionMayorDeEdad}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="confirmacionMayorDeEdad"
+                    >
+                      Confirmo que tengo más de 18 años
+                    </label>
+                  </div>
+                  <hr />
+                  <div className="d-flex justify-content-between mt-2">
+                    <Link
+                      to={"/seleccion-perfil"}
+                      className="btn btn-secondary"
+                    >
+                      Atrás
+                    </Link>
+                    <button
+                      type="submit"
+                      className="btn btn-primary"
+                      disabled={!repartidorData.confirmacionMayorDeEdad}
+                    >
+                      Finalizado
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

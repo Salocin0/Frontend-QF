@@ -6,18 +6,18 @@ import FormEncargado from "./FormEncargado";
 import FormRepartidor from "./FormRepartidor";
 import { useParams } from "react-router-dom";
 
-const ProcesoRegistro = ({ tipoUsuario }) => {
-  const { tipo } = useParams();
-  const [step, setStep] = useState(1); // Controla el paso actual del registro
-
-  //si tipo==="consumidor" el proceso va a ser formUsuario -> formConsumidor = finaliza
-  //si tipo==="repartidor" el proceso va a ser formUsuario -> formConsumidor -> formRepartidor = finaliza
-  //si tipo==="engargado" el proceso va a ser formUsuario -> formConsumidor -> formEncargado = finaliza
-  //si tipo==="productor" el proceso va a ser formUsuario -> formConsumidor -> formProductor = finaliza
+const ProcesoRegistro = () => {
+  const { tipoUsuario } = useParams();
+  const [step, setStep] = useState(1);
+  console.log("tipoUsuario:", tipoUsuario);
 
   // Función para avanzar al siguiente paso
   const nextStep = () => {
     setStep(step + 1);
+  };
+
+  const backStep = () => {
+    setStep(step - 1);
   };
 
   // Función para manejar el envío del formulario de registro
@@ -33,31 +33,31 @@ const ProcesoRegistro = ({ tipoUsuario }) => {
       return (
         <FormUsuario
           nextStep={nextStep}
+          backStep={backStep}
           tipoUsuario={tipoUsuario}
           handleRegistro={handleRegistro}
         />
       );
     case 2:
       return (
-        <FormConsumidor nextStep={nextStep} handleRegistro={handleRegistro} />
+        <FormConsumidor nextStep={nextStep} backStep={backStep} tipoUsuario={tipoUsuario} handleRegistro={handleRegistro} />
       );
     case 3:
-      if (tipo === "repartidor") {
+      if (tipoUsuario === "repartidor") {
         return (
-          <FormRepartidor nextStep={nextStep} handleRegistro={handleRegistro} />
+          <FormRepartidor nextStep={nextStep} backStep={backStep} tipoUsuario={tipoUsuario} handleRegistro={handleRegistro} />
         );
-      } else if (tipo === "engargado") {
+      } else if (tipoUsuario === "encargado") {
         return (
-          <FormEncargado nextStep={nextStep} handleRegistro={handleRegistro} />
+          <FormEncargado nextStep={nextStep} backStep={backStep} tipoUsuario={tipoUsuario} handleRegistro={handleRegistro} />
         );
-      } else if (tipo === "productor") {
+      } else if (tipoUsuario === "productor") {
         return (
-          <FormProductor nextStep={nextStep} handleRegistro={handleRegistro} />
+          <FormProductor nextStep={nextStep} backStep={backStep} tipoUsuario={tipoUsuario} handleRegistro={handleRegistro} />
         );
-      }else{
-        //redirigir a login + toast
       }
     default:
+      //registrar
       //redirigir a login + toast
   }
 };

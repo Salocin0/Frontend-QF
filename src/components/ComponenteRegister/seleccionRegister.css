@@ -9,12 +9,51 @@
     padding: 0;
 }
 
-.cardPerfil {
+.card{
     background-color: #292C3E;
     border: none;
 }
 
-hr {
+hr,label,h2 {
+    color: white;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="date"],
+select, option  {
+  background-color: #181A21;
+  color: white;
+  border: none;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="email"]::placeholder,
+input[type="date"]::placeholder,
+select::placeholder, option::placeholder{
+  color: white;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+select:focus {
+  background-color: #303443;
+  color: white;
+}
+
+input[type="text"]:focus::placeholder,
+input[type="password"]:focus::placeholder,
+input[type="email"]:focus::placeholder,
+input[type="date"]:focus::placeholder {
+  color: white;
+}
+
+.btn-outline-secondary{
+    border: 2px solid white;
     color: white;
 }
 
@@ -24,11 +63,6 @@ hr {
 
 .card-footer {
     border-top: 1px white;
-}
-
-
-h2 {
-    color: white;
 }
 
 .radiocheckcolor {

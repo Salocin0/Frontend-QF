@@ -32,7 +32,7 @@ export const Main = () => {
       <Routes>
           <Route path="/" element={<LandingPage/>} />
            <Route path="/recuperar" element={<RecuperarContraseña/>} />
-           <Route path="/registrarse/:tipo" element={<ProcesoRegistro/>} />
+           <Route path="/registrarse/:tipoUsuario" element={<ProcesoRegistro/>} />
            <Route path="/cambiar-contrasenia/:codigo" element={<CambiarContraseña/>} />
            <Route path="/home" element={<Home/>} />
            <Route path="/consultar-usuario" element={<ConsultarUsuario/>} />
