@@ -18,10 +18,7 @@ const ConsultarUsuario = () => {
   const [mostrarContenidoRepartidor, setMostrarContenidoRepartidor] =
     useState(false);
 
-    const [datosActualizados, setDatosActualizados] = useState({
-      nombre: "",
-      apellido: "",
-    });
+
 
 
 
