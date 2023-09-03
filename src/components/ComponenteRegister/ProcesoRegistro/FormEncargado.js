@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
   const [encargadoData, setEncargadoData] = useState({
@@ -16,8 +17,31 @@ const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
     });
   };
 
+  function tieneNumeros(cadena) {
+    return !isNaN(Number(cadena));
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!encargadoData.cuit.trim()) {
+      toast.error("cuit no puede estar vacía.");
+      return;
+    }
+
+    if (!encargadoData.razonSocial.trim()) {
+      toast.error("razon social no puede estar vacía.");
+      return;
+    }
+
+    if (tieneLetras(encargadoData.cuit)) {
+      toast.error("cuit no puede tener letras.");
+      return;
+    }
     handleRegistro(encargadoData);
     nextStep();
   };

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const FormConsumidor = ({
   nextStep,
@@ -28,9 +29,67 @@ const FormConsumidor = ({
     });
   };
 
+  function tieneNumeros(cadena) {
+    return !isNaN(Number(cadena));
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Actualizar el objeto consumidorData con la localidad seleccionada
+
+    const hoy = new Date();
+    const fechaNacimientoDate = new Date(consumidorData.fechaNacimiento);
+    const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
+    
+    if (!consumidorData.nombre.trim()) {
+      toast.error("nombre no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(consumidorData.nombre)) {
+      toast.error("El nombre no puede contener números");
+      return;
+    }
+
+    if (tieneNumeros(consumidorData.apellido)) {
+      toast.error("El apellido no puede contener números");
+      return;
+    }
+
+    if (tieneLetras(consumidorData.dni)) {
+      toast.error("El DNI no puede contener letras");
+      return;
+    }
+
+    if (!consumidorData.apellido.trim()) {
+      toast.error("apellido no puede estar vacio");
+      return;
+    }
+
+    if (!consumidorData.dni.trim()) {
+      toast.error("DNI no puede estar vacio");
+      return;
+    }
+
+    if (edad < 18) {
+      toast.error("Debes tener al menos 18 años para registrarte.");
+      return;
+    }
+
+    if (tieneLetras(consumidorData.telefono)) {
+      toast.error("El telefono no puede contener letras");
+      return;
+    }
+
+    if (!consumidorData.telefono.trim()) {
+      toast.error("telefono no puede estar vacio");
+      return;
+    }
+
     setConsumidorData({
       ...consumidorData,
     });

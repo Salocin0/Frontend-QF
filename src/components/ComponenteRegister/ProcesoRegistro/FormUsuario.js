@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../seleccionRegister.css";
+import { toast } from "react-toastify";
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
   const [userData, setUserData] = useState({
@@ -18,8 +19,34 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     });
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (userData.password !== userData.confirmPassword) {
+      toast.error("Las contraseñas no coinciden");
+      return;
+    }
+
+    if (!validateEmail(userData.correoElectronico)) {
+      toast.error("correo electrónico inválido.");
+      return;
+    }
+
+    if (!userData.password.trim()) {
+      toast.error("La contraseña no puede estar vacía.");
+      return;
+    }
+
+    if (userData.password.length < 8) {
+      toast.error("La contraseña debe tener al menos 8 caracteres.");
+      return;
+    }
+
     handleRegistro(userData);
     nextStep();
   };
