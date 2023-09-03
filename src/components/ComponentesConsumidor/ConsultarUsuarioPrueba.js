@@ -212,6 +212,42 @@ const ConsultarUsuario = () => {
     setEditModePE(false);
   };
 
+  const handleSaveChangesPEPrueba = async (e) => {
+    e.preventDefault();
+
+    const datosActualizados = {
+      razonSocialPE,
+      cuitPE,
+
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8000/productor/${user.consumidorId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosActualizados),
+      });
+
+      if (response.ok) {
+        toast.success("Datos actualizados correctamente");
+        cargarDatos(user);
+        setEditModePE(false);
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al actualizar los datos del repartidor:", error);
+      toast.error("Error al actualizar los datos");
+    }
+  };
+
+
+
+
+
+
   const handleEditModeToggleEPC = () => {
     setEditModeEPC(!editMode);
     setIsDisabledEPC(!isDisabled);
@@ -223,12 +259,8 @@ const ConsultarUsuario = () => {
     cargarDatos(user); // Volver a cargar los datos originales
   };
 
-  const handleSaveChangesEPC = (e) => {
-    e.preventDefault();
-    setEditModeEPC(false);
-  };
 
-  const handleSaveChangesEPCPrueba = async (e) => {
+  const handleSaveChangesEPC = async (e) => {
     e.preventDefault();
 
     const datosActualizados = {
@@ -236,11 +268,6 @@ const ConsultarUsuario = () => {
       cuitEPC,
 
     };
-
-    console.log(datosActualizados);
-    console.log(user.consumidorId);
-
-    console.log(user.encargado)
 
     try {
       const response = await fetch(`http://localhost:8000/encargado/${user.consumidorId}`, {
@@ -551,7 +578,7 @@ const ConsultarUsuario = () => {
                                   <button
                                     type="button"
                                     className=" btn btn-success mr-2"
-                                    onClick={handleSaveChangesPE}
+                                    onClick={handleSaveChangesPEPrueba}
                                   >
                                     Guardar
                                   </button>
@@ -653,7 +680,7 @@ const ConsultarUsuario = () => {
                                   <button
                                     type="button"
                                     className=" btn btn-success mr-2"
-                                    onClick={handleSaveChangesEPCPrueba}
+                                    onClick={handleSaveChangesEPC}
                                   >
                                     Guardar
                                   </button>
