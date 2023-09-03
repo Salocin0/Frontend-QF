@@ -19,15 +19,8 @@ const SeleccionRegister = () => {
   };
 
   const handleNextClick = () => {
-    switch (selectedType) {
-      case "consumidor":
-        return "/registrarse";
-      case "productor":
-        return "/ser-productor";
-      case "repartidor":
-        return "/ser-repartidor";
-      case "encargado":
-        return "/ser-encargado";
+    if (selectedType) {
+      return `/registrarse/${selectedType}`;
     }
   };
 

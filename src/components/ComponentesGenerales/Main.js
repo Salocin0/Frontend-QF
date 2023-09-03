@@ -24,6 +24,7 @@ import Inicio from './Inicio';
 import Sidebar from './Sidebar';
 import DocumentUpload from './DocumentUpload';
 import SeleccionRegister from '../ComponenteRegister/SeleccionRegister';
+import ProcesoRegistro from '../ComponenteRegister/ProcesoRegistro/ProcesoRegistro';
 
 export const Main = () => {
   return (
@@ -31,7 +32,7 @@ export const Main = () => {
       <Routes>
           <Route path="/" element={<LandingPage/>} />
            <Route path="/recuperar" element={<RecuperarContraseña/>} />
-           <Route path="/registrarse" element={<RegistrarUsuario/>} />
+           <Route path="/registrarse/:tipo" element={<ProcesoRegistro/>} />
            <Route path="/cambiar-contrasenia/:codigo" element={<CambiarContraseña/>} />
            <Route path="/home" element={<Home/>} />
            <Route path="/consultar-usuario" element={<ConsultarUsuario/>} />

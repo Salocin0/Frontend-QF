@@ -39,24 +39,24 @@ h2 {
 
 .radiocheckcolor:hover {
     background-color: gray !important;
-    border: none !important;
+    border: 2px solid gray !important;
     color: black !important;
 }
 
 .btn.active {
     background-color: #F7B813 !important;
-    border: none !important;
+    border: 2px solid #F7B813 !important;
     color: black !important;
 }
 
 .checkcolor {
     background-color: #F7B813 !important;
-    border: none !important;
+    border: 2px solid #F7B813 !important;
     color: black !important;
 }
 
 .checkcolor:hover {
     background-color: #F7B813 !important;
-    border: none !important;
+    border: 2px solid #F7B813 !important;
     color: black !important;
 }
