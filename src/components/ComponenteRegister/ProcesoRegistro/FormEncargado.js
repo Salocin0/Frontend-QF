@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
-const FormEncargado = ({ nextStep, handleRegistro }) => {
+const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
   const [encargadoData, setEncargadoData] = useState({
     cuit: "",
     razonSocial: "",
@@ -16,8 +17,31 @@ const FormEncargado = ({ nextStep, handleRegistro }) => {
     });
   };
 
+  function tieneNumeros(cadena) {
+    return !isNaN(Number(cadena));
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!encargadoData.cuit.trim()) {
+      toast.error("cuit no puede estar vacía.");
+      return;
+    }
+
+    if (!encargadoData.razonSocial.trim()) {
+      toast.error("razon social no puede estar vacía.");
+      return;
+    }
+
+    if (tieneLetras(encargadoData.cuit)) {
+      toast.error("cuit no puede tener letras.");
+      return;
+    }
     handleRegistro(encargadoData);
     nextStep();
   };
@@ -76,12 +100,12 @@ const FormEncargado = ({ nextStep, handleRegistro }) => {
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between mt-2">
-                    <Link
-                      to={"/seleccion-perfil"}
+                    <button
                       className="btn btn-secondary"
+                      onClick={() => backStep()}
                     >
                       Atrás
-                    </Link>
+                    </button>
                     <button type="submit" className="btn btn-success">
                       Finalizar
                     </button>

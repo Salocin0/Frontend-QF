@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
   const [productorData, setProductorData] = useState({
@@ -16,8 +17,33 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
     });
   };
 
+  function tieneNumeros(cadena) {
+    return !isNaN(Number(cadena));
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!productorData.cuit.trim()) {
+      toast.error("cuit no puede estar vacía.");
+      return;
+    }
+
+    if (!productorData.razonSocial.trim()) {
+      toast.error("razon social no puede estar vacía.");
+      return;
+    }
+
+    if (tieneLetras(productorData.cuit)) {
+      toast.error("cuit no puede tener letras.");
+      return;
+    }
+
     handleRegistro(productorData);
     nextStep();
   };
@@ -76,12 +102,12 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between mt-2">
-                    <Link
-                      to={"/seleccion-perfil"}
+                    <button
                       className="btn btn-secondary"
+                      onClick={() => backStep()}
                     >
                       Atrás
-                    </Link>
+                    </button>
                     <button type="submit" className="btn btn-success">
                       Finalizar
                     </button>

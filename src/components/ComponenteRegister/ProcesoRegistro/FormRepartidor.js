@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const FormRepartidor = ({ nextStep, handleRegistro }) => {
+const FormRepartidor = ({ nextStep,backStep, handleRegistro }) => {
   const [repartidorData, setRepartidorData] = useState({
     confirmacionMayorDeEdad: false,
   });
@@ -13,6 +13,15 @@ const FormRepartidor = ({ nextStep, handleRegistro }) => {
       [name]: checked,
     });
   };
+
+  function tieneNumeros(cadena) {
+    return !isNaN(Number(cadena));
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,12 +63,12 @@ const FormRepartidor = ({ nextStep, handleRegistro }) => {
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between mt-2">
-                    <Link
-                      to={"/seleccion-perfil"}
+                    <button
                       className="btn btn-secondary"
+                      onClick={() => backStep()}
                     >
                       Atrás
-                    </Link>
+                    </button>
                     <button
                       type="submit"
                       className="btn btn-primary"

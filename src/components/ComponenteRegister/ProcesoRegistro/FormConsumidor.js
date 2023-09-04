@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const FormConsumidor = ({
   nextStep,
@@ -6,6 +7,10 @@ const FormConsumidor = ({
   handleRegistro,
   tipoUsuario,
 }) => {
+  const [provincias, setProvincias] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [localidades, setLocalidades] = useState([]);
+  const [selectedLocalidad, setSelectedLocalidad] = useState("");
   const [consumidorData, setConsumidorData] = useState({
     nombre: "",
     apellido: "",
@@ -16,7 +21,6 @@ const FormConsumidor = ({
     telefono: "",
   });
 
-  // Función para manejar cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setConsumidorData({
@@ -25,16 +29,111 @@ const FormConsumidor = ({
     });
   };
 
-  // Función para manejar el envío del formulario
+  function tieneNumeros(cadena) {
+    return !isNaN(Number(cadena));
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Validación de datos aquí
 
-    // Llama a la función de registro en el componente principal
+    const hoy = new Date();
+    const fechaNacimientoDate = new Date(consumidorData.fechaNacimiento);
+    const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
+    
+    if (!consumidorData.nombre.trim()) {
+      toast.error("nombre no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(consumidorData.nombre)) {
+      toast.error("El nombre no puede contener números");
+      return;
+    }
+
+    if (tieneNumeros(consumidorData.apellido)) {
+      toast.error("El apellido no puede contener números");
+      return;
+    }
+
+    if (tieneLetras(consumidorData.dni)) {
+      toast.error("El DNI no puede contener letras");
+      return;
+    }
+
+    if (!consumidorData.apellido.trim()) {
+      toast.error("apellido no puede estar vacio");
+      return;
+    }
+
+    if (!consumidorData.dni.trim()) {
+      toast.error("DNI no puede estar vacio");
+      return;
+    }
+
+    if (edad < 18) {
+      toast.error("Debes tener al menos 18 años para registrarte.");
+      return;
+    }
+
+    if (tieneLetras(consumidorData.telefono)) {
+      toast.error("El telefono no puede contener letras");
+      return;
+    }
+
+    if (!consumidorData.telefono.trim()) {
+      toast.error("telefono no puede estar vacio");
+      return;
+    }
+
+    setConsumidorData({
+      ...consumidorData,
+    });
     handleRegistro(consumidorData);
-
-    // Avanza al siguiente paso
     nextStep();
+  };
+
+  useEffect(() => {
+    fetch("https://apis.datos.gob.ar/georef/api/provincias")
+      .then((response) => response.json())
+      .then((data) => {
+        setProvincias(data.provincias);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const handleLocalidadChange = (e) => {
+    setSelectedLocalidad(e.target.value);
+    consumidorData.localidad=e.target.value
+  };
+
+  const handleProvinceChange = (e) => {
+    setSelectedProvince(e.target.value);
+    consumidorData.provincia=e.target.value
+
+    if (e.target.value !== "") {
+      fetch(
+        `https://apis.datos.gob.ar/georef/api/municipios?provincia=${e.target.value}&campos=id,nombre&max=700`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const sortedLocalidades = data.municipios.sort((a, b) =>
+            a.nombre.localeCompare(b.nombre)
+          );
+          setLocalidades(sortedLocalidades);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      setLocalidades([]);
+    }
   };
 
   return (
@@ -96,23 +195,38 @@ const FormConsumidor = ({
                   <div className="form-group">
                     <label htmlFor="provincia">Provincia</label>
                     <select
-                      name="provincia"
-                      value={consumidorData.provincia}
-                      onChange={handleChange}
+                      id="provincia"
                       className="form-control"
+                      value={selectedProvince}
+                      onChange={handleProvinceChange}
+                      required
                     >
-                      {/* Opciones de provincia */}
+                      <option value="" disabled>
+                        Seleccione una provincia
+                      </option>
+                      {provincias.map((prov) => (
+                        <option key={prov.nombre} value={prov.nombre}>
+                          {prov.nombre}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="form-group">
                     <label htmlFor="localidad">Localidad</label>
                     <select
-                      name="localidad"
-                      value={consumidorData.localidad}
-                      onChange={handleChange}
-                      className="form-control"
+                      className="form-control mt-2"
+                      value={selectedLocalidad}
+                      onChange={handleLocalidadChange}
+                      required
                     >
-                      {/* Opciones de localidad */}
+                      <option value="" disabled>
+                        Seleccione una localidad
+                      </option>
+                      {localidades.map((loc) => (
+                        <option key={loc.nombre} value={loc.nombre}>
+                          {loc.nombre}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   <div className="form-group">
@@ -139,11 +253,7 @@ const FormConsumidor = ({
                         Finalizar
                       </button>
                     ) : (
-                      <button
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={() => nextStep()}
-                      >
+                      <button type="submit" className="btn btn-primary">
                         Siguiente
                       </button>
                     )}
