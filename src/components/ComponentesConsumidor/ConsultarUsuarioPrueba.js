@@ -23,16 +23,20 @@ const ConsultarUsuario = () => {
 
 
   const [productor, setProductor] = useState("");
-  const [nombre, setNombre] = useState("");
   const [nombreC, setNombreC] = useState("");
-  const [apellido, setApellido] = useState("");
   const [apellidoC, setApellidoC] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [fechaNacimientoC, setFechaNacimientoC] = useState("");
-  const [dni, setDni] = useState("");
   const [dniC, setDniC] = useState("");
   const [localidad, setLocalidad] = useState("");
   const [localidadC, setLocalidadC] = useState("");
+  const [provinciaC, setProvinciaC] = useState("");
+
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [localidadPrueba, setLocalidadPrueba] = useState("");
+  const [filteredLocalidades, setFilteredLocalidades] = useState([]);
+  const [provincias, setProvincias] = useState([]);
+
 
   const [telefono, setTelefono] = useState("");
   const [telefonoC, setTelefonoC] = useState("");
@@ -85,17 +89,49 @@ const ConsultarUsuario = () => {
     }
   }, []);
 
-  const handleNombreChange = (e) => {
-    setNombre(e.target.value);
+    useEffect(() => {
+    fetch("https://apis.datos.gob.ar/georef/api/provincias")
+      .then((response) => response.json())
+      .then((data) => {
+        setProvincias(data.provincias);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const handleProvinceChange = (e) => {
+    setSelectedProvince(e.target.value);
+    setLocalidadPrueba([]);
+
+    if (e.target.value !== "") {
+      fetch(
+        `https://apis.datos.gob.ar/georef/api/municipios?provincia=${e.target.value}&campos=id,nombre&max=700`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const sortedLocalidades = data.municipios.sort((a, b) =>
+            a.nombre.localeCompare(b.nombre)
+          );
+          setLocalidadPrueba(sortedLocalidades);
+          setFilteredLocalidades(data.municipios);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      setLocalidadPrueba([]);
+      setFilteredLocalidades([]);
+    }
   };
+
+
+
 
   const handleNombreChangeC = (e) => {
     setNombreC(e.target.value);
   };
 
-  const handleApellidoChange = (e) => {
-    setApellido(e.target.value);
-  };
 
   const handleApellidoChangeC = (e) => {
     setApellidoC(e.target.value);
@@ -109,12 +145,10 @@ const ConsultarUsuario = () => {
     setFechaNacimiento(e.target.value);
   };
 
-  const handleDniChange = (e) => {
-    setDni(e.target.value);
-  };
+
 
   const handleDniChangeC = (e) => {
-    setDni(e.target.value);
+    setDniC(e.target.value);
   };
 
   const handleLocalidadChange = (e) => {
@@ -123,6 +157,10 @@ const ConsultarUsuario = () => {
 
   const handleLocalidadChangeC = (e) => {
     setLocalidadC(e.target.value);
+  };
+
+  const handleProvinciaChangeC = (e) => {
+    setProvinciaC(e.target.value);
   };
 
   const handleTelefonoChange = (e) => {
@@ -188,13 +226,53 @@ const ConsultarUsuario = () => {
     cargarDatos(user); // Volver a cargar los datos originales
   };
 
-
-
-
   const handleSaveChangesC = (e) => {
     e.preventDefault();
     setEditModeC(false);
   };
+
+
+  const handleSaveChangesCPrueba = async (e) => {
+    e.preventDefault();
+
+    const datosActualizados = {
+      nombreC,
+      apellidoC,
+      dniC,
+      fechaNacimiento,
+      provinciaC,
+      localidad,
+      telefono
+
+    };
+
+    console.log(datosActualizados);
+
+    try {
+      const response = await fetch(`http://localhost:8000/consumidor/${user.consumidorId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(datosActualizados),
+      });
+
+      if (response.ok) {
+        toast.success("Datos actualizados correctamente");
+        cargarDatos(user);
+        setEditModeEPC(false);
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al actualizar los datos del repartidor:", error);
+      toast.error("Error al actualizar los datos");
+    }
+  };
+
+
+
+
 
   const handleEditModeTogglePE = () => {
     setEditModePE(!editMode);
@@ -330,9 +408,9 @@ const ConsultarUsuario = () => {
         const data1 = await response1.json();
         //console.log(data1.data.encargado.cuit != undefined);
 
-        setApellido(data1.data.apellido);
-        setNombre(data1.data.nombre);
-        setDni(data1.data.dni);
+        setApellidoC(data1.data.apellido);
+        setNombreC(data1.data.nombre);
+        setDniC(data1.data.dni);
 
         const fechaNacimientoEspañol = new Date(
           data1.data.fechaNacimiento
@@ -340,6 +418,8 @@ const ConsultarUsuario = () => {
         setFechaNacimiento(fechaNacimientoEspañol);
 
         setLocalidad(data1.data.localidad);
+        setProvinciaC(data1.data.provincia);
+
         setTelefono(data1.data.telefono);
 
         if (data1.data.Productor?.cuit || data1.data.Productor?.razonSocial) {
@@ -413,7 +493,7 @@ const ConsultarUsuario = () => {
                                 <button
                                   type="button"
                                   className=" btn btn-success mr-2"
-                                  onClick={handleSaveChangesC}
+                                  onClick={handleSaveChangesCPrueba}
                                 >
                                   Guardar
                                 </button>
@@ -453,7 +533,7 @@ const ConsultarUsuario = () => {
                                 className="form-control"
                                 value={username}
                                 onChange={handleUsernameChangeC}
-                                readOnly={!editModeC}
+                                readOnly={editModeC}
                                 disabled={isDisabledC}
                               />
                             </div>
@@ -468,7 +548,7 @@ const ConsultarUsuario = () => {
                                 type="text"
                                 id="nombre"
                                 className="form-control"
-                                value={nombre}
+                                value={nombreC}
                                 onChange={handleNombreChangeC}
                                 readOnly={!editModeC}
                                 disabled={isDisabledC}
@@ -485,7 +565,7 @@ const ConsultarUsuario = () => {
                                 type="text"
                                 id="apellido"
                                 className="form-control"
-                                value={apellido}
+                                value={apellidoC}
                                 onChange={handleApellidoChangeC}
                                 readOnly={!editModeC}
                                 disabled={isDisabledC}
@@ -516,29 +596,68 @@ const ConsultarUsuario = () => {
                                 type="text"
                                 id="dni"
                                 className="form-control"
-                                value={dni}
+                                value={dniC}
                                 onChange={handleDniChangeC}
                                 readOnly={!editModeC}
                                 disabled={isDisabledC}
                               />
                             </div>
-                            <div className="mb-2">
-                              <label
-                                className="mb-2 text-dark"
-                                htmlFor="localidad"
+
+
+
+
+                            <div className="mb-3">
+                              <label className="mb-2 text-black" htmlFor="provincia">
+                                Provincia
+                              </label>
+                              <select
+                                id="provincia"
+                                className="form-control"
+                                value={selectedProvince}
+                                onChange={handleProvinceChange}
+                                      readOnly={!editModeC}
+                                disabled={isDisabledC}
+                                required
                               >
+                                <option value="" disabled>
+                                 {provinciaC}
+                                </option>
+                                {provincias.map((prov) => (
+                                  <option key={prov.id} value={prov.id}>
+                                    {prov.nombre}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+
+
+                            <div className="mb-3">
+                              <label className="mb-2 text-black" htmlFor="localidad">
                                 Localidad
                               </label>
-                              <input
-                                type="text"
-                                id="localidad"
-                                className="form-control"
+
+                              <select
+                                className="form-control mt-2"
                                 value={localidad}
-                                onChange={handleLocalidadChangeC}
-                                readOnly={!editModeC}
+                                onChange={handleLocalidadChange}
+                                       readOnly={!editModeC}
                                 disabled={isDisabledC}
-                              />
+                                required
+                              >
+                                <option value="" disabled>
+                                  {localidad}
+
+                                </option>
+                                {filteredLocalidades.map((loc) => (
+                                  <option key={loc.nombre} value={loc.nombre}>
+                                    {loc.nombre}
+                                  </option>
+                                ))}
+                              </select>
                             </div>
+
+
+
                             <div className="mb-2">
                               <label
                                 className="mb-2 text-dark"
