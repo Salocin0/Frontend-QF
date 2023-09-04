@@ -32,10 +32,10 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
       return;
     }
 
-    if (!validateEmail(userData.correoElectronico)) {
+    /*if (!validateEmail(userData.correoElectronico)) {
       toast.error("correo electrónico inválido.");
       return;
-    }
+    }*/
 
     if (!userData.password.trim()) {
       toast.error("La contraseña no puede estar vacía.");
