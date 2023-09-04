@@ -39,7 +39,7 @@ const Login = () => {
           localStorage.setItem("sessionId", data.data.sessionId);
           toast.success("Login correcto");
           updateUser(data.data);
-          navigate(`/home`);
+          navigate(`/perfil-nuevo`);
         } else {
           toast.error("Datos incorrectos");
         }

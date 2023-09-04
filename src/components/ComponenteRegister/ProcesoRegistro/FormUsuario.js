@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../seleccionRegister.css";
 import { toast } from "react-toastify";
+import "../seleccionRegister.css";
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
+
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -24,6 +27,14 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     return emailRegex.test(email);
   };
 
+  const toggleShowPassword1 = () => {
+    setShowPassword1(!showPassword1);
+  };
+
+  const toggleShowPassword2 = () => {
+    setShowPassword2(!showPassword2);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -31,11 +42,6 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
       toast.error("Las contraseñas no coinciden");
       return;
     }
-
-    /*if (!validateEmail(userData.correoElectronico)) {
-      toast.error("correo electrónico inválido.");
-      return;
-    }*/
 
     if (!userData.password.trim()) {
       toast.error("La contraseña no puede estar vacía.");
@@ -50,8 +56,6 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     handleRegistro(userData);
     nextStep();
   };
-
-  console.log(tipoUsuario);
 
   return (
     <div className="background">
@@ -92,7 +96,7 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     <label htmlFor="password">Contraseña</label>
                     <div className="input-group">
                       <input
-                        type="password"
+                        type={showPassword1 ? "text" : "password"} // Cambia el tipo de entrada de contraseña según el estado de showPassword
                         name="password"
                         value={userData.password}
                         onChange={handleChange}
@@ -103,8 +107,9 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                         <button
                           type="button"
                           className="btn btn-outline-secondary"
+                          onClick={toggleShowPassword1}
                         >
-                          Mostrar
+                          {showPassword1 ? "Ocultar" : "Mostrar"}
                         </button>
                       </div>
                     </div>
@@ -113,7 +118,7 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     <label htmlFor="confirmPassword">Repetir Contraseña</label>
                     <div className="input-group">
                       <input
-                        type="password"
+                        type={showPassword2 ? "text" : "password"}
                         name="confirmPassword"
                         value={userData.confirmPassword}
                         onChange={handleChange}
@@ -124,18 +129,16 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                         <button
                           type="button"
                           className="btn btn-outline-secondary"
+                          onClick={toggleShowPassword2}
                         >
-                          Mostrar
+                          {showPassword2 ? "Ocultar" : "Mostrar"}
                         </button>
                       </div>
                     </div>
                   </div>
                   <hr />
                   <div className="d-flex justify-content-between mt-2">
-                    <Link
-                      to={"/seleccion-perfil"}
-                      className="btn btn-secondary"
-                    >
+                    <Link to={"/seleccion-perfil"} className="btn btn-secondary">
                       Atrás
                     </Link>
                     <button type="submit" className="btn btn-primary">
