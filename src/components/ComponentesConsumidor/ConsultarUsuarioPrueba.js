@@ -260,7 +260,7 @@ const ConsultarUsuario = () => {
       if (response.ok) {
         toast.success("Datos actualizados correctamente");
         cargarDatos(user);
-        setEditModeEPC(false);
+        setEditModeC(false);
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -349,6 +349,7 @@ const ConsultarUsuario = () => {
 
     try {
       const response = await fetch(`http://localhost:8000/encargado/${user.consumidorId}`, {
+
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -394,6 +395,7 @@ const ConsultarUsuario = () => {
 
   const cargarDatos = async (user) => {
     setUsername(user.usuario);
+    console.log(user.consumidorId);
 
     try {
       const response1 = await fetch(
