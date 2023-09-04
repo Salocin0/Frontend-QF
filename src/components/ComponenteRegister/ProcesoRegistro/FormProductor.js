@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
@@ -17,6 +16,14 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
     });
   };
 
+  const isCuitValid = (cuit) => {
+  const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
+  if (!cuit.trim()) {
+    return false;
+  }
+  return regexCuit.test(cuit);
+};
+
   function tieneNumeros(cadena) {
     return !isNaN(Number(cadena));
   }
@@ -29,10 +36,11 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!productorData.cuit.trim()) {
-      toast.error("cuit no puede estar vacía.");
+    if (!isCuitValid(productorData.cuit)) {
+      toast.error("El CUIT no es válido o está vacío.");
       return;
     }
+
 
     if (!productorData.razonSocial.trim()) {
       toast.error("razon social no puede estar vacía.");

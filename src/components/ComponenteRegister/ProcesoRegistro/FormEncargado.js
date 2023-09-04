@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
@@ -8,6 +7,14 @@ const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
     razonSocial: "",
     ivaCondicion: "responsable_inscripto",
   });
+
+  const isCuitValid = (cuit) => {
+    const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
+    if (!cuit.trim()) {
+      return false;
+    }
+    return regexCuit.test(cuit);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,10 +33,12 @@ const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
     return regex.test(cadena);
   }
 
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!encargadoData.cuit.trim()) {
-      toast.error("cuit no puede estar vacía.");
+
+    if (!isCuitValid(encargadoData.cuit)) {
+      toast.error("El CUIT no es válido o está vacío.");
       return;
     }
 
