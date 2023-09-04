@@ -7,7 +7,7 @@ import "./Sidebar.css";
 import Logo from "../QuickFoodLogo.png";
 
 const Sidebar = ({ tipoUsuario }) => {
-  const [usuario, setUsuario] = useState("Consumidor");
+  const [usuario, setUsuario] = useState("consumidor");
   const [isResponsable, setIsResponsable] = useState(false);
   const [isProductor, setIsProductor] = useState(false);
   const [isRepartidor, setIsRepartidor] = useState(false);
@@ -15,10 +15,10 @@ const Sidebar = ({ tipoUsuario }) => {
 
   useEffect(() => {
     setUsuario(tipoUsuario);
-    setIsResponsable(usuario === "Responsable");
-    setIsProductor(usuario === "Productor");
-    setIsRepartidor(usuario === "Repartidor");
-    setHaveRol(usuario !== "Consumidor");
+    setIsResponsable(usuario === "responsable");
+    setIsProductor(usuario === "productor");
+    setIsRepartidor(usuario === "repartidor");
+    setHaveRol(usuario !== "consumidor");
   }, [tipoUsuario,usuario]);
 
   return (
