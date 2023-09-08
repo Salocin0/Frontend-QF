@@ -121,7 +121,7 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                       name="confirmPassword"
                       value={userData.confirmPassword}
                       onChange={handleChange}
-                      className={`${styles.blackwhite} form-control`}
+                      className={` form-control ${styles.blackwhite}`}
                       placeholder="Repetir Contraseña"
                     />
                     <div className="input-group-append">

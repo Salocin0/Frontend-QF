@@ -22,6 +22,9 @@ hr,label,h2 {
   background-color: #181A21;
   color: white;
   border: none;
+  --bs-body-bg:#181A21;
+  --bs-border-width:none;
+  --bs-body-color:white;
 }
 .btn-outline-secondary{
     border: 2px solid white;
