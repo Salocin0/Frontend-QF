@@ -15,6 +15,7 @@ import LandingPage from '../ComponentesLandingPage/LandingPage';
 import CambiarContraseña from '../ComponentesLogin/CambiarContraseña';
 import Login from '../ComponentesLogin/Login';
 import RecuperarContraseña from '../ComponentesLogin/RecuperarContraseña';
+import RegistrarProducto from '../ComponentesProducto/RegistrarProducto';
 import AdquirirNuevoRolPE from '../ComponentesProductorDeEventos/AdquirirNuevoRolPE';
 import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuarioPE';
 import ConsultarPuesto from '../ComponentesPuesto/ConsultarPuesto';
@@ -62,6 +63,8 @@ export const Main = () => {
 
            <Route path="/subir-archivo" element={<DocumentUpload/>} />
            <Route path="/seleccion-perfil" element={<SeleccionRegister/>} />
+           <Route path="/prueba-productos" element={<RegistrarProducto/>} />
+
       </Routes>
     </main>
   )
