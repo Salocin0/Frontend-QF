@@ -15,7 +15,7 @@ const Sidebar = ({ tipoUsuario }) => {
 
   useEffect(() => {
     setUsuario(tipoUsuario);
-    setIsResponsable(usuario === "responsable");
+    setIsResponsable(usuario === "encargado");
     setIsProductor(usuario === "productor");
     setIsRepartidor(usuario === "repartidor");
     setHaveRol(usuario !== "consumidor");
