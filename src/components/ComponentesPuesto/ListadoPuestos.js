@@ -2,8 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useEffect } from "react";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Puesto from "./Puesto";
-import "./puestos.css";
-import "../ComponentesConsumidor/ConsultarUsuario.css";
+import stylepuesto from "./puestos.module.css";
+import style from  '../ComponentesConsumidor/ConsultarUsuario.module.css'
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 
@@ -66,7 +66,7 @@ const ListadoPuestos = () => {
   }, [session]);
 
   return (
-    <div className="d-flex background">
+    <div className={`${style.background} d-flex`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
@@ -75,23 +75,23 @@ const ListadoPuestos = () => {
           {Array.isArray(carritos) && carritos.length > 0 ? (
             rows.length > 0 &&
             rows.map((row, rowIndex) => (
-              <div key={rowIndex} className="row">
+              <div key={rowIndex} className={`row ${stylepuesto.row}`}>
                 {row.map((carrito, index) => (
-                  <div key={index} className="col-md-3 pb-2">
+                  <div key={index} className={`${stylepuesto.colmd3} col-md-3 pb-2`}>
                     {carrito !== null ? <Puesto carrito={carrito} /> : null}
                   </div>
                 ))}
               </div>
             ))
           ) : (
-            <h2 className="centered-text">
+            <h2 className={stylepuesto.centeredtext}>
               No tenes ningun puesto en este momento.
             </h2>
           )}
         </div>
         <Link
           to={`/crear-puesto`}
-          className="btn btn-primary btn-floating btn-lg"
+          className={`btn btn-primary ${stylepuesto.btnfloating} btn-lg`}
         >
           +
         </Link>

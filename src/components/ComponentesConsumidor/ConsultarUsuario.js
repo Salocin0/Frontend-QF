@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
 import { UserContext } from '../ComponentesGenerales/UserContext';
-import './ConsultarUsuario.css';
 
 const ConsultarUsuario = () => {
   const { user } = useContext(UserContext);

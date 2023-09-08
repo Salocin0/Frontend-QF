@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from '../ComponentesGenerales/UserContext';
-import '../ComponentesConsumidor/ConsultarUsuario.css';
+import style from  '../ComponentesConsumidor/ConsultarUsuario.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';

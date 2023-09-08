@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import "./ConsultarUsuario.css";
+import style from "./ConsultarUsuario.module.css";
 
 const ConsultarUsuario = () => {
   const { user } = useContext(UserContext);
@@ -17,10 +17,6 @@ const ConsultarUsuario = () => {
     useState(false);
   const [mostrarContenidoRepartidor, setMostrarContenidoRepartidor] =
     useState(false);
-
-
-
-
 
   const [productor, setProductor] = useState("");
   const [nombreC, setNombreC] = useState("");
@@ -37,7 +33,6 @@ const ConsultarUsuario = () => {
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [provincias, setProvincias] = useState([]);
 
-
   const [telefono, setTelefono] = useState("");
   const [telefonoC, setTelefonoC] = useState("");
 
@@ -46,7 +41,7 @@ const ConsultarUsuario = () => {
   const [cuitEPC, setCuitEPC] = useState("");
 
   const [razonSocialR, setRazonSocialR] = useState("");
-  const [razonSocialEPC, setRazonSocialEPC] = useState("")
+  const [razonSocialEPC, setRazonSocialEPC] = useState("");
   const [razonSocialPE, setRazonSocialPE] = useState("");
   const [documentos, setDocumentos] = useState("");
 
@@ -89,7 +84,7 @@ const ConsultarUsuario = () => {
     }
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
       .then((response) => response.json())
       .then((data) => {
@@ -125,13 +120,9 @@ const ConsultarUsuario = () => {
     }
   };
 
-
-
-
   const handleNombreChangeC = (e) => {
     setNombreC(e.target.value);
   };
-
 
   const handleApellidoChangeC = (e) => {
     setApellidoC(e.target.value);
@@ -144,8 +135,6 @@ const ConsultarUsuario = () => {
   const handleFechaNacimientoChangeC = (e) => {
     setFechaNacimiento(e.target.value);
   };
-
-
 
   const handleDniChangeC = (e) => {
     setDniC(e.target.value);
@@ -231,7 +220,6 @@ const ConsultarUsuario = () => {
     setEditModeC(false);
   };
 
-
   const handleSaveChangesCPrueba = async (e) => {
     e.preventDefault();
 
@@ -242,20 +230,22 @@ const ConsultarUsuario = () => {
       fechaNacimiento,
       provinciaC,
       localidad,
-      telefono
-
+      telefono,
     };
 
     console.log(datosActualizados);
 
     try {
-      const response = await fetch(`http://localhost:8000/consumidor/${user.consumidorId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datosActualizados),
-      });
+      const response = await fetch(
+        `http://localhost:8000/consumidor/${user.consumidorId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datosActualizados),
+        }
+      );
 
       if (response.ok) {
         toast.success("Datos actualizados correctamente");
@@ -269,10 +259,6 @@ const ConsultarUsuario = () => {
       toast.error("Error al actualizar los datos");
     }
   };
-
-
-
-
 
   const handleEditModeTogglePE = () => {
     setEditModePE(!editMode);
@@ -296,17 +282,19 @@ const ConsultarUsuario = () => {
     const datosActualizados = {
       razonSocialPE,
       cuitPE,
-
     };
 
     try {
-      const response = await fetch(`http://localhost:8000/productor/${user.consumidorId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datosActualizados),
-      });
+      const response = await fetch(
+        `http://localhost:8000/productor/${user.consumidorId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datosActualizados),
+        }
+      );
 
       if (response.ok) {
         toast.success("Datos actualizados correctamente");
@@ -321,11 +309,6 @@ const ConsultarUsuario = () => {
     }
   };
 
-
-
-
-
-
   const handleEditModeToggleEPC = () => {
     setEditModeEPC(!editMode);
     setIsDisabledEPC(!isDisabled);
@@ -337,25 +320,25 @@ const ConsultarUsuario = () => {
     cargarDatos(user); // Volver a cargar los datos originales
   };
 
-
   const handleSaveChangesEPC = async (e) => {
     e.preventDefault();
 
     const datosActualizados = {
       razonSocialEPC,
       cuitEPC,
-
     };
 
     try {
-      const response = await fetch(`http://localhost:8000/encargado/${user.consumidorId}`, {
-
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(datosActualizados),
-      });
+      const response = await fetch(
+        `http://localhost:8000/encargado/${user.consumidorId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datosActualizados),
+        }
+      );
 
       if (response.ok) {
         toast.success("Datos actualizados correctamente");
@@ -369,7 +352,6 @@ const ConsultarUsuario = () => {
       toast.error("Error al actualizar los datos");
     }
   };
-
 
   const handleEditModeToggleR = () => {
     setEditMode(!editModeR);
@@ -466,522 +448,527 @@ const ConsultarUsuario = () => {
   };
 
   return (
-    <>
-      <div className="d-flex">
-        <div className="col-2">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className="flex-grow-1 background">
-          <section className="align-items-center justify-content-center col-6 offset-3 form mt-0">
-            <div className="card shadow-lg">
-              <div className="card-body p-3 formulario">
-                <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                  Tu Perfil
-                </h1>
-                <form className="needs-validation">
-                  <div>
-                    <hr />
-
-                    <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                      Usuario
-                    </h1>
-
-                    <section className="align-items-center justify-content-center col form">
-                      <div className="card shadow-lg">
-                        <div className="card-body p-3 formulario">
-                          <div className="d-flex justify-content-end">
-                            {editModeC ? (
-                              <>
-                                <button
-                                  type="button"
-                                  className=" btn btn-success mr-2"
-                                  onClick={handleSaveChangesCPrueba}
-                                >
-                                  Guardar
-                                </button>
-                                <br />
-                                <button
-                                  type="button"
-                                  className="btn btn-danger"
-                                  onClick={handleCancelChangesC}
-                                >
-                                  Cancelar
-                                </button>
-                              </>
-                            ) : (
+    <div className={`${style.background} row`}>
+      <div className="col-2">
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
+      </div>
+      <div className={`col-10`}>
+        <section
+          className={`${style.form} align-items-center justify-content-center col-6 offset-3 mt-0`}
+        >
+          <div className={`shadow-lg ${style.card}`}>
+            <div className={`${style.formulario} card-body mt-3 mb-5`}>
+              <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                Tu Perfil
+              </h1>
+              <form className="needs-validation">
+                <div>
+                  <hr />
+                  <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                    Usuario
+                  </h1>
+                  <section
+                    className={`${style.form} align-items-center justify-content-center col`}
+                  >
+                    <div className={`card ${style.card} shadow-lg`}>
+                      <div className={`${style.formulario} card-body p-3`}>
+                        <div className="d-flex justify-content-end">
+                          {editModeC ? (
+                            <>
                               <button
                                 type="button"
-                                className="btn btn-primary"
-                                onClick={handleEditModeToggleC}
+                                className=" btn btn-success mr-2"
+                                onClick={handleSaveChangesCPrueba}
                               >
-                                Editar
+                                Guardar
                               </button>
-                            )}
-                          </div>
-                          <form
-                            onSubmit={handleSaveChangesC}
-                            className="needs-validation"
-                          >
-                            <div className="mb-2">
-                              <label
-                                className="mb-2 text-dark"
-                                htmlFor="username"
+                              <br />
+                              <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={handleCancelChangesC}
                               >
-                                Nombre de Usuario
-                              </label>
-                              <input
-                                type="text"
-                                id="username"
-                                className="form-control"
-                                value={username}
-                                onChange={handleUsernameChangeC}
-                                readOnly={editModeC}
-                                disabled={isDisabledC}
-                              />
-                            </div>
-                            <div className=" mb-2">
-                              <label
-                                className="mb-2 text-dark"
-                                htmlFor="nombre"
-                              >
-                                Nombre
-                              </label>
-                              <input
-                                type="text"
-                                id="nombre"
-                                className="form-control"
-                                value={nombreC}
-                                onChange={handleNombreChangeC}
-                                readOnly={!editModeC}
-                                disabled={isDisabledC}
-                              />
-                            </div>
-                            <div className=" mb-2">
-                              <label
-                                className="mb-2 text-dark"
-                                htmlFor="apellido"
-                              >
-                                Apellido
-                              </label>
-                              <input
-                                type="text"
-                                id="apellido"
-                                className="form-control"
-                                value={apellidoC}
-                                onChange={handleApellidoChangeC}
-                                readOnly={!editModeC}
-                                disabled={isDisabledC}
-                              />
-                            </div>
-                            <div className="mb-2">
-                              <label
-                                className="mb-2 text-dark"
-                                htmlFor="fechaNacimiento"
-                              >
-                                Fecha de Nacimiento
-                              </label>
-                              <input
-                                type="text"
-                                id="fechaNacimiento"
-                                className="form-control"
-                                value={fechaNacimiento}
-                                onChange={handleFechaNacimientoChangeC}
-                                readOnly={!editModeC}
-                                disabled={isDisabledC}
-                              />
-                            </div>
-                            <div className="mb-2">
-                              <label className="mb-2 text-dark" htmlFor="dni">
-                                DNI
-                              </label>
-                              <input
-                                type="text"
-                                id="dni"
-                                className="form-control"
-                                value={dniC}
-                                onChange={handleDniChangeC}
-                                readOnly={!editModeC}
-                                disabled={isDisabledC}
-                              />
-                            </div>
-
-
-
-
-                            <div className="mb-3">
-                              <label className="mb-2 text-black" htmlFor="provincia">
-                                Provincia
-                              </label>
-                              <select
-                                id="provincia"
-                                className="form-control"
-                                value={selectedProvince}
-                                onChange={handleProvinceChange}
-                                      readOnly={!editModeC}
-                                disabled={isDisabledC}
-                                required
-                              >
-                                <option value="" disabled>
-                                 {provinciaC}
-                                </option>
-                                {provincias.map((prov) => (
-                                  <option key={prov.id} value={prov.id}>
-                                    {prov.nombre}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-
-
-                            <div className="mb-3">
-                              <label className="mb-2 text-black" htmlFor="localidad">
-                                Localidad
-                              </label>
-
-                              <select
-                                className="form-control mt-2"
-                                value={localidad}
-                                onChange={handleLocalidadChange}
-                                       readOnly={!editModeC}
-                                disabled={isDisabledC}
-                                required
-                              >
-                                <option value="" disabled>
-                                  {localidad}
-
-                                </option>
-                                {filteredLocalidades.map((loc) => (
-                                  <option key={loc.nombre} value={loc.nombre}>
-                                    {loc.nombre}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-
-
-
-                            <div className="mb-2">
-                              <label
-                                className="mb-2 text-dark"
-                                htmlFor="telefono"
-                              >
-                                Teléfono
-                              </label>
-                              <input
-                                type="text"
-                                id="telefono"
-                                className="form-control"
-                                value={telefono}
-                                onChange={handleTelefonoChangeC}
-                                readOnly={!editModeC}
-                                disabled={isDisabledC}
-                              />
-                            </div>
-                          </form>
+                                Cancelar
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={handleEditModeToggleC}
+                            >
+                              Editar
+                            </button>
+                          )}
                         </div>
+                        <form
+                          onSubmit={handleSaveChangesC}
+                          className="needs-validation"
+                        >
+                          <div className="mb-2">
+                            <label
+                              className="mb-2 text-dark"
+                              htmlFor="username"
+                            >
+                              Nombre de Usuario
+                            </label>
+                            <input
+                              type="text"
+                              id="username"
+                              className="form-control"
+                              value={username}
+                              onChange={handleUsernameChangeC}
+                              readOnly={editModeC}
+                              disabled={isDisabledC}
+                            />
+                          </div>
+                          <div className=" mb-2">
+                            <label className="mb-2 text-dark" htmlFor="nombre">
+                              Nombre
+                            </label>
+                            <input
+                              type="text"
+                              id="nombre"
+                              className="form-control"
+                              value={nombreC}
+                              onChange={handleNombreChangeC}
+                              readOnly={!editModeC}
+                              disabled={isDisabledC}
+                            />
+                          </div>
+                          <div className=" mb-2">
+                            <label
+                              className="mb-2 text-dark"
+                              htmlFor="apellido"
+                            >
+                              Apellido
+                            </label>
+                            <input
+                              type="text"
+                              id="apellido"
+                              className="form-control"
+                              value={apellidoC}
+                              onChange={handleApellidoChangeC}
+                              readOnly={!editModeC}
+                              disabled={isDisabledC}
+                            />
+                          </div>
+                          <div className="mb-2">
+                            <label
+                              className="mb-2 text-dark"
+                              htmlFor="fechaNacimiento"
+                            >
+                              Fecha de Nacimiento
+                            </label>
+                            <input
+                              type="text"
+                              id="fechaNacimiento"
+                              className="form-control"
+                              value={fechaNacimiento}
+                              onChange={handleFechaNacimientoChangeC}
+                              readOnly={!editModeC}
+                              disabled={isDisabledC}
+                            />
+                          </div>
+                          <div className="mb-2">
+                            <label className="mb-2 text-dark" htmlFor="dni">
+                              DNI
+                            </label>
+                            <input
+                              type="text"
+                              id="dni"
+                              className="form-control"
+                              value={dniC}
+                              onChange={handleDniChangeC}
+                              readOnly={!editModeC}
+                              disabled={isDisabledC}
+                            />
+                          </div>
+                          <div className="mb-3">
+                            <label
+                              className="mb-2 text-black"
+                              htmlFor="provincia"
+                            >
+                              Provincia
+                            </label>
+                            <select
+                              id="provincia"
+                              className="form-control"
+                              value={selectedProvince}
+                              onChange={handleProvinceChange}
+                              readOnly={!editModeC}
+                              disabled={isDisabledC}
+                              required
+                            >
+                              <option value="" disabled>
+                                {provinciaC}
+                              </option>
+                              {provincias.map((prov) => (
+                                <option key={prov.id} value={prov.id}>
+                                  {prov.nombre}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="mb-3">
+                            <label
+                              className="mb-2 text-black"
+                              htmlFor="localidad"
+                            >
+                              Localidad
+                            </label>
+
+                            <select
+                              className="form-control mt-2"
+                              value={localidad}
+                              onChange={handleLocalidadChange}
+                              readOnly={!editModeC}
+                              disabled={isDisabledC}
+                              required
+                            >
+                              <option value="" disabled>
+                                {localidad}
+                              </option>
+                              {filteredLocalidades.map((loc) => (
+                                <option key={loc.nombre} value={loc.nombre}>
+                                  {loc.nombre}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="mb-2">
+                            <label
+                              className="mb-2 text-dark"
+                              htmlFor="telefono"
+                            >
+                              Teléfono
+                            </label>
+                            <input
+                              type="text"
+                              id="telefono"
+                              className="form-control"
+                              value={telefono}
+                              onChange={handleTelefonoChangeC}
+                              readOnly={!editModeC}
+                              disabled={isDisabledC}
+                            />
+                          </div>
+                        </form>
                       </div>
-                    </section>
-                  </div>
-
-                  {mostrarContenidoProductor && (
-                    <>
-                      <hr />
-
-                      <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                        Productor de Eventos
-                      </h1>
-                      <section className="align-items-center justify-content-center col form">
-                        <div className="card shadow-lg">
-                          <div className="card-body p-3 formulario">
-                            <div className="d-flex justify-content-end">
-                              {editModePE ? (
-                                <>
-                                  <button
-                                    type="button"
-                                    className=" btn btn-success mr-2"
-                                    onClick={handleSaveChangesPEPrueba}
-                                  >
-                                    Guardar
-                                  </button>
-                                  <br />
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={handleCancelChangesPE}
-                                  >
-                                    Cancelar
-                                  </button>
-                                </>
-                              ) : (
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  onClick={handleEditModeTogglePE}
-                                >
-                                  Editar
-                                </button>
-                              )}
-                            </div>
-                            <form
-                              onSubmit={handleSaveChangesPE}
-                              className="needs-validation"
+                    </div>
+                    {mostrarContenidoProductor && (
+                      <>
+                        <hr />
+                        <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                          Productor de Eventos
+                        </h1>
+                        <section
+                          className={`${style.form} align-items-center justify-content-center col `}
+                        >
+                          <div className={`card ${style.card} shadow-lg`}>
+                            <div
+                              className={`${style.formulario} card-body p-3`}
                             >
-                              {/* CUIT */}
-                              <div className="mb-2">
-                                <label
-                                  className="mb-2 text-dark"
-                                  htmlFor="cuit"
-                                >
-                                  CUIT
-                                </label>
-                                <input
-                                  type="number"
-                                  id="cuit"
-                                  className="form-control"
-                                  value={cuitPE}
-                                  onChange={handleCuitChangePE}
-                                  readOnly={!editModePE}
-                                  disabled={!editModePE}
-                                />
-                              </div>
-                              {/* Razon Social */}
-                              <div className="mb-2">
-                                <label
-                                  className="mb-2 text-dark"
-                                  htmlFor="razonSocial"
-                                >
-                                  Razon Social
-                                </label>
-                                <input
-                                  type="text"
-                                  id="razonSocial"
-                                  className="form-control"
-                                  value={razonSocialPE}
-                                  onChange={handleRazonSocialChangePE}
-                                  readOnly={!editModePE}
-                                  disabled={!editModePE}
-                                />
-                              </div>
-                              {/* Documentos */}
-                              <div className="mb-2">
-                                <label
-                                  className="mb-2 text-dark"
-                                  htmlFor="documentos"
-                                >
-                                  Documentos
-                                </label>
-                                <input
-                                  type="file"
-                                  id="documentos"
-                                  className="form-control"
-                                  onChange={handleDocumentosChangePE}
-                                  readOnly={!editModePE}
-                                  disabled={!editModePE}
-                                />
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </section>
-                    </>
-                  )}
-                  {mostrarContenidoEncargadoPuesto && (
-                    <>
-                      <hr />
-
-                      <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                        Encargado Puesto de Comida
-                      </h1>
-                      <section className="align-items-center justify-content-center col form">
-                        <div className="card shadow-lg">
-                          <div className="card-body p-3 formulario">
-                            <div className="d-flex justify-content-end">
-                              {editModeEPC ? (
-                                <>
+                              <div className="d-flex justify-content-end">
+                                {editModePE ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className=" btn btn-success mr-2"
+                                      onClick={handleSaveChangesPEPrueba}
+                                    >
+                                      Guardar
+                                    </button>
+                                    <br />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={handleCancelChangesPE}
+                                    >
+                                      Cancelar
+                                    </button>
+                                  </>
+                                ) : (
                                   <button
                                     type="button"
-                                    className=" btn btn-success mr-2"
-                                    onClick={handleSaveChangesEPC}
+                                    className="btn btn-primary"
+                                    onClick={handleEditModeTogglePE}
                                   >
-                                    Guardar
+                                    Editar
                                   </button>
-                                  <br />
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={handleCancelChangesEPC}
+                                )}
+                              </div>
+                              <form
+                                onSubmit={handleSaveChangesPE}
+                                className="needs-validation"
+                              >
+                                {/* CUIT */}
+                                <div className="mb-2">
+                                  <label
+                                    className="mb-2 text-dark"
+                                    htmlFor="cuit"
                                   >
-                                    Cancelar
-                                  </button>
-                                </>
-                              ) : (
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  onClick={handleEditModeToggleEPC}
-                                >
-                                  Editar
-                                </button>
-                              )}
+                                    CUIT
+                                  </label>
+                                  <input
+                                    type="number"
+                                    id="cuit"
+                                    className="form-control"
+                                    value={cuitPE}
+                                    onChange={handleCuitChangePE}
+                                    readOnly={!editModePE}
+                                    disabled={!editModePE}
+                                  />
+                                </div>
+                                {/* Razon Social */}
+                                <div className="mb-2">
+                                  <label
+                                    className="mb-2 text-dark"
+                                    htmlFor="razonSocial"
+                                  >
+                                    Razon Social
+                                  </label>
+                                  <input
+                                    type="text"
+                                    id="razonSocial"
+                                    className="form-control"
+                                    value={razonSocialPE}
+                                    onChange={handleRazonSocialChangePE}
+                                    readOnly={!editModePE}
+                                    disabled={!editModePE}
+                                  />
+                                </div>
+                                {/* Documentos */}
+                                <div className="mb-2">
+                                  <label
+                                    className="mb-2 text-dark"
+                                    htmlFor="documentos"
+                                  >
+                                    Documentos
+                                  </label>
+                                  <input
+                                    type="file"
+                                    id="documentos"
+                                    className="form-control"
+                                    onChange={handleDocumentosChangePE}
+                                    readOnly={!editModePE}
+                                    disabled={!editModePE}
+                                  />
+                                </div>
+                              </form>
                             </div>
-                            <form
-                              onSubmit={handleSaveChangesEPC}
-                              className="needs-validation"
-                            >
-                              {/* CUIT */}
-                              <div className="mb-2">
-                                <label
-                                  className="mb-2 text-dark"
-                                  htmlFor="cuit"
-                                >
-                                  CUIT
-                                </label>
-                                <input
-                                  type="number"
-                                  id="cuit"
-                                  className="form-control"
-                                  value={cuitEPC}
-                                  onChange={handleCuitChangeEPC}
-                                  readOnly={!editModeEPC}
-                                  disabled={!editModeEPC}
-                                />
-                              </div>
-                              {/* Razon Social */}
-                              <div className="mb-2">
-                                <label
-                                  className="mb-2 text-dark"
-                                  htmlFor="razonSocial"
-                                >
-                                  Razon Social
-                                </label>
-                                <input
-                                  type="text"
-                                  id="razonSocial"
-                                  className="form-control"
-                                  value={razonSocialEPC}
-                                  onChange={handleRazonSocialChangeEPC}
-                                  readOnly={!editModeEPC}
-                                  disabled={!editModeEPC}
-                                />
-                              </div>
-                              {/* Documentos */}
-                              <div className="mb-2">
-                                <label
-                                  className="mb-2 text-dark"
-                                  htmlFor="documentos"
-                                >
-                                  Documentos
-                                </label>
-                                <input
-                                  type="file"
-                                  id="documentos"
-                                  className="form-control"
-                                  onChange={handleDocumentosChangeEPC}
-                                  readOnly={!editModeEPC}
-                                  disabled={!editModeEPC}
-                                />
-                              </div>
-                            </form>
                           </div>
-                        </div>
-                      </section>
-                    </>
-                  )}
-
-                  {mostrarContenidoRepartidor && (
-                    <>
-                      <hr />
-                      <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                        Repartidor
-                      </h1>
-                      <section className="align-items-center justify-content-center col form">
-                        <div className="card shadow-lg">
-                          <div className="card-body p-3 formulario">
-                            <div className="d-flex justify-content-end">
-                              {editModeR ? (
-                                <>
+                        </section>
+                      </>
+                    )}
+                    {mostrarContenidoEncargadoPuesto && (
+                      <>
+                        <hr />
+                        <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                          Encargado Puesto de Comida
+                        </h1>
+                        <section
+                          className={`${style.form} align-items-center justify-content-center col`}
+                        >
+                          <div className={`card ${style.card} shadow-lg`}>
+                            <div
+                              className={`${style.formulario} card-body p-3`}
+                            >
+                              <div className="d-flex justify-content-end">
+                                {editModeEPC ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className=" btn btn-success mr-2"
+                                      onClick={handleSaveChangesEPC}
+                                    >
+                                      Guardar
+                                    </button>
+                                    <br />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={handleCancelChangesEPC}
+                                    >
+                                      Cancelar
+                                    </button>
+                                  </>
+                                ) : (
                                   <button
                                     type="button"
-                                    className=" btn btn-success mr-2"
-                                    onClick={handleSaveChangesR}
+                                    className="btn btn-primary"
+                                    onClick={handleEditModeToggleEPC}
                                   >
-                                    Guardar
+                                    Editar
                                   </button>
-                                  <br />
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={handleCancelChangesR}
+                                )}
+                              </div>
+                              <form
+                                onSubmit={handleSaveChangesEPC}
+                                className="needs-validation"
+                              >
+                                {/* CUIT */}
+                                <div className="mb-2">
+                                  <label
+                                    className="mb-2 text-dark"
+                                    htmlFor="cuit"
                                   >
-                                    Cancelar
-                                  </button>
-                                </>
-                              ) : (
-                                <button
-                                  type="button"
-                                  className="btn btn-primary"
-                                  onClick={handleEditModeToggleR}
-                                >
-                                  Editar
-                                </button>
-                              )}
+                                    CUIT
+                                  </label>
+                                  <input
+                                    type="number"
+                                    id="cuit"
+                                    className="form-control"
+                                    value={cuitEPC}
+                                    onChange={handleCuitChangeEPC}
+                                    readOnly={!editModeEPC}
+                                    disabled={!editModeEPC}
+                                  />
+                                </div>
+                                {/* Razon Social */}
+                                <div className="mb-2">
+                                  <label
+                                    className="mb-2 text-dark"
+                                    htmlFor="razonSocial"
+                                  >
+                                    Razon Social
+                                  </label>
+                                  <input
+                                    type="text"
+                                    id="razonSocial"
+                                    className="form-control"
+                                    value={razonSocialEPC}
+                                    onChange={handleRazonSocialChangeEPC}
+                                    readOnly={!editModeEPC}
+                                    disabled={!editModeEPC}
+                                  />
+                                </div>
+                                {/* Documentos */}
+                                <div className="mb-2">
+                                  <label
+                                    className="mb-2 text-dark"
+                                    htmlFor="documentos"
+                                  >
+                                    Documentos
+                                  </label>
+                                  <input
+                                    type="file"
+                                    id="documentos"
+                                    className="form-control"
+                                    onChange={handleDocumentosChangeEPC}
+                                    readOnly={!editModeEPC}
+                                    disabled={!editModeEPC}
+                                  />
+                                </div>
+                              </form>
                             </div>
-                            <form
-                              onSubmit={handleSaveChangesR}
-                              className="needs-validation"
-                            >
-                              {/* CUIT */}
-                              <div className="mb-2 mt-0">
-                                <label
-                                  className="mb-1 text-dark"
-                                  htmlFor="cuit"
-                                >
-                                  {" "}
-                                  {/* <-- Ajustar aquí: mb-0 */}
-                                  CUIT
-                                </label>
-                                <input
-                                  type="number"
-                                  id="cuit"
-                                  className="form-control"
-                                  value={cuitR}
-                                  onChange={handleCuitChangeR}
-                                  readOnly={!editModeR}
-                                  disabled={!editModeR}
-                                />
-                              </div>
-
-                              {/* Documentos */}
-                              <div className="mb-2">
-                                <label
-                                  className="mb-2 text-dark"
-                                  htmlFor="documentos"
-                                >
-                                  Documentos
-                                </label>
-                                <input
-                                  type="file"
-                                  id="documentos"
-                                  className="form-control"
-                                  onChange={handleDocumentosChangeR}
-                                  readOnly={!editModeR}
-                                  disabled={!editModeR}
-                                />
-                              </div>
-                            </form>
                           </div>
-                        </div>
-                      </section>
-                    </>
-                  )}
-                </form>
-              </div>
+                        </section>
+                      </>
+                    )}
+
+                    {mostrarContenidoRepartidor && (
+                      <>
+                        <hr />
+                        <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                          Repartidor
+                        </h1>
+                        <section
+                          className={`${style.form} align-items-center justify-content-center col`}
+                        >
+                          <div className={`card ${style.card} shadow-lg`}>
+                            <div
+                              className={`${style.formulario} card-body p-3`}
+                            >
+                              <div className="d-flex justify-content-end">
+                                {editModeR ? (
+                                  <>
+                                    <button
+                                      type="button"
+                                      className=" btn btn-success mr-2"
+                                      onClick={handleSaveChangesR}
+                                    >
+                                      Guardar
+                                    </button>
+                                    <br />
+                                    <button
+                                      type="button"
+                                      className="btn btn-danger"
+                                      onClick={handleCancelChangesR}
+                                    >
+                                      Cancelar
+                                    </button>
+                                  </>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={handleEditModeToggleR}
+                                  >
+                                    Editar
+                                  </button>
+                                )}
+                              </div>
+                              <form
+                                onSubmit={handleSaveChangesR}
+                                className="needs-validation"
+                              >
+                                {/* CUIT */}
+                                <div className="mb-2 mt-0">
+                                  <label
+                                    className="mb-1 text-dark"
+                                    htmlFor="cuit"
+                                  >
+                                    {" "}
+                                    CUIT
+                                  </label>
+                                  <input
+                                    type="number"
+                                    id="cuit"
+                                    className="form-control"
+                                    value={cuitR}
+                                    onChange={handleCuitChangeR}
+                                    readOnly={!editModeR}
+                                    disabled={!editModeR}
+                                  />
+                                </div>
+
+                                {/* Documentos */}
+                                <div className="mb-2">
+                                  <label
+                                    className="mb-2 text-dark"
+                                    htmlFor="documentos"
+                                  >
+                                    Documentos
+                                  </label>
+                                  <input
+                                    type="file"
+                                    id="documentos"
+                                    className="form-control"
+                                    onChange={handleDocumentosChangeR}
+                                    readOnly={!editModeR}
+                                    disabled={!editModeR}
+                                  />
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </section>
+                      </>
+                    )}
+                  </section>
+                </div>
+              </form>
             </div>
-          </section>
-          <Footer />
-        </div>
+          </div>
+        </section>
       </div>
-    </>
+      <div style={{ position: "fixed", left: "0", bottom: "0" }}>
+        <Footer />
+      </div>
+    </div>
   );
 };
 

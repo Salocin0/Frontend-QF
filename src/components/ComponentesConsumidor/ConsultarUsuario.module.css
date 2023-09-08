@@ -5,7 +5,6 @@
 
 body {
   background-color: black;
-
 }
 
 .background {
@@ -16,16 +15,31 @@ body {
 }
 
 .form {
-  padding: 10px;
+  padding: 0 5px;
   margin-bottom: 20px;
+  background-color: white;
+  border-radius: 10px;
 }
 
 .card {
   width: 100%;
   margin-left: auto;
+  padding-bottom: 0px;
 }
 
 .deshabilitar {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.formulario {
+  background-color: white;
+  border-radius: 10px;
+  height: auto;
+  padding: 20px;
+  overflow-y: auto !important;
+}
+
+.rad {
+  border-radius: 10px;
 }

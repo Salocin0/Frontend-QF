@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { Link } from "react-router-dom";
+import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 
 const CrearNuevoCarro = () => {
   const [numeroCarro, setNumeroCarro] = useState("");
@@ -92,10 +93,10 @@ const CrearNuevoCarro = () => {
         <div className="col-2">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
-        <div className="flex-grow-1 background">
-          <section className="align-items-center justify-content-center col-6 offset-3 form">
-            <div className="card shadow-lg">
-              <div className="card-body p-3 formulario">
+        <div className={`flex-grow-1 ${style.background}`}>
+          <section className={`align-items-center justify-content-center col-6 offset-3 ${style.form} mt-3 mb-5 ${style.rad}`}>
+            <div className={`${style.card} shadow-lg`}>
+              <div className={`card-body p-3 ${style.formulario}`}>
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                   Registrar Carro de Comida
                 </h1>
@@ -242,13 +243,13 @@ const CrearNuevoCarro = () => {
                     />
                   </div>
                   <div className="d-grid">
-                    <button type="submit" className="btn btn-success">
+                    <button type="submit" className="btn btn-success my-1">
                       Registrar Carro de Comida
                     </button>
                   </div>
                   <Link
                     to={`/listado-puestos`}
-                    className="btn btn-primary w-100 mt-1"
+                    className="btn btn-primary w-100 my-1"
                   >
                     Volver
                   </Link>

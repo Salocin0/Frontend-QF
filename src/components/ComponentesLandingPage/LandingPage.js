@@ -1,33 +1,33 @@
-import React from 'react';
-import Footer from '../ComponentesGenerales/Footer';
-import ComoFunciona from './ComoFunciona';
-import Contacto from './Contacto';
-import Imagenes from './Imagenes';
-import Navbar from './Navbar';
-import "./landingPage.css";
+import React from "react";
+import Footer from "../ComponentesGenerales/Footer";
+import ComoFunciona from "./ComoFunciona";
+import Contacto from "./Contacto";
+import Imagenes from "./Imagenes";
+import Navbar from "./Navbar";
+import style from "./landingPage.module.css";
+
 
 const LandingPage = () => {
   return (
-    <div className="app">
-      
-      <nav className='navbar'>
-        <Navbar/>
+    <div>
+      <nav className={style.navbar}>
+        <Navbar />
       </nav>
 
-      <section className="imagenes">
-        <Imagenes/>
+      <section className={style.imagenes}>
+        <Imagenes />
       </section>
 
-      <section className="comofunciona">
-        <ComoFunciona/>
+      <section className={style.ComoFunciona}>
+        <ComoFunciona />
       </section>
 
-      <section className="contacto">
-        <Contacto/>
+      <section>
+        <Contacto />
       </section>
 
-      <footer className="footer">
-        <Footer/>
+      <footer className={style.footer}>
+        <Footer />
       </footer>
     </div>
   );

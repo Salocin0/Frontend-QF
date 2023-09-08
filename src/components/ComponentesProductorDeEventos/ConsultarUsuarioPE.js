@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import "../ComponentesConsumidor/ConsultarUsuario.css";
+import style from  '../ComponentesConsumidor/ConsultarUsuario.module.css'
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";

@@ -1,4 +1,4 @@
-* {
+/** {
   margin: 0;
   padding: 0;
 
@@ -41,4 +41,4 @@
 .row {
   --bs-gutter-x: 1.5rem !important ;
 }
-
+*/

@@ -2,7 +2,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
-import "./Sidebar.css";
+import style from "./Sidebar.module.css";
 
 import Logo from "../QuickFoodLogo.png";
 
@@ -23,32 +23,32 @@ const Sidebar = ({ tipoUsuario }) => {
 
   return (
     <>
-      <div className="sidebar">
-        <div className="logo-container">
+      <div className={style.sidebar}>
+        <div className={style.logocontainer}>
           <a href="/inicio">
-            <img src={Logo} alt="Logo" className="logo" />
+            <img src={Logo} alt="Logo" className={style.logo} />
           </a>
         </div>
         <div className="menu-container">
-          <ul className="nav flex-column p-3">
-            <li className="nav-item">
-              <a href="/inicio" className="nav-link text-truncate">
-                <i className="bi bi-1-circle-fill icono"></i>
+          <ul className={`${style.nav} flex-column p-3`}>
+            <li className={style.navitem}>
+              <a href="/inicio" className={`${style.navlink} text-truncate`}>
+                <i className={`${style.icono} bi bi-1-circle-fill`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">Inicio</span>
               </a>
             </li>
-            <li className="nav-item">
-              <a href="/historial-pedidos" className="nav-link text-truncate">
-                <i className="bi bi-1-circle-fill icono"></i>
+            <li className={style.navitem}>
+              <a href="/historial-pedidos" className={`${style.navlink} text-truncate`}>
+                <i className={`${style.icono} bi bi-1-circle-fill`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Mis Pedidos
                 </span>
               </a>
             </li>
             {isResponsable && (
-              <li className="nav-item">
-                <a href="/listado-puestos" className="nav-link text-truncate">
-                  <i className="bi bi-1-circle-fill icono"></i>
+              <li className={style.navitem}>
+                <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
+                  <i className={`${style.icono} bi bi-1-circle-fill`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Puestos
                   </span>
@@ -56,9 +56,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
             {isProductor && (
-              <li className="nav-item">
-                <a href="/listado-puestos" className="nav-link text-truncate">
-                  <i className="bi bi-1-circle-fill icono"></i>
+              <li className={style.navitem}>
+                <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
+                  <i className={`${style.icono} bi bi-1-circle-fill`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Eventos
                   </span>
@@ -66,9 +66,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
             {isRepartidor && (
-              <li className="nav-item">
-                <a href="/listado-puestos" className="nav-link text-truncate">
-                  <i className="bi bi-1-circle-fill icono"></i>
+              <li className={style.navitem}>
+                <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
+                  <i className={`${style.icono} bi bi-1-circle-fill`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Pedidos Asignados
                   </span>
@@ -76,10 +76,10 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
 
-            <li className="nav-item dropdown especial">
-              <i className="bi bi-1-circle-fill icono iconoespecial"></i>
+            <li className={`${style.navitem} dropdown ${style.especial}`}>
+              <i className={`${style.icono} bi bi-1-circle-fill ${style.iconoespecial}`} ></i>
               <a
-                className="nav-link dropdown-toggle text-truncate"
+                className={`${style.navlink} text-truncate dropdown-toggle`}
                 id="dropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="true"

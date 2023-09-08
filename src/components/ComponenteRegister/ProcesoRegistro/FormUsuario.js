@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import "../seleccionRegister.css";
+import styles from "../seleccionRegister.module.css";
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
   const [showPassword1, setShowPassword1] = useState(false);
@@ -58,95 +58,93 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
   };
 
   return (
-    <div className="background">
-      <div className="container vh-100">
-        <div className="row h-100 justify-content-center align-items-center">
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-header">
-                <h2 className="text-center">
-                  Datos Usuario 1/{tipoUsuario === "consumidor" ? "2" : "3"}
-                </h2>
-              </div>
-              <div className="card-body">
-                <form onSubmit={handleSubmit}>
-                  <div className="form-group">
-                    <label htmlFor="username">Nombre de usuario</label>
+    <div className={`${styles.background} ${styles.container} vh-100`}>
+      <div className="row h-100 justify-content-center align-items-center">
+        <div className="col-md-4">
+          <div className={`${styles.card} card`}>
+            <div className={`${styles.cardheader}`}>
+              <h2 className={`${styles.h2} text-center`} style={{color: "white"}}>
+                Datos Usuario 1/{tipoUsuario === "consumidor" ? "2" : "3"}
+              </h2>
+            </div>
+            <div className="card-body">
+              <form onSubmit={handleSubmit}>
+                <div className={` form-group`}>
+                  <label htmlFor="username" className={styles.label}>Nombre de usuario</label>
+                  <input
+                    type="text"
+                    name="username"
+                    value={userData.username}
+                    onChange={handleChange}
+                    className={`${styles.blackwhite}  form-control`}
+                    placeholder="Nombre de usuario"
+                  />
+                </div>
+                <div className={` form-group`}>
+                  <label htmlFor="email" className={styles.label}>Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={userData.email}
+                    onChange={handleChange}
+                    className={`${styles.blackwhite}  form-control`}
+                    placeholder="Email"
+                  />
+                </div>
+                <div className={` form-group`}>
+                  <label htmlFor="password" className={styles.label}>Contraseña</label>
+                  <div className="input-group">
                     <input
-                      type="text"
-                      name="username"
-                      value={userData.username}
+                      type={showPassword1 ? "text" : "password"}
+                      name="password"
+                      value={userData.password}
                       onChange={handleChange}
-                      className="form-control"
-                      placeholder="Nombre de usuario"
+                      className={`${styles.blackwhite} form-control`}
+                      placeholder="Contraseña"
                     />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      value={userData.email}
-                      onChange={handleChange}
-                      className="form-control"
-                      placeholder="Email"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="password">Contraseña</label>
-                    <div className="input-group">
-                      <input
-                        type={showPassword1 ? "text" : "password"} // Cambia el tipo de entrada de contraseña según el estado de showPassword
-                        name="password"
-                        value={userData.password}
-                        onChange={handleChange}
-                        className="form-control"
-                        placeholder="Contraseña"
-                      />
-                      <div className="input-group-append">
-                        <button
-                          type="button"
-                          className="btn btn-outline-secondary"
-                          onClick={toggleShowPassword1}
-                        >
-                          {showPassword1 ? "Ocultar" : "Mostrar"}
-                        </button>
-                      </div>
+                    <div className="input-group-append">
+                      <button
+                        type="button"
+                        className={`${styles['btn']} btn btn-outline-secondary`}
+                        onClick={toggleShowPassword1}
+                      >
+                        {showPassword1 ? "Ocultar" : "Mostrar"}
+                      </button>
                     </div>
                   </div>
-                  <div className="form-group">
-                    <label htmlFor="confirmPassword">Repetir Contraseña</label>
-                    <div className="input-group">
-                      <input
-                        type={showPassword2 ? "text" : "password"}
-                        name="confirmPassword"
-                        value={userData.confirmPassword}
-                        onChange={handleChange}
-                        className="form-control"
-                        placeholder="Repetir Contraseña"
-                      />
-                      <div className="input-group-append">
-                        <button
-                          type="button"
-                          className="btn btn-outline-secondary"
-                          onClick={toggleShowPassword2}
-                        >
-                          {showPassword2 ? "Ocultar" : "Mostrar"}
-                        </button>
-                      </div>
+                </div>
+                <div className={`${styles['form-group']} form-group`}>
+                  <label htmlFor="confirmPassword" className={styles.label}>Repetir Contraseña</label>
+                  <div className="input-group">
+                    <input
+                      type={showPassword2 ? "text" : "password"}
+                      name="confirmPassword"
+                      value={userData.confirmPassword}
+                      onChange={handleChange}
+                      className={`${styles.blackwhite} form-control`}
+                      placeholder="Repetir Contraseña"
+                    />
+                    <div className="input-group-append">
+                      <button
+                        type="button"
+                        className={`${styles['btn']} btn btn-outline-secondary`}
+                        onClick={toggleShowPassword2}
+                      >
+                        {showPassword2 ? "Ocultar" : "Mostrar"}
+                      </button>
                     </div>
                   </div>
-                  <hr />
-                  <div className="d-flex justify-content-between mt-2">
-                    <Link to={"/seleccion-perfil"} className="btn btn-secondary">
-                      Atrás
-                    </Link>
-                    <button type="submit" className="btn btn-primary">
-                      Siguiente
-                    </button>
-                  </div>
-                </form>
-              </div>
+                </div>
+                <hr style={{color: "white"}}/>
+                <div className={`d-flex justify-content-between mt-2 ${styles['d-flex']}`}>
+                  <Link to={"/seleccion-perfil"} className={`${styles['btn']} btn btn-secondary`}>
+                    Atrás
+                  </Link>
+                  <button type="submit" className={`${styles['btn']} btn btn-primary`}>
+                    Siguiente
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

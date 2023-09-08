@@ -53,7 +53,7 @@ const RecuperarContraseña = () => {
             <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
               <div className="card shadow-lg">
                 <div className="card-body p-3 text-center">
-                  <h1 className="fs-4 card-title fw-bold mb-1 text-black">
+                  <h1 className="fs-4 card-title fw-bold mb-4 text-black">
                     Recuperar Contraseña
                   </h1>
                   <form onSubmit={handleSubmit} className="needs-validation">
@@ -74,7 +74,7 @@ const RecuperarContraseña = () => {
                       </div>
                     </div>
                     <div className="d-grid">
-                      <button type="submit" className="btn btn-warning">
+                      <button type="submit" className="btn btn-primary">
                         Enviar Mail de Recuperación
                       </button>
                     </div>

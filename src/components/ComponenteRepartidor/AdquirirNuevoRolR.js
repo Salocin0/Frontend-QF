@@ -6,7 +6,7 @@ import "../ComponentesEPC/AdquirirNuevoRolEPC.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import '../ComponentesConsumidor/ConsultarUsuario.css'
+import style from  '../ComponentesConsumidor/ConsultarUsuario.module.css'
 
 const AdquirirNuevoRolR = () => {
   const navigate = useNavigate();

@@ -1,5 +1,5 @@
 /* Estilo para la tarjeta de producto */
-.card {
+/*.card {
     border: none;
     background: #f7f7f7;
     border-radius: 10px;
@@ -13,7 +13,7 @@
 }
 
 .card-body {
-    padding: 20px; /* Elimina esta línea o establece margin-top: 0; si es necesario */
+    padding: 20px; /* Elimina esta línea o establece margin-top: 0; si es necesario *//*
 }
 
 .card-title {
@@ -44,7 +44,7 @@
     color: #0056b3;
 }
 
-/* Estilo para el botón "Agregar al Pedido" */
+/* Estilo para el botón "Agregar al Pedido" *//*
 .btn-pedido {
     position: absolute;
     bottom: 0;
@@ -75,3 +75,4 @@
     max-width: 100%;
     max-height: 20%;
 }
+*/

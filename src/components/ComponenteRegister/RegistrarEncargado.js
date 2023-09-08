@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import "../ComponentesConsumidor/ConsultarUsuario.css";
 
 const RegistroEncargado = () => {
   const [nombre, setNombre] = useState("");

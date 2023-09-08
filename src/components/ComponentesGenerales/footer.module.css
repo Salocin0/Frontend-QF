@@ -1,27 +1,26 @@
-/* Estilos para el footer */
 .footer {
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
   background-color: #272727;
-  padding: 20px 0; 
   padding-bottom: 6px;
   color: #ffffff;
   font-size: 12px;
   z-index: 1000;
 }
+
 .footer .row {
   align-items: center;
 }
 
-.footer-link {
+.footerlink {
   margin-right: 10px;
   color: #ffffff;
   text-decoration: none;
 }
 
-.footer-icon {
+.footericon {
   color: #ffffff;
   margin-right: 5px;
 }
