@@ -1,12 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
-import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 
 const ConsultarPuesto = () => {
   const { id } = useParams();

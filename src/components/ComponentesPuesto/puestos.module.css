@@ -46,3 +46,7 @@
     height: 100%;
     color: white;
   }
+
+  .custom-dropdown-toggle::after {
+    display: none;
+  }

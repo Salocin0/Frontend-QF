@@ -15,7 +15,9 @@ import LandingPage from '../ComponentesLandingPage/LandingPage';
 import CambiarContraseña from '../ComponentesLogin/CambiarContraseña';
 import Login from '../ComponentesLogin/Login';
 import RecuperarContraseña from '../ComponentesLogin/RecuperarContraseña';
-import RegistrarProducto from '../ComponentesProducto/RegistrarProducto';
+import ListadoProducto from '../ComponentesProducto/ListadoProducto';
+import ListadoProductoUser from '../ComponentesProducto/ListadoProductoUser';
+import RegistrarProductos from '../ComponentesProducto/RegistrarProductos';
 import AdquirirNuevoRolPE from '../ComponentesProductorDeEventos/AdquirirNuevoRolPE';
 import ConsultarUsuarioPE from '../ComponentesProductorDeEventos/ConsultarUsuarioPE';
 import ConsultarPuesto from '../ComponentesPuesto/ConsultarPuesto';
@@ -63,7 +65,10 @@ export const Main = () => {
 
            <Route path="/subir-archivo" element={<DocumentUpload/>} />
            <Route path="/seleccion-perfil" element={<SeleccionRegister/>} />
-           <Route path="/prueba-productos" element={<RegistrarProducto/>} />
+
+           <Route path="/prueba-productos" element={<ListadoProductoUser/>} />
+           <Route path="/listado-productos" element={<ListadoProducto/>} />
+           <Route path="/registrar-productos" element={<RegistrarProductos/>} />
 
       </Routes>
     </main>

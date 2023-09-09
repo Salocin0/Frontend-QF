@@ -3,9 +3,9 @@ import React from 'react';
 import Sidebar from '../ComponentesGenerales/Sidebar';
 import banner from '../ComponentesProducto/banner.png';
 import imagenProducto from '../ComponentesProducto/f1.png';
-import './RegistrarProducto.css';
+import './ListadoProducto.css';
 
-const RegistrarProducto = () => {
+const ListadoProductoUser = () => {
     return (
         <div className="main-container">
 
@@ -70,4 +70,4 @@ const RegistrarProducto = () => {
     );
 }
 
-export default RegistrarProducto;
+export default ListadoProductoUser;

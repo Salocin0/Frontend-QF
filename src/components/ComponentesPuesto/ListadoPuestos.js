@@ -1,11 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import style from '../ComponentesConsumidor/ConsultarUsuario.module.css';
+import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Puesto from "./Puesto";
 import stylepuesto from "./puestos.module.css";
-import style from  '../ComponentesConsumidor/ConsultarUsuario.module.css'
-import { Link } from "react-router-dom";
-import Footer from "../ComponentesGenerales/Footer";
 
 const ListadoPuestos = () => {
   const [rows, setRows] = useState([]);
