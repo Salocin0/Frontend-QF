@@ -120,6 +120,18 @@ const ConsultarUsuario = () => {
     }
   };
 
+   const isCuitValid = (cuitEPC) => {
+    console.log("Entre" + cuitEPC);
+    const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
+    if (!cuitEPC.trim()) {
+      return false;
+    }
+    return regexCuit.test(cuitEPC);
+  };
+
+
+
+
   const handleNombreChangeC = (e) => {
     setNombreC(e.target.value);
   };
@@ -205,7 +217,7 @@ const ConsultarUsuario = () => {
   };
 
   const handleEditModeToggleC = () => {
-    setEditModeC(!editModeC);
+    setEditModeC(true);
     setIsDisabledC(!isDisabledC);
   };
 
@@ -222,6 +234,19 @@ const ConsultarUsuario = () => {
 
   const handleSaveChangesCPrueba = async (e) => {
     e.preventDefault();
+
+    if (
+      !nombreC ||
+      !apellidoC ||
+      !dniC ||
+      !fechaNacimiento ||
+      !provinciaC ||
+      !localidad ||
+      !telefono
+    ) {
+      toast.error("Rellene todos los campos");
+      return;
+    }
 
     const datosActualizados = {
       nombreC,
@@ -249,8 +274,10 @@ const ConsultarUsuario = () => {
 
       if (response.ok) {
         toast.success("Datos actualizados correctamente");
-        cargarDatos(user);
         setEditModeC(false);
+
+        setIsDisabledC(!isDisabledC);
+        cargarDatos(user);
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -278,6 +305,16 @@ const ConsultarUsuario = () => {
 
   const handleSaveChangesPEPrueba = async (e) => {
     e.preventDefault();
+
+      if (!isCuitValid(cuitPE)) {
+      toast.error("El CUIT no es válido o está vacío.");
+      return;
+    }
+
+    if (!razonSocialPE.trim()) {
+      toast.error("razon social no puede estar vacía.");
+      return;
+    }
 
     const datosActualizados = {
       razonSocialPE,
@@ -322,6 +359,17 @@ const ConsultarUsuario = () => {
 
   const handleSaveChangesEPC = async (e) => {
     e.preventDefault();
+
+    if (!isCuitValid(cuitEPC)) {
+      toast.error("El CUIT no es válido o está vacío.");
+      return;
+    }
+
+    if (!razonSocialEPC.trim()) {
+      toast.error("razon social no puede estar vacía.");
+      return;
+    }
+
 
     const datosActualizados = {
       razonSocialEPC,
@@ -518,8 +566,9 @@ const ConsultarUsuario = () => {
                               className="form-control"
                               value={username}
                               onChange={handleUsernameChangeC}
-                              readOnly={editModeC}
+                              readOnly={!editModeC}
                               disabled={isDisabledC}
+                              required
                             />
                           </div>
                           <div className=" mb-2">
@@ -534,6 +583,7 @@ const ConsultarUsuario = () => {
                               onChange={handleNombreChangeC}
                               readOnly={!editModeC}
                               disabled={isDisabledC}
+                              required
                             />
                           </div>
                           <div className=" mb-2">
@@ -551,6 +601,7 @@ const ConsultarUsuario = () => {
                               onChange={handleApellidoChangeC}
                               readOnly={!editModeC}
                               disabled={isDisabledC}
+                              required
                             />
                           </div>
                           <div className="mb-2">
@@ -568,6 +619,7 @@ const ConsultarUsuario = () => {
                               onChange={handleFechaNacimientoChangeC}
                               readOnly={!editModeC}
                               disabled={isDisabledC}
+                              required
                             />
                           </div>
                           <div className="mb-2">
@@ -582,6 +634,7 @@ const ConsultarUsuario = () => {
                               onChange={handleDniChangeC}
                               readOnly={!editModeC}
                               disabled={isDisabledC}
+                              required
                             />
                           </div>
                           <div className="mb-3">
@@ -653,6 +706,7 @@ const ConsultarUsuario = () => {
                               onChange={handleTelefonoChangeC}
                               readOnly={!editModeC}
                               disabled={isDisabledC}
+                              required
                             />
                           </div>
                         </form>
@@ -720,6 +774,7 @@ const ConsultarUsuario = () => {
                                     onChange={handleCuitChangePE}
                                     readOnly={!editModePE}
                                     disabled={!editModePE}
+                                    required
                                   />
                                 </div>
                                 {/* Razon Social */}
@@ -738,6 +793,7 @@ const ConsultarUsuario = () => {
                                     onChange={handleRazonSocialChangePE}
                                     readOnly={!editModePE}
                                     disabled={!editModePE}
+                                    required
                                   />
                                 </div>
                                 {/* Documentos */}
@@ -825,6 +881,7 @@ const ConsultarUsuario = () => {
                                     onChange={handleCuitChangeEPC}
                                     readOnly={!editModeEPC}
                                     disabled={!editModeEPC}
+                                    required
                                   />
                                 </div>
                                 {/* Razon Social */}
@@ -843,6 +900,7 @@ const ConsultarUsuario = () => {
                                     onChange={handleRazonSocialChangeEPC}
                                     readOnly={!editModeEPC}
                                     disabled={!editModeEPC}
+                                    required
                                   />
                                 </div>
                                 {/* Documentos */}

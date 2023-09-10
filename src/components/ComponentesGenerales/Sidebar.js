@@ -19,7 +19,7 @@ const Sidebar = ({ tipoUsuario }) => {
     setIsProductor(usuario === "productor");
     setIsRepartidor(usuario === "repartidor");
     setHaveRol(usuario !== "consumidor");
-  }, [tipoUsuario,usuario]);
+  }, [tipoUsuario, usuario]);
 
   return (
     <>
@@ -38,10 +38,10 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className={style.navitem}>
-              <a href="/historial-pedidos" className={`${style.navlink} text-truncate`}>
+              <a href="#" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
                 <i className={`${style.icono} bi bi-1-circle-fill`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
-                  Mis Pedidos
+                  Mis Pedidos (Próximamente)
                 </span>
               </a>
             </li>

@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from '../ComponentesGenerales/UserContext';
-import style from  '../ComponentesConsumidor/ConsultarUsuario.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { toast } from 'react-toastify';
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
+import { UserContext } from '../ComponentesGenerales/UserContext';
 
 const ConsultarUsuarioEPC = () => {
   const location = useLocation();
@@ -46,6 +45,14 @@ const ConsultarUsuarioEPC = () => {
     }
   }, []);
 
+  const isCuitValid = (cuit) => {
+    console.log("Entre");
+    const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
+    if (!cuit.trim()) {
+      return false;
+    }
+    return regexCuit.test(cuit);
+  };
   const handleNombreChange = (e) => {
     setNombre(e.target.value);
   };
@@ -60,6 +67,7 @@ const ConsultarUsuarioEPC = () => {
 
   const handleCuitChange = (e) => {
     setCuit(e.target.value);
+
   };
 
   const handleRazonSocialChange = (e) => {
@@ -81,10 +89,9 @@ const ConsultarUsuarioEPC = () => {
   const handleEditModeToggle = () => {
     setEditMode(!editMode);
   };
-  
+
   const deshabilitarUsuario = async () => {
     try {
-
       const response = await fetch(`http://127.0.0.1:8000/encargado/${encargado.id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
@@ -112,7 +119,7 @@ const ConsultarUsuarioEPC = () => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const handleDelete = () => {
     deshabilitarUsuario();
@@ -120,6 +127,19 @@ const ConsultarUsuarioEPC = () => {
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
+
+     console.log("aca");
+
+      if (!isCuitValid(cuit)) {
+        toast.error("El CUIT no es válido o está vacío.");
+        return;
+      }
+
+
+    if (!razonSocial.trim()) {
+      toast.error("razon social no puede estar vacía.");
+      return;
+    }
     updateEncargado()
     setEditMode(false);
   };
@@ -147,10 +167,13 @@ const ConsultarUsuarioEPC = () => {
 
   const updateEncargado = async () => {
     try {
-      const nuevoEncargado={
-        cuit:cuit,
-        razonSocial:razonSocial
+
+
+      const nuevoEncargado = {
+        cuit: cuit,
+        razonSocial: razonSocial
       }
+
 
       const response = await fetch(`http://127.0.0.1:8000/encargado/${encargado.id}`, {
         method: 'PUT',
@@ -212,8 +235,8 @@ const ConsultarUsuarioEPC = () => {
   return (
     <>
       <div className="d-flex">
-      <div className='col-2'>
-      <Sidebar tipoUsuario={session?.tipoUsuario} />
+        <div className='col-2'>
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1 background">
           <section className="align-items-center justify-content-center col-6 offset-3 form ">
@@ -222,7 +245,7 @@ const ConsultarUsuarioEPC = () => {
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">Tu Perfil - Productor de Eventos</h1>
                 <form onSubmit={handleSaveChanges} className="needs-validation">
                   <div className="row">
-                  <div className="mb-2">
+                    <div className="mb-2">
                       <label className="mb-2 text-dark" htmlFor="rol">
                         Rol
                       </label>
@@ -273,7 +296,7 @@ const ConsultarUsuarioEPC = () => {
                       DNI
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       id="dni"
                       className="form-control"
                       value={dni}
@@ -287,7 +310,7 @@ const ConsultarUsuarioEPC = () => {
                       CUIT
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       id="cuit"
                       className="form-control"
                       value={cuit}

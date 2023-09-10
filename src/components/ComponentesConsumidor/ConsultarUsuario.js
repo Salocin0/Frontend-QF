@@ -285,7 +285,7 @@ const ConsultarUsuario = () => {
                   <div className="d-grid">
                     {!editMode && (
                       <>
-                        <button type="button" className="btn btn-primary" onClick={handleEditModeToggle}>
+                        <button type="button" className="btn btn-primary mb-2" onClick={handleEditModeToggle}>
                           Editar
                         </button>
                         <button type="button" className="btn btn-danger deshabilitar">

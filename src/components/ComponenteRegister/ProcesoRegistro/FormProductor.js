@@ -76,7 +76,6 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                     onChange={handleChange}
                     className={`${styles.blackwhite} form-control`}
                     placeholder="Ingrese CUIT"
-                    pattern="^\d{2}-\d{8}-\d{1}$"
                     required
                   />
                 </div>

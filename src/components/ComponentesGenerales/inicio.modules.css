@@ -1,0 +1,18 @@
+.background {
+    background-color: #f0f0f0;
+    min-height: 100vh;
+  }
+  
+  .cardA {
+    width: 100px;
+    height: 150px;
+  }
+  
+  .cardA a {
+    text-decoration: none; /* Elimina el subrayado de los enlaces dentro de las tarjetas */
+  }
+  
+  .cardAImg {
+    max-width: 100px; /* Ajusta el tamaño máximo del icono al contenedor de la tarjeta */
+  }
+  
