@@ -1,144 +1,18 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { UserContext } from "../ComponentesGenerales/UserContext";
-import "./AdquirirNuevoRolPE.css";
+import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
+import styleadquirirrol from "./../ComponentesEPC/AdquirirNuevoRolEPC.module.css";
 
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 
 const AdquirirNuevoRolPE = () => {
-  const navigate = useNavigate();
   const [session, setSession] = useState(null);
-  const { user } = useContext(UserContext);
-  const [consumidor, setConsumidor] = useState("");
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [dni, setDni] = useState("");
   const [cuit, setCuit] = useState("");
-  const [telefono, setTelefono] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
-  const [documento, setDocumento] = useState("");
-
-  useEffect(() => {
-    if (user) {
-      cargarDatos(user);
-    }
-  }, [user]);
-
-  const cargarDatos = async (user) => {
-    try {
-      console.log(user);
-      const responseconsumidor = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidorId}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      if (responseconsumidor.ok) {
-        const data = await responseconsumidor.json();
-        console.log(data.data);
-        setConsumidor(data.data);
-        setApellido(data.data.apellido);
-        setNombre(data.data.nombre);
-        setDni(data.data.dni);
-        if (data.data.codigo === 200) {
-          toast.success("Datos cargados correctamente");
-        } else if (data.data.codigo === 400) {
-          toast.error("Error al cargar los datos");
-        }
-      } else {
-        throw new Error("Error en la respuesta HTTP");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleNombreChange = (e) => {
-    setNombre(e.target.value);
-  };
-
-  const handleApellidoChange = (e) => {
-    setApellido(e.target.value);
-  };
-
-  const handleDniChange = (e) => {
-    setDni(e.target.value);
-  };
-
-  const handleCuitChange = (e) => {
-    setCuit(e.target.value);
-  };
-
-  const handleRazonSocialChange = (e) => {
-    setRazonSocial(e.target.value);
-  };
-
-  const handleTelefonoChange = (e) => {
-    setTelefono(e.target.value);
-  };
-
-  const handleDocumentoChange = (e) => {
-    setDocumento(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const productor = {
-        productor: {
-          cuit: cuit,
-          razonSocial: razonSocial,
-        },
-      };
-
-      const response = await fetch("http://localhost:8000/productor", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(productor),
-      });
-      console.log("llego");
-
-      if (response.ok) {
-        const data = await response.json();
-        const consumidornuevo = consumidor;
-        console.log(consumidornuevo);
-        consumidornuevo.productorId = data.data.id;
-        setConsumidor(consumidornuevo);
-      } else {
-        throw new Error("Error en la respuesta HTTP");
-      }
-
-      const responseGuardar = await fetch(
-        `http://localhost:8000/consumidor/${consumidor.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ consumidor }),
-        }
-      );
-
-      if (responseGuardar.ok) {
-        const data = await responseGuardar.json();
-        if (data.code === 200) {
-          toast.success("Nuevo rol adquirido correctamente");
-          setTimeout(() => {
-            navigate(`/home`);
-          }, 1500);
-        } else if (data.code === 400) {
-          toast.error("Error al adquirir el nuevo rol");
-        }
-      } else {
-        throw new Error("Error en la respuesta HTTP");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const [condicionIva, setCondicionIva] = useState("");
+  const [nuevoRol, setNuevorol] = useState(false);
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -158,139 +32,124 @@ const AdquirirNuevoRolPE = () => {
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
-  }, []);
+  }, [nuevoRol]);
+
+  const handleCondicionIvaChange = (e) => {
+    setCondicionIva(e.target.value);
+  };
+
+  const handleCuitChange = (e) => {
+    setCuit(e.target.value);
+  };
+
+  const handleRazonSocialChange = (e) => {
+    setRazonSocial(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const productor = {
+        cuit: cuit,
+        razonSocial: razonSocial,
+        condicionIva: condicionIva,
+      };
+
+      const response = await fetch(
+        `http://localhost:8000/user/update/${session.id}/to/productor`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(productor),
+        }
+      );
+
+      if (response.ok) {
+        toast.success("actualizado a productor de eventos");
+        const data = await response.json();
+        setNuevorol(true)
+        console.log(data);
+      } else {
+        toast.error("error al actualizar a productor de eventos");
+        console.log(response.json());
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <>
-      <div className="d-flex">
-        <div className="col-2">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className="flex-grow-1 imgback">
-          <section className="align-items-center justify-content-center col-6 offset-3 form">
-            <div className="card shadow-lg">
-              <div className="card-body p-3">
-                <h1 className="fs-4 card-title fw-bold mb-2">
-                  Adquirir Nuevo Rol - Productor de Eventos
-                </h1>
-                <form onSubmit={handleSubmit} className="needs-validation">
-                  <div className="mb-2">
-                    <label className="form-label" htmlFor="nombre">
-                      Nombre
-                    </label>
-                    <input
-                      type="text"
-                      id="nombre"
-                      className="form-control"
-                      value={nombre}
-                      onChange={handleNombreChange}
-                      disabled
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="form-label text-dark" htmlFor="apellido">
-                      Apellido
-                    </label>
-                    <input
-                      type="text"
-                      id="apellido"
-                      className="form-control"
-                      value={apellido}
-                      onChange={handleApellidoChange}
-                      disabled
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="form-label text-dark" htmlFor="dni">
-                      DNI
-                    </label>
-                    <input
-                      type="text"
-                      id="dni"
-                      className="form-control"
-                      value={dni}
-                      onChange={handleDniChange}
-                      disabled
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="form-label text-dark" htmlFor="cuit">
-                      CUIT
-                    </label>
-                    <input
-                      type="number"
-                      id="cuit"
-                      className="form-control"
-                      value={cuit}
-                      onChange={handleCuitChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label
-                      className="form-label text-dark"
-                      htmlFor="razonSocial"
-                    >
-                      Razon Social
-                    </label>
-                    <input
-                      type="text"
-                      id="razonSocial"
-                      className="form-control"
-                      value={razonSocial}
-                      onChange={handleRazonSocialChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label className="form-label text-dark" htmlFor="telefono">
-                      Teléfono
-                    </label>
-                    <input
-                      type="text"
-                      id="telefono"
-                      className="form-control"
-                      value={telefono}
-                      onChange={handleTelefonoChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-2">
-                    <label
-                      className="form-label text-dark"
-                      htmlFor="documentos"
-                    >
-                      Documentos
-                    </label>
-                    <input
-                      type="file"
-                      id="documentos"
-                      className="form-control"
-                      onChange={handleDocumentoChange}
-                      multiple
-                      required
-                    />
-                  </div>
-
-                  <div className="d-grid">
-                    <button type="submit" className="btn btn-success">
-                      Solicitar Nuevo Rol - Productor de Eventos
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </section>
-          <Footer />
-        </div>
+    <div className={`${style.background} d-flex`}>
+      <div className="col-2">
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
-    </>
+      <div className="flex-grow-1 d-flex align-items-center justify-content-center">
+        <div className={`${style.form} card shadow-lg`}>
+          <div
+            className={`${styleadquirirrol.formularioAdquirirNuevoRolEPC} card-body px-3`}
+          >
+            <h1 className="fs-4 card-title fw-bold mb-2">
+              Adquirir Nuevo Rol - Productor de Eventos
+            </h1>
+            <hr />
+            <form onSubmit={handleSubmit} className="needs-validation">
+              <div className="mb-2">
+                <label className="form-label text-dark" htmlFor="cuit">
+                  CUIT
+                </label>
+                <input
+                  type="number"
+                  id="cuit"
+                  className="form-control"
+                  value={cuit}
+                  onChange={handleCuitChange}
+                  required
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="form-label text-dark" htmlFor="razonSocial">
+                  Razon Social
+                </label>
+                <input
+                  type="text"
+                  id="razonSocial"
+                  className="form-control"
+                  value={razonSocial}
+                  onChange={handleRazonSocialChange}
+                  required
+                />
+              </div>
+
+              <div className={`form-group`}>
+                <label htmlFor="ivaCondicion" style={{ color: "black" }}>
+                  Condición frente al IVA
+                </label>
+                <select
+                  className={`form-control`}
+                  name="ivaCondicion"
+                  onChange={handleCondicionIvaChange}
+                  value={condicionIva}
+                >
+                  <option value="">Seleccionar</option>
+                  <option value="responsable_inscripto">
+                    Responsable Inscripto
+                  </option>
+                  <option value="monotributista">Monotributista</option>
+                </select>
+              </div>
+              <div className="pb-3" />
+              <div className="d-grid">
+                <button type="submit" className="btn btn-success">
+                  Solicitar Nuevo Rol - Productor de Eventos
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    </div>
   );
 };
 

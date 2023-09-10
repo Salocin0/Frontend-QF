@@ -106,7 +106,6 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                       Responsable Inscripto
                     </option>
                     <option value="monotributista">Monotributista</option>
-                    {/* Agrega más opciones según sea necesario */}
                   </select>
                 </div>
                 <hr style={{color:"white"}} />
