@@ -299,7 +299,7 @@ const ConsultarPuesto = () => {
                   />
               </div>
 
-                <div className="mb-3">
+                {/*<div className="mb-3">
                   <label className="mb-2 text-dark" htmlFor="pdfDNI">
                     DNI (PDF)
                   </label>
@@ -311,7 +311,7 @@ const ConsultarPuesto = () => {
                     disabled={!editMode}
                     // required to be implemented
                   />
-                </div>
+              </div>*/}
                 <div className="d-grid">
                   {!editMode && (
                     <>

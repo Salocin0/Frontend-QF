@@ -50,11 +50,11 @@ const CrearNuevoCarro = () => {
       nombreCarro,
       tipoNegocio,
       pdfAfip,
-      pdfCuil,
-      pdfDNI,
-      telefonoContacto,
-      razonSocial,
-      cuit,
+      //pdfCuil,
+      //pdfDNI,
+      //telefonoContacto,
+      //razonSocial,
+      //cuit,
       telefonoCarro,
       consumidorId: session.consumidorId,
     };
@@ -74,7 +74,7 @@ const CrearNuevoCarro = () => {
           toast.success("Carro de comida registrado correctamente");
           navigate("/listado-puestos");
         } else {
-          toast.error("nombre existente");
+          toast.error("Ya existe un carro con el ID ingresado.");
         }
 
         // Redireccionar a la página deseada
@@ -200,7 +200,7 @@ const CrearNuevoCarro = () => {
                       Teléfono del Carro de Comida
                     </label>
                     <input
-                      type="tel"
+                      type="number"
                       id="telefonoCarro"
                       className="form-control"
                       value={telefonoCarro}
@@ -235,7 +235,7 @@ const CrearNuevoCarro = () => {
                   </div>
 
 
-                  <div className="mb-3">
+                  {/*<div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="pdfDNI">
                       DNI (PDF)
                     </label>
@@ -246,7 +246,7 @@ const CrearNuevoCarro = () => {
                       onChange={(e) => setPdfDNI(e.target.files[0])}
                       required
                     />
-                  </div>
+                </div>*/}
                   <div className="d-grid">
                     <button type="submit" className="btn btn-success my-1">
                       Registrar Carro de Comida
