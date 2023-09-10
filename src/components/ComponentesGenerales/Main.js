@@ -67,8 +67,8 @@ export const Main = () => {
            <Route path="/seleccion-perfil" element={<SeleccionRegister/>} />
 
            <Route path="/prueba-productos" element={<ListadoProductoUser/>} />
-           <Route path="/listado-productos" element={<ListadoProducto/>} />
-           <Route path="/registrar-productos" element={<RegistrarProductos/>} />
+           <Route path="/listado-productos/:id" element={<ListadoProducto/>} />
+           <Route path="/registrar-productos/:id" element={<RegistrarProductos/>} />
 
       </Routes>
     </main>

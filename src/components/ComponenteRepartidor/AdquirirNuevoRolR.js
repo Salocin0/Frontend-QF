@@ -1,15 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import { UserContext } from "../ComponentesGenerales/UserContext";
 import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import styleadquirirrol from "./../ComponentesEPC/AdquirirNuevoRolEPC.module.css";
 
 const AdquirirNuevoRolR = () => {
- 
+  const navigate = useNavigate();
   const [confirmacionMayorDeEdad, setConfirmacionMayorDeEdad] = useState(false);
   const [session, setSession] = useState(null);
   const [nuevoRol, setNuevorol] = useState(false);
@@ -50,6 +49,7 @@ const AdquirirNuevoRolR = () => {
         const data = await response.json();
         setNuevorol(true)
         console.log(data);
+        navigate(`/login`);
       } else {
         toast.error("error al actualizar a repartidor");
         console.log(response.json());

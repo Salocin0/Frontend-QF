@@ -5,13 +5,14 @@ import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import styleadquirirrol from "./../ComponentesEPC/AdquirirNuevoRolEPC.module.css";
+import { useNavigate } from "react-router-dom";
 
 const AdquirirNuevoRolEPC = () => {
   const [cuit, setCuit] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
   const [condicionIva, setCondicionIva] = useState("");
   const [nuevoRol, setNuevorol] = useState(false);
-
+  const navigate = useNavigate();
   const [session, setSession] = useState(null);
 
   useEffect(() => {
@@ -66,6 +67,7 @@ const AdquirirNuevoRolEPC = () => {
         const data = await response.json();
         console.log(data);
         setNuevorol(true)
+        navigate(`/login`);
       } else {
         toast.error("error al actualizar a Encargado de puesto")
         console.log(response.json());

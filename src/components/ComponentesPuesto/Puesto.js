@@ -53,7 +53,7 @@ const Puesto = ({ carrito }) => {
               <Dropdown.Toggle variant="danger">
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item as={Link} to="/listado-productos">
+                <Dropdown.Item as={Link} to={`/listado-productos/${carrito.id}`}>
                   Actualizar Listado Productos
                 </Dropdown.Item>
                 <Dropdown.Item as={Link} to={`/puesto/${carrito.id}`}>

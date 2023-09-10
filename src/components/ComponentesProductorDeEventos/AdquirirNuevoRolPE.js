@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import styleadquirirrol from "./../ComponentesEPC/AdquirirNuevoRolEPC.module.css";
-
+import { useNavigate } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 
@@ -13,6 +13,7 @@ const AdquirirNuevoRolPE = () => {
   const [razonSocial, setRazonSocial] = useState("");
   const [condicionIva, setCondicionIva] = useState("");
   const [nuevoRol, setNuevorol] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -69,6 +70,7 @@ const AdquirirNuevoRolPE = () => {
         const data = await response.json();
         setNuevorol(true)
         console.log(data);
+        navigate(`/login`);
       } else {
         toast.error("error al actualizar a productor de eventos");
         console.log(response.json());
