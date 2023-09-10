@@ -215,7 +215,7 @@ const ConsultarPuesto = () => {
                     <option value="Tipo de Negocio 2">Tipo de Negocio 2</option>
                   </select>
                 </div>
-                <div className="mb-3">
+               {/* <div className="mb-3">
                   <label className="mb-2 text-dark" htmlFor="telefonoContacto">
                     Teléfono de Contacto
                   </label>
@@ -228,7 +228,7 @@ const ConsultarPuesto = () => {
                     disabled={!editMode}
                     required
                   />
-                </div>
+  </div>
                 <div className="mb-3">
                   <label className="mb-2 text-dark" htmlFor="razonSocial">
                     Razón Social
@@ -256,7 +256,7 @@ const ConsultarPuesto = () => {
                     disabled={!editMode}
                     required
                   />
-                </div>
+                </div> */}
                 <div className="mb-3">
                   <label className="mb-2 text-dark" htmlFor="telefonoCarro">
                     Teléfono del Carro de Comida
@@ -268,7 +268,7 @@ const ConsultarPuesto = () => {
                     value={telefonoCarro}
                     onChange={(e) => setTelefonoCarro(e.target.value)}
                     disabled={!editMode}
-                    required
+                    required //To be implemented
                   />
                 </div>
                 <div className="mb-3">
@@ -281,12 +281,12 @@ const ConsultarPuesto = () => {
                     className="form-control"
                     onChange={(e) => setPdfAfip(e.target.files[0])}
                     disabled={!editMode}
-                    required
+                    // required To be implemented
                   />
                 </div>
                 <div className="mb-3">
                   <label className="mb-2 text-dark" htmlFor="pdfCuil">
-                    Constancia de CUIL (PDF)
+                    Constancia de Inspección Bromatológica (PDF)
                   </label>
                   <input
                     type="file"
@@ -294,9 +294,11 @@ const ConsultarPuesto = () => {
                     className="form-control"
                     onChange={(e) => setPdfCuil(e.target.files[0])}
                     disabled={!editMode}
-                    required
+
+                     //requiered To be implemented
                   />
-                </div>
+              </div>
+
                 <div className="mb-3">
                   <label className="mb-2 text-dark" htmlFor="pdfDNI">
                     DNI (PDF)
@@ -307,7 +309,7 @@ const ConsultarPuesto = () => {
                     className="form-control"
                     onChange={(e) => setPdfDNI(e.target.files[0])}
                     disabled={!editMode}
-                    required
+                    // required to be implemented
                   />
                 </div>
                 <div className="d-grid">

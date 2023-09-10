@@ -1,11 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import { Link } from "react-router-dom";
-import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 
 const CrearNuevoCarro = () => {
   const [numeroCarro, setNumeroCarro] = useState("");
@@ -104,7 +103,7 @@ const CrearNuevoCarro = () => {
                   <div className="row">
                     <div className="mb-3 col-md-6">
                       <label className="mb-2 text-dark" htmlFor="idCarro">
-                        N° ID Carro
+                        Numero de Carro
                       </label>
                       <input
                         type="number"
@@ -151,12 +150,12 @@ const CrearNuevoCarro = () => {
                       </option>
                     </select>
                   </div>
-                  <div className="mb-3">
+                   {/*<div className="mb-3">
                     <label
                       className="mb-2 text-dark"
                       htmlFor="telefonoContacto"
                     >
-                      Teléfono de Contacto
+                      Teléfono de Contacto (Puesto)
                     </label>
                     <input
                       type="tel"
@@ -167,6 +166,7 @@ const CrearNuevoCarro = () => {
                       required
                     />
                   </div>
+
                   <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="razonSocial">
                       Razón Social
@@ -180,6 +180,7 @@ const CrearNuevoCarro = () => {
                       required
                     />
                   </div>
+
                   <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="cuit">
                       CUIT
@@ -192,7 +193,8 @@ const CrearNuevoCarro = () => {
                       onChange={(e) => setCuit(e.target.value)}
                       required
                     />
-                  </div>
+                  </div>*/
+                 }
                   <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="telefonoCarro">
                       Teléfono del Carro de Comida
@@ -218,9 +220,10 @@ const CrearNuevoCarro = () => {
                       required
                     />
                   </div>
-                  <div className="mb-3">
+
+                    <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="pdfCuil">
-                      Constancia de CUIL (PDF)
+                      Constancia de Inspección Bromatológica (PDF)
                     </label>
                     <input
                       type="file"
@@ -230,6 +233,8 @@ const CrearNuevoCarro = () => {
                       required
                     />
                   </div>
+
+
                   <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="pdfDNI">
                       DNI (PDF)
