@@ -50,6 +50,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
   const [razonSocialR, setRazonSocialR] = useState("");
   const [razonSocialEPC, setRazonSocialEPC] = useState("");
   const [condicionEPC, setCondicionEPC] = useState("");
+  const [condicionIvaPE, setCondicionPE] = useState("");
 
   const [razonSocialPE, setRazonSocialPE] = useState("");
   const [documentos, setDocumentos] = useState("");
@@ -202,6 +203,10 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
   const handleRazonSocialChangePE = (e) => {
     setRazonSocialPE(e.target.value);
   };
+
+  const handleCondicionPE = (e) => {
+    setCondicionPE(e.target.value);
+  }
 
   const handleRazonSocialChangeEPC = (e) => {
     setRazonSocialEPC(e.target.value);
@@ -371,8 +376,36 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
   };
 
   const handleDeshabilitarPE = () => {
+    setShowModal(true);
+  }
 
+  const confirmarDeshabilitarPE = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/productor/${user.consumidorId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
+      if (response.ok) {
+
+        setShowModal(false);
+
+        toast.success("Usuario deshabilitado correctamente");
+        window.location.reload();
+
+        cargarDatos(user);
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al eliminar los datos del productor:", error);
+      toast.error("Error al actualizar los datos");
+    }
   }
 
   const handleEditModeToggleEPC = () => {
@@ -556,11 +589,13 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
         setTelefono(data1.data.telefono);
 
-        if (data1.data.Productor?.cuit || data1.data.Productor?.razonSocial) {
+        if ( data1.data.Productor?.habilitado === true && (data1.data.Productor?.cuit || data1.data.Productor?.razonSocial)) {
           setMostrarContenidoProductor(true);
           console.log(data1.data.Productor.razonSocial);
           setCuitPE(data1.data.Productor.cuit);
           setRazonSocialPE(data1.data.Productor.razonSocial)
+          setCondicionPE(data1.data.Productor.condicionIva)
+
         }
 
 
@@ -910,23 +945,25 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                     required
                                   />
                                 </div>
-                                {/* Documentos */}
                                 <div className="mb-2">
                                   <label
                                     className="mb-2 text-dark"
-                                    htmlFor="documentos"
+                                    htmlFor="razonSocial"
                                   >
-                                    Documentos
+                                    Condicion IVA
                                   </label>
                                   <input
-                                    type="file"
-                                    id="documentos"
+                                    type="text"
+                                    id="condicion"
                                     className="form-control"
-                                    onChange={handleDocumentosChangePE}
+                                    value={condicionIvaPE}
+                                    onChange={handleCondicionPE}
                                     readOnly={!editModePE}
                                     disabled={!editModePE}
+                                    required
                                   />
                                 </div>
+
                               </form>
                               <div className="d-flex">
                                 <button
@@ -936,6 +973,39 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                 >
                                   Deshabilitar Usuario
                                 </button>
+                                    <Modal
+                                  isOpen={showModal}
+                                  onRequestClose={() => setShowModal(false)}
+                                  contentLabel="Confirmación de deshabilitación"
+                                  style={{
+                                    overlay: {
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    },
+                                    content: {
+                                      position: 'relative',
+                                      top: 'auto',
+                                      left: 'auto',
+                                      right: 'auto',
+                                      bottom: 'auto',
+                                      borderRadius: '8px',
+                                      maxWidth: '400px', // Ajusta el ancho máximo aquí
+                                      padding: '20px',
+                                      textAlign: 'center', // Centra el contenido del modal
+                                    },
+                                  }}
+                                >
+                                  <h2>¿Está seguro de deshabilitar su cuenta?</h2>
+                                  <div className="d-flex justify-content-center">
+                                    <button onClick={() => setShowModal(false)} className="btn btn-secondary mr-2">
+                                      Cancelar
+                                    </button>
+                                    <button onClick={confirmarDeshabilitarPE} className="btn btn-danger ml-2">
+                                      Sí, deshabilitar
+                                    </button>
+                                  </div>
+                                </Modal>
                               </div>
                             </div>
                           </div>
