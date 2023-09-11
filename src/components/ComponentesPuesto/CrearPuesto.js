@@ -88,12 +88,12 @@ const CrearNuevoCarro = () => {
 
   return (
     <>
-      <div className="d-flex">
+      <div className={`d-flex ${style.background}`}>
         <div className="col-2">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
-        <div className={`flex-grow-1 ${style.background}`}>
-          <section className={`align-items-center justify-content-center col-6 offset-3 ${style.form} mt-3 mb-5 ${style.rad}`}>
+        <div className={`flex-grow-1`}>
+          <section className={`align-items-center justify-content-center col-6 offset-3 ${style.form} mt-3 mb-5 ${style.rad} `}>
             <div className={`${style.card} shadow-lg`}>
               <div className={`card-body p-3 ${style.formulario}`}>
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
