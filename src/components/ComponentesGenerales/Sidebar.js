@@ -4,7 +4,7 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
 import style from "./Sidebar.module.css";
 
-import Logo from "../QuickFoodLogo.png";
+import Logo from "../img/QuickFood_LogoYellow.png";
 
 const Sidebar = ({ tipoUsuario }) => {
   const [usuario, setUsuario] = useState("consumidor");

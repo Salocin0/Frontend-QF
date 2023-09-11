@@ -1,8 +1,9 @@
+import { faRightToBracket, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faRightToBracket } from "@fortawesome/free-solid-svg-icons";
-import "bootstrap/dist/css/bootstrap.min.css";
+import Logo from '../img/QuickFood_LogoYellow.png';
 import style from "./landingPage.module.css";
 
 const Navbar = () => {
@@ -12,7 +13,7 @@ const Navbar = () => {
         className={`${style.navbar} navbar-expand-lg navbar-light bg-light`}
       >
         <div className="container-fluid d-flex align-items-center mx-0 w-100">
-          <h2 className={`${style.logo2} mt-2`}>LOGO</h2>
+        <img src={Logo} alt="Logo" className={style.logo} />
           <div className="d-flex justify-content-end mx-0 mt-2 w-100">
             <ul className="navbar-nav">
               <Link
