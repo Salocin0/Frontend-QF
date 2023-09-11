@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
+import Modal from 'react-modal';
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
@@ -9,6 +10,7 @@ import style from "./ConsultarUsuario.module.css";
 
 const ConsultarUsuario = ({ tipoUsuario }) => {
 
+  const [showModal, setShowModal] = useState(false);
 
   const { user } = useContext(UserContext);
   const location = useLocation();
@@ -47,6 +49,8 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
   const [razonSocialR, setRazonSocialR] = useState("");
   const [razonSocialEPC, setRazonSocialEPC] = useState("");
+  const [condicionEPC, setCondicionEPC] = useState("");
+
   const [razonSocialPE, setRazonSocialPE] = useState("");
   const [documentos, setDocumentos] = useState("");
 
@@ -88,14 +92,9 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
           if (
             data.data.tipoUsuario === "repartidor"
-
           ) {
             setMostrarContenidoRepartidor(true);
-
-
           }
-
-
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -209,6 +208,10 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     setRazonSocialEPC(e.target.value);
   };
 
+  const handleCondicionEPC = (e) => {
+    setCondicionEPC(e.target.value);
+  };
+
   const handleRazonSocialChangeR = (e) => {
     setRazonSocialR(e.target.value);
   };
@@ -304,7 +307,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     }
   };
 
-  const handleEliminarCuenta =() => {
+  const handleEliminarCuenta = () => {
 
 
   }
@@ -368,7 +371,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     }
   };
 
-   const handleDeshabilitarPE =() => {
+  const handleDeshabilitarPE = () => {
 
 
   }
@@ -397,10 +400,16 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       return;
     }
 
+        if (!condicionEPC.trim()) {
+      toast.error("Condicion IVA no puede estar vacía.");
+      return;
+    }
+
 
     const datosActualizados = {
       razonSocialEPC,
       cuitEPC,
+      condicionEPC,
     };
 
     try {
@@ -428,9 +437,38 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     }
   };
 
-  const handleDeshabilitarEPC =() => {
+   const handleDeshabilitarEPC = async (e) => {
+    // Mostrar el modal de confirmación
+    setShowModal(true);
+  };
 
+  const confirmarDeshabilitar = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/encargado/${user.consumidorId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
+      if (response.ok) {
+
+        setShowModal(false);
+
+        toast.success("Usuario deshabilitado correctamente");
+        window.location.reload();
+
+        cargarDatos(user);
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al eliminar los datos del encargado:", error);
+      toast.error("Error al actualizar los datos");
+    }
   }
 
   const handleEditModeToggleR = () => {
@@ -449,6 +487,9 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     setEditModeR(false);
   };
 
+  const handleDeshabilitarR = () => {
+
+  }
   useEffect(() => {
     if (user) {
       cargarDatos(user);
@@ -493,15 +534,19 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
           setRazonSocialPE(data1.data.Productor.razonSocial)
         }
 
+        console.log(data1.data.encargado.habilitado);
+
         if (
-          data1.data.encargado?.cuit !== undefined ||
-          data1.data.encargado?.razonSocial !== undefined
-        ) {
+          data1.data.encargado?.habilitado === true &&
+          (data1.data.encargado?.cuit !== undefined ||
+            data1.data.encargado?.razonSocial !== undefined)
+        ){
           setMostrarContenidoEncargadoPuesto(true);
           console.log(data1.data.encargado.razonSocial);
 
           setCuitEPC(data1.data.encargado.cuit);
           setRazonSocialEPC(data1.data.encargado.razonSocial);
+          setCondicionEPC(data1.data.encargado.condicionIva);
         }
 
 
@@ -733,15 +778,15 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                             />
                           </div>
                         </form>
-                               <div className="d-flex">
-                                <button
-                                  type="button"
-                                  className="btn btn-danger mr-2 w-100"
-                                  onClick={handleEliminarCuenta}
-                                >
-                                  Eliminar mi cuenta
-                                </button>
-                              </div>
+                        <div className="d-flex">
+                          <button
+                            type="button"
+                            className="btn btn-danger mr-2 w-100"
+                            onClick={handleEliminarCuenta}
+                          >
+                            Eliminar mi cuenta
+                          </button>
+                        </div>
                       </div>
                     </div>
                     {mostrarContenidoProductor && (
@@ -846,7 +891,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                   />
                                 </div>
                               </form>
-                                     <div className="d-flex">
+                              <div className="d-flex">
                                 <button
                                   type="button"
                                   className="btn btn-danger mr-2 w-100"
@@ -944,6 +989,24 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                     required
                                   />
                                 </div>
+                                                              <div className="mb-2">
+                                  <label
+                                    className="mb-2 text-dark"
+                                    htmlFor="Condicon"
+                                  >
+                                    Condicion IVA
+                                  </label>
+                                  <input
+                                    type="text"
+                                    id="IVA"
+                                    className="form-control"
+                                    value={condicionEPC}
+
+                                    onChange={handleCondicionEPC}
+                                    readOnly={!editModeEPC}
+                                    disabled={!editModeEPC}
+                                  />
+                                </div>
                                 {/* Documentos */}
                                 <div className="mb-2">
                                   <label
@@ -962,15 +1025,48 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                   />
                                 </div>
                               </form>
-                              <div className="d-flex">
-                                <button
-                                  type="button"
-                                  className="btn btn-danger mr-2 w-100"
-                                  onClick={handleDeshabilitarEPC}
-                                >
-                                  Deshabilitar Usuario
-                                </button>
-                              </div>
+                              <div>
+  <button
+    type="button"
+    className="btn btn-danger mr-2 w-100"
+    onClick={handleDeshabilitarEPC}
+  >
+    Deshabilitar Usuario
+  </button>
+  <Modal
+    isOpen={showModal}
+    onRequestClose={() => setShowModal(false)}
+    contentLabel="Confirmación de deshabilitación"
+    style={{
+      overlay: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      content: {
+        position: 'relative',
+        top: 'auto',
+        left: 'auto',
+        right: 'auto',
+        bottom: 'auto',
+        borderRadius: '8px',
+        maxWidth: '400px', // Ajusta el ancho máximo aquí
+        padding: '20px',
+        textAlign: 'center', // Centra el contenido del modal
+      },
+    }}
+  >
+    <h2>¿Está seguro de deshabilitar su cuenta?</h2>
+    <div className="d-flex justify-content-center">
+      <button onClick={() => setShowModal(false)} className="btn btn-secondary mr-2">
+        Cancelar
+      </button>
+      <button onClick={confirmarDeshabilitar} className="btn btn-danger ml-2">
+        Sí, deshabilitar
+      </button>
+    </div>
+  </Modal>
+</div>
                             </div>
                           </div>
                         </section>
@@ -1035,14 +1131,14 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
                                 </div>
                                 <div className="d-flex">
-                                <button
-                                  type="button"
-                                  className="btn btn-danger mr-2 w-100"
-                                  onClick={handleDeshabilitarEPC}
-                                >
-                                  Deshabilitar Usuario
-                                </button>
-                              </div>
+                                  <button
+                                    type="button"
+                                    className="btn btn-danger mr-2 w-100"
+                                    onClick={handleDeshabilitarR}
+                                  >
+                                    Deshabilitar Usuario
+                                  </button>
+                                </div>
 
                               </form>
                             </div>
