@@ -39,6 +39,13 @@ const FormConsumidor = ({
     return regex.test(cadena);
   }
 
+  function validaDNI(cadena) {
+    const regexDni = /^\d{8}$/;
+    console.log(regexDni.test(cadena))
+    return regexDni.test(cadena);
+  }
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -52,6 +59,7 @@ const FormConsumidor = ({
     }
 
     if (tieneNumeros(consumidorData.nombre)) {
+
       toast.error("El nombre no puede contener números");
       return;
     }
@@ -65,6 +73,13 @@ const FormConsumidor = ({
       toast.error("El DNI no puede contener letras");
       return;
     }
+
+    if (!validaDNI(consumidorData.dni)){
+      toast.error("El DNI no es valido");
+      return;
+    }
+
+
 
     if (!consumidorData.apellido.trim()) {
       toast.error("apellido no puede estar vacio");

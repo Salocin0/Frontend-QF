@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
-import FormUsuario from "./FormUsuario";
-import FormProductor from "./FormProductor";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import FormConsumidor from "./FormConsumidor";
 import FormEncargado from "./FormEncargado";
+import FormProductor from "./FormProductor";
 import FormRepartidor from "./FormRepartidor";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import FormUsuario from "./FormUsuario";
 
 const ProcesoRegistro = () => {
   const { tipoUsuario } = useParams();
@@ -95,16 +94,27 @@ const ProcesoRegistro = () => {
         },
         body: JSON.stringify(datosRegistro),
       })
-        .then((response) => response.json())
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Respuesta de servidor no exitosa");
+          }
+        })
         .then((data) => {
-          toast.success("registro correcto");
-          navigate(`/login`);
+          if (data.status === "success") {
+            toast.success("Registro exitoso");
+            navigate(`/login`);
+          } else {
+            throw new Error(data.msg || "Error en el servidor");
+          }
         })
         .catch((error) => {
           console.error("Error en la solicitud:", error);
-          toast.error("error al registrar");
+          toast.error("Error al registrar. Por favor, vuelva a intentar.");
           navigate(`/`);
         });
+
     }
   }, [registrar]);
 

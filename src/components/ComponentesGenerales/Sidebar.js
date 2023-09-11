@@ -41,7 +41,7 @@ const Sidebar = ({ tipoUsuario }) => {
               <a href="#" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
                 <i className={`${style.icono} bi bi-1-circle-fill`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
-                  Mis Pedidos (Próximamente)
+                  Pedidos
                 </span>
               </a>
             </li>
