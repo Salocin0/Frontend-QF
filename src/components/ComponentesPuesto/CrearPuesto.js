@@ -109,6 +109,7 @@ const CrearNuevoCarro = () => {
                         type="number"
                         id="idCarro"
                         className="form-control"
+                        min="1"
                         value={numeroCarro}
                         onChange={(e) => setNumeroCarro(e.target.value)}
                         required
