@@ -37,6 +37,15 @@ const RegistrarProductos = () => {
     }
   }, []);
 
+  function tieneNumeros(cadena) {
+    return /\d/.test(cadena);
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const producto = {
@@ -48,7 +57,47 @@ const RegistrarProductos = () => {
       puestoId: Number(id),
       precio: precio,
     }
-    console.log(producto)
+
+    if (!producto.nombre.trim()) {
+      toast.error("Nombre no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.nombre)) {
+      toast.error("El nombre no puede contener números");
+      return;
+    }
+
+    if (!producto.descripcion.trim()) {
+      toast.error("La descripcion no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.descripcion)) {
+      toast.error("La descripcion no puede contener números");
+      return;
+    }
+
+    if (!producto.aderezos.trim()) {
+      toast.error("Los aderezos no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.aderezos)) {
+      toast.error("Los aderezos no puede contener números");
+      return;
+    }
+
+    if (!producto.precio.toString().trim()) {
+      toast.error("El precio no puede estar vacio");
+      return;
+    }
+
+    if (tieneLetras(producto.precio)) {
+      toast.error("El precio no puede contener letras");
+      return;
+    }
+
     fetch("http://localhost:8000/producto", {
       method: "POST",
       headers: {
