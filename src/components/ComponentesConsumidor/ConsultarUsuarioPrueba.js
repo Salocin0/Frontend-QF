@@ -7,7 +7,9 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import style from "./ConsultarUsuario.module.css";
 
-const ConsultarUsuario = () => {
+const ConsultarUsuario = ({ tipoUsuario }) => {
+
+
   const { user } = useContext(UserContext);
   const location = useLocation();
   const id = location.state && location.state.value;
@@ -17,6 +19,9 @@ const ConsultarUsuario = () => {
     useState(false);
   const [mostrarContenidoRepartidor, setMostrarContenidoRepartidor] =
     useState(false);
+
+  const [isRepartidor, setIsRepartidor] = useState(false);
+
 
   const [productor, setProductor] = useState("");
   const [nombreC, setNombreC] = useState("");
@@ -79,6 +84,18 @@ const ConsultarUsuario = () => {
         .then((data) => {
           setSession(data.data);
           console.log(data.data);
+          console.log(data.data.tipoUsuario);
+
+          if (
+            data.data.tipoUsuario === "repartidor"
+
+          ) {
+            setMostrarContenidoRepartidor(true);
+
+
+          }
+
+
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -120,7 +137,7 @@ const ConsultarUsuario = () => {
     }
   };
 
-   const isCuitValid = (cuitEPC) => {
+  const isCuitValid = (cuitEPC) => {
     console.log("Entre" + cuitEPC);
     const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
     if (!cuitEPC.trim()) {
@@ -287,6 +304,11 @@ const ConsultarUsuario = () => {
     }
   };
 
+  const handleEliminarCuenta =() => {
+
+
+  }
+
   const handleEditModeTogglePE = () => {
     setEditModePE(!editMode);
     setIsDisabledPE(!isDisabled);
@@ -306,7 +328,7 @@ const ConsultarUsuario = () => {
   const handleSaveChangesPEPrueba = async (e) => {
     e.preventDefault();
 
-      if (!isCuitValid(cuitPE)) {
+    if (!isCuitValid(cuitPE)) {
       toast.error("El CUIT no es válido o está vacío.");
       return;
     }
@@ -345,6 +367,11 @@ const ConsultarUsuario = () => {
       toast.error("Error al actualizar los datos");
     }
   };
+
+   const handleDeshabilitarPE =() => {
+
+
+  }
 
   const handleEditModeToggleEPC = () => {
     setEditModeEPC(!editMode);
@@ -400,6 +427,11 @@ const ConsultarUsuario = () => {
       toast.error("Error al actualizar los datos");
     }
   };
+
+  const handleDeshabilitarEPC =() => {
+
+
+  }
 
   const handleEditModeToggleR = () => {
     setEditMode(!editModeR);
@@ -458,7 +490,7 @@ const ConsultarUsuario = () => {
           setMostrarContenidoProductor(true);
           console.log(data1.data.Productor.razonSocial);
           setCuitPE(data1.data.Productor.cuit);
-          setRazonSocialPE(data1.data.Productor.razonSocial);
+          setRazonSocialPE(data1.data.Productor.razonSocial)
         }
 
         if (
@@ -472,15 +504,6 @@ const ConsultarUsuario = () => {
           setRazonSocialEPC(data1.data.encargado.razonSocial);
         }
 
-        if (
-          data1.data.repartidore?.cuit ||
-          data1.data.repartidore?.razonSocial
-        ) {
-          setMostrarContenidoRepartidor(true);
-
-          setCuitR(data1.data.repartidore.cuit);
-          setRazonSocialR(data1.data.repartidore.razonSocial);
-        }
 
         if (data1.codigo === 200) {
           toast.success("Datos cargados correctamente");
@@ -710,6 +733,15 @@ const ConsultarUsuario = () => {
                             />
                           </div>
                         </form>
+                               <div className="d-flex">
+                                <button
+                                  type="button"
+                                  className="btn btn-danger mr-2 w-100"
+                                  onClick={handleEliminarCuenta}
+                                >
+                                  Eliminar mi cuenta
+                                </button>
+                              </div>
                       </div>
                     </div>
                     {mostrarContenidoProductor && (
@@ -814,6 +846,15 @@ const ConsultarUsuario = () => {
                                   />
                                 </div>
                               </form>
+                                     <div className="d-flex">
+                                <button
+                                  type="button"
+                                  className="btn btn-danger mr-2 w-100"
+                                  onClick={handleDeshabilitarPE}
+                                >
+                                  Deshabilitar Usuario
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </section>
@@ -921,6 +962,15 @@ const ConsultarUsuario = () => {
                                   />
                                 </div>
                               </form>
+                              <div className="d-flex">
+                                <button
+                                  type="button"
+                                  className="btn btn-danger mr-2 w-100"
+                                  onClick={handleDeshabilitarEPC}
+                                >
+                                  Deshabilitar Usuario
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </section>
@@ -980,36 +1030,20 @@ const ConsultarUsuario = () => {
                                     htmlFor="cuit"
                                   >
                                     {" "}
-                                    CUIT
+                                    Usted actualmente es Repartidor
                                   </label>
-                                  <input
-                                    type="number"
-                                    id="cuit"
-                                    className="form-control"
-                                    value={cuitR}
-                                    onChange={handleCuitChangeR}
-                                    readOnly={!editModeR}
-                                    disabled={!editModeR}
-                                  />
-                                </div>
 
-                                {/* Documentos */}
-                                <div className="mb-2">
-                                  <label
-                                    className="mb-2 text-dark"
-                                    htmlFor="documentos"
-                                  >
-                                    Documentos
-                                  </label>
-                                  <input
-                                    type="file"
-                                    id="documentos"
-                                    className="form-control"
-                                    onChange={handleDocumentosChangeR}
-                                    readOnly={!editModeR}
-                                    disabled={!editModeR}
-                                  />
                                 </div>
+                                <div className="d-flex">
+                                <button
+                                  type="button"
+                                  className="btn btn-danger mr-2 w-100"
+                                  onClick={handleDeshabilitarEPC}
+                                >
+                                  Deshabilitar Usuario
+                                </button>
+                              </div>
+
                               </form>
                             </div>
                           </div>
