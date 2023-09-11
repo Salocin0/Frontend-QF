@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import style from "./ListadoProducto.module.css";
+import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css"
 
 const ListadoProducto = ({}) => {
   const [session, setSession] = useState(null);
@@ -15,9 +17,9 @@ const ListadoProducto = ({}) => {
     nombre: "",
     descripcion: "",
     precio: 0,
-    stock: 0,
-        img: 0,
-        estado: 1,
+    aderezos:"",
+    img: 0,
+    estado: 1,
   });
 
   useEffect(() => {
@@ -78,30 +80,77 @@ const ListadoProducto = ({}) => {
   const onEdit = (productId) => {
     setEditProductId(productId);
 
-    const productToEdit = productos.find((producto) => producto.id === productId);
+    const productToEdit = productos.find(
+      (producto) => producto.id === productId
+    );
     if (productToEdit) {
       setEditedValues({
         nombre: productToEdit.nombre,
         descripcion: productToEdit.descripcion,
         precio: productToEdit.precio,
-        stock: productToEdit.stock,
+        aderezos: productToEdit.aderezos,
         img: productToEdit.img,
-        estado: productToEdit.estado,  
+        estado: productToEdit.estado,
       });
     }
   };
 
+  function tieneNumeros(cadena) {
+    return /\d/.test(cadena);
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const onSave = (productId) => {
     const producto = {
-      producto:{
+      producto: {
         nombre: editedValues.nombre,
         descripcion: editedValues.descripcion,
-        stock: editedValues.stock,
+        aderezos: editedValues.aderezos,
         img: editedValues.img,
-        estado: editedValues.estado,
         precio: editedValues.precio,
-      }
+      },
     };
+    console.log(tieneNumeros(producto.producto.nombre))
+    if (!producto.producto.nombre.trim()) {
+      toast.error("Nombre no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.producto.nombre)) {
+      toast.error("El nombre no puede contener números");
+      return;
+    }
+
+    if (!producto.producto.descripcion.trim()) {
+      toast.error("La descripcion no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.producto.descripcion)) {
+      toast.error("La descripcion no puede contener números");
+      return;
+    }
+
+    if (!producto.producto.aderezos.trim()) {
+      toast.error("Los aderezos no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.producto.aderezos)) {
+      toast.error("Los aderezos no puede contener números");
+      return;
+    }
+
+    if (!producto.producto.precio.toString().trim()) {
+      toast.error("El precio no puede estar vacio");
+      return;
+    }
+    
+    
     console.log(JSON.stringify(producto));
     fetch(`http://localhost:8000/producto/${productId}`, {
       method: "PUT",
@@ -120,161 +169,131 @@ const ListadoProducto = ({}) => {
   };
 
   return (
-    <div className="row">
+    <div className={`row ${styleback.background}`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className="col-10">
-        <div className="d-flex justify-content-between mb-3">
-          <h1 className="text-center">Productos</h1>
+        <div className="d-flex justify-content-center mb-3">
+          <h1 className="pt-3" style={{ color: "white" }}>Productos</h1>
         </div>
-        <div>
+        <hr style={{ color: "white" }} className="me-4"/>
+        <div className="d-flex justify-content-end col-11">
           <Link to={`/registrar-productos/${id}`} className={`btn btn-success`}>
             Nuevo Producto
           </Link>
         </div>
-  
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">Nombre</th>
-              <th scope="col">Descripción</th>
-              <th scope="col">Stock</th>
-              <th scope="col">Imagen</th>
-              <th scope="col">Estado</th>
-              <th scope="col">Precio</th>
-              <th scope="col">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {productos.map((producto) => (
-              <tr key={producto.id}>
-                <td>
-                  {editProductId === producto.id ? (
-                    <input
-                      type="text"
-                      value={editedValues.nombre}
-                      onChange={(e) =>
-                        setEditedValues({
-                          ...editedValues,
-                          nombre: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    producto.nombre
-                  )}
-                </td>
-                <td>
-                  {editProductId === producto.id ? (
-                    <input
-                      type="text"
-                      value={editedValues.descripcion}
-                      onChange={(e) =>
-                        setEditedValues({
-                          ...editedValues,
-                          descripcion: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    producto.descripcion
-                  )}
-                </td>
-                <td>
-                  {editProductId === producto.id ? (
-                    <input
-                      type="number"
-                      value={editedValues.stock}
-                      onChange={(e) =>
-                        setEditedValues({
-                          ...editedValues,
-                          stock: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    producto.stock
-                  )}
-                </td>
-                <td>
-                  {editProductId === producto.id ? (
-                    <input
-                      type="text"
-                      value={editedValues.img}
-                      onChange={(e) =>
-                        setEditedValues({
-                          ...editedValues,
-                          img: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    producto.img
-                  )}
-                </td>
-                <td>
-                  {editProductId === producto.id ? (
-                    <input
-                      type="text"
-                      value={editedValues.estado}
-                      onChange={(e) =>
-                        setEditedValues({
-                          ...editedValues,
-                          estado: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    producto.estado
-                  )}
-                </td>
-                <td>
-                  {editProductId === producto.id ? (
-                    <input
-                      type="number"
-                      value={editedValues.precio}
-                      onChange={(e) =>
-                        setEditedValues({
-                          ...editedValues,
-                          precio: e.target.value,
-                        })
-                      }
-                    />
-                  ) : (
-                    `$${producto.precio}`
-                  )}
-                </td>
-                <td>
-                  {editProductId === producto.id ? (
-                    <button
-                      className="btn btn-success btn-sm"
-                      onClick={() => onSave(producto.id)}
-                    >
-                      Guardar
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => onEdit(producto.id)}
-                    >
-                      Modificar
-                    </button>
-                  )}
-                  <button
-                    className="btn btn-danger btn-sm ms-2"
-                    onClick={() => onDelete(producto.id)}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="d-flex align-items-center justify-content-center">
+          <div className="col-10 pt-3 h-100">
+            <table className={`table ${style.tablerounded} text-center`}>
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Descripción</th>
+                  <th scope="col">Aderezos</th>
+                  <th scope="col">Precio</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productos.map((producto) => (
+                  <tr key={producto.id}>
+                    <td className={style.editcell}>
+                      {editProductId === producto.id ? (
+                        <input
+                          type="text"
+                          value={editedValues.nombre}
+                          onChange={(e) =>
+                            setEditedValues({
+                              ...editedValues,
+                              nombre: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        producto.nombre
+                      )}
+                    </td>
+                    <td className={style.editcell}>
+                      {editProductId === producto.id ? (
+                        <input
+                          type="text"
+                          value={editedValues.descripcion}
+                          onChange={(e) =>
+                            setEditedValues({
+                              ...editedValues,
+                              descripcion: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        producto.descripcion
+                      )}
+                    </td>
+                    <td className={style.editcell}>
+                      {editProductId === producto.id ? (
+                        <input
+                          type="text"
+                          value={editedValues.aderezos}
+                          onChange={(e) =>
+                            setEditedValues({
+                              ...editedValues,
+                              aderezos: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        producto.aderezos
+                      )}
+                    </td>
+                    <td className={style.editcell}>
+                      {editProductId === producto.id ? (
+                        <input
+                          type="number"
+                          value={editedValues.precio}
+                          onChange={(e) =>
+                            setEditedValues({
+                              ...editedValues,
+                              precio: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        `$${producto.precio}`
+                      )}
+                    </td>
+                    <td className={style.editcell}>
+                      {editProductId === producto.id ? (
+                        <button
+                          className="btn btn-success btn-sm"
+                          onClick={() => onSave(producto.id)}
+                        >
+                          Guardar
+                        </button>
+                      ) : (
+                        <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => onEdit(producto.id)}
+                        >
+                          Modificar
+                        </button>
+                      )}
+                      <button
+                        className="btn btn-danger btn-sm ms-2"
+                        onClick={() => onDelete(producto.id)}
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
-  );  
+  );
 };
 
 export default ListadoProducto;

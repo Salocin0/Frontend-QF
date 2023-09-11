@@ -152,11 +152,11 @@ const ConsultarPuesto = () => {
   }, []);
 
   return (
-    <div className={`d-flex`}>
+    <div className={`d-flex ${style.background}`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
-      <div className={`flex-grow-1 ${style.background}`}>
+      <div className={`flex-grow-1`}>
         <section
           className={`align-items-center justify-content-center col-6 offset-3 ${style.form} mt-3 mb-5 ${style.rad}`}
         >

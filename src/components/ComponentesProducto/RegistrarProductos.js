@@ -11,7 +11,6 @@ const RegistrarProductos = () => {
   const [imagen, setImagen] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [aderezos, setAderezos] = useState("");
-  const [stock, setStock] = useState(10);
   const [precio, setPrecio] = useState(10);
   const [estado, setEstado] = useState("Standby");
   const { id } = useParams();
@@ -38,31 +37,77 @@ const RegistrarProductos = () => {
     }
   }, []);
 
+  function tieneNumeros(cadena) {
+    return /\d/.test(cadena);
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = {
-      nombre,
-      imagen,
-      descripcion,
-      aderezos,
-      estado,
-      puestoId: id,
-      stock,
-      precio,
-    };
-    // Realizar la solicitud HTTP para enviar los datos al servidor
+    const producto = {
+      nombre:nombre,
+      imagen:imagen.name,
+      descripcion:descripcion,
+      aderezos:aderezos,
+      estado:Boolean(estado),
+      puestoId: Number(id),
+      precio: precio,
+    }
+
+    if (!producto.nombre.trim()) {
+      toast.error("Nombre no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.nombre)) {
+      toast.error("El nombre no puede contener números");
+      return;
+    }
+
+    if (!producto.descripcion.trim()) {
+      toast.error("La descripcion no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.descripcion)) {
+      toast.error("La descripcion no puede contener números");
+      return;
+    }
+
+    if (!producto.aderezos.trim()) {
+      toast.error("Los aderezos no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(producto.aderezos)) {
+      toast.error("Los aderezos no puede contener números");
+      return;
+    }
+
+    if (!producto.precio.toString().trim()) {
+      toast.error("El precio no puede estar vacio");
+      return;
+    }
+
+    if (tieneLetras(producto.precio)) {
+      toast.error("El precio no puede contener letras");
+      return;
+    }
+
     fetch("http://localhost:8000/producto", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(producto),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.code);
-        // Manejo de la respuesta del servidor
-        if (data.ok) {
+        if (data.code==200) {
           toast.success("producto registrado correctamente");
           navigate(`/listado-productos/${id}`);
         } else {
@@ -70,7 +115,6 @@ const RegistrarProductos = () => {
         }
       })
       .catch((error) => {
-        // Manejo de errores
         console.error(error);
         toast.error("Error al registrar el producto");
       });
@@ -134,6 +178,22 @@ const RegistrarProductos = () => {
                           className="form-control"
                           value={descripcion}
                           onChange={(e) => setDescripcion(e.target.value)}
+                          required
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <label
+                          className="mb-2 text-black"
+                          htmlFor="precio"
+                        >
+                          Precio
+                        </label>
+                        <textarea
+                          id="precio"
+                          className="form-control"
+                          value={precio}
+                          onChange={(e) => setPrecio(e.target.value)}
                           required
                         />
                       </div>

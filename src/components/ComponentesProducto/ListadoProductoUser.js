@@ -3,7 +3,7 @@ import React from 'react';
 import Sidebar from '../ComponentesGenerales/Sidebar';
 import banner from '../ComponentesProducto/banner.png';
 import imagenProducto from '../ComponentesProducto/f1.png';
-import './ListadoProducto.css';
+//import './ListadoProducto.css';
 
 const ListadoProductoUser = () => {
     return (
