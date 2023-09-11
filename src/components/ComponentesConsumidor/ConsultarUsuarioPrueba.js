@@ -855,6 +855,8 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                             type="button"
                             className="btn btn-danger mr-2 w-100"
                             onClick={handleEliminarCuenta}
+                            disabled
+
                           >
                             Eliminar mi cuenta
                           </button>
