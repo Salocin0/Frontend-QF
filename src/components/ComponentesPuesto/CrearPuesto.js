@@ -44,21 +44,20 @@ const CrearNuevoCarro = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Crear un objeto con los datos del formulario
     const formData = {
       numeroCarro,
       nombreCarro,
       tipoNegocio,
       pdfAfip,
-      //pdfCuil,
-      //pdfDNI,
-      //telefonoContacto,
-      //razonSocial,
-      //cuit,
       telefonoCarro,
       consumidorId: session.consumidorId,
     };
-    // Realizar la solicitud HTTP para enviar los datos al servidor
+
+    if (!numeroCarro || !nombreCarro || !tipoNegocio || !telefonoCarro)  {
+      toast.error("Por favor rellene todos los datos");
+      return;
+    }
+
     fetch("http://localhost:8000/puesto", {
       method: "POST",
       headers: {
@@ -68,23 +67,19 @@ const CrearNuevoCarro = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.code);
-        // Manejo de la respuesta del servidor
         if (data.code === 200) {
           toast.success("Carro de comida registrado correctamente");
           navigate("/listado-puestos");
         } else {
           toast.error("Ya existe un carro con el ID ingresado.");
         }
-
-        // Redireccionar a la página deseada
       })
       .catch((error) => {
-        // Manejo de errores
         console.error(error);
         toast.error("Error al registrar el carro de comida");
       });
   };
+
 
   return (
     <>
@@ -112,7 +107,7 @@ const CrearNuevoCarro = () => {
                         min="1"
                         value={numeroCarro}
                         onChange={(e) => setNumeroCarro(e.target.value)}
-                        required
+
                       />
                     </div>
                     <div className="mb-3 col-md-6">
@@ -125,7 +120,7 @@ const CrearNuevoCarro = () => {
                         className="form-control"
                         value={nombreCarro}
                         onChange={(e) => setNombreCarro(e.target.value)}
-                        required
+
                       />
                     </div>
                   </div>
