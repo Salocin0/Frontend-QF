@@ -87,8 +87,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
-          console.log(data.data.tipoUsuario);
+
 
           if (
             data.data.tipoUsuario === "repartidor"
@@ -400,7 +399,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       return;
     }
 
-        if (!condicionEPC.trim()) {
+    if (!condicionEPC.trim()) {
       toast.error("Condicion IVA no puede estar vacía.");
       return;
     }
@@ -437,12 +436,12 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     }
   };
 
-   const handleDeshabilitarEPC = async (e) => {
+  const handleDeshabilitarEPC = async (e) => {
     // Mostrar el modal de confirmación
     setShowModal(true);
   };
 
-  const confirmarDeshabilitar = async () => {
+  const confirmarDeshabilitarEPC = async () => {
     try {
       const response = await fetch(
         `http://localhost:8000/encargado/${user.consumidorId}`,
@@ -488,8 +487,40 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
   };
 
   const handleDeshabilitarR = () => {
-
+    setShowModal(true);
   }
+
+  const confirmarDeshabilitarR = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/repartidor/${user.consumidorId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+
+        setShowModal(false);
+        setMostrarContenidoRepartidor(false);
+
+        toast.success("Usuario deshabilitado correctamente");
+
+
+        cargarDatos(user);
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al eliminar los datos del repartidor:", error);
+      toast.error("Error al actualizar los datos");
+    }
+  }
+
+
   useEffect(() => {
     if (user) {
       cargarDatos(user);
@@ -511,8 +542,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
       if (response1.ok) {
         const data1 = await response1.json();
-        //console.log(data1.data.encargado.cuit != undefined);
-
         setApellidoC(data1.data.apellido);
         setNombreC(data1.data.nombre);
         setDniC(data1.data.dni);
@@ -534,13 +563,14 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
           setRazonSocialPE(data1.data.Productor.razonSocial)
         }
 
-        console.log(data1.data.encargado.habilitado);
+
+
 
         if (
           data1.data.encargado?.habilitado === true &&
           (data1.data.encargado?.cuit !== undefined ||
             data1.data.encargado?.razonSocial !== undefined)
-        ){
+        ) {
           setMostrarContenidoEncargadoPuesto(true);
           console.log(data1.data.encargado.razonSocial);
 
@@ -548,6 +578,13 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
           setRazonSocialEPC(data1.data.encargado.razonSocial);
           setCondicionEPC(data1.data.encargado.condicionIva);
         }
+
+        console.log(data1.data.repartidore?.habilitado);
+        if(data1.data.repartidore?.habilitado === false){
+          setMostrarContenidoRepartidor(false);
+        }
+
+
 
 
         if (data1.codigo === 200) {
@@ -989,7 +1026,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                     required
                                   />
                                 </div>
-                                                              <div className="mb-2">
+                                <div className="mb-2">
                                   <label
                                     className="mb-2 text-dark"
                                     htmlFor="Condicon"
@@ -1026,47 +1063,47 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                 </div>
                               </form>
                               <div>
-  <button
-    type="button"
-    className="btn btn-danger mr-2 w-100"
-    onClick={handleDeshabilitarEPC}
-  >
-    Deshabilitar Usuario
-  </button>
-  <Modal
-    isOpen={showModal}
-    onRequestClose={() => setShowModal(false)}
-    contentLabel="Confirmación de deshabilitación"
-    style={{
-      overlay: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      content: {
-        position: 'relative',
-        top: 'auto',
-        left: 'auto',
-        right: 'auto',
-        bottom: 'auto',
-        borderRadius: '8px',
-        maxWidth: '400px', // Ajusta el ancho máximo aquí
-        padding: '20px',
-        textAlign: 'center', // Centra el contenido del modal
-      },
-    }}
-  >
-    <h2>¿Está seguro de deshabilitar su cuenta?</h2>
-    <div className="d-flex justify-content-center">
-      <button onClick={() => setShowModal(false)} className="btn btn-secondary mr-2">
-        Cancelar
-      </button>
-      <button onClick={confirmarDeshabilitar} className="btn btn-danger ml-2">
-        Sí, deshabilitar
-      </button>
-    </div>
-  </Modal>
-</div>
+                                <button
+                                  type="button"
+                                  className="btn btn-danger mr-2 w-100"
+                                  onClick={handleDeshabilitarEPC}
+                                >
+                                  Deshabilitar Usuario
+                                </button>
+                                <Modal
+                                  isOpen={showModal}
+                                  onRequestClose={() => setShowModal(false)}
+                                  contentLabel="Confirmación de deshabilitación"
+                                  style={{
+                                    overlay: {
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    },
+                                    content: {
+                                      position: 'relative',
+                                      top: 'auto',
+                                      left: 'auto',
+                                      right: 'auto',
+                                      bottom: 'auto',
+                                      borderRadius: '8px',
+                                      maxWidth: '400px', // Ajusta el ancho máximo aquí
+                                      padding: '20px',
+                                      textAlign: 'center', // Centra el contenido del modal
+                                    },
+                                  }}
+                                >
+                                  <h2>¿Está seguro de deshabilitar su cuenta?</h2>
+                                  <div className="d-flex justify-content-center">
+                                    <button onClick={() => setShowModal(false)} className="btn btn-secondary mr-2">
+                                      Cancelar
+                                    </button>
+                                    <button onClick={confirmarDeshabilitarEPC} className="btn btn-danger ml-2">
+                                      Sí, deshabilitar
+                                    </button>
+                                  </div>
+                                </Modal>
+                              </div>
                             </div>
                           </div>
                         </section>
@@ -1087,49 +1124,26 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                               className={`${style.formulario} card-body p-3`}
                             >
                               <div className="d-flex justify-content-end">
-                                {editModeR ? (
-                                  <>
-                                    <button
-                                      type="button"
-                                      className=" btn btn-success mr-2"
-                                      onClick={handleSaveChangesR}
-                                    >
-                                      Guardar
-                                    </button>
-                                    <br />
-                                    <button
-                                      type="button"
-                                      className="btn btn-danger"
-                                      onClick={handleCancelChangesR}
-                                    >
-                                      Cancelar
-                                    </button>
-                                  </>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={handleEditModeToggleR}
-                                  >
-                                    Editar
-                                  </button>
-                                )}
+
                               </div>
                               <form
                                 onSubmit={handleSaveChangesR}
                                 className="needs-validation"
                               >
-                                {/* CUIT */}
-                                <div className="mb-2 mt-0">
+                                <div className="mb-2 mt-0 text-center" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                                   <label
                                     className="mb-1 text-dark"
                                     htmlFor="cuit"
+                                    style={{
+                                      fontSize: '18px', // Tamaño de fuente personalizado
+                                      fontWeight: 'bold', // Peso de fuente en negrita
+                                      color: '#333', // Color de texto personalizado
+                                    }}
                                   >
-                                    {" "}
                                     Usted actualmente es Repartidor
                                   </label>
-
                                 </div>
+
                                 <div className="d-flex">
                                   <button
                                     type="button"
@@ -1138,6 +1152,39 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                   >
                                     Deshabilitar Usuario
                                   </button>
+                                  <Modal
+                                    isOpen={showModal}
+                                    onRequestClose={() => setShowModal(false)}
+                                    contentLabel="Confirmación de deshabilitación"
+                                    style={{
+                                      overlay: {
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                      },
+                                      content: {
+                                        position: 'relative',
+                                        top: 'auto',
+                                        left: 'auto',
+                                        right: 'auto',
+                                        bottom: 'auto',
+                                        borderRadius: '8px',
+                                        maxWidth: '400px', // Ajusta el ancho máximo aquí
+                                        padding: '20px',
+                                        textAlign: 'center', // Centra el contenido del modal
+                                      },
+                                    }}
+                                  >
+                                    <h2>¿Está seguro de deshabilitar su cuenta?</h2>
+                                    <div className="d-flex justify-content-center">
+                                      <button onClick={() => setShowModal(false)} className="btn btn-secondary mr-2">
+                                        Cancelar
+                                      </button>
+                                      <button onClick={confirmarDeshabilitarR} className="btn btn-danger ml-2">
+                                        Sí, deshabilitar
+                                      </button>
+                                    </div>
+                                  </Modal>
                                 </div>
 
                               </form>
