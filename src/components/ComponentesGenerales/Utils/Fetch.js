@@ -1,48 +1,95 @@
 class Fetch {
-    constructor(baseUrl) {
-      this.baseUrl = baseUrl; // La URL base de tu backend
-    }
-  
-    async getPuestos() {
-      try {
-        const response = await fetch(`${this.baseUrl}/puestos`);
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        throw new Error('Error al realizar la solicitud GET a /puestos:', error);
-      }
-    }
-  
-    async getUsers() {
-      try {
-        const response = await fetch(`${this.baseUrl}/user`);
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        throw new Error('Error al realizar la solicitud GET a /user:', error);
-      }
-    }
-  
-    // Agrega métodos adicionales para otras rutas según sea necesario
+  constructor(baseUrl) {
+      this.baseUrl = baseUrl;
   }
-  
-  export default Fetch;
 
+  async getPuestos(consumidorId) {
+    try {
+      const headers = new Headers();
+      headers.append("ConsumidorId", consumidorId);
+      const response = await fetch(`${this.baseUrl}/puestos`,{headers: headers});
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error("Error al realizar la solicitud GET a /puestos:", error);
+    }
+  }
 
-  /*el codigo de aca se aplicaria en los componentes
-  
-  import Fetch from './fetch'; // Asegúrate de que la ruta del import sea correcta
+  async getUsers() {
+    try {
+      const response = await fetch(`${this.baseUrl}/user`);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error("Error al realizar la solicitud GET a /user:", error);
+    }
+  }
 
-const api = new Fetch('https://tu-api-backend.com');
+  async deletePuesto(id, consumidorId) {
+    try {
+      const headers = new Headers();
+      headers.append("ConsumidorId", consumidorId);
+      const response = await fetch(`${this.baseUrl}/puesto/${id}`, {
+        method: "DELETE",
+        headers: headers,
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(
+        "Error al realizar la solicitud Delete a /puesto/${id} ",
+        error
+      );
+    }
+  }
 
-// Ejemplo de una solicitud GET a /puestos
-api.getPuestos()
-  .then(data => console.log('Respuesta GET a /puestos:', data))
-  .catch(error => console.error('Error GET a /puestos:', error));
+  async getDataSession(sessionId) {
+    try {
+      const response = await fetch(`${this.baseUrl}/user/session`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      });
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw new Error(
+        "Error al realizar la solicitud Post a /user/session para obtener la sesion",
+        error
+      );
+    }
+  }
 
-// Ejemplo de una solicitud GET a /user
-api.getUsers()
-  .then(data => console.log('Respuesta GET a /user:', data))
-  .catch(error => console.error('Error GET a /user:', error));
+  async getProvincias() {
+    try {
+      const response = await fetch(
+        "https://apis.datos.gob.ar/georef/api/provincias"
+      );
+      const data = await response.json();
+      return data.provincias;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 
-// Puedes llamar a otros métodos según las rutas de tu backend*/
+  async getLocalidadesByProvincia(provincia) {
+    try {
+      const response = await fetch(
+        `https://apis.datos.gob.ar/georef/api/municipios?provincia=${provincia}&campos=id,nombre&max=700`
+      );
+      const data = await response.json();
+      const sortedLocalidades = data.municipios.sort((a, b) =>
+        a.nombre.localeCompare(b.nombre)
+      );
+      return sortedLocalidades;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+}
+
+export default Fetch;
