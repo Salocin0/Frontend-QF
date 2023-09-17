@@ -1,5 +1,5 @@
-*{
-  margin:0;
+* {
+  margin: 0;
   padding: 0;
 
 }
@@ -17,7 +17,7 @@
 
 .navitem:hover {
   background-color: white;
-  color:#333
+  color: #333
 }
 
 .icono {
@@ -40,7 +40,7 @@
   width: 100%;
   text-decoration: none;
   color: #333;
-  
+
 }
 
 .navlink i {
@@ -62,7 +62,6 @@
   height: 100%;
 }
 
-
 .text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -77,7 +76,10 @@
   height: 100vh;
   position: sticky;
   top: 0;
-  background-color: black;
+  background: #0F2027;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  
 }
 
 .logocontainer {
@@ -88,19 +90,14 @@
 }
 
 .logo {
-  width: 80px;
-  height: 80px;
-}
-
-.logo:hover {
-  border-radius: 10%;
-  border: 1px solid red;
+  width: 100px;
+  height: 100px;
 }
 
 .especial {
   order: 999;
   position: absolute;
-  bottom: 3%; 
+  bottom: 3%;
   margin-right: 16px;
   margin-left: 16px;
   left: 0;

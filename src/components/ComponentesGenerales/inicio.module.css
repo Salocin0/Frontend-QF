@@ -16,3 +16,12 @@
     max-width: 100px; /* Ajusta el tamaño máximo del icono al contenedor de la tarjeta */
   }
   
+  .cardtitle {
+    text-decoration: none;
+    color: black; /* Establece el color del texto en negro */
+  }
+  
+  .cardtitle:hover {
+    color: black; /* Esto asegura que el color se mantenga en negro incluso al pasar el cursor */
+  }
+  

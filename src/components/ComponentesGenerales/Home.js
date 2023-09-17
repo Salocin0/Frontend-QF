@@ -8,7 +8,7 @@ import Inicio from '../ComponentesConsumidor/Inicio';
 import Notificaciones from '../ComponentesConsumidor/Notificaciones';
 
 const Home = (data) => {
-  const [selectedItem, setSelectedItem] = useState("Perfil");
+  const [selectedItem, setSelectedItem] = useState("Inicio");
 
   const handleNavbarItemClick = (item) => {
     setSelectedItem(item);

@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import style from "./ListadoProducto.module.css";
 import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css"
+import Producto from "./Producto";
+import styleProducto from "./producto.module.css";
 
 const ListadoProducto = ({}) => {
   const [session, setSession] = useState(null);
@@ -13,6 +15,7 @@ const ListadoProducto = ({}) => {
   const [productos, setProductos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [editProductId, setEditProductId] = useState(null);
+  const [rows, setRows] = useState([]);
   const [editedValues, setEditedValues] = useState({
     nombre: "",
     descripcion: "",
@@ -57,8 +60,19 @@ const ListadoProducto = ({}) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data.data);
           setProductos(data.data);
+          const totalProductos = Math.ceil(data.data.length / 4) * 4;
+          const productosConNulos = [
+            ...data.data,
+            ...Array(totalProductos - data.data.length).fill(null),
+          ];
+
+          const generatedRows = [];
+          for (let i = 0; i < productosConNulos.length; i += 4) {
+            const row = productosConNulos.slice(i, i + 4);
+            generatedRows.push(row);
+          }
+          setRows(generatedRows);
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
@@ -185,110 +199,22 @@ const ListadoProducto = ({}) => {
         </div>
         <div className="d-flex align-items-center justify-content-center">
           <div className="col-10 pt-3 h-100">
-            <table className={`table ${style.tablerounded} text-center`}>
-              <thead>
-                <tr>
-                  <th scope="col">Nombre</th>
-                  <th scope="col">Descripción</th>
-                  <th scope="col">Aderezos</th>
-                  <th scope="col">Precio</th>
-                  <th scope="col">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {productos.map((producto) => (
-                  <tr key={producto.id}>
-                    <td className={style.editcell}>
-                      {editProductId === producto.id ? (
-                        <input
-                          type="text"
-                          value={editedValues.nombre}
-                          onChange={(e) =>
-                            setEditedValues({
-                              ...editedValues,
-                              nombre: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        producto.nombre
-                      )}
-                    </td>
-                    <td className={style.editcell}>
-                      {editProductId === producto.id ? (
-                        <input
-                          type="text"
-                          value={editedValues.descripcion}
-                          onChange={(e) =>
-                            setEditedValues({
-                              ...editedValues,
-                              descripcion: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        producto.descripcion
-                      )}
-                    </td>
-                    <td className={style.editcell}>
-                      {editProductId === producto.id ? (
-                        <input
-                          type="text"
-                          value={editedValues.aderezos}
-                          onChange={(e) =>
-                            setEditedValues({
-                              ...editedValues,
-                              aderezos: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        producto.aderezos
-                      )}
-                    </td>
-                    <td className={style.editcell}>
-                      {editProductId === producto.id ? (
-                        <input
-                          type="number"
-                          value={editedValues.precio}
-                          onChange={(e) =>
-                            setEditedValues({
-                              ...editedValues,
-                              precio: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        `$${producto.precio}`
-                      )}
-                    </td>
-                    <td className={style.editcell}>
-                      {editProductId === producto.id ? (
-                        <button
-                          className="btn btn-success btn-sm"
-                          onClick={() => onSave(producto.id)}
-                        >
-                          Guardar
-                        </button>
-                      ) : (
-                        <button
-                          className="btn btn-primary btn-sm"
-                          onClick={() => onEdit(producto.id)}
-                        >
-                          Modificar
-                        </button>
-                      )}
-                      <button
-                        className="btn btn-danger btn-sm ms-2"
-                        onClick={() => onDelete(producto.id)}
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
+          {Array.isArray(productos) && productos.length > 0 ? (
+            rows.length > 0 &&
+            rows.map((row, rowIndex) => (
+              <div key={rowIndex} className={`row ${styleProducto.row}`}>
+                {row.map((producto, index) => (
+                  <div key={index} className={`${styleProducto.colmd3} pb-2`}>
+                    {producto !== null ? <Producto producto={producto} /> : null}
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            ))
+          ) : (
+            <h2 className={styleProducto.centeredtext}>
+              No tenes ningun puesto en este momento.
+            </h2>
+          )}
           </div>
         </div>
       </div>

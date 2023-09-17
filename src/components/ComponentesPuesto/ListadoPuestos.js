@@ -47,7 +47,6 @@ const ListadoPuestos = () => {
         .then((response) => response.json())
         .then((data) => {
           setCarritos(data.data);
-
           const totalCarritos = Math.ceil(data.data.length / 4) * 4;
           const carritosConNulos = [
             ...data.data,

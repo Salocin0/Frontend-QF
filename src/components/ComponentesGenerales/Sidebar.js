@@ -3,6 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
 import style from "./Sidebar.module.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDolly } from '@fortawesome/free-solid-svg-icons';
 
 import Logo from "../img/QuickFood_LogoYellow.png";
 
@@ -33,13 +35,13 @@ const Sidebar = ({ tipoUsuario }) => {
           <ul className={`${style.nav} flex-column p-3`}>
             <li className={style.navitem}>
               <a href="/inicio" className={`${style.navlink} text-truncate`}>
-                <i className={`${style.icono} bi bi-1-circle-fill`}></i>
+                <i className={`${style.icono} bi bi-house`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">Inicio</span>
               </a>
             </li>
             <li className={style.navitem}>
               <a href="#" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
-                <i className={`${style.icono} bi bi-1-circle-fill`}></i>
+                <i className={`${style.icono} bi bi-bag`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Pedidos
                 </span>
@@ -48,7 +50,7 @@ const Sidebar = ({ tipoUsuario }) => {
             {isResponsable && (
               <li className={style.navitem}>
                 <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
-                  <i className={`${style.icono} bi bi-1-circle-fill`}></i>
+                  <i className={`${style.icono} bi bi-shop`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Puestos
                   </span>
@@ -58,7 +60,7 @@ const Sidebar = ({ tipoUsuario }) => {
             {isProductor && (
               <li className={style.navitem}>
                 <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
-                  <i className={`${style.icono} bi bi-1-circle-fill`}></i>
+                  <i className={`${style.icono} bi bi-balloon`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Eventos
                   </span>
@@ -68,7 +70,7 @@ const Sidebar = ({ tipoUsuario }) => {
             {isRepartidor && (
               <li className={style.navitem}>
                 <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
-                  <i className={`${style.icono} bi bi-1-circle-fill`}></i>
+                <FontAwesomeIcon icon={faDolly} className={`${style.icono}`}/>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Pedidos Asignados
                   </span>
@@ -77,7 +79,7 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
 
             <li className={`${style.navitem} dropdown ${style.especial}`}>
-              <i className={`${style.icono} bi bi-1-circle-fill ${style.iconoespecial}`} ></i>
+              <i className={`${style.icono} bi bi-person-circle ${style.iconoespecial}`} ></i>
               <a
                 className={`${style.navlink} text-truncate dropdown-toggle`}
                 id="dropdown"
