@@ -47,7 +47,7 @@ const Puesto = ({ carrito }) => {
         />
         <div className="card-body">
           <div className="d-flex justify-content-between align-items-center">
-            <h3 className="card-text">{carrito.nombreCarro}</h3>
+          <h5 className={`card-text ${style.truncate}`} title={carrito.nombreCarro}>{carrito.nombreCarro}</h5>
 
             <Dropdown>
               <Dropdown.Toggle variant="danger">

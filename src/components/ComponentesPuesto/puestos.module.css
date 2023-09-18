@@ -50,3 +50,22 @@
   .custom-dropdown-toggle::after {
     display: none;
   }
+
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    transition: max-width 0.3s ease;
+    text-align: center;
+
+  }
+
+  .truncate:hover {
+    max-width: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    text-align: center;
+  }
+
