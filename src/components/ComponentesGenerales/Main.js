@@ -27,6 +27,7 @@ import DocumentUpload from './DocumentUpload';
 import Home from './Home';
 import Inicio from './Inicio';
 import Sidebar from './Sidebar';
+import ConsultarProducto from "../ComponentesProducto/ConsultarProducto"
 
 export const Main = () => {
   return (
@@ -69,6 +70,7 @@ export const Main = () => {
            <Route path="/prueba-productos" element={<ListadoProductoUser/>} />
            <Route path="/listado-productos/:id" element={<ListadoProducto/>} />
            <Route path="/registrar-productos/:id" element={<RegistrarProductos/>} />
+           <Route path="/producto/:id" element={<ConsultarProducto/>} />
 
       </Routes>
     </main>

@@ -123,7 +123,7 @@ const RegistrarProductos = () => {
   return (
     <div className="container-fluid">
       <div className="row">
-        <div className="col-2">
+        <div className="col-2 p-0">
           <Sidebar />
         </div>
         <div className={`col ${style.background}`}>

@@ -5,28 +5,26 @@ import { toast } from "react-toastify";
 import imgDefault from "./../../components/QuickFoodLogo.png";
 import style from "./producto.module.css";
 
-const Producto = ({ producto }) => {
+const Producto = ({ producto, session, idpuesto, recargar }) => {
   const handleDropdownClick = (e) => {
     e.preventDefault();
   };
 
-
   const { id } = useParams();
-  const [session, setSession] = useState(null);
   const navigate = useNavigate();
 
   const handleDelete = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/puesto/${id}`, {
+    fetch(`http://localhost:8000/producto/${producto.id}`, {
       method: "DELETE",
       headers: headers,
     })
       .then((response) => {
         if (response.ok) {
-          toast.success("Puesto deshabilitado correctamente");
-          navigate(`/listado-puestos`);
+          toast.success("Producto deshabilitado correctamente");
+          recargar();
         } else {
           response.json().then((errorData) => {
             const errorMessage = errorData.message || "Ha ocurrido un error";
@@ -38,8 +36,8 @@ const Producto = ({ producto }) => {
   };
 
   useEffect(() => {
-    console.log(producto)
-  },[])
+    console.log(producto);
+  }, []);
 
   return (
     <div className={style.cardlink}>
@@ -50,24 +48,37 @@ const Producto = ({ producto }) => {
           alt="Thumbnail"
         />
         <div className="card-body">
-          <div className="d-flex justify-content-between align-items-center">
-            <h4 className="card-text">{producto?.nombre}</h4>
-            <p className="card-text">{producto?.descripcion}</p>
-            <h4 className="card-text">$ {producto?.precio}</h4>
-            <Dropdown>
-              <Dropdown.Toggle variant="danger">
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item as={Link} to={`/listado-productos/${producto?.id}`}>
-                  Actualizar Listado Productos
-                </Dropdown.Item>
-                <Dropdown.Item as={Link} to={`/producto/${producto?.id}`}>
-                  Modificar Datos Carrito
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={handleDelete}>Deshabilitar Carrito</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
+          <div style={{ height: "60px" }}>
+            <h6 className="card-title text-center">
+              {producto?.nombre}
+            </h6>
+          </div>
+          <div style={{ height: "80px" }}>
+            <p className="card-text text-center">
+              {producto?.descripcion}
+            </p>
+          </div>
+
+          <div className="row">
+            <div className="col-10">
+              <h4 className="card-text">$ {producto?.precio}</h4>
+            </div>
+            <div className="col-2">
+              <div className="d-flex justify-content-end">
+                <Dropdown>
+                  <Dropdown.Toggle variant="danger"></Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item as={Link} to={`/producto/${producto?.id}`}>
+                      Actualizar Producto
+                    </Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item onClick={handleDelete}>
+                      Deshabilitar Producto
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+            </div>
           </div>
         </div>
       </div>

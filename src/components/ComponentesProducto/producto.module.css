@@ -12,7 +12,7 @@
   
   .cardimgtop {
     width: 100%;
-    max-height: 150px;
+    max-height: 200px;
     object-fit: cover;
     border-radius: 6px 6px 0 0;
   } 

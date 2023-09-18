@@ -18,10 +18,14 @@ const ListadoProducto = ({}) => {
     nombre: "",
     descripcion: "",
     precio: 0,
-    aderezos:"",
+    aderezos: "",
     img: 0,
     estado: 1,
   });
+
+  const recargarComponente = () => {
+    setRecargar(+1);
+  };
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -126,7 +130,7 @@ const ListadoProducto = ({}) => {
         precio: editedValues.precio,
       },
     };
-    console.log(tieneNumeros(producto.producto.nombre))
+    console.log(tieneNumeros(producto.producto.nombre));
     if (!producto.producto.nombre.trim()) {
       toast.error("Nombre no puede estar vacio");
       return;
@@ -161,8 +165,7 @@ const ListadoProducto = ({}) => {
       toast.error("El precio no puede estar vacio");
       return;
     }
-    
-    
+
     console.log(JSON.stringify(producto));
     fetch(`http://localhost:8000/producto/${productId}`, {
       method: "PUT",
@@ -181,38 +184,55 @@ const ListadoProducto = ({}) => {
   };
 
   return (
-    <div className={`row ${styleback.background}`}>
-      <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
-      </div>
-      <div className="col-10">
-        <div className="d-flex justify-content-center mb-3">
-          <h1 className="pt-3" style={{ color: "white" }}>Productos</h1>
+    <div >
+      <div className={`row m-0 ${styleback.background}`}>
+        <div className="col-2 p-0">
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
-        <hr style={{ color: "white" }} className="me-4"/>
-        <div className="d-flex justify-content-end col-11">
-          <Link to={`/registrar-productos/${id}`} className={`btn btn-success`}>
-            Nuevo Producto
-          </Link>
-        </div>
-        <div className="d-flex align-items-center justify-content-center">
-          <div className="col-10 pt-3 h-100">
-          {Array.isArray(productos) && productos.length > 0 ? (
-            rows.length > 0 &&
-            rows.map((row, rowIndex) => (
-              <div key={rowIndex} className={`row ${styleProducto.row}`}>
-                {row.map((producto, index) => (
-                  <div key={index} className={`${styleProducto.colmd3} pb-2`}>
-                    {producto !== null ? <Producto producto={producto} /> : null}
+        <div className={`col-10`}>
+          <div className="d-flex justify-content-center mb-3">
+            <h1 className="pt-3" style={{ color: "white" }}>
+              Productos
+            </h1>
+          </div>
+          <hr style={{ color: "white" }} className="me-4" />
+          <div className="d-flex justify-content-end col-11">
+            <Link
+              to={`/registrar-productos/${id}`}
+              className={`btn btn-success`}
+            >
+              Nuevo Producto
+            </Link>
+          </div>
+          <div className="d-flex align-items-center justify-content-center">
+            <div className="col-10 pt-3 pb-3 h-100">
+              {Array.isArray(productos) && productos.length > 0 ? (
+                rows.length > 0 &&
+                rows.map((row, rowIndex) => (
+                  <div key={rowIndex} className={`row ${styleProducto.row}`}>
+                    {row.map((producto, index) => (
+                      <div
+                        key={index}
+                        className={`${styleProducto.colmd3} pb-2`}
+                      >
+                        {producto !== null ? (
+                          <Producto
+                            producto={producto}
+                            session={session}
+                            idpuesto={id}
+                            recargar={recargarComponente}
+                          />
+                        ) : null}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            ))
-          ) : (
-            <h2 className={styleProducto.centeredtext}>
-              No tenes ningun producto asociado a este carrito.
-            </h2>
-          )}
+                ))
+              ) : (
+                <h2 className={styleProducto.centeredtext}>
+                  No tenes ningun producto asociado a este carrito.
+                </h2>
+              )}
+            </div>
           </div>
         </div>
       </div>
