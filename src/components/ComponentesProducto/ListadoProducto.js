@@ -1,11 +1,9 @@
-import Sidebar from "../ComponentesGenerales/Sidebar";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import style from "./ListadoProducto.module.css";
-import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css"
+import Sidebar from "../ComponentesGenerales/Sidebar";
+import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Producto from "./Producto";
 import styleProducto from "./producto.module.css";
 
@@ -212,7 +210,7 @@ const ListadoProducto = ({}) => {
             ))
           ) : (
             <h2 className={styleProducto.centeredtext}>
-              No tenes ningun puesto en este momento.
+              No tenes ningun producto asociado a este carrito.
             </h2>
           )}
           </div>

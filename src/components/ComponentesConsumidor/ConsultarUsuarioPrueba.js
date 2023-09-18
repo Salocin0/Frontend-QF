@@ -72,6 +72,8 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
   const [rolSeleccionado, setRolSeleccionado] = useState("Usuario");
 
+  const [mostrarBotonHabilitarDeNuevoR, setMostrarBotonHabilitarDeNuevoR] = useState(false);
+
   const [session, setSession] = useState(null);
 
   useEffect(() => {
@@ -316,6 +318,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
   }
 
+
   const handleEditModeTogglePE = () => {
     setEditModePE(!editMode);
     setIsDisabledPE(!isDisabled);
@@ -539,6 +542,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
         setShowModal(false);
         setMostrarContenidoRepartidor(false);
+        setMostrarBotonHabilitarDeNuevoR(true);
 
         toast.success("Usuario deshabilitado correctamente");
 
@@ -553,6 +557,36 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     }
   }
 
+
+    const handleVolverAHabilitarR = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/repartidor/${user.consumidorId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+
+        setShowModal(false);
+        setMostrarContenidoRepartidor(true);
+        setMostrarBotonHabilitarDeNuevoR(false);
+
+        toast.success("Usuario habilitado nuevamente");
+
+        cargarDatos(user);
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al habilitar el repartidor nuevamente:", error);
+      toast.error("Error al actualizar los datos");
+    }
+  }
 
   useEffect(() => {
     if (user) {
@@ -861,6 +895,21 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                             Eliminar mi cuenta
                           </button>
                         </div>
+                        <br/>
+                        {mostrarBotonHabilitarDeNuevoR && (
+
+                        <div className="d-flex">
+
+                          <button
+                            type="button"
+                            className="btn btn-success mr-2 w-100"
+                            onClick={handleVolverAHabilitarR}
+
+
+                          >
+                            Volver a habilitarme como 'Repartidor'
+                          </button>
+                        </div> )}
                       </div>
                     </div>
                     {mostrarContenidoProductor && (
