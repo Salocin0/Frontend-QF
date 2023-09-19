@@ -7,6 +7,7 @@ import puestos from "../img/carro.png";
 import eventos from "../img/eventos.png";
 import pedidos from "../img/pedidos.png";
 import perfil from "../img/perfil.png";
+import notificaciones from "../img/notificaciones.png";
 import "./cards.css";
 import style from "./inicio.module.css";
 
@@ -16,6 +17,7 @@ const Inicio = () => {
     { to: "/perfil-nuevo", imgSrc: perfil, title: "Perfil" },
     { to: "/consultar-eventos", imgSrc: eventos, title: "Eventos" },
     { to: "/consultar-pedidos", imgSrc: pedidos, title: "Pedidos" },
+    //{ to: "/notificaciones", imgSrc: notificaciones, title: "Notificaciones" },
     { to: "/listado-puestos", imgSrc: puestos, title: "Puestos" },
   ];
   useEffect(() => {
@@ -40,12 +42,7 @@ const Inicio = () => {
 
   return (
     <div
-      className="d-flex align-items-center justify-content-center"
-      style={{
-        background: `url('QuickFoodFondo.png')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      className={`${style.background} d-flex align-items-center justify-content-center`}
     >
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />

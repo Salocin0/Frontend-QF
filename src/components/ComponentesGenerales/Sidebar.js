@@ -40,10 +40,26 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className={style.navitem}>
-              <a href="#" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
+              <a href="/eventos" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
+                <i className={`${style.icono} bi bi-balloon`}></i>
+                <span className="ms-1 d-none d-sm-inline w-100">
+                  Eventos
+                </span>
+              </a>
+            </li>
+            <li className={style.navitem}>
+              <a href="/pedidos" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
                 <i className={`${style.icono} bi bi-bag`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Pedidos
+                </span>
+              </a>
+            </li>
+            <li className={style.navitem}>
+              <a href="/Notificaciones" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
+                <i className={`${style.icono} bi bi-bell`}></i>
+                <span className="ms-1 d-none d-sm-inline w-100">
+                  Notificaciones
                 </span>
               </a>
             </li>
@@ -59,7 +75,7 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
             {isProductor && (
               <li className={style.navitem}>
-                <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
+                <a href="/listado-eventos" className={`${style.navlink} text-truncate`}>
                   <i className={`${style.icono} bi bi-balloon`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Eventos
@@ -69,7 +85,7 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
             {isRepartidor && (
               <li className={style.navitem}>
-                <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
+                <a href="/pedidos-asignados" className={`${style.navlink} text-truncate`}>
                 <FontAwesomeIcon icon={faDolly} className={`${style.icono}`}/>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Pedidos Asignados

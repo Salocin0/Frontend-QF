@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import style from '../ComponentesConsumidor/ConsultarUsuario.module.css';
+import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Puesto from "./Puesto";
@@ -71,12 +71,21 @@ const ListadoPuestos = () => {
       </div>
       <div className="flex-grow-1 pb-5">
         <div className="container pt-2 h-100">
+          <div className="d-flex justify-content-center mb-3">
+            <h1 className="pt-3" style={{ color: "white" }}>
+              Puestos
+            </h1>
+          </div>
+          <hr style={{ color: "white" }} className="me-4" />
           {Array.isArray(carritos) && carritos.length > 0 ? (
             rows.length > 0 &&
             rows.map((row, rowIndex) => (
               <div key={rowIndex} className={`row ${stylepuesto.row}`}>
                 {row.map((carrito, index) => (
-                  <div key={index} className={`${stylepuesto.colmd3} col-md-3 pb-2`}>
+                  <div
+                    key={index}
+                    className={`${stylepuesto.colmd3} col-md-3 pb-2`}
+                  >
                     {carrito !== null ? <Puesto carrito={carrito} /> : null}
                   </div>
                 ))}
@@ -92,7 +101,7 @@ const ListadoPuestos = () => {
           to={`/crear-puesto`}
           className={`btn btn-primary ${stylepuesto.btnfloating} btn-lg`}
         >
-          +
+          <i class="bi bi-plus-lg"></i> Agregar Puesto
         </Link>
         <Footer />
       </div>

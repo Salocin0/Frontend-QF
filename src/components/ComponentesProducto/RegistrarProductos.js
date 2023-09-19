@@ -165,7 +165,22 @@ const RegistrarProductos = () => {
                           required
                         />
                       </div>
-
+                      
+                      <div className="mb-3">
+                        <label
+                          className="mb-2 text-black"
+                          htmlFor="precio"
+                        >
+                          Precio
+                        </label>
+                        <input
+                          id="precio"
+                          className="form-control"
+                          value={precio}
+                          onChange={(e) => setPrecio(e.target.value)}
+                          required
+                        />
+                      </div>
                       <div className="mb-3">
                         <label
                           className="mb-2 text-black"
@@ -178,22 +193,6 @@ const RegistrarProductos = () => {
                           className="form-control"
                           value={descripcion}
                           onChange={(e) => setDescripcion(e.target.value)}
-                          required
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label
-                          className="mb-2 text-black"
-                          htmlFor="precio"
-                        >
-                          Precio
-                        </label>
-                        <textarea
-                          id="precio"
-                          className="form-control"
-                          value={precio}
-                          onChange={(e) => setPrecio(e.target.value)}
                           required
                         />
                       </div>

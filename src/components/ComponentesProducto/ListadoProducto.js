@@ -199,9 +199,9 @@ const ListadoProducto = ({}) => {
           <div className="d-flex justify-content-end col-11">
             <Link
               to={`/registrar-productos/${id}`}
-              className={`btn btn-success`}
+              className={`btn btn-success btn-lg ${styleProducto.btnfloating}`}
             >
-              Nuevo Producto
+              <i class="bi bi-plus-lg"></i> Agregar Producto
             </Link>
           </div>
           <div className="d-flex align-items-center justify-content-center">

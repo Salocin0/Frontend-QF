@@ -43,17 +43,18 @@ const Producto = ({ producto, session, idpuesto, recargar }) => {
     <div className={style.cardlink}>
       <div className="card shadow-sm">
         <img
-          src={producto?.imgs || imgDefault}
-          className={style.cardimgtop}
+          src={`data:image/jpeg;base64,${producto?.img}`}
+          className={`${style.cardimgtop} img-flex`}
           alt="Thumbnail"
+          style={{ height: "150px" }}
         />
         <div className="card-body">
-          <div style={{ height: "60px" }}>
+          <div >
             <h6 className="card-title text-center">
               {producto?.nombre}
             </h6>
           </div>
-          <div style={{ height: "80px" }}>
+          <div style={{ height: "100px" }}>
             <p className="card-text text-center">
               {producto?.descripcion}
             </p>
