@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
+import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 
 const CrearNuevoCarro = () => {
   const [numeroCarro, setNumeroCarro] = useState("");
@@ -16,7 +17,10 @@ const CrearNuevoCarro = () => {
   const [telefonoCarro, setTelefonoCarro] = useState("");
   const [pdfAfip, setPdfAfip] = useState(null);
   const [pdfCuil, setPdfCuil] = useState(null);
-  const [pdfDNI, setPdfDNI] = useState(null);
+  const [logoBase64, setLogoBase64] = useState(null);
+  const [bannerBase64, setBannerBase64] = useState(null);
+
+
 
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
@@ -41,19 +45,41 @@ const CrearNuevoCarro = () => {
     }
   }, []);
 
+
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+
+    fileToBase64(file, (base64) => {
+      setLogoBase64(base64);
+    });
+  };
+
+  const handleBannerChange = (e) => {
+    const file = e.target.files[0];
+
+    fileToBase64(file, (base64) => {
+      setBannerBase64(base64);
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    console.log(logoBase64);
     const formData = {
       numeroCarro,
       nombreCarro,
       tipoNegocio,
       pdfAfip,
+      logo: logoBase64,
+      banner: bannerBase64,
       telefonoCarro,
       consumidorId: session.consumidorId,
     };
 
-    if (!numeroCarro || !nombreCarro || !tipoNegocio || !telefonoCarro)  {
+    console.log(formData)
+
+    if (!numeroCarro || !nombreCarro || !tipoNegocio || !telefonoCarro) {
       toast.error("Por favor rellene todos los datos");
       return;
     }
@@ -125,6 +151,32 @@ const CrearNuevoCarro = () => {
                     </div>
                   </div>
                   <div className="mb-3">
+                        <label className="mb-2 text-black" htmlFor="logo">
+                          Logo
+                        </label>
+                        <input
+                          type="file"
+                          id="imagen"
+                          className="form-control"
+                          accept="image/*"
+                          onChange={handleLogoChange}
+                          required
+                        />
+                      </div>
+                      <div className="mb-3">
+                        <label className="mb-2 text-black" htmlFor="banner">
+                          Banner
+                        </label>
+                        <input
+                          type="file"
+                          id="imagen"
+                          className="form-control"
+                          accept="image/*"
+                          onChange={handleBannerChange}
+                          required
+                        />
+                      </div>
+                  <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="tipoNegocio">
                       Tipo de Negocio
                     </label>
@@ -146,7 +198,7 @@ const CrearNuevoCarro = () => {
                       </option>
                     </select>
                   </div>
-                   {/*<div className="mb-3">
+                  {/*<div className="mb-3">
                     <label
                       className="mb-2 text-dark"
                       htmlFor="telefonoContacto"
@@ -190,7 +242,7 @@ const CrearNuevoCarro = () => {
                       required
                     />
                   </div>*/
-                 }
+                  }
                   <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="telefonoCarro">
                       Teléfono del Carro de Comida
@@ -217,7 +269,7 @@ const CrearNuevoCarro = () => {
                     />
                   </div>
 
-                    <div className="mb-3">
+                  <div className="mb-3">
                     <label className="mb-2 text-dark" htmlFor="pdfCuil">
                       Constancia de Inspección Bromatológica (PDF)
                     </label>

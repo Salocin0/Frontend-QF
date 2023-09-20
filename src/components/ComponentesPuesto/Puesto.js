@@ -1,8 +1,8 @@
-import { default as React, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import imgDefault from "../QuickFoodLogo.png";
+import { base64ToFile } from "../ComponentesGenerales/Utils/base64";
 import style from "./puestos.module.css";
 
 const Puesto = ({ carrito }) => {
@@ -10,10 +10,25 @@ const Puesto = ({ carrito }) => {
     e.preventDefault();
   };
 
-
   const { id } = useParams();
   const [session, setSession] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (carrito && carrito.img) {
+      try {
+        const file = base64ToFile(
+          carrito.img,
+          "imagen.png",
+          "image/png"
+        );
+        setImageFile(file);
+      } catch (error) {
+        console.error("Error al convertir la imagen:", error);
+      }
+    }
+  }, [carrito]);
 
   const handleDelete = () => {
     const headers = new Headers();
@@ -40,18 +55,20 @@ const Puesto = ({ carrito }) => {
   return (
     <div className={style.cardlink}>
       <div className="card shadow-sm">
-        <img
-          src={`data:image/png;base64,${carrito?.img}`}
-          className={style.cardimgtop}
-          alt="Thumbnail"
-        />
+        {imageFile && (
+          <img
+            src={carrito?.img}
+            className={style.cardimgtop}
+            alt="Thumbnail"
+          />
+        )}
         <div className="card-body">
           <div className="d-flex justify-content-between align-items-center">
-          <h5 className={`card-text ${style.truncate}`} title={carrito.nombreCarro}>{carrito.nombreCarro}</h5>
-
+            <h5 className={`card-text ${style.truncate}`} title={carrito.nombreCarro}>
+              {carrito.nombreCarro}
+            </h5>
             <Dropdown>
-              <Dropdown.Toggle variant="danger">
-              </Dropdown.Toggle>
+              <Dropdown.Toggle variant="danger"></Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item as={Link} to={`/listado-productos/${carrito.id}`}>
                   Actualizar Listado Productos
