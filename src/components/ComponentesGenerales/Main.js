@@ -28,6 +28,8 @@ import Home from './Home';
 import Inicio from './Inicio';
 import Sidebar from './Sidebar';
 import ConsultarProducto from "../ComponentesProducto/ConsultarProducto"
+import ListadoEventos from '../ComponentesEventos/ListadoEvento';
+import ListadoPuestosUser from '../ComponentesPuesto/ListadoPuestosUser';
 
 export const Main = () => {
   return (
@@ -67,10 +69,14 @@ export const Main = () => {
            <Route path="/subir-archivo" element={<DocumentUpload/>} />
            <Route path="/seleccion-perfil" element={<SeleccionRegister/>} />
 
-           <Route path="/prueba-productos" element={<ListadoProductoUser/>} />
+           
            <Route path="/listado-productos/:id" element={<ListadoProducto/>} />
            <Route path="/registrar-productos/:id" element={<RegistrarProductos/>} />
            <Route path="/producto/:id" element={<ConsultarProducto/>} />
+
+           <Route path="/eventos" element={<ListadoEventos/>} />
+           <Route path="/listado-puestos/:id" element={<ListadoPuestosUser/>} />
+           <Route path="/productos-puesto/:id" element={<ListadoProductoUser/>} />
 
       </Routes>
     </main>

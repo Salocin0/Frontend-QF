@@ -40,7 +40,7 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className={style.navitem}>
-              <a href="/eventos" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
+              <a href="/eventos" className={`${style.navlink} text-truncate`} >
                 <i className={`${style.icono} bi bi-balloon`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Eventos
@@ -48,7 +48,7 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className={style.navitem}>
-              <a href="/pedidos" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
+              <a href="/pedidos" className={`${style.navlink} text-truncate`} >
                 <i className={`${style.icono} bi bi-bag`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Pedidos
@@ -56,10 +56,18 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className={style.navitem}>
-              <a href="/Notificaciones" className={`${style.navlink} text-truncate`} onClick={(e) => e.preventDefault()}>
+              <a href="/Notificaciones" className={`${style.navlink} text-truncate`} >
                 <i className={`${style.icono} bi bi-bell`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Notificaciones
+                </span>
+              </a>
+            </li>
+            <li className={style.navitem}>
+              <a href="/carrito" className={`${style.navlink} text-truncate`} >
+                <i className={`${style.icono} bi bi-cart`}></i>
+                <span className="ms-1 d-none d-sm-inline w-100">
+                  Carrito
                 </span>
               </a>
             </li>

@@ -6,6 +6,7 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Producto from "./Producto";
 import styleProducto from "./producto.module.css";
+import Footer from "../ComponentesGenerales/Footer";
 
 const ListadoProducto = ({}) => {
   const [session, setSession] = useState(null);
@@ -205,7 +206,7 @@ const ListadoProducto = ({}) => {
             </Link>
           </div>
           <div className="d-flex align-items-center justify-content-center">
-            <div className="col-10 pt-3 pb-3 h-100">
+            <div className="pt-3 pb-4 h-100">
               {Array.isArray(productos) && productos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
@@ -213,7 +214,7 @@ const ListadoProducto = ({}) => {
                     {row.map((producto, index) => (
                       <div
                         key={index}
-                        className={`${styleProducto.colmd3} pb-2`}
+                        className={`${styleProducto.colmd3} pb-4`}
                       >
                         {producto !== null ? (
                           <Producto
@@ -236,6 +237,7 @@ const ListadoProducto = ({}) => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
