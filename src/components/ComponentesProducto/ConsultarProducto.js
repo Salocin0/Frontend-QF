@@ -48,28 +48,13 @@ const ConsultarPuesto = () => {
       return;
     }
 
-    if (tieneNumeros(productoguardar.nombre)) {
-      toast.error("El nombre no puede contener números");
-      return;
-    }
-
     if (!productoguardar.descripcion.trim()) {
       toast.error("La descripcion no puede estar vacio");
       return;
     }
 
-    if (tieneNumeros(productoguardar.descripcion)) {
-      toast.error("La descripcion no puede contener números");
-      return;
-    }
-
     if (!productoguardar.aderezos.trim()) {
       toast.error("Los aderezos no puede estar vacio");
-      return;
-    }
-
-    if (tieneNumeros(productoguardar.aderezos)) {
-      toast.error("Los aderezos no puede contener números");
       return;
     }
 
