@@ -5,15 +5,30 @@ import { toast } from "react-toastify";
 import { base64ToFile } from "../ComponentesGenerales/Utils/base64";
 import style from "./puestos.module.css";
 
-const Puesto = ({ carrito }) => {
-  const handleDropdownClick = (e) => {
-    e.preventDefault();
-  };
-
-  const { id } = useParams();
+const Puesto = ({ carrito,recargar }) => {
   const [session, setSession] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (sessionId) {
+      fetch("http://localhost:8000/user/session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ sessionID: sessionId }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setSession(data.data);
+          console.log(data.data);
+        })
+        .catch((error) => console.error("Error fetching session:", error));
+    }
+  }, []);
 
   useEffect(() => {
     if (carrito && carrito.img) {
@@ -34,7 +49,7 @@ const Puesto = ({ carrito }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/puesto/${id}`, {
+    fetch(`http://localhost:8000/puesto/${carrito.id}`, {
       method: "DELETE",
       headers: headers,
     })
@@ -42,6 +57,7 @@ const Puesto = ({ carrito }) => {
         if (response.ok) {
           toast.success("Puesto deshabilitado correctamente");
           navigate(`/listado-puestos`);
+          recargar();
         } else {
           response.json().then((errorData) => {
             const errorMessage = errorData.message || "Ha ocurrido un error";

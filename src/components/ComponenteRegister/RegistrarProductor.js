@@ -80,8 +80,8 @@ const RegistroProductor = () => {
         .then((response) => response.json())
         .then((data) => {
           const sortedLocalidades = data.municipios.sort((a, b) =>
-          a.nombre.localeCompare(b.nombre)
-        );
+            a.nombre.localeCompare(b.nombre)
+          );
           setLocalidad(sortedLocalidades);
           setFilteredLocalidades(data.municipios);
         })
@@ -151,7 +151,7 @@ const RegistroProductor = () => {
       fechaAlta: fecha,
       nombreDeUsuario: username,
       correoElectronico: email,
-      tipoUsuario:"Productor"
+      tipoUsuario: "Productor",
     };
     const consumidor = {
       nombre: nombre,
@@ -159,7 +159,7 @@ const RegistroProductor = () => {
       fechaDeNacimiento: fechaNacimiento,
       dni: dni,
       localidad: localidad,
-      provincia:provincias.filter(p=> p.id ===selectedProvince)[0].nombre,
+      provincia: provincias.filter((p) => p.id === selectedProvince)[0].nombre,
       telefono: telefono,
       usuario: usuario,
     };
@@ -167,12 +167,12 @@ const RegistroProductor = () => {
       correoElectronico: email,
       contraseña: password,
       consumidor: consumidor,
-      productor:{
-        cuit:cuit,
-        razonSocial:razonSocial,
-      }
+      productor: {
+        cuit: cuit,
+        razonSocial: razonSocial,
+      },
     };
-    console.log(JSON.stringify(json_consumidor))
+    console.log(JSON.stringify(json_consumidor));
     fetch("http://127.0.0.1:8000/user/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -397,10 +397,10 @@ const RegistroProductor = () => {
                     </button>
                   </div>
                 </div>
-                
+
                 <hr />
                 <h3>Datos Productor de eventos</h3>
-                
+
                 <div className="mb-3">
                   <label className="mb-2 text-black" htmlFor="text">
                     Razon social

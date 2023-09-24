@@ -18,16 +18,12 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
   };
 
   const isCuitValid = (cuit) => {
-  const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
-  if (!cuit.trim()) {
-    return false;
-  }
-  return regexCuit.test(cuit);
-};
-
-  function tieneNumeros(cadena) {
-    return !isNaN(Number(cadena));
-  }
+    const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
+    if (!cuit.trim()) {
+      return false;
+    }
+    return regexCuit.test(cuit);
+  };
 
   function tieneLetras(cadena) {
     const regex = /[a-zA-Z]/;
@@ -41,7 +37,6 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
       toast.error("El CUIT no es válido o está vacío.");
       return;
     }
-
 
     if (!productorData.razonSocial.trim()) {
       toast.error("razon social no puede estar vacía.");
@@ -63,12 +58,19 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
         <div className="col-md-4">
           <div className={`${styles.card} card`}>
             <div className={`${styles.cardheader} card-header`}>
-              <h2 className={`${styles.h2} text-center`} style={{color:"white"}}>Datos Productor 3/3</h2>
+              <h2
+                className={`${styles.h2} text-center`}
+                style={{ color: "white" }}
+              >
+                Datos Productor 3/3
+              </h2>
             </div>
-            <div className={`${styles['card-body']} card-body`}>
+            <div className={`${styles["card-body"]} card-body`}>
               <form onSubmit={handleSubmit}>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="cuit" className={styles.label}>CUIT:</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="cuit" className={styles.label}>
+                    CUIT:
+                  </label>
                   <input
                     type="text"
                     name="cuit"
@@ -79,8 +81,10 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                     required
                   />
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="razonSocial" className={styles.label}>Razón Social:</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="razonSocial" className={styles.label}>
+                    Razón Social:
+                  </label>
                   <input
                     type="text"
                     name="razonSocial"
@@ -91,7 +95,7 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                     required
                   />
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
+                <div className={`${styles["form-group"]} form-group`}>
                   <label htmlFor="ivaCondicion" className={styles.label}>
                     Condición frente al IVA:
                   </label>
@@ -107,15 +111,20 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                     <option value="monotributista">Monotributista</option>
                   </select>
                 </div>
-                <hr style={{color:"white"}} />
-                <div className={`d-flex justify-content-between mt-2 ${styles['d-flex']}`}>
+                <hr style={{ color: "white" }} />
+                <div
+                  className={`d-flex justify-content-between mt-2 ${styles["d-flex"]}`}
+                >
                   <button
-                    className={`${styles['btn']} btn btn-secondary`}
+                    className={`${styles["btn"]} btn btn-secondary`}
                     onClick={() => backStep()}
                   >
                     Atrás
                   </button>
-                  <button type="submit" className={`${styles['btn']} btn btn-success`}>
+                  <button
+                    type="submit"
+                    className={`${styles["btn"]} btn btn-success`}
+                  >
                     Finalizar
                   </button>
                 </div>

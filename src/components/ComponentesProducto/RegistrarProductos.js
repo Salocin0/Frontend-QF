@@ -5,6 +5,7 @@ import style from "../ComponentesProducto/RegistrarProducto.module.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
+import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 
 const RegistrarProductos = () => {
   const [nombre, setNombre] = useState("");
@@ -46,17 +47,25 @@ const RegistrarProductos = () => {
     return regex.test(cadena);
   }
 
+  const handleImgChange = (e) => {
+    const file = e.target.files[0];
+
+    fileToBase64(file, (base64) => {
+      setImagen(base64);
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const producto = {
-      nombre:nombre,
-      imagen:imagen.name,
-      descripcion:descripcion,
-      aderezos:aderezos,
-      estado:Boolean(estado),
+      nombre: nombre,
+      imagen: imagen,
+      descripcion: descripcion,
+      aderezos: aderezos,
+      estado: Boolean(estado),
       puestoId: Number(id),
       precio: precio,
-    }
+    };
 
     if (!producto.nombre.trim()) {
       toast.error("Nombre no puede estar vacio");
@@ -107,7 +116,7 @@ const RegistrarProductos = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.code==200) {
+        if (data.code == 200) {
           toast.success("producto registrado correctamente");
           navigate(`/listado-productos/${id}`);
         } else {
@@ -124,7 +133,7 @@ const RegistrarProductos = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-2 p-0">
-          <Sidebar />
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className={`col ${style.background}`}>
           <div className="fondo">
@@ -161,16 +170,14 @@ const RegistrarProductos = () => {
                           id="imagen"
                           className="form-control"
                           accept="image/*"
-                          onChange={(e) => setImagen(e.target.files[0])}
+                          onChange={handleImgChange}
+                          //onChange={(e) => setImagen(e.target.files[0])}
                           required
                         />
                       </div>
-                      
+
                       <div className="mb-3">
-                        <label
-                          className="mb-2 text-black"
-                          htmlFor="precio"
-                        >
+                        <label className="mb-2 text-black" htmlFor="precio">
                           Precio
                         </label>
                         <input
@@ -222,9 +229,7 @@ const RegistrarProductos = () => {
                           required
                         >
                           <option value={false}>Standby</option>
-                          <option value={true}>
-                            Listo para la venta
-                          </option>
+                          <option value={true}>Listo para la venta</option>
                         </select>
                       </div>
 

@@ -1,20 +1,19 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { UserContext } from '../ComponentesGenerales/UserContext';
-import Login from './Login';
+import { fireEvent, render, screen } from "@testing-library/react";
+import React from "react";
+import { MemoryRouter } from "react-router-dom";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import Login from "./Login";
 
-
-jest.mock('react-router-dom', () => {
-  const originalModule = jest.requireActual('react-router-dom');
+jest.mock("react-router-dom", () => {
+  const originalModule = jest.requireActual("react-router-dom");
   return {
     ...originalModule,
     useNavigate: jest.fn(),
   };
 });
 
-describe('Test de Login', () => {
-  it('debe mostrar el campo de usuario', () => {
+describe("Test de Login", () => {
+  it("debe mostrar el campo de usuario", () => {
     render(
       <UserContext.Provider value={{ updateUser: jest.fn() }}>
         <MemoryRouter>
@@ -22,11 +21,11 @@ describe('Test de Login', () => {
         </MemoryRouter>
       </UserContext.Provider>
     );
-    const usuarioInput = screen.getByLabelText('Usuario');
+    const usuarioInput = screen.getByLabelText("Usuario");
     expect(usuarioInput).toBeInTheDocument();
   });
 
-  it('debe mostrar el campo de contraseña', () => {
+  it("debe mostrar el campo de contraseña", () => {
     render(
       <UserContext.Provider value={{ updateUser: jest.fn() }}>
         <MemoryRouter>
@@ -34,11 +33,11 @@ describe('Test de Login', () => {
         </MemoryRouter>
       </UserContext.Provider>
     );
-    const contraseñaInput = screen.getByLabelText('Contraseña');
+    const contraseñaInput = screen.getByLabelText("Contraseña");
     expect(contraseñaInput).toBeInTheDocument();
   });
 
-  it('debe mostrar el botón de Ingresar', () => {
+  it("debe mostrar el botón de Ingresar", () => {
     render(
       <UserContext.Provider value={{ updateUser: jest.fn() }}>
         <MemoryRouter>
@@ -46,11 +45,11 @@ describe('Test de Login', () => {
         </MemoryRouter>
       </UserContext.Provider>
     );
-    const ingresarButton = screen.getByText('Ingresar');
+    const ingresarButton = screen.getByText("Ingresar");
     expect(ingresarButton).toBeInTheDocument();
   });
 
-  it('debe mostrar el enlace de Recuperar Contraseña', () => {
+  it("debe mostrar el enlace de Recuperar Contraseña", () => {
     render(
       <UserContext.Provider value={{ updateUser: jest.fn() }}>
         <MemoryRouter>
@@ -58,12 +57,11 @@ describe('Test de Login', () => {
         </MemoryRouter>
       </UserContext.Provider>
     );
-    const recuperarContraseñaLink = screen.getByText('Recuperar Contraseña');
+    const recuperarContraseñaLink = screen.getByText("Recuperar Contraseña");
     expect(recuperarContraseñaLink).toBeInTheDocument();
   });
 
-  it('debe redirigir a la página de recuperar contraseña al hacer clic en el enlace', () => {
-
+  it("debe redirigir a la página de recuperar contraseña al hacer clic en el enlace", () => {
     render(
       <UserContext.Provider value={{ updateUser: jest.fn() }}>
         <MemoryRouter>
@@ -72,14 +70,12 @@ describe('Test de Login', () => {
       </UserContext.Provider>
     );
 
-    const recuperarContraseñaLink = screen.getByText('Recuperar Contraseña');
+    const recuperarContraseñaLink = screen.getByText("Recuperar Contraseña");
     expect(recuperarContraseñaLink).toBeInTheDocument();
-    expect.toHaveAttribute('href', '/recuperar');
-
+    expect.toHaveAttribute("href", "/recuperar");
   });
 
-  it('debe redirigir a la página de registrarse al hacer clic en el enlace', () => {
-
+  it("debe redirigir a la página de registrarse al hacer clic en el enlace", () => {
     render(
       <UserContext.Provider value={{ updateUser: jest.fn() }}>
         <MemoryRouter>
@@ -88,17 +84,12 @@ describe('Test de Login', () => {
       </UserContext.Provider>
     );
 
-
-    const registrarmeLink = screen.getByText('Registrarme');
+    const registrarmeLink = screen.getByText("Registrarme");
     expect(registrarmeLink).toBeInTheDocument();
-    expect(registrarmeLink).toHaveAttribute('href', '/registrarse');
-
-
-
+    expect(registrarmeLink).toHaveAttribute("href", "/registrarse");
   });
 
-  it('debe tener un boton que redirija la navegacion', () => {
-
+  it("debe tener un boton que redirija la navegacion", () => {
     render(
       <UserContext.Provider value={{ updateUser: jest.fn() }}>
         <MemoryRouter>
@@ -107,16 +98,13 @@ describe('Test de Login', () => {
       </UserContext.Provider>
     );
 
-    const ingresarButton = screen.getByRole('button', { name: 'Ingresar' });
-    expect (ingresarButton).toBeInTheDocument();
-
+    const ingresarButton = screen.getByRole("button", { name: "Ingresar" });
+    expect(ingresarButton).toBeInTheDocument();
   });
 
-  it('debe redirigir a /home al hacer clic en el botón de Ingresar con éxito', async () => {
-
-
+  it("debe redirigir a /home al hacer clic en el botón de Ingresar con éxito", async () => {
     // Obtener la función mockeada de useNavigate
-    const navigateMock = require('react-router-dom').useNavigate;
+    const navigateMock = require("react-router-dom").useNavigate;
 
     // Configurar el comportamiento esperado de useNavigate
     navigateMock.mockReturnValue(() => {});
@@ -129,7 +117,7 @@ describe('Test de Login', () => {
       </UserContext.Provider>
     );
 
-    const ingresarButton = screen.getByRole('button', { name: 'Ingresar' });
+    const ingresarButton = screen.getByRole("button", { name: "Ingresar" });
     fireEvent.click(ingresarButton);
 
     // Esperar a que las promesas se resuelvan
@@ -138,6 +126,4 @@ describe('Test de Login', () => {
     // Verificar que navigate se llamó con "/home"
     expect(navigateMock).toHaveBeenCalledTimes(1);
   });
-
-
 });

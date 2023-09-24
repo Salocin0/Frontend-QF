@@ -22,11 +22,6 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     });
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-    return emailRegex.test(email);
-  };
-
   const toggleShowPassword1 = () => {
     setShowPassword1(!showPassword1);
   };
@@ -63,14 +58,19 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
         <div className="col-md-4">
           <div className={`${styles.card} card`}>
             <div className={`${styles.cardheader}`}>
-              <h2 className={`${styles.h2} text-center`} style={{color: "white"}}>
+              <h2
+                className={`${styles.h2} text-center`}
+                style={{ color: "white" }}
+              >
                 Datos Usuario 1/{tipoUsuario === "consumidor" ? "2" : "3"}
               </h2>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className={` form-group`}>
-                  <label htmlFor="username" className={styles.label}>Nombre de usuario</label>
+                  <label htmlFor="username" className={styles.label}>
+                    Nombre de usuario
+                  </label>
                   <input
                     type="text"
                     name="username"
@@ -81,7 +81,9 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                   />
                 </div>
                 <div className={` form-group`}>
-                  <label htmlFor="email" className={styles.label}>Email</label>
+                  <label htmlFor="email" className={styles.label}>
+                    Email
+                  </label>
                   <input
                     type="email"
                     name="email"
@@ -92,7 +94,9 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                   />
                 </div>
                 <div className={` form-group`}>
-                  <label htmlFor="password" className={styles.label}>Contraseña</label>
+                  <label htmlFor="password" className={styles.label}>
+                    Contraseña
+                  </label>
                   <div className="input-group">
                     <input
                       type={showPassword1 ? "text" : "password"}
@@ -105,7 +109,7 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     <div className="input-group-append">
                       <button
                         type="button"
-                        className={`${styles['btn']} btn btn-outline-secondary`}
+                        className={`${styles["btn"]} btn btn-outline-secondary`}
                         onClick={toggleShowPassword1}
                       >
                         {showPassword1 ? "Ocultar" : "Mostrar"}
@@ -113,8 +117,10 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     </div>
                   </div>
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="confirmPassword" className={styles.label}>Repetir Contraseña</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="confirmPassword" className={styles.label}>
+                    Repetir Contraseña
+                  </label>
                   <div className="input-group">
                     <input
                       type={showPassword2 ? "text" : "password"}
@@ -127,7 +133,7 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     <div className="input-group-append">
                       <button
                         type="button"
-                        className={`${styles['btn']} btn btn-outline-secondary`}
+                        className={`${styles["btn"]} btn btn-outline-secondary`}
                         onClick={toggleShowPassword2}
                       >
                         {showPassword2 ? "Ocultar" : "Mostrar"}
@@ -135,12 +141,20 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     </div>
                   </div>
                 </div>
-                <hr style={{color: "white"}}/>
-                <div className={`d-flex justify-content-between mt-2 ${styles['d-flex']}`}>
-                  <Link to={"/seleccion-perfil"} className={`${styles['btn']} btn btn-secondary`}>
+                <hr style={{ color: "white" }} />
+                <div
+                  className={`d-flex justify-content-between mt-2 ${styles["d-flex"]}`}
+                >
+                  <Link
+                    to={"/seleccion-perfil"}
+                    className={`${styles["btn"]} btn btn-secondary`}
+                  >
                     Atrás
                   </Link>
-                  <button type="submit" className={`${styles['btn']} btn btn-primary`}>
+                  <button
+                    type="submit"
+                    className={`${styles["btn"]} btn btn-primary`}
+                  >
                     Siguiente
                   </button>
                 </div>

@@ -41,10 +41,9 @@ const FormConsumidor = ({
 
   function validaDNI(cadena) {
     const regexDni = /^\d{8}$/;
-    console.log(regexDni.test(cadena))
+    console.log(regexDni.test(cadena));
     return regexDni.test(cadena);
   }
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -52,14 +51,13 @@ const FormConsumidor = ({
     const hoy = new Date();
     const fechaNacimientoDate = new Date(consumidorData.fechaNacimiento);
     const edad = hoy.getFullYear() - fechaNacimientoDate.getFullYear();
-    
+
     if (!consumidorData.nombre.trim()) {
       toast.error("nombre no puede estar vacio");
       return;
     }
 
     if (tieneNumeros(consumidorData.nombre)) {
-
       toast.error("El nombre no puede contener números");
       return;
     }
@@ -74,12 +72,10 @@ const FormConsumidor = ({
       return;
     }
 
-    if (!validaDNI(consumidorData.dni)){
+    if (!validaDNI(consumidorData.dni)) {
       toast.error("El DNI no es valido");
       return;
     }
-
-
 
     if (!consumidorData.apellido.trim()) {
       toast.error("apellido no puede estar vacio");
@@ -126,12 +122,12 @@ const FormConsumidor = ({
 
   const handleLocalidadChange = (e) => {
     setSelectedLocalidad(e.target.value);
-    consumidorData.localidad=e.target.value
+    consumidorData.localidad = e.target.value;
   };
 
   const handleProvinceChange = (e) => {
     setSelectedProvince(e.target.value);
-    consumidorData.provincia=e.target.value
+    consumidorData.provincia = e.target.value;
 
     if (e.target.value !== "") {
       fetch(
@@ -158,14 +154,19 @@ const FormConsumidor = ({
         <div className="col-md-4">
           <div className={`${styles.card} card`}>
             <div className={`${styles.cardheader} card-header`}>
-              <h2 className={`${styles.h2} text-center`} style={{color:"white"}}>
+              <h2
+                className={`${styles.h2} text-center`}
+                style={{ color: "white" }}
+              >
                 Datos Consumidor 2/{tipoUsuario === "consumidor" ? "2" : "3"}
               </h2>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="nombre" className={styles.label}>Nombre</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="nombre" className={styles.label}>
+                    Nombre
+                  </label>
                   <input
                     type="text"
                     name="nombre"
@@ -175,8 +176,10 @@ const FormConsumidor = ({
                     placeholder="Nombre"
                   />
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="apellido" className={styles.label}>Apellido</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="apellido" className={styles.label}>
+                    Apellido
+                  </label>
                   <input
                     type="text"
                     name="apellido"
@@ -186,8 +189,10 @@ const FormConsumidor = ({
                     placeholder="Apellido"
                   />
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="dni" className={styles.label}>DNI</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="dni" className={styles.label}>
+                    DNI
+                  </label>
                   <input
                     type="text"
                     name="dni"
@@ -197,8 +202,10 @@ const FormConsumidor = ({
                     placeholder="DNI"
                   />
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="fechaNacimiento" className={styles.label}>Fecha de Nacimiento</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="fechaNacimiento" className={styles.label}>
+                    Fecha de Nacimiento
+                  </label>
                   <input
                     type="date"
                     name="fechaNacimiento"
@@ -207,8 +214,10 @@ const FormConsumidor = ({
                     className={`${styles.blackwhite}  form-control`}
                   />
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="provincia" className={styles.label}>Provincia</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="provincia" className={styles.label}>
+                    Provincia
+                  </label>
                   <select
                     id="provincia"
                     className={`${styles.blackwhite}  form-control`}
@@ -220,14 +229,20 @@ const FormConsumidor = ({
                       Seleccione una provincia
                     </option>
                     {provincias.map((prov) => (
-                      <option key={prov.nombre} value={prov.nombre} className={`${styles['option']}`}>
+                      <option
+                        key={prov.nombre}
+                        value={prov.nombre}
+                        className={`${styles["option"]}`}
+                      >
                         {prov.nombre}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="localidad" className={styles.label}>Localidad</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="localidad" className={styles.label}>
+                    Localidad
+                  </label>
                   <select
                     className={`${styles.blackwhite} form-control mt-2`}
                     value={selectedLocalidad}
@@ -238,14 +253,20 @@ const FormConsumidor = ({
                       Seleccione una localidad
                     </option>
                     {localidades.map((loc) => (
-                      <option key={loc.nombre} value={loc.nombre} className={`${styles['option']}`}>
+                      <option
+                        key={loc.nombre}
+                        value={loc.nombre}
+                        className={`${styles["option"]}`}
+                      >
                         {loc.nombre}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className={`${styles['form-group']} form-group`}>
-                  <label htmlFor="telefono" className={styles.label}>Teléfono</label>
+                <div className={`${styles["form-group"]} form-group`}>
+                  <label htmlFor="telefono" className={styles.label}>
+                    Teléfono
+                  </label>
                   <input
                     type="text"
                     name="telefono"
@@ -255,20 +276,28 @@ const FormConsumidor = ({
                     placeholder="Teléfono"
                   />
                 </div>
-                <hr style={{color:"white"}} />
-                <div className={`d-flex justify-content-between mt-2 ${styles['d-flex']}`}>
+                <hr style={{ color: "white" }} />
+                <div
+                  className={`d-flex justify-content-between mt-2 ${styles["d-flex"]}`}
+                >
                   <button
-                    className={`${styles['btn']} btn btn-secondary`}
+                    className={`${styles["btn"]} btn btn-secondary`}
                     onClick={() => backStep()}
                   >
                     Atrás
                   </button>
                   {tipoUsuario === "consumidor" ? (
-                    <button type="submit" className={`${styles['btn']} btn btn-success`}>
+                    <button
+                      type="submit"
+                      className={`${styles["btn"]} btn btn-success`}
+                    >
                       Finalizar
                     </button>
                   ) : (
-                    <button type="submit" className={`${styles['btn']} btn btn-primary`}>
+                    <button
+                      type="submit"
+                      className={`${styles["btn"]} btn btn-primary`}
+                    >
                       Siguiente
                     </button>
                   )}

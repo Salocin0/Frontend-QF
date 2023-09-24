@@ -115,7 +115,7 @@ const ConsultarPuesto = () => {
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
-      <div className={`flex-grow-1`}>
+      <div className={`d-flex align-items-center justify-content-center`}>
         <section
           className={`align-items-center justify-content-center col-6 offset-3 ${style.form} mt-3 mb-5 ${style.rad}`}
         >

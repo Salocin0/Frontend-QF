@@ -11,6 +11,11 @@ const ListadoPuestos = () => {
   const [rows, setRows] = useState([]);
   const [carritos, setCarritos] = useState([]);
   const [session, setSession] = useState(null);
+  const [recargar, setRecargar] = useState(0);
+
+  const recargarComponente = () => {
+    setRecargar(+1);
+  };
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -63,7 +68,7 @@ const ListadoPuestos = () => {
         })
         .catch((error) => console.log("No existen carritos."));
     }
-  }, [session]);
+  }, [session,recargar]);
 
   return (
     <div className={`${style.background} d-flex`}>
@@ -87,7 +92,7 @@ const ListadoPuestos = () => {
                     key={index}
                     className={`${stylepuesto.colmd3} col-md-3 pb-2`}
                   >
-                    {carrito !== null ? <Puesto carrito={carrito} /> : null}
+                    {carrito !== null ? <Puesto carrito={carrito} recargar={recargarComponente} /> : null}
                   </div>
                 ))}
               </div>

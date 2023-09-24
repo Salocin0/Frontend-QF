@@ -47,21 +47,17 @@ const ProductoUser = ({ producto, session, idpuesto, recargar }) => {
     <div className={style.cardlink}>
       <div className="card shadow-sm">
         <img
-          src={`data:image/jpeg;base64,${producto?.img}`}
+          src={`${producto?.img}`}
           className={`${style.cardimgtop} img-flex`}
           alt="Thumbnail"
           style={{ height: "150px" }}
         />
         <div className="card-body">
-          <div >
-            <h6 className="card-title text-center">
-              {producto?.nombre}
-            </h6>
+          <div>
+            <h6 className="card-title text-center">{producto?.nombre}</h6>
           </div>
           <div style={{ height: "100px" }}>
-            <p className="card-text text-center">
-              {producto?.descripcion}
-            </p>
+            <p className="card-text text-center">{producto?.descripcion}</p>
           </div>
 
           <div className="row">
@@ -71,9 +67,7 @@ const ProductoUser = ({ producto, session, idpuesto, recargar }) => {
             <div className="col-7">
               <div className="d-flex justify-content-end">
                 <button className="btn btn-danger" onClick={handleAddtocart}>
-                <i class="bi bi-cart-plus">
-                  
-                </i>
+                  <i class="bi bi-cart-plus"></i>
                 </button>
               </div>
             </div>

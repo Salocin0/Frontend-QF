@@ -69,8 +69,8 @@ const RegistroRepartidor = () => {
         .then((response) => response.json())
         .then((data) => {
           const sortedLocalidades = data.municipios.sort((a, b) =>
-          a.nombre.localeCompare(b.nombre)
-        );
+            a.nombre.localeCompare(b.nombre)
+          );
           setLocalidad(sortedLocalidades);
           setFilteredLocalidades(data.municipios);
         })
@@ -140,7 +140,7 @@ const RegistroRepartidor = () => {
       fechaAlta: fecha,
       nombreDeUsuario: username,
       correoElectronico: email,
-      tipoUsuario:"Repartidor"
+      tipoUsuario: "Repartidor",
     };
     const consumidor = {
       nombre: nombre,
@@ -148,7 +148,7 @@ const RegistroRepartidor = () => {
       fechaDeNacimiento: fechaNacimiento,
       dni: dni,
       localidad: localidad,
-      provincia:provincias.filter(p=> p.id ===selectedProvince)[0].nombre,
+      provincia: provincias.filter((p) => p.id === selectedProvince)[0].nombre,
       telefono: telefono,
       usuario: usuario,
     };
@@ -156,11 +156,11 @@ const RegistroRepartidor = () => {
       correoElectronico: email,
       contraseña: password,
       consumidor: consumidor,
-      repartidor:{
-        nombre:nombre
-      }
+      repartidor: {
+        nombre: nombre,
+      },
     };
-    console.log(JSON.stringify(json_consumidor))
+    console.log(JSON.stringify(json_consumidor));
     fetch("http://127.0.0.1:8000/user/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -2,13 +2,9 @@ import { default as React, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import imgDefault from "../QuickFoodLogo.png";
 import style from "./eventos.module.css";
 //TODO MODIFICACIONES PARA QUE ANDE, ESTA HARDCODEADO EN LISTADOEVENTOS
 const Puesto = ({ carrito }) => {
-  const handleDropdownClick = (e) => {
-    e.preventDefault();
-  };
 
 
   const { id } = useParams();
@@ -47,20 +43,29 @@ const Puesto = ({ carrito }) => {
         />
         <div className="card-body">
           <div className="d-flex justify-content-between align-items-center">
-          <h5 className={`card-text ${style.truncate}`} title={carrito.nombreCarro}>{carrito.nombreCarro}</h5>
+            <h5
+              className={`card-text ${style.truncate}`}
+              title={carrito.nombreCarro}
+            >
+              {carrito.nombreCarro}
+            </h5>
 
             <Dropdown>
-              <Dropdown.Toggle variant="danger">
-              </Dropdown.Toggle>
+              <Dropdown.Toggle variant="danger"></Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item as={Link} to={`/listado-productos/${carrito.id}`}>
+                <Dropdown.Item
+                  as={Link}
+                  to={`/listado-productos/${carrito.id}`}
+                >
                   Actualizar Listado Productos
                 </Dropdown.Item>
                 <Dropdown.Item as={Link} to={`/puesto/${carrito.id}`}>
                   Modificar Datos Carrito
                 </Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item onClick={handleDelete}>Deshabilitar Carrito</Dropdown.Item>
+                <Dropdown.Item onClick={handleDelete}>
+                  Deshabilitar Carrito
+                </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>

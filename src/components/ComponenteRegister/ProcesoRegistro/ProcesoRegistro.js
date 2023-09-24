@@ -17,7 +17,7 @@ const ProcesoRegistro = () => {
   const [productorData, setProductorData] = useState({});
   const [registrar, setRegistrar] = useState(false);
   const navigate = useNavigate();
-  
+
   const handleFinalizar = () => {
     setRegistrar(true);
   };
@@ -114,10 +114,10 @@ const ProcesoRegistro = () => {
           toast.error("Error al registrar. Por favor, vuelva a intentar.");
           navigate(`/`);
         });
-
     }
   }, [registrar]);
 
+  // eslint-disable-next-line default-case
   switch (step) {
     case 1:
       return (

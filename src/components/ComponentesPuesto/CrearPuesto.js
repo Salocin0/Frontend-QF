@@ -45,8 +45,6 @@ const CrearNuevoCarro = () => {
     }
   }, []);
 
-
-
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
 

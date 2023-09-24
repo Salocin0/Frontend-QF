@@ -8,21 +8,6 @@ function fileToBase64(file, callback) {
   reader.readAsDataURL(file);
 }
 
-/*function base64ToFile(base64String, filename, mimeType) {
-  const byteCharacters = atob(base64String.split(",")[1]);
-  const byteArrays = [];
-
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteArrays.push(byteCharacters.charCodeAt(i));
-  }
-
-  const byteArray = new Uint8Array(byteArrays);
-
-  const blob = new Blob([byteArray], { type: mimeType });
-
-  return new File([blob], filename, { type: mimeType });
-}*/
-
 function base64ToFile(base64String, filename, mimeType) {
   if (!base64String || typeof base64String !== 'string' || !base64String.startsWith('data:image/')) {
     throw new Error('Invalid base64String');
@@ -39,14 +24,11 @@ function base64ToFile(base64String, filename, mimeType) {
   const byteArray = new Uint8Array(byteArrays);
 
   if (!mimeType) {
-    mimeType = dataParts[0].split(':')[1].split(';')[0]; // Obtener el tipo MIME desde la cadena base64
+    mimeType = dataParts[0].split(':')[1].split(';')[0];
   }
 
   return new File([byteArray], filename, { type: mimeType });
 }
-
-
-
 
 export { base64ToFile, fileToBase64 };
 

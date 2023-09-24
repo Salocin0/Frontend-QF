@@ -206,7 +206,7 @@ const ListadoProducto = ({}) => {
             </Link>
           </div>
           <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-3 pb-4 h-100">
+            <div className="pt-3 pb-4 h-100 w-100">
               {Array.isArray(productos) && productos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (

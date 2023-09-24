@@ -44,7 +44,7 @@ const PuestoUser = ({ carrito }) => {
       <div className={style.cardlink}>
         <div className="card shadow-sm">
           <img
-            src={`data:image/png;base64,${carrito?.img}`}
+            src={`${carrito?.img}`}
             className={style.cardimgtop}
             alt="Thumbnail"
           />

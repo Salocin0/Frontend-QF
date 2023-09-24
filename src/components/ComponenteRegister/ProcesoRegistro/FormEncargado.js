@@ -25,15 +25,10 @@ const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
     });
   };
 
-  function tieneNumeros(cadena) {
-    return !isNaN(Number(cadena));
-  }
-
   function tieneLetras(cadena) {
     const regex = /[a-zA-Z]/;
     return regex.test(cadena);
   }
-
 
   const handleSubmit = (e) => {
     e.preventDefault();

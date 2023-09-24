@@ -1,17 +1,13 @@
-import { default as React, useEffect, useState } from "react";
+import { default as React, useEffect } from "react";
 import { Dropdown } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import imgDefault from "./../../components/QuickFoodLogo.png";
+
 import style from "./producto.module.css";
 
 const Producto = ({ producto, session, idpuesto, recargar }) => {
-  const handleDropdownClick = (e) => {
-    e.preventDefault();
-  };
 
-  const { id } = useParams();
-  const navigate = useNavigate();
+
 
   const handleDelete = () => {
     const headers = new Headers();
@@ -36,14 +32,13 @@ const Producto = ({ producto, session, idpuesto, recargar }) => {
   };
 
   useEffect(() => {
-    console.log(producto);
   }, []);
 
   return (
     <div className={style.cardlink}>
       <div className="card shadow-sm">
         <img
-          src={`data:image/jpeg;base64,${producto?.img}`}
+          src={`${producto?.img}`}
           className={`${style.cardimgtop} img-flex`}
           alt="Thumbnail"
           style={{ height: "150px" }}

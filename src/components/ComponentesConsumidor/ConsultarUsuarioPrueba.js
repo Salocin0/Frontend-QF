@@ -1,20 +1,17 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
-import Modal from 'react-modal';
-import { useLocation } from "react-router-dom";
+import Modal from "react-modal";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import style from "./ConsultarUsuario.module.css";
 
-const ConsultarUsuario = ({ tipoUsuario }) => {
-
+const ConsultarUsuario = () => {
   const [showModal, setShowModal] = useState(false);
 
   const { user } = useContext(UserContext);
-  const location = useLocation();
-  const id = location.state && location.state.value;
+
   const [mostrarContenidoProductor, setMostrarContenidoProductor] =
     useState(false);
   const [mostrarContenidoEncargadoPuesto, setMostrarContenidoEncargadoPuesto] =
@@ -22,14 +19,9 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
   const [mostrarContenidoRepartidor, setMostrarContenidoRepartidor] =
     useState(false);
 
-  const [isRepartidor, setIsRepartidor] = useState(false);
-
-
-  const [productor, setProductor] = useState("");
   const [nombreC, setNombreC] = useState("");
   const [apellidoC, setApellidoC] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
-  const [fechaNacimientoC, setFechaNacimientoC] = useState("");
   const [dniC, setDniC] = useState("");
   const [localidad, setLocalidad] = useState("");
   const [localidadC, setLocalidadC] = useState("");
@@ -70,9 +62,8 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
   const [editModeEPC, setEditModeEPC] = useState(false);
   const [editModeR, setEditModeR] = useState(false);
 
-  const [rolSeleccionado, setRolSeleccionado] = useState("Usuario");
-
-  const [mostrarBotonHabilitarDeNuevoR, setMostrarBotonHabilitarDeNuevoR] = useState(false);
+  const [mostrarBotonHabilitarDeNuevoR, setMostrarBotonHabilitarDeNuevoR] =
+    useState(false);
 
   const [session, setSession] = useState(null);
 
@@ -91,10 +82,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
         .then((data) => {
           setSession(data.data);
 
-
-          if (
-            data.data.tipoUsuario === "repartidor"
-          ) {
+          if (data.data.tipoUsuario === "repartidor") {
             setMostrarContenidoRepartidor(true);
           }
         })
@@ -146,9 +134,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     }
     return regexCuit.test(cuitEPC);
   };
-
-
-
 
   const handleNombreChangeC = (e) => {
     setNombreC(e.target.value);
@@ -208,7 +193,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
   const handleCondicionPE = (e) => {
     setCondicionPE(e.target.value);
-  }
+  };
 
   const handleRazonSocialChangeEPC = (e) => {
     setRazonSocialEPC(e.target.value);
@@ -313,11 +298,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
     }
   };
 
-  const handleEliminarCuenta = () => {
-
-
-  }
-
+  const handleEliminarCuenta = () => {};
 
   const handleEditModeTogglePE = () => {
     setEditModePE(!editMode);
@@ -380,7 +361,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
   const handleDeshabilitarPE = () => {
     setShowModal(true);
-  }
+  };
 
   const confirmarDeshabilitarPE = async () => {
     try {
@@ -395,7 +376,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       );
 
       if (response.ok) {
-
         setShowModal(false);
 
         toast.success("Usuario deshabilitado correctamente");
@@ -409,7 +389,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       console.error("Error al eliminar los datos del productor:", error);
       toast.error("Error al actualizar los datos");
     }
-  }
+  };
 
   const handleEditModeToggleEPC = () => {
     setEditModeEPC(!editMode);
@@ -439,7 +419,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       toast.error("Condicion IVA no puede estar vacía.");
       return;
     }
-
 
     const datosActualizados = {
       razonSocialEPC,
@@ -490,7 +469,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       );
 
       if (response.ok) {
-
         setShowModal(false);
 
         toast.success("Usuario deshabilitado correctamente");
@@ -504,7 +482,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       console.error("Error al eliminar los datos del encargado:", error);
       toast.error("Error al actualizar los datos");
     }
-  }
+  };
 
   const handleEditModeToggleR = () => {
     setEditMode(!editModeR);
@@ -524,7 +502,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
   const handleDeshabilitarR = () => {
     setShowModal(true);
-  }
+  };
 
   const confirmarDeshabilitarR = async () => {
     try {
@@ -539,13 +517,11 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       );
 
       if (response.ok) {
-
         setShowModal(false);
         setMostrarContenidoRepartidor(false);
         setMostrarBotonHabilitarDeNuevoR(true);
 
         toast.success("Usuario deshabilitado correctamente");
-
 
         cargarDatos(user);
       } else {
@@ -555,10 +531,9 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       console.error("Error al eliminar los datos del repartidor:", error);
       toast.error("Error al actualizar los datos");
     }
-  }
+  };
 
-
-    const handleVolverAHabilitarR = async () => {
+  const handleVolverAHabilitarR = async () => {
     try {
       const response = await fetch(
         `http://localhost:8000/repartidor/${user.consumidorId}`,
@@ -571,7 +546,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       );
 
       if (response.ok) {
-
         setShowModal(false);
         setMostrarContenidoRepartidor(true);
         setMostrarBotonHabilitarDeNuevoR(false);
@@ -586,7 +560,7 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
       console.error("Error al habilitar el repartidor nuevamente:", error);
       toast.error("Error al actualizar los datos");
     }
-  }
+  };
 
   useEffect(() => {
     if (user) {
@@ -623,17 +597,16 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
 
         setTelefono(data1.data.telefono);
 
-        if ( data1.data.Productor?.habilitado === true && (data1.data.Productor?.cuit || data1.data.Productor?.razonSocial)) {
+        if (
+          data1.data.Productor?.habilitado === true &&
+          (data1.data.Productor?.cuit || data1.data.Productor?.razonSocial)
+        ) {
           setMostrarContenidoProductor(true);
           console.log(data1.data.Productor.razonSocial);
           setCuitPE(data1.data.Productor.cuit);
-          setRazonSocialPE(data1.data.Productor.razonSocial)
-          setCondicionPE(data1.data.Productor.condicionIva)
-
+          setRazonSocialPE(data1.data.Productor.razonSocial);
+          setCondicionPE(data1.data.Productor.condicionIva);
         }
-
-
-
 
         if (
           data1.data.encargado?.habilitado === true &&
@@ -649,12 +622,9 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
         }
 
         console.log(data1.data.repartidore?.habilitado);
-        if(data1.data.repartidore?.habilitado === false){
+        if (data1.data.repartidore?.habilitado === false) {
           setMostrarContenidoRepartidor(false);
         }
-
-
-
 
         if (data1.codigo === 200) {
           toast.success("Datos cargados correctamente");
@@ -680,49 +650,50 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
         >
           <div className={`shadow-lg ${style.card}`}>
             <div className={`${style.formulario} card-body mt-3 mb-5`}>
-              <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                Tu Perfil
-              </h1>
               <form className="needs-validation">
                 <div>
-                  <hr />
-                  <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                    Usuario
-                  </h1>
                   <section
                     className={`${style.form} align-items-center justify-content-center col`}
                   >
                     <div className={`card ${style.card} shadow-lg`}>
                       <div className={`${style.formulario} card-body p-3`}>
-                        <div className="d-flex justify-content-end">
-                          {editModeC ? (
-                            <>
+                        <div className="row">
+                          <div className="justify-content-start col-6">
+                            <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                              Usuario
+                            </h1>
+                          </div>
+                          <div className="d-flex justify-content-end col-6">
+                            {editModeC ? (
+                              <>
+                                <button
+                                  type="button"
+                                  className=" btn btn-success mr-2"
+                                  onClick={handleSaveChangesCPrueba}
+                                >
+                                  Guardar
+                                </button>
+                                <br />
+                                <button
+                                  type="button"
+                                  className="btn btn-danger"
+                                  onClick={handleCancelChangesC}
+                                >
+                                  Cancelar
+                                </button>
+                              </>
+                            ) : (
                               <button
                                 type="button"
-                                className=" btn btn-success mr-2"
-                                onClick={handleSaveChangesCPrueba}
+                                className="btn btn-primary"
+                                onClick={handleEditModeToggleC}
                               >
-                                Guardar
+                                Editar
                               </button>
-                              <br />
-                              <button
-                                type="button"
-                                className="btn btn-danger"
-                                onClick={handleCancelChangesC}
-                              >
-                                Cancelar
-                              </button>
-                            </>
-                          ) : (
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              onClick={handleEditModeToggleC}
-                            >
-                              Editar
-                            </button>
-                          )}
+                            )}
+                          </div>
                         </div>
+
                         <form
                           onSubmit={handleSaveChangesC}
                           className="needs-validation"
@@ -890,34 +861,28 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                             className="btn btn-danger mr-2 w-100"
                             onClick={handleEliminarCuenta}
                             disabled
-
                           >
                             Eliminar mi cuenta
                           </button>
                         </div>
-                        <br/>
+                        <br />
                         {mostrarBotonHabilitarDeNuevoR && (
-
-                        <div className="d-flex">
-
-                          <button
-                            type="button"
-                            className="btn btn-success mr-2 w-100"
-                            onClick={handleVolverAHabilitarR}
-
-
-                          >
-                            Volver a habilitarme como 'Repartidor'
-                          </button>
-                        </div> )}
+                          <div className="d-flex">
+                            <button
+                              type="button"
+                              className="btn btn-success mr-2 w-100"
+                              onClick={handleVolverAHabilitarR}
+                            >
+                              Volver a habilitarme como 'Repartidor'
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                     {mostrarContenidoProductor && (
                       <>
                         <hr />
-                        <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                          Productor de Eventos
-                        </h1>
+
                         <section
                           className={`${style.form} align-items-center justify-content-center col `}
                         >
@@ -925,35 +890,43 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                             <div
                               className={`${style.formulario} card-body p-3`}
                             >
-                              <div className="d-flex justify-content-end">
-                                {editModePE ? (
-                                  <>
+                              <div className="row">
+                                <div className="justify-content-start col-8">
+                                  <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                                    Productor de Eventos
+                                  </h1>
+                                </div>
+                                <div className="d-flex justify-content-end col-4">
+                                  {editModePE ? (
+                                    <>
+                                      <button
+                                        type="button"
+                                        className=" btn btn-success mr-2"
+                                        onClick={handleSaveChangesPEPrueba}
+                                      >
+                                        Guardar
+                                      </button>
+                                      <br />
+                                      <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        onClick={handleCancelChangesPE}
+                                      >
+                                        Cancelar
+                                      </button>
+                                    </>
+                                  ) : (
                                     <button
                                       type="button"
-                                      className=" btn btn-success mr-2"
-                                      onClick={handleSaveChangesPEPrueba}
+                                      className="btn btn-primary"
+                                      onClick={handleEditModeTogglePE}
                                     >
-                                      Guardar
+                                      Editar
                                     </button>
-                                    <br />
-                                    <button
-                                      type="button"
-                                      className="btn btn-danger"
-                                      onClick={handleCancelChangesPE}
-                                    >
-                                      Cancelar
-                                    </button>
-                                  </>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={handleEditModeTogglePE}
-                                  >
-                                    Editar
-                                  </button>
-                                )}
+                                  )}
+                                </div>
                               </div>
+
                               <form
                                 onSubmit={handleSaveChangesPE}
                                 className="needs-validation"
@@ -1014,7 +987,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                     required
                                   />
                                 </div>
-
                               </form>
                               <div className="d-flex">
                                 <button
@@ -1024,35 +996,43 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                 >
                                   Deshabilitar Usuario
                                 </button>
-                                    <Modal
+                                <Modal
                                   isOpen={showModal}
                                   onRequestClose={() => setShowModal(false)}
                                   contentLabel="Confirmación de deshabilitación"
                                   style={{
                                     overlay: {
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
                                     },
                                     content: {
-                                      position: 'relative',
-                                      top: 'auto',
-                                      left: 'auto',
-                                      right: 'auto',
-                                      bottom: 'auto',
-                                      borderRadius: '8px',
-                                      maxWidth: '400px', // Ajusta el ancho máximo aquí
-                                      padding: '20px',
-                                      textAlign: 'center', // Centra el contenido del modal
+                                      position: "relative",
+                                      top: "auto",
+                                      left: "auto",
+                                      right: "auto",
+                                      bottom: "auto",
+                                      borderRadius: "8px",
+                                      maxWidth: "400px", // Ajusta el ancho máximo aquí
+                                      padding: "20px",
+                                      textAlign: "center", // Centra el contenido del modal
                                     },
                                   }}
                                 >
-                                  <h2>¿Está seguro de deshabilitar su cuenta?</h2>
+                                  <h2>
+                                    ¿Está seguro de deshabilitar su cuenta?
+                                  </h2>
                                   <div className="d-flex justify-content-center">
-                                    <button onClick={() => setShowModal(false)} className="btn btn-secondary mr-2">
+                                    <button
+                                      onClick={() => setShowModal(false)}
+                                      className="btn btn-secondary mr-2"
+                                    >
                                       Cancelar
                                     </button>
-                                    <button onClick={confirmarDeshabilitarPE} className="btn btn-danger ml-2">
+                                    <button
+                                      onClick={confirmarDeshabilitarPE}
+                                      className="btn btn-danger ml-2"
+                                    >
                                       Sí, deshabilitar
                                     </button>
                                   </div>
@@ -1066,9 +1046,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                     {mostrarContenidoEncargadoPuesto && (
                       <>
                         <hr />
-                        <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                          Encargado Puesto de Comida
-                        </h1>
                         <section
                           className={`${style.form} align-items-center justify-content-center col`}
                         >
@@ -1076,34 +1053,41 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                             <div
                               className={`${style.formulario} card-body p-3`}
                             >
-                              <div className="d-flex justify-content-end">
-                                {editModeEPC ? (
-                                  <>
+                              <div className="row">
+                                <div className="justify-content-start col-8">
+                                  <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                                    Encargado Puesto de Comida
+                                  </h1>
+                                </div>
+                                <div className="d-flex justify-content-end col-4">
+                                  {editModeEPC ? (
+                                    <>
+                                      <button
+                                        type="button"
+                                        className=" btn btn-success mr-2"
+                                        onClick={handleSaveChangesEPC}
+                                      >
+                                        Guardar
+                                      </button>
+                                      <br />
+                                      <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        onClick={handleCancelChangesEPC}
+                                      >
+                                        Cancelar
+                                      </button>
+                                    </>
+                                  ) : (
                                     <button
                                       type="button"
-                                      className=" btn btn-success mr-2"
-                                      onClick={handleSaveChangesEPC}
+                                      className="btn btn-primary"
+                                      onClick={handleEditModeToggleEPC}
                                     >
-                                      Guardar
+                                      Editar
                                     </button>
-                                    <br />
-                                    <button
-                                      type="button"
-                                      className="btn btn-danger"
-                                      onClick={handleCancelChangesEPC}
-                                    >
-                                      Cancelar
-                                    </button>
-                                  </>
-                                ) : (
-                                  <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={handleEditModeToggleEPC}
-                                  >
-                                    Editar
-                                  </button>
-                                )}
+                                  )}
+                                </div>
                               </div>
                               <form
                                 onSubmit={handleSaveChangesEPC}
@@ -1159,7 +1143,6 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                     id="IVA"
                                     className="form-control"
                                     value={condicionEPC}
-
                                     onChange={handleCondicionEPC}
                                     readOnly={!editModeEPC}
                                     disabled={!editModeEPC}
@@ -1197,29 +1180,37 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                   contentLabel="Confirmación de deshabilitación"
                                   style={{
                                     overlay: {
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
                                     },
                                     content: {
-                                      position: 'relative',
-                                      top: 'auto',
-                                      left: 'auto',
-                                      right: 'auto',
-                                      bottom: 'auto',
-                                      borderRadius: '8px',
-                                      maxWidth: '400px', // Ajusta el ancho máximo aquí
-                                      padding: '20px',
-                                      textAlign: 'center', // Centra el contenido del modal
+                                      position: "relative",
+                                      top: "auto",
+                                      left: "auto",
+                                      right: "auto",
+                                      bottom: "auto",
+                                      borderRadius: "8px",
+                                      maxWidth: "400px", // Ajusta el ancho máximo aquí
+                                      padding: "20px",
+                                      textAlign: "center", // Centra el contenido del modal
                                     },
                                   }}
                                 >
-                                  <h2>¿Está seguro de deshabilitar su cuenta?</h2>
+                                  <h2>
+                                    ¿Está seguro de deshabilitar su cuenta?
+                                  </h2>
                                   <div className="d-flex justify-content-center">
-                                    <button onClick={() => setShowModal(false)} className="btn btn-secondary mr-2">
+                                    <button
+                                      onClick={() => setShowModal(false)}
+                                      className="btn btn-secondary mr-2"
+                                    >
                                       Cancelar
                                     </button>
-                                    <button onClick={confirmarDeshabilitarEPC} className="btn btn-danger ml-2">
+                                    <button
+                                      onClick={confirmarDeshabilitarEPC}
+                                      className="btn btn-danger ml-2"
+                                    >
                                       Sí, deshabilitar
                                     </button>
                                   </div>
@@ -1244,21 +1235,32 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                             <div
                               className={`${style.formulario} card-body p-3`}
                             >
-                              <div className="d-flex justify-content-end">
-
+                              <div className="row">
+                                <div className="justify-content-start col-8">
+                                  <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                                    Repartidor
+                                  </h1>
+                                </div>
+                                <div className="d-flex justify-content-end col-4"></div>
                               </div>
+
                               <form
                                 onSubmit={handleSaveChangesR}
                                 className="needs-validation"
                               >
-                                <div className="mb-2 mt-0 text-center" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                                <div
+                                  className="mb-2 mt-0 text-center"
+                                  style={{
+                                    fontFamily: "Open Sans, sans-serif",
+                                  }}
+                                >
                                   <label
                                     className="mb-1 text-dark"
                                     htmlFor="cuit"
                                     style={{
-                                      fontSize: '18px', // Tamaño de fuente personalizado
-                                      fontWeight: 'bold', // Peso de fuente en negrita
-                                      color: '#333', // Color de texto personalizado
+                                      fontSize: "18px", // Tamaño de fuente personalizado
+                                      fontWeight: "bold", // Peso de fuente en negrita
+                                      color: "#333", // Color de texto personalizado
                                     }}
                                   >
                                     Usted actualmente es Repartidor
@@ -1279,35 +1281,42 @@ const ConsultarUsuario = ({ tipoUsuario }) => {
                                     contentLabel="Confirmación de deshabilitación"
                                     style={{
                                       overlay: {
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
                                       },
                                       content: {
-                                        position: 'relative',
-                                        top: 'auto',
-                                        left: 'auto',
-                                        right: 'auto',
-                                        bottom: 'auto',
-                                        borderRadius: '8px',
-                                        maxWidth: '400px', // Ajusta el ancho máximo aquí
-                                        padding: '20px',
-                                        textAlign: 'center', // Centra el contenido del modal
+                                        position: "relative",
+                                        top: "auto",
+                                        left: "auto",
+                                        right: "auto",
+                                        bottom: "auto",
+                                        borderRadius: "8px",
+                                        maxWidth: "400px", // Ajusta el ancho máximo aquí
+                                        padding: "20px",
+                                        textAlign: "center", // Centra el contenido del modal
                                       },
                                     }}
                                   >
-                                    <h2>¿Está seguro de deshabilitar su cuenta?</h2>
+                                    <h2>
+                                      ¿Está seguro de deshabilitar su cuenta?
+                                    </h2>
                                     <div className="d-flex justify-content-center">
-                                      <button onClick={() => setShowModal(false)} className="btn btn-secondary mr-2">
+                                      <button
+                                        onClick={() => setShowModal(false)}
+                                        className="btn btn-secondary mr-2"
+                                      >
                                         Cancelar
                                       </button>
-                                      <button onClick={confirmarDeshabilitarR} className="btn btn-danger ml-2">
+                                      <button
+                                        onClick={confirmarDeshabilitarR}
+                                        className="btn btn-danger ml-2"
+                                      >
                                         Sí, deshabilitar
                                       </button>
                                     </div>
                                   </Modal>
                                 </div>
-
                               </form>
                             </div>
                           </div>

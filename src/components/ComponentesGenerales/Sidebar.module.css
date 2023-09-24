@@ -76,9 +76,9 @@
   height: 100vh;
   position: sticky;
   top: 0;
-  background: #0F2027;  
-  background: -webkit-linear-gradient(to top, #172b34, #12242b, #0f1b20);  
-  background: linear-gradient(to top,  #172b34, #12242b, #0f1b20); 
+  background: #0F2027;
+  background: -webkit-linear-gradient(to top, #172b34, #12242b, #0f1b20);
+  background: linear-gradient(to top, #172b34, #12242b, #0f1b20);
   /*background: linear-gradient(to top, #2C5364, #203A43, #0F2027); */
 }
 

@@ -1,15 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useContext, useEffect, useState } from "react";
-import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Footer from '../ComponentesGenerales/Footer';
 import Sidebar from '../ComponentesGenerales/Sidebar';
 import { UserContext } from '../ComponentesGenerales/UserContext';
 
 const ConsultarUsuarioEPC = () => {
-  const location = useLocation();
   const { user, updateUser } = useContext(UserContext);
-  const id = location.state && location.state.value;
 
   const [encargado, setEncargado] = useState('');
   const [nombre, setNombre] = useState('');

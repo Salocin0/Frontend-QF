@@ -47,7 +47,7 @@ const AdquirirNuevoRolR = () => {
       if (response.ok) {
         toast.success("actualizado a repartidor");
         const data = await response.json();
-        setNuevorol(true)
+        setNuevorol(true);
         console.log(data);
         navigate(`/login`);
       } else {
@@ -66,12 +66,18 @@ const AdquirirNuevoRolR = () => {
       </div>
       <div className="flex-grow-1 d-flex align-items-center justify-content-center">
         <div className={`${style.form}`}>
-          <div className={`${styleadquirirrol.formularioAdquirirNuevoRolEPC} card-body px-3`}>
+          <div
+            className={`${styleadquirirrol.formularioAdquirirNuevoRolEPC} card-body px-3`}
+          >
             <h1 className="fs-4 card-title fw-bold mb-2 text-dark">
               Adquirir Nuevo Rol - Repartidor
             </h1>
             <hr />
-            <form onSubmit={handleSubmit} className="needs-validation" encType="multipart/form-data">
+            <form
+              onSubmit={handleSubmit}
+              className="needs-validation"
+              encType="multipart/form-data"
+            >
               <div className={`form-check mb-4 ms-4`}>
                 <input
                   type="checkbox"
@@ -79,15 +85,25 @@ const AdquirirNuevoRolR = () => {
                   id="confirmacionMayorDeEdad"
                   name="confirmacionMayorDeEdad"
                   checked={confirmacionMayorDeEdad}
-                  onChange={() => setConfirmacionMayorDeEdad(!confirmacionMayorDeEdad)}
+                  onChange={() =>
+                    setConfirmacionMayorDeEdad(!confirmacionMayorDeEdad)
+                  }
                 />
-                <label className={`form-check-label`} htmlFor="confirmacionMayorDeEdad" style={{ color: "black" }}>
+                <label
+                  className={`form-check-label`}
+                  htmlFor="confirmacionMayorDeEdad"
+                  style={{ color: "black" }}
+                >
                   Confirmo que tengo más de 18 años
                 </label>
               </div>
 
               <div className="d-grid">
-                <button type="submit" className="btn btn-success" disabled={!confirmacionMayorDeEdad}>
+                <button
+                  type="submit"
+                  className="btn btn-success"
+                  disabled={!confirmacionMayorDeEdad}
+                >
                   Solicitar Nuevo Rol - Repartidor
                 </button>
               </div>

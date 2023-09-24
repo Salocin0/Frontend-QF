@@ -126,9 +126,7 @@ const SeleccionRegister = () => {
                 </label>
               </div>
             </div>
-            <div
-              className={`d-flex justify-content-between mb-3 mx-3`}
-            >
+            <div className={`d-flex justify-content-between mb-3 mx-3`}>
               <button
                 className={`btn btn-secondary ${styles.btnOutlineSecondary}`}
                 onClick={handleClearSelectionClick}

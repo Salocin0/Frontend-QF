@@ -4,15 +4,12 @@ import { Link } from "react-router-dom";
 import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import Puesto from "./Evento";
 import stylepuesto from "./eventos.module.css";
-import { Dropdown } from "react-bootstrap";
-import villamaria from "./img/villa maria.png"
-import cosquin from "./img/cosquin.png"
+import villamaria from "./img/villa maria.png";
+import cosquin from "./img/cosquin.png";
 
 const ListadoEventos = () => {
   const [rows, setRows] = useState([]);
-  const [carritos, setCarritos] = useState([]);
   const [session, setSession] = useState(null);
 
   const eventos = [
@@ -59,16 +56,6 @@ const ListadoEventos = () => {
 
   useEffect(() => {
     if (session) {
-      /*const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
-
-      fetch("http://localhost:8000/puesto", {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setCarritos(data.data);*/
       const totalEventos = Math.ceil(eventos.length / 4) * 4;
       const EventosConNulos = [
         ...eventos,
@@ -81,8 +68,6 @@ const ListadoEventos = () => {
         generatedRows.push(row);
       }
       setRows(generatedRows);
-      /*})*/
-      /*.catch((error) => console.log("No existen carritos."));*/
     }
   }, [session]);
 

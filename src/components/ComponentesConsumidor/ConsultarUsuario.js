@@ -1,27 +1,24 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import Footer from '../ComponentesGenerales/Footer';
-import Sidebar from '../ComponentesGenerales/Sidebar';
-import { UserContext } from '../ComponentesGenerales/UserContext';
+import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import Footer from "../ComponentesGenerales/Footer";
+import Sidebar from "../ComponentesGenerales/Sidebar";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const ConsultarUsuario = () => {
   const { user } = useContext(UserContext);
-  const location = useLocation();
-  const id = location.state && location.state.value;
 
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
-  const [dni, setDni] = useState('');
-  const [localidad, setLocalidad] = useState('');
-  const [telefono, setTelefono] = useState('');
-  const [username, setUsername] = useState('');
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [dni, setDni] = useState("");
+  const [localidad, setLocalidad] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [username, setUsername] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
-  const [rolSeleccionado, setRolSeleccionado] = useState('Usuario');
+  const [rolSeleccionado, setRolSeleccionado] = useState("Usuario");
 
   const [session, setSession] = useState(null);
 
@@ -93,10 +90,13 @@ const ConsultarUsuario = () => {
     setUsername(user.usuario);
 
     try {
-      const response1 = await fetch(`http://localhost:8000/consumidor/${user.consumidorId}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response1 = await fetch(
+        `http://localhost:8000/consumidor/${user.consumidorId}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (response1.ok) {
         const data1 = await response1.json();
@@ -105,22 +105,24 @@ const ConsultarUsuario = () => {
         setDni(data1.data.dni);
 
         // Convertir la fecha de nacimiento al formato español
-        const fechaNacimientoEspañol = new Date(data1.data.fechaNacimiento).toLocaleDateString('es-ES');
+        const fechaNacimientoEspañol = new Date(
+          data1.data.fechaNacimiento
+        ).toLocaleDateString("es-ES");
         setFechaNacimiento(fechaNacimientoEspañol);
 
         setLocalidad(data1.data.localidad);
         setTelefono(data1.data.telefono);
 
         if (data1.codigo === 200) {
-          toast.success('Datos cargados correctamente');
+          toast.success("Datos cargados correctamente");
         } else if (data1.codigo === 400) {
-          toast.error('Error al cargar los datos');
+          toast.error("Error al cargar los datos");
         }
       } else {
-        throw new Error('Error en la respuesta HTTP');
+        throw new Error("Error en la respuesta HTTP");
       }
     } catch (error) {
-      console.error('Error al cargar los datos:', error);
+      console.error("Error al cargar los datos:", error);
     }
   };
 
@@ -128,17 +130,17 @@ const ConsultarUsuario = () => {
     setRolSeleccionado(e.target.value);
 
     switch (e.target.value) {
-      case 'Usuario':
-        window.location.href = '/consultar-usuario';
+      case "Usuario":
+        window.location.href = "/consultar-usuario";
         break;
-      case 'Productor de Eventos':
-        window.location.href = '/consultar-usuarioPE';
+      case "Productor de Eventos":
+        window.location.href = "/consultar-usuarioPE";
         break;
-      case 'Encargado Puesto de Comida':
-        window.location.href = '/consultar-usuarioEPC';
+      case "Encargado Puesto de Comida":
+        window.location.href = "/consultar-usuarioEPC";
         break;
-      case 'Repartidor':
-        window.location.href = '/ruta-repartidor';
+      case "Repartidor":
+        window.location.href = "/ruta-repartidor";
         break;
       default:
         break;
@@ -148,14 +150,16 @@ const ConsultarUsuario = () => {
   return (
     <>
       <div className="d-flex">
-        <div className='col-2'>
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
+        <div className="col-2">
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="flex-grow-1 background">
           <section className="align-items-center justify-content-center col-6 offset-3 form">
             <div className="card shadow-lg">
               <div className="card-body p-3 formulario">
-                <h1 className="fs-5 card-title fw-bold mb-2 text-dark">Tu Perfil</h1>
+                <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
+                  Tu Perfil
+                </h1>
                 <form onSubmit={handleSaveChanges} className="needs-validation">
                   <div className="row">
                     <div className="mb-2">
@@ -169,8 +173,12 @@ const ConsultarUsuario = () => {
                         onChange={handleRolChange}
                       >
                         <option value="Usuario">Usuario</option>
-                        <option value="Productor de Eventos">Productor de Eventos</option>
-                        <option value="Encargado Puesto de Comida">Encargado Puesto de Comida</option>
+                        <option value="Productor de Eventos">
+                          Productor de Eventos
+                        </option>
+                        <option value="Encargado Puesto de Comida">
+                          Encargado Puesto de Comida
+                        </option>
                         <option value="Repartidor" disabled>
                           Repartidor
                         </option>
@@ -202,7 +210,6 @@ const ConsultarUsuario = () => {
                         onChange={handleNombreChange}
                         readOnly={!editMode}
                         disabled={isDisabled}
-
                       />
                     </div>
                     <div className="col-md-6 mb-2">
@@ -217,7 +224,6 @@ const ConsultarUsuario = () => {
                         onChange={handleApellidoChange}
                         readOnly={!editMode}
                         disabled={isDisabled}
-
                       />
                     </div>
                   </div>
@@ -233,7 +239,6 @@ const ConsultarUsuario = () => {
                       onChange={handleFechaNacimientoChange}
                       readOnly={!editMode}
                       disabled={isDisabled}
-
                     />
                   </div>
                   <div className="mb-2">
@@ -248,7 +253,6 @@ const ConsultarUsuario = () => {
                       onChange={handleDniChange}
                       readOnly={!editMode}
                       disabled={isDisabled}
-
                     />
                   </div>
                   <div className="mb-2">
@@ -263,7 +267,6 @@ const ConsultarUsuario = () => {
                       onChange={handleLocalidadChange}
                       readOnly={!editMode}
                       disabled={isDisabled}
-
                     />
                   </div>
                   <div className="mb-2">
@@ -278,23 +281,34 @@ const ConsultarUsuario = () => {
                       onChange={handleTelefonoChange}
                       readOnly={!editMode}
                       disabled={isDisabled}
-
                     />
                   </div>
 
                   <div className="d-grid">
                     {!editMode && (
                       <>
-                        <button type="button" className="btn btn-primary mb-2" onClick={handleEditModeToggle}>
+                        <button
+                          type="button"
+                          className="btn btn-primary mb-2"
+                          onClick={handleEditModeToggle}
+                        >
                           Editar
                         </button>
-                        <button type="button" className="btn btn-danger deshabilitar">
+                        <button
+                          type="button"
+                          className="btn btn-danger deshabilitar"
+                        >
                           Deshabilitar Usuario
                         </button>
                       </>
                     )}
                     {editMode && (
-                      <button type="submit" className="btn btn-primary" onClick={handleEditModeToggle} style={{ width: '100%' }}>
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                        onClick={handleEditModeToggle}
+                        style={{ width: "100%" }}
+                      >
                         Guardar Cambios
                       </button>
                     )}

@@ -15,7 +15,7 @@ const Inicio = () => {
   const [session, setSession] = useState(null);
   const cardData = [
     { to: "/perfil-nuevo", imgSrc: perfil, title: "Perfil" },
-    { to: "/consultar-eventos", imgSrc: eventos, title: "Eventos" },
+    { to: "/eventos", imgSrc: eventos, title: "Eventos" },
     { to: "/consultar-pedidos", imgSrc: pedidos, title: "Pedidos" },
     //{ to: "/notificaciones", imgSrc: notificaciones, title: "Notificaciones" },
     { to: "/listado-puestos", imgSrc: puestos, title: "Puestos" },

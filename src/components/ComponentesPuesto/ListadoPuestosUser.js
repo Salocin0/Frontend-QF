@@ -38,7 +38,7 @@ const ListadoPuestosUser = () => {
   useEffect(() => {
     if (session) {
       const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
+      headers.append("ConsumidorId", 1);
 
       fetch("http://localhost:8000/puesto", {
         method: "GET",
