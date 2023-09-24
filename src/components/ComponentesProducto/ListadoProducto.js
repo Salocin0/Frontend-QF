@@ -112,15 +112,6 @@ const ListadoProducto = ({}) => {
     }
   };
 
-  function tieneNumeros(cadena) {
-    return /\d/.test(cadena);
-  }
-
-  function tieneLetras(cadena) {
-    const regex = /[a-zA-Z]/;
-    return regex.test(cadena);
-  }
-
   const onSave = (productId) => {
     const producto = {
       producto: {
@@ -131,41 +122,6 @@ const ListadoProducto = ({}) => {
         precio: editedValues.precio,
       },
     };
-    console.log(tieneNumeros(producto.producto.nombre));
-    if (!producto.producto.nombre.trim()) {
-      toast.error("Nombre no puede estar vacio");
-      return;
-    }
-
-    if (tieneNumeros(producto.producto.nombre)) {
-      toast.error("El nombre no puede contener números");
-      return;
-    }
-
-    if (!producto.producto.descripcion.trim()) {
-      toast.error("La descripcion no puede estar vacio");
-      return;
-    }
-
-    if (tieneNumeros(producto.producto.descripcion)) {
-      toast.error("La descripcion no puede contener números");
-      return;
-    }
-
-    if (!producto.producto.aderezos.trim()) {
-      toast.error("Los aderezos no puede estar vacio");
-      return;
-    }
-
-    if (tieneNumeros(producto.producto.aderezos)) {
-      toast.error("Los aderezos no puede contener números");
-      return;
-    }
-
-    if (!producto.producto.precio.toString().trim()) {
-      toast.error("El precio no puede estar vacio");
-      return;
-    }
 
     console.log(JSON.stringify(producto));
     fetch(`http://localhost:8000/producto/${productId}`, {
@@ -185,7 +141,7 @@ const ListadoProducto = ({}) => {
   };
 
   return (
-    <div >
+    <div>
       <div className={`row m-0 ${styleback.background}`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />

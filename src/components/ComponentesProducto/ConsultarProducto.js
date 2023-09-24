@@ -24,17 +24,60 @@ const ConsultarPuesto = () => {
     setEditMode(!editMode);
   };
 
+  function tieneNumeros(cadena) {
+    return /\d/.test(cadena);
+  }
+
+  function tieneLetras(cadena) {
+    const regex = /[a-zA-Z]/;
+    return regex.test(cadena);
+  }
+
   const handleSaveChanges = (e) => {
     e.preventDefault();
 
-    const productoguardar = producto
-    productoguardar.nombre = nombre
-    productoguardar.descripcion = descripcion
-    productoguardar.precio = precio
-    productoguardar.aderezos = aderezos
-    productoguardar.estado = estado
-    
-    // Realizar la solicitud HTTP para enviar los datos al servidor
+    const productoguardar = producto;
+    productoguardar.nombre = nombre;
+    productoguardar.descripcion = descripcion;
+    productoguardar.precio = precio;
+    productoguardar.aderezos = aderezos;
+    productoguardar.estado = estado;
+
+    if (!productoguardar.nombre.trim()) {
+      toast.error("Nombre no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(productoguardar.nombre)) {
+      toast.error("El nombre no puede contener números");
+      return;
+    }
+
+    if (!productoguardar.descripcion.trim()) {
+      toast.error("La descripcion no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(productoguardar.descripcion)) {
+      toast.error("La descripcion no puede contener números");
+      return;
+    }
+
+    if (!productoguardar.aderezos.trim()) {
+      toast.error("Los aderezos no puede estar vacio");
+      return;
+    }
+
+    if (tieneNumeros(productoguardar.aderezos)) {
+      toast.error("Los aderezos no puede contener números");
+      return;
+    }
+
+    if (!productoguardar.precio.toString().trim()) {
+      toast.error("El precio no puede estar vacio");
+      return;
+    }
+
     fetch(`http://localhost:8000/producto/${id}`, {
       method: "PUT",
       headers: {
@@ -124,7 +167,7 @@ const ConsultarPuesto = () => {
               <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                 Consultar Producto
               </h1>
-              <form onSubmit={handleSaveChanges} className="needs-validation">
+              <form onSubmit={handleSaveChanges} class="no-validate">
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="mb-2 text-dark" htmlFor="idCarro">
@@ -137,7 +180,6 @@ const ConsultarPuesto = () => {
                       value={nombre}
                       onChange={(e) => setNombre(e.target.value)}
                       disabled={!editMode}
-                      required
                     />
                   </div>
                   <div className="mb-3 col-md-6">
@@ -151,7 +193,6 @@ const ConsultarPuesto = () => {
                       value={descripcion}
                       onChange={(e) => setDescripcion(e.target.value)}
                       disabled={!editMode}
-                      required
                     />
                   </div>
                   <div className="mb-3 col-md-6">
@@ -165,7 +206,6 @@ const ConsultarPuesto = () => {
                       value={aderezos}
                       onChange={(e) => setAderezos(e.target.value)}
                       disabled={!editMode}
-                      required
                     />
                   </div>
                   <div className="mb-3 col-md-6">
@@ -173,13 +213,12 @@ const ConsultarPuesto = () => {
                       Precio
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       id="nombreCarro"
                       className="form-control"
                       value={precio}
                       onChange={(e) => setPrecio(e.target.value)}
                       disabled={!editMode}
-                      required
                     />
                   </div>
                 </div>
@@ -192,7 +231,6 @@ const ConsultarPuesto = () => {
                     className="form-select"
                     value={estado}
                     onChange={(e) => setEstado(e.target.value)}
-                    required
                   >
                     <option value={false}>Standby</option>
                     <option value={true}>Listo para la venta</option>
