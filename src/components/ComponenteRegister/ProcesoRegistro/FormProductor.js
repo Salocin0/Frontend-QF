@@ -74,6 +74,7 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                   <input
                     type="text"
                     name="cuit"
+                    id="cuit"
                     value={productorData.cuit}
                     onChange={handleChange}
                     className={`${styles.blackwhite} form-control`}
@@ -88,6 +89,7 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                   <input
                     type="text"
                     name="razonSocial"
+                    id="razonSocial"
                     value={productorData.razonSocial}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
@@ -102,6 +104,7 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                   <select
                     className={`${styles.blackwhite}  form-control`}
                     name="ivaCondicion"
+                    id="ivaCondicion"
                     value={productorData.ivaCondicion}
                     onChange={handleChange}
                   >

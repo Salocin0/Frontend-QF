@@ -86,7 +86,7 @@ describe("Test de Login", () => {
 
     const registrarmeLink = screen.getByText("Registrarme");
     expect(registrarmeLink).toBeInTheDocument();
-    expect(registrarmeLink).toHaveAttribute("href", "/registrarse");
+    expect(registrarmeLink).toHaveAttribute("href", "/seleccion-perfil");
   });
 
   it("debe tener un boton que redirija la navegacion", () => {
@@ -103,10 +103,7 @@ describe("Test de Login", () => {
   });
 
   it("debe redirigir a /home al hacer clic en el botón de Ingresar con éxito", async () => {
-    // Obtener la función mockeada de useNavigate
     const navigateMock = require("react-router-dom").useNavigate;
-
-    // Configurar el comportamiento esperado de useNavigate
     navigateMock.mockReturnValue(() => {});
 
     render(
@@ -119,11 +116,7 @@ describe("Test de Login", () => {
 
     const ingresarButton = screen.getByRole("button", { name: "Ingresar" });
     fireEvent.click(ingresarButton);
-
-    // Esperar a que las promesas se resuelvan
     await Promise.resolve();
-
-    // Verificar que navigate se llamó con "/home"
     expect(navigateMock).toHaveBeenCalledTimes(1);
   });
 });

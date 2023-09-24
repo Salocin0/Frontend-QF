@@ -41,7 +41,6 @@ const FormConsumidor = ({
 
   function validaDNI(cadena) {
     const regexDni = /^\d{8}$/;
-    console.log(regexDni.test(cadena));
     return regexDni.test(cadena);
   }
 
@@ -170,6 +169,8 @@ const FormConsumidor = ({
                   <input
                     type="text"
                     name="nombre"
+                    id="nombre"
+                    data-testid="nombre"
                     value={consumidorData.nombre}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
@@ -183,6 +184,8 @@ const FormConsumidor = ({
                   <input
                     type="text"
                     name="apellido"
+                    id="apellido"
+                    data-testid="apellido"
                     value={consumidorData.apellido}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
@@ -196,6 +199,8 @@ const FormConsumidor = ({
                   <input
                     type="text"
                     name="dni"
+                    id="dni"
+                    data-testid="dni"
                     value={consumidorData.dni}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
@@ -209,6 +214,8 @@ const FormConsumidor = ({
                   <input
                     type="date"
                     name="fechaNacimiento"
+                    id="fechaNacimiento"
+                    data-testid="fechaNacimiento"
                     value={consumidorData.fechaNacimiento}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
@@ -220,6 +227,8 @@ const FormConsumidor = ({
                   </label>
                   <select
                     id="provincia"
+                    name="provincia"
+                    data-testid="provincia"
                     className={`${styles.blackwhite}  form-control`}
                     value={selectedProvince}
                     onChange={handleProvinceChange}
@@ -247,6 +256,9 @@ const FormConsumidor = ({
                     className={`${styles.blackwhite} form-control mt-2`}
                     value={selectedLocalidad}
                     onChange={handleLocalidadChange}
+                    data-testid="localidad"
+                    id="localidad"
+                    name="localidad"
                     required
                   >
                     <option value="" disabled>
@@ -270,6 +282,8 @@ const FormConsumidor = ({
                   <input
                     type="text"
                     name="telefono"
+                    id="telefono"
+                    data-testid="telefono"
                     value={consumidorData.telefono}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}

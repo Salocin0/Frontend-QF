@@ -66,6 +66,7 @@ const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
                   <input
                     type="text"
                     name="cuit"
+                    id="cuit"
                     value={encargadoData.cuit}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
@@ -78,6 +79,7 @@ const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
                   <input
                     type="text"
                     name="razonSocial"
+                    id="razonSocial"
                     value={encargadoData.razonSocial}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
@@ -92,6 +94,7 @@ const FormEncargado = ({ nextStep,backStep, handleRegistro }) => {
                   <select
                     className={`${styles.blackwhite}  form-control`}
                     name="ivaCondicion"
+                    id="ivaCondicion"
                     value={encargadoData.ivaCondicion}
                     onChange={handleChange}
                   >

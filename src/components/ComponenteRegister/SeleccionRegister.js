@@ -47,8 +47,9 @@ const SeleccionRegister = () => {
                   id="consumidor"
                   autoComplete="off"
                   checked={true}
-                  readOnly
                   className="custom-control-input"
+                  onChange={() => {}}
+                  
                 />
                 <span className={styles.placeholder}>Consumidor</span>
                 <FontAwesomeIcon icon={faUser} />
@@ -74,6 +75,7 @@ const SeleccionRegister = () => {
                     onClick={() => handleTypeChange("productor")}
                     checked={selectedType === "productor"}
                     className="custom-control-input"
+                    readOnly
                   />
                   <span className={styles.placeholder}>Productor</span>
                   <FontAwesomeIcon icon={faBriefcase} />
@@ -97,6 +99,7 @@ const SeleccionRegister = () => {
                     onClick={() => handleTypeChange("repartidor")}
                     checked={selectedType === "repartidor"}
                     className="custom-control-input"
+                    readOnly
                   />
                   <span className={styles.placeholder}>Repartidor</span>
                   <FontAwesomeIcon icon={faDolly} />
@@ -120,6 +123,7 @@ const SeleccionRegister = () => {
                     onClick={() => handleTypeChange("encargado")}
                     checked={selectedType === "encargado"}
                     className="custom-control-input"
+                    readOnly
                   />
                   <span className={styles.placeholder}>Encargado</span>
                   <FontAwesomeIcon icon={faShop} />

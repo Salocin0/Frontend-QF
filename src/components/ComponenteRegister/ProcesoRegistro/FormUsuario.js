@@ -67,17 +67,20 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                <div className={` form-group`}>
+                <div className={`form-group`}>
                   <label htmlFor="username" className={styles.label}>
                     Nombre de usuario
                   </label>
                   <input
                     type="text"
                     name="username"
+                    id="username"
+                    data-testid="username"
                     value={userData.username}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
                     placeholder="Nombre de usuario"
+                    autoComplete=" "
                   />
                 </div>
                 <div className={` form-group`}>
@@ -87,10 +90,13 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                   <input
                     type="email"
                     name="email"
+                    id="email"
+                    data-testid="email"
                     value={userData.email}
                     onChange={handleChange}
                     className={`${styles.blackwhite}  form-control`}
                     placeholder="Email"
+                    autoComplete=" "
                   />
                 </div>
                 <div className={` form-group`}>
@@ -101,6 +107,8 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     <input
                       type={showPassword1 ? "text" : "password"}
                       name="password"
+                      id="password"
+                      data-testid="password"
                       value={userData.password}
                       onChange={handleChange}
                       className={`${styles.blackwhite} form-control`}
@@ -125,6 +133,8 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     <input
                       type={showPassword2 ? "text" : "password"}
                       name="confirmPassword"
+                      id="confirmPassword"
+                      data-testid="confirmPassword"
                       value={userData.confirmPassword}
                       onChange={handleChange}
                       className={` form-control ${styles.blackwhite}`}
