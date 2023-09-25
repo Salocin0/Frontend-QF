@@ -36,26 +36,29 @@ const AdquirirNuevoRolR = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        `http://localhost:8000/user/update/${session.id}/to/repartidor`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+      if (session) {
+        const response = await fetch(
+          `http://localhost:8000/user/update/${session?.id}/to/repartidor`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+  
+        if (response.ok) {
+          toast.success("actualizado a repartidor");
+          const data = await response.json();
+          setNuevorol(true);
+          console.log(data);
+          navigate(`/login`);
+        } else {
+          toast.error("error al actualizar a repartidor");
+          console.log(response.json());
         }
-      );
-
-      if (response.ok) {
-        toast.success("actualizado a repartidor");
-        const data = await response.json();
-        setNuevorol(true);
-        console.log(data);
-        navigate(`/login`);
-      } else {
-        toast.error("error al actualizar a repartidor");
-        console.log(response.json());
       }
     } catch (error) {
       console.error(error);
+      toast.error("error");
     }
   };
 
@@ -103,6 +106,7 @@ const AdquirirNuevoRolR = () => {
                   type="submit"
                   className="btn btn-success"
                   disabled={!confirmacionMayorDeEdad}
+                  data-testid="submit-button"
                 >
                   Solicitar Nuevo Rol - Repartidor
                 </button>
