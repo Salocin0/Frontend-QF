@@ -31,7 +31,8 @@ const FormConsumidor = ({
   };
 
   function tieneNumeros(cadena) {
-    return !isNaN(Number(cadena));
+    const pattern = /\d/;
+    return pattern.test(cadena);
   }
 
   function tieneLetras(cadena) {
@@ -197,7 +198,7 @@ const FormConsumidor = ({
                     DNI
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     name="dni"
                     id="dni"
                     data-testid="dni"
@@ -280,7 +281,7 @@ const FormConsumidor = ({
                     Teléfono
                   </label>
                   <input
-                    type="text"
+                    type="number"
                     name="telefono"
                     id="telefono"
                     data-testid="telefono"

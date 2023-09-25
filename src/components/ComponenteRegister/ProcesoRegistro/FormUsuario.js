@@ -33,6 +33,16 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!userData.username.trim()) {
+      toast.error("el nombre de usuario no puede estar vacío.");
+      return;
+    }
+
+    if (userData.email.length===0) {
+      toast.error("el email no puede estar vacío.");
+      return;
+    }
+
     if (userData.password !== userData.confirmPassword) {
       toast.error("Las contraseñas no coinciden");
       return;

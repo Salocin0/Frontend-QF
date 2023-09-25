@@ -37,7 +37,7 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
       toast.error("El CUIT no es válido o está vacío.");
       return;
     }
-
+    
     if (!productorData.razonSocial.trim()) {
       toast.error("razon social no puede estar vacía.");
       return;
