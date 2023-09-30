@@ -7,29 +7,40 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import stylepuesto from "./eventos.module.css";
 import villamaria from "./img/villa maria.png";
 import cosquin from "./img/cosquin.png";
+import { toast } from "react-toastify";
 
 const ListadoEventos = () => {
   const [rows, setRows] = useState([]);
   const [session, setSession] = useState(null);
+  const [eventos, setEventos] = useState([]);
+  const [recargar, setRecargar] = useState(0);
+  const [editProductId, setEditProductId] = useState(null);
+  const [editedValues, setEditedValues] = useState({
+    nombre: "",
+    descripcion: "",
+    tipoEvento: "",
+    tipoPago: "",
+    fechaInicio: Date.now(),
+    horaInicio: Date.now(),
+    fechaFin: Date.now(),
+    cantidadPuestos: 0,
+    cantidadRepartidores: 0,
+    capacidadMaxima: 0,
+    conButaca: false,
+    conRepartidor: false,
+    conPreventa: false,
+    tipoPreventa: 0,
+    fechaInicioPreventa: Date.now(),
+    fechaFinPreventa: Date.now(),
+    plazoCancelacionPreventa: 0,
+    linkVentaEntradas: "",
+    ubicacion: "",
+    consumidorId: 0,
+  });
 
-  const eventos = [
-    {
-      id: 1,
-      nombre: "Cosquin Rock 2023",
-      fecha: "10/10/2023",
-      ciudad: "Cosquín/Cordoba",
-      categoria: "Festival de musica",
-      img: cosquin,
-    },
-    {
-      id: 2,
-      nombre: "Festival de cuarteto",
-      fecha: "10/11/2023",
-      ciudad: "Villa Maria/Cordoba",
-      categoria: "Festival de musica",
-      img: villamaria,
-    },
-  ];
+  const recargarComponente = () => {
+    setRecargar(+1);
+  };
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -56,20 +67,75 @@ const ListadoEventos = () => {
 
   useEffect(() => {
     if (session) {
-      const totalEventos = Math.ceil(eventos.length / 4) * 4;
-      const EventosConNulos = [
-        ...eventos,
-        ...Array(totalEventos - eventos.length).fill(null),
-      ];
+      const headers = new Headers();
+      headers.append("ConsumidorId", session.consumidorId);
 
-      const generatedRows = [];
-      for (let i = 0; i < EventosConNulos.length; i += 4) {
-        const row = EventosConNulos.slice(i, i + 4);
-        generatedRows.push(row);
-      }
-      setRows(generatedRows);
+      fetch("http://localhost:8000/evento", {
+        method: "GET",
+        headers: headers,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setEventos(data.data);
+          const totalEventos = Math.ceil(data.data.length / 4) * 4;
+          const eventosConNulos = [
+            ...data.data,
+            ...Array(totalEventos - data.data.length).fill(null),
+          ];
+
+          const generatedRows = [];
+          for (let i = 0; i < eventosConNulos.length; i += 4) {
+            const row = eventosConNulos.slice(i, i + 4);
+            generatedRows.push(row);
+          }
+          setRows(generatedRows);
+        })
+        .catch((error) => console.log("No existen carritos.", error));
     }
-  }, [session]);
+  }, [session, recargar]);
+
+  const onDelete = (eventoId) => {
+    fetch(`http://localhost:8000/evento/${eventoId}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Producto eliminado con éxito");
+
+        setRecargar(+1);
+      })
+      .catch((error) => toast.error("Error al eliminar el producto"));
+  };
+
+  const onEdit = (eventoid) => {
+    setEditProductId(eventoid);
+
+    const eventoToEdit = eventos.find((evento) => evento.id === eventoid);
+    if (eventoToEdit) {
+      setEditedValues({
+        nombre: eventoToEdit.nombre,
+        descripcion: eventoToEdit.descripcion,
+        tipoEvento: eventoToEdit.tipoEvento,
+        tipoPago: eventoToEdit.tipoPago,
+        fechaInicio: eventoToEdit.fechaInicio,
+        horaInicio: eventoToEdit.horaInicio,
+        fechaFin: eventoToEdit.fechaFin,
+        cantidadPuestos: eventoToEdit.cantidadPuestos,
+        cantidadRepartidores: eventoToEdit.cantidadRepartidores,
+        capacidadMaxima: eventoToEdit.capacidadMaxima,
+        conButaca: eventoToEdit.conButaca,
+        conRepartidor: eventoToEdit.conRepartidor,
+        conPreventa: eventoToEdit.conPreventa,
+        tipoPreventa: eventoToEdit.tipoPreventa,
+        fechaInicioPreventa: eventoToEdit.fechaInicioPreventa,
+        fechaFinPreventa: eventoToEdit.fechaFinPreventa,
+        plazoCancelacionPreventa: eventoToEdit.plazoCancelacionPreventa,
+        linkVentaEntradas: eventoToEdit.linkVentaEntradas,
+        ubicacion: eventoToEdit.ubicacion,
+        consumidorId: eventoToEdit.consumidorId,
+      });
+    }
+  };
 
   return (
     <div className={`${style.background} d-flex`}>

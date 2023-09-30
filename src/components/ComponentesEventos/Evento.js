@@ -15,13 +15,13 @@ const Puesto = ({ carrito }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/puesto/${id}`, {
+    fetch(`http://localhost:8000/evento/${id}`, {
       method: "DELETE",
       headers: headers,
     })
       .then((response) => {
         if (response.ok) {
-          toast.success("Puesto deshabilitado correctamente");
+          toast.success("Evento deshabilitado correctamente");
           navigate(`/listado-puestos`);
         } else {
           response.json().then((errorData) => {
@@ -53,14 +53,8 @@ const Puesto = ({ carrito }) => {
             <Dropdown>
               <Dropdown.Toggle variant="danger"></Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item
-                  as={Link}
-                  to={`/listado-productos/${carrito.id}`}
-                >
-                  Actualizar Listado Productos
-                </Dropdown.Item>
                 <Dropdown.Item as={Link} to={`/puesto/${carrito.id}`}>
-                  Modificar Datos Carrito
+                  Modificar Datos Evento
                 </Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={handleDelete}>
