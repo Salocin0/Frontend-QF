@@ -72,18 +72,8 @@ const RegistrarProductos = () => {
       return;
     }
 
-    if (tieneNumeros(producto.nombre)) {
-      toast.error("El nombre no puede contener números");
-      return;
-    }
-
     if (!producto.descripcion.trim()) {
       toast.error("La descripcion no puede estar vacio");
-      return;
-    }
-
-    if (tieneNumeros(producto.descripcion)) {
-      toast.error("La descripcion no puede contener números");
       return;
     }
 
@@ -92,10 +82,6 @@ const RegistrarProductos = () => {
       return;
     }
 
-    if (tieneNumeros(producto.aderezos)) {
-      toast.error("Los aderezos no puede contener números");
-      return;
-    }
 
     if (!producto.precio.toString().trim()) {
       toast.error("El precio no puede estar vacio");

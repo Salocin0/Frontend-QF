@@ -18,7 +18,7 @@ const Inicio = () => {
     { to: "/eventos", imgSrc: eventos, title: "Eventos" },
     { to: "/consultar-pedidos", imgSrc: pedidos, title: "Pedidos" },
     //{ to: "/notificaciones", imgSrc: notificaciones, title: "Notificaciones" },
-    { to: "/listado-puestos", imgSrc: puestos, title: "Puestos" },
+    { to: "/inicio", imgSrc: puestos, title: "Puestos" },
   ];
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");

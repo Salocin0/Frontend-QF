@@ -30,7 +30,7 @@
     "react-toastify": "^9.1.3",
     "sweetalert": "^2.1.2",
     "sweetalert-react": "^0.4.11",
-    "sweetalert2": "^11.7.27",
+    "sweetalert2": "^11.6.13",
     "web-vitals": "^3.3.2"
   },
   "scripts": {
