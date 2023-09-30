@@ -62,8 +62,8 @@ const ConsultarUsuario = () => {
   const [editModeEPC, setEditModeEPC] = useState(false);
   const [editModeR, setEditModeR] = useState(false);
 
-  const [mostrarBotonHabilitarDeNuevoR, setMostrarBotonHabilitarDeNuevoR] =
-    useState(false);
+  const [mostrarBotonHabilitarDeNuevoR, setMostrarBotonHabilitarDeNuevoR] = useState(false);
+  const [mostrarBotonHabilitarDeNuevoEPC, setMostrarBotonHabilitarDeNuevoEPC] = useState(false);
 
   const [session, setSession] = useState(null);
 
@@ -82,9 +82,16 @@ const ConsultarUsuario = () => {
         .then((data) => {
           setSession(data.data);
 
-          if (data.data.tipoUsuario === "repartidor") {
+          console.log(data.data.tipoUsuario);
+
+          if (data.data.tipoUsuario === "repartidor")  {
             setMostrarContenidoRepartidor(true);
+          } else if (data.data.tipoUsuario === "encargado")  {
+            setMostrarContenidoEncargadoPuesto(true);
+          } else if (data.data.tipoUsuario === "productor")  {
+            setMostrarContenidoProductor(true);
           }
+
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -470,11 +477,12 @@ const ConsultarUsuario = () => {
 
       if (response.ok) {
         setShowModal(false);
-
+        setMostrarContenidoEncargadoPuesto(false);
+        setMostrarBotonHabilitarDeNuevoEPC(true);
+        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "consumidor" }));
         toast.success("Usuario deshabilitado correctamente");
-        window.location.reload();
-
         cargarDatos(user);
+
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -483,6 +491,38 @@ const ConsultarUsuario = () => {
       toast.error("Error al actualizar los datos");
     }
   };
+
+ const handleVolverAHabilitarEPC = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/encargado/${user.consumidorId}/habilitacion`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        setShowModal(false);
+        setMostrarContenidoEncargadoPuesto(true);
+        setMostrarBotonHabilitarDeNuevoEPC(false);
+        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "encargado" }));
+
+        toast.success("Rol Encargado Puesto habilitado nuevamente");
+
+        cargarDatos(user);
+
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al habilitar el repartidor nuevamente:", error);
+      toast.error("Error al actualizar los datos");
+    }
+  };
+
 
   const handleEditModeToggleR = () => {
     setEditMode(!editModeR);
@@ -521,9 +561,13 @@ const ConsultarUsuario = () => {
         setMostrarContenidoRepartidor(false);
         setMostrarBotonHabilitarDeNuevoR(true);
 
+        // Cambiar session.tipoUsuario a "consumidor"
+        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "consumidor" }));
+
         toast.success("Usuario deshabilitado correctamente");
 
         cargarDatos(user);
+
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -532,6 +576,7 @@ const ConsultarUsuario = () => {
       toast.error("Error al actualizar los datos");
     }
   };
+
 
   const handleVolverAHabilitarR = async () => {
     try {
@@ -547,12 +592,14 @@ const ConsultarUsuario = () => {
 
       if (response.ok) {
         setShowModal(false);
-        setMostrarContenidoRepartidor(true);
         setMostrarBotonHabilitarDeNuevoR(false);
+        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "repartidor" }));
 
-        toast.success("Usuario habilitado nuevamente");
+        toast.success("Rol Repartidor habilitado nuevamente");
+        setMostrarContenidoRepartidor(true);
 
         cargarDatos(user);
+
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -619,11 +666,15 @@ const ConsultarUsuario = () => {
           setCuitEPC(data1.data.encargado.cuit);
           setRazonSocialEPC(data1.data.encargado.razonSocial);
           setCondicionEPC(data1.data.encargado.condicionIva);
+        } else if (data1.data.encargado?.habilitado === false){
+          setMostrarBotonHabilitarDeNuevoEPC(true);
+
         }
 
         console.log(data1.data.repartidore?.habilitado);
         if (data1.data.repartidore?.habilitado === false) {
           setMostrarContenidoRepartidor(false);
+          setMostrarBotonHabilitarDeNuevoR(true)
         }
 
         if (data1.codigo === 200) {
@@ -874,6 +925,17 @@ const ConsultarUsuario = () => {
                               onClick={handleVolverAHabilitarR}
                             >
                               Volver a habilitarme como 'Repartidor'
+                            </button>
+                          </div>
+                        )}
+                        {mostrarBotonHabilitarDeNuevoEPC && (
+                          <div className="d-flex">
+                            <button
+                              type="button"
+                              className="btn btn-success mr-2 w-100"
+                              onClick={handleVolverAHabilitarEPC}
+                            >
+                              Volver a habilitarme como 'Encargado de Puesto'
                             </button>
                           </div>
                         )}
@@ -1225,9 +1287,6 @@ const ConsultarUsuario = () => {
                     {mostrarContenidoRepartidor && (
                       <>
                         <hr />
-                        <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                          Repartidor
-                        </h1>
                         <section
                           className={`${style.form} align-items-center justify-content-center col`}
                         >
