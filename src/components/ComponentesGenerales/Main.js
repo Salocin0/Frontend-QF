@@ -30,6 +30,8 @@ import Sidebar from "./Sidebar";
 import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
 import ListadoEventos from "../ComponentesEventos/ListadoEvento";
 import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
+import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
+import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
 
 export const Main = () => {
   return (
@@ -88,6 +90,10 @@ export const Main = () => {
         <Route path="/eventos" element={<ListadoEventos />} />
         <Route path="/listado-puestos/:id" element={<ListadoPuestosUser />} />
         <Route path="/productos-puesto/:id" element={<ListadoProductoUser />} />
+
+        <Route path="/listado-eventos" element={<ListadoEventos />} />
+        <Route path="/registrar-evento" element={<RegistrarEvento />} />
+        <Route path="/evento/:id" element={<ConsultarEvento />} />
       </Routes>
     </main>
   );
