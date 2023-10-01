@@ -11,10 +11,14 @@ import ConsultarUsuario from "../ComponentesConsumidor/ConsultarUsuario";
 import ConsultarUsuarioPrueba from "../ComponentesConsumidor/ConsultarUsuarioPrueba";
 import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
 import ConsultarUsuarioEPC from "../ComponentesEPC/ConsultarUsuarioEPC";
+import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
+import ListadoEventos from "../ComponentesEventos/ListadoEvento";
+import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
 import LandingPage from "../ComponentesLandingPage/LandingPage";
 import CambiarContraseña from "../ComponentesLogin/CambiarContraseña";
 import Login from "../ComponentesLogin/Login";
 import RecuperarContraseña from "../ComponentesLogin/RecuperarContraseña";
+import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
 import ListadoProducto from "../ComponentesProducto/ListadoProducto";
 import ListadoProductoUser from "../ComponentesProducto/ListadoProductoUser";
 import RegistrarProductos from "../ComponentesProducto/RegistrarProductos";
@@ -23,15 +27,12 @@ import ConsultarUsuarioPE from "../ComponentesProductorDeEventos/ConsultarUsuari
 import ConsultarPuesto from "../ComponentesPuesto/ConsultarPuesto";
 import CrearNuevoPuesto from "../ComponentesPuesto/CrearPuesto";
 import ListadoPuestos from "../ComponentesPuesto/ListadoPuestos";
+import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
+import ListadoPuestosDeshabilitados from "../ComponentesPuesto/PuestoDeshabilitados.js";
 import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
-import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
-import ListadoEventos from "../ComponentesEventos/ListadoEvento";
-import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
-import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
-import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
 
 export const Main = () => {
   return (
@@ -63,6 +64,8 @@ export const Main = () => {
 
         <Route path="/crear-puesto" element={<CrearNuevoPuesto />} />
         <Route path="/listado-puestos" element={<ListadoPuestos />} />
+        <Route path="/puestos-deshabilitados" element={<ListadoPuestosDeshabilitados />} />
+
         <Route path="/consultar-puesto" element={<ConsultarPuesto />} />
         <Route path="/puesto/:id" element={<ConsultarPuesto />} />
 

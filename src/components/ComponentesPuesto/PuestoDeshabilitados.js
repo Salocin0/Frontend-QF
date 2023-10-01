@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import Puesto from "./Puesto";
+import PuestoDeshabilitado from "./PuestoDeshabilitado.js";
 import stylepuesto from "./puestos.module.css";
 
-const ListadoPuestos = () => {
+const ListadoPuestosDeshabilitados = () => {
   const [rows, setRows] = useState([]);
   const [carritos, setCarritos] = useState([]);
   const [session, setSession] = useState(null);
@@ -46,7 +46,7 @@ const ListadoPuestos = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/puesto", {
+      fetch("http://localhost:8000/puesto/deshabilitados", {
         method: "GET",
         headers: headers,
       })
@@ -80,12 +80,12 @@ const ListadoPuestos = () => {
           <div className={`d-flex justify-content-between align-items-center mb-3`}>
             <div>
               <h1 className="pt-3" style={{ color: "white" }}>
-                Puestos
+                Puestos Deshabilitados
               </h1>
             </div>
             <div>
-              <Link to="/puestos-deshabilitados" className="btn btn-secondary me-2">
-                Puestos Deshabilitados
+              <Link to="/listado-puestos" className="btn btn-secondary me-2">
+                Puestos
               </Link>
             </div>
           </div>
@@ -99,7 +99,7 @@ const ListadoPuestos = () => {
                     key={index}
                     className={`${stylepuesto.colmd3} col-md-3 pb-2`}
                   >
-                    {carrito !== null ? <Puesto carrito={carrito} recargar={recargarComponente} /> : null}
+                    {carrito !== null ? <PuestoDeshabilitado carrito={carrito} recargar={recargarComponente} /> : null}
                   </div>
                 ))}
               </div>
@@ -110,16 +110,11 @@ const ListadoPuestos = () => {
             </h2>
           )}
         </div>
-        <Link
-          to={`/crear-puesto`}
-          className={`btn btn-primary ${stylepuesto.btnfloating} btn-lg`}
-        >
-          <i className="bi bi-plus-lg"></i> Agregar Puesto
-        </Link>
+
         <Footer />
       </div>
     </div>
   );
 };
 
-export default ListadoPuestos;
+export default ListadoPuestosDeshabilitados;

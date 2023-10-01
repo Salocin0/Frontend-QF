@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { base64ToFile } from "../ComponentesGenerales/Utils/base64";
 import style from "./puestos.module.css";
 
-const Puesto = ({ carrito,recargar }) => {
+const PuestoDeshabilitado = ({ carrito,recargar }) => {
   const [session, setSession] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ const Puesto = ({ carrito,recargar }) => {
     }
   }, [carrito]);
 
-  const handleDelete = () => {
+  const handleHabilitar = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
@@ -55,7 +55,7 @@ const Puesto = ({ carrito,recargar }) => {
     })
       .then((response) => {
         if (response.ok) {
-          toast.success("Puesto deshabilitado correctamente");
+          toast.success("Puesto habilitado nuevamente");
           navigate(`/listado-puestos`);
           recargar();
         } else {
@@ -86,14 +86,7 @@ const Puesto = ({ carrito,recargar }) => {
             <Dropdown>
               <Dropdown.Toggle variant="danger"></Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item as={Link} to={`/listado-productos/${carrito.id}`}>
-                  Actualizar Listado Productosss
-                </Dropdown.Item>
-                <Dropdown.Item as={Link} to={`/puesto/${carrito.id}`}>
-                  Modificar Datos Carrito
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={handleDelete}>Deshabilitar Carrito</Dropdown.Item>
+                  <Dropdown.Item onClick={handleHabilitar}>Habilitar Carrito</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
@@ -103,4 +96,4 @@ const Puesto = ({ carrito,recargar }) => {
   );
 };
 
-export default Puesto;
+export default PuestoDeshabilitado;
