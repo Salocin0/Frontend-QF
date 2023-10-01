@@ -64,6 +64,7 @@ const ConsultarUsuario = () => {
 
   const [mostrarBotonHabilitarDeNuevoR, setMostrarBotonHabilitarDeNuevoR] = useState(false);
   const [mostrarBotonHabilitarDeNuevoEPC, setMostrarBotonHabilitarDeNuevoEPC] = useState(false);
+  const [mostrarBotonHabilitarDeNuevoPE, setMostrarBotonHabilitarDeNuevoPE] = useState(false);
 
   const [session, setSession] = useState(null);
 
@@ -90,6 +91,8 @@ const ConsultarUsuario = () => {
             setMostrarContenidoEncargadoPuesto(true);
           } else if (data.data.tipoUsuario === "productor")  {
             setMostrarContenidoProductor(true);
+          } else{
+            console.log("Eror");
           }
 
         })
@@ -384,10 +387,10 @@ const ConsultarUsuario = () => {
 
       if (response.ok) {
         setShowModal(false);
-
-        toast.success("Usuario deshabilitado correctamente");
-        window.location.reload();
-
+        setMostrarContenidoProductor(false);
+        setMostrarBotonHabilitarDeNuevoPE(true);
+        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "consumidor" }));
+        toast.success("Rol deshabilitado correctamente");
         cargarDatos(user);
       } else {
         throw new Error("Error en la respuesta HTTP");
@@ -398,6 +401,36 @@ const ConsultarUsuario = () => {
     }
   };
 
+  const handleVolverAHabilitarPE = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/productor/${user.consumidorId}/habilitacion`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        setShowModal(false);
+        setMostrarContenidoProductor(true);
+        setMostrarBotonHabilitarDeNuevoPE(false);
+        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "productor" }));
+
+        toast.success("Rol Productor habilitado nuevamente");
+
+        cargarDatos(user);
+
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al habilitar el productor nuevamente:", error);
+      toast.error("Error al actualizar los datos");
+    }
+  };
   const handleEditModeToggleEPC = () => {
     setEditModeEPC(!editMode);
     setIsDisabledEPC(!isDisabled);
@@ -653,6 +686,8 @@ const ConsultarUsuario = () => {
           setCuitPE(data1.data.Productor.cuit);
           setRazonSocialPE(data1.data.Productor.razonSocial);
           setCondicionPE(data1.data.Productor.condicionIva);
+        } else if (data1.data.Productor?.habilitado === false) {
+          setMostrarContenidoProductor(false);
         }
 
         if (
@@ -711,7 +746,7 @@ const ConsultarUsuario = () => {
                         <div className="row">
                           <div className="justify-content-start col-6">
                             <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                              Usuario
+                              Usuario <p>{session?.tipoUsuario}</p>
                             </h1>
                           </div>
                           <div className="d-flex justify-content-end col-6">
@@ -936,6 +971,17 @@ const ConsultarUsuario = () => {
                               onClick={handleVolverAHabilitarEPC}
                             >
                               Volver a habilitarme como 'Encargado de Puesto'
+                            </button>
+                          </div>
+                        )}
+                        {mostrarBotonHabilitarDeNuevoPE && (
+                          <div className="d-flex">
+                            <button
+                              type="button"
+                              className="btn btn-success mr-2 w-100"
+                              onClick={handleVolverAHabilitarPE}
+                            >
+                              Volver a habilitarme como 'Productor de Evento'
                             </button>
                           </div>
                         )}
