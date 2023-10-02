@@ -71,6 +71,7 @@ const Sidebar = ({ tipoUsuario }) => {
                 </span>
               </a>
             </li>
+            <hr style={{ color: "white" }} />
             {isResponsable && (
               <li className={style.navitem}>
                 <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>

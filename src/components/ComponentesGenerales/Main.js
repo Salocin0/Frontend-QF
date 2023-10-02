@@ -85,7 +85,7 @@ export const Main = () => {
         <Route path="/seleccion-perfil" element={<SeleccionRegister />} />
 
         <Route path="/listado-productos/:id" element={<ListadoProducto />} />
-        <Route path="/listado-productos-deshabilitados" element={<ListadoProductoDeshabilitado/>} />
+        <Route path="/listado-productos-deshabilitados/:id" element={<ListadoProductoDeshabilitado/>} />
         <Route
           path="/registrar-productos/:id"
           element={<RegistrarProductos />}

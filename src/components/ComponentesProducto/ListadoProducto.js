@@ -82,7 +82,7 @@ const ListadoProducto = ({ carrito }) => {
         .catch((error) => console.log("No existen carritos.", error));
     }
   }, [session, recargar]);
-
+/*
   useEffect(() => {
     if (session) {
       const headers = new Headers();
@@ -111,7 +111,7 @@ const ListadoProducto = ({ carrito }) => {
         .catch((error) => console.log("No existen carritos."));
     }
   }, [session, recargar]);
-
+*/
   const onDelete = (productId) => {
     fetch(`http://localhost:8000/producto/${productId}`, {
       method: "DELETE",
@@ -184,7 +184,7 @@ const ListadoProducto = ({ carrito }) => {
             </h1>
             <Link
               //to={`/listado-productos-deshabilitados/${carrito.id}`}
-              to={`/listado-productos-deshabilitados`}
+              to={`/listado-productos-deshabilitados/${id}`}
 
               className="btn btn-secondary"
             >

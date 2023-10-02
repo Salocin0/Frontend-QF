@@ -56,7 +56,7 @@ const ListadoProductoDeshabilitado = ({carrito}) => {
       headers.append("ConsumidorId", session.consumidorId);
       headers.append("puestoId", id);
 
-      fetch(`http://localhost:8000/producto/${carrito.id}/deshabilitados`, {
+      fetch(`http://localhost:8000/producto/${id}/deshabilitados`, {
         method: "GET",
         headers: headers,
       })
