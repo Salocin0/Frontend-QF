@@ -49,8 +49,8 @@ const PuestoDeshabilitado = ({ carrito,recargar }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/puesto/${carrito.id}`, {
-      method: "DELETE",
+    fetch(`http://localhost:8000/puesto/${carrito.id}/habilitacion`, {
+      method: "PUT",
       headers: headers,
     })
       .then((response) => {
