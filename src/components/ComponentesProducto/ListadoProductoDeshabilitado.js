@@ -1,22 +1,19 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css";
-import Producto from "./Producto";
+import ProductoDeshabilitado from "./ProductoDeshabilitado";
 import styleProducto from "./producto.module.css";
 
-const ListadoProducto = ({ carrito }) => {
+const ListadoProductoDeshabilitado = ({carrito}) => {
   const [session, setSession] = useState(null);
   const { id } = useParams();
   const [productos, setProductos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [editProductId, setEditProductId] = useState(null);
   const [rows, setRows] = useState([]);
-  const [carritos, setCarritos] = useState([]);
-
   const [editedValues, setEditedValues] = useState({
     nombre: "",
     descripcion: "",
@@ -59,7 +56,7 @@ const ListadoProducto = ({ carrito }) => {
       headers.append("ConsumidorId", session.consumidorId);
       headers.append("puestoId", id);
 
-      fetch("http://localhost:8000/producto", {
+      fetch(`http://localhost:8000/producto/${carrito.id}/deshabilitados`, {
         method: "GET",
         headers: headers,
       })
@@ -83,93 +80,10 @@ const ListadoProducto = ({ carrito }) => {
     }
   }, [session, recargar]);
 
-  useEffect(() => {
-    if (session) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/puesto", {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setCarritos(data.data);
-          const totalCarritos = Math.ceil(data.data.length / 4) * 4;
-          const carritosConNulos = [
-            ...data.data,
-            ...Array(totalCarritos - data.data.length).fill(null),
-          ];
 
-          const generatedRows = [];
-          for (let i = 0; i < carritosConNulos.length; i += 4) {
-            const row = carritosConNulos.slice(i, i + 4);
-            generatedRows.push(row);
-          }
-          setRows(generatedRows);
-        })
-        .catch((error) => console.log("No existen carritos."));
-    }
-  }, [session, recargar]);
 
-  const onDelete = (productId) => {
-    fetch(`http://localhost:8000/producto/${productId}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then(() => {
-        toast.success("Producto eliminado con éxito");
 
-        setRecargar(+1);
-      })
-      .catch((error) => toast.error("Error al eliminar el producto"));
-  };
-
-  const onEdit = (productId) => {
-    setEditProductId(productId);
-
-    const productToEdit = productos.find(
-      (producto) => producto.id === productId
-    );
-    if (productToEdit) {
-      setEditedValues({
-        nombre: productToEdit.nombre,
-        descripcion: productToEdit.descripcion,
-        precio: productToEdit.precio,
-        aderezos: productToEdit.aderezos,
-        img: productToEdit.img,
-        estado: productToEdit.estado,
-      });
-    }
-  };
-
-  const onSave = (productId) => {
-    const producto = {
-      producto: {
-        nombre: editedValues.nombre,
-        descripcion: editedValues.descripcion,
-        aderezos: editedValues.aderezos,
-        img: editedValues.img,
-        precio: editedValues.precio,
-      },
-    };
-
-    console.log(JSON.stringify(producto));
-    fetch(`http://localhost:8000/producto/${productId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(producto),
-    })
-      .then((response) => response.json())
-      .then(() => {
-        toast.success("Producto actualizado con éxito");
-        setEditProductId(null);
-        setRecargar((prev) => prev + 1);
-      })
-      .catch((error) => toast.error("Error al actualizar el producto"));
-  };
 
   return (
     <div>
@@ -180,27 +94,17 @@ const ListadoProducto = ({ carrito }) => {
         <div className={`col-10`}>
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h1 className="pt-3" style={{ color: "white" }}>
-              Productos
+              Productos Deshabilitados
             </h1>
             <Link
-              //to={`/listado-productos-deshabilitados/${carrito.id}`}
-              to={`/listado-productos-deshabilitados`}
-
+              to={`/listado-productos/${id}`}
               className="btn btn-secondary"
             >
-              Productos Deshabilitados
+              Productos Habilitados
             </Link>
-
           </div>
           <hr style={{ color: "white" }} className="me-4" />
-          <div className="d-flex justify-content-end col-11">
-            <Link
-              to={`/registrar-productos/${id}`}
-              className={`btn btn-success btn-lg ${styleProducto.btnfloating}`}
-            >
-              <i class="bi bi-plus-lg"></i> Agregar Producto
-            </Link>
-          </div>
+
           <div className="d-flex align-items-center justify-content-center">
             <div className="pt-3 pb-4 h-100 w-100">
               {Array.isArray(productos) && productos.length > 0 ? (
@@ -213,7 +117,7 @@ const ListadoProducto = ({ carrito }) => {
                         className={`${styleProducto.colmd3} pb-4`}
                       >
                         {producto !== null ? (
-                          <Producto
+                          <ProductoDeshabilitado
                             producto={producto}
                             session={session}
                             idpuesto={id}
@@ -226,7 +130,7 @@ const ListadoProducto = ({ carrito }) => {
                 ))
               ) : (
                 <h2 className={styleProducto.centeredtext}>
-                  No tenes ningun producto asociado a este carrito.
+                  No tenes ningun producto deshabilitado en este carrito.
                 </h2>
               )}
             </div>
@@ -238,4 +142,4 @@ const ListadoProducto = ({ carrito }) => {
   );
 };
 
-export default ListadoProducto;
+export default ListadoProductoDeshabilitado;

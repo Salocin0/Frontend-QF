@@ -20,6 +20,7 @@ import Login from "../ComponentesLogin/Login";
 import RecuperarContraseña from "../ComponentesLogin/RecuperarContraseña";
 import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
 import ListadoProducto from "../ComponentesProducto/ListadoProducto";
+import ListadoProductoDeshabilitado from "../ComponentesProducto/ListadoProductoDeshabilitado";
 import ListadoProductoUser from "../ComponentesProducto/ListadoProductoUser";
 import RegistrarProductos from "../ComponentesProducto/RegistrarProductos";
 import AdquirirNuevoRolPE from "../ComponentesProductorDeEventos/AdquirirNuevoRolPE";
@@ -84,6 +85,7 @@ export const Main = () => {
         <Route path="/seleccion-perfil" element={<SeleccionRegister />} />
 
         <Route path="/listado-productos/:id" element={<ListadoProducto />} />
+        <Route path="/listado-productos-deshabilitados" element={<ListadoProductoDeshabilitado/>} />
         <Route
           path="/registrar-productos/:id"
           element={<RegistrarProductos />}
