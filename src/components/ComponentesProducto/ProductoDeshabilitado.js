@@ -8,8 +8,8 @@ const ProductoDeshabilitado = ({ producto, session, idpuesto, recargar }) => {
 
 
 
-    const hablitarNuevamente = (productId) => {
-        fetch(`http://localhost:8000/producto/${productId}/habilitar`, {
+    const hablitarNuevamente = () => {
+        fetch(`http://localhost:8000/producto/${producto.id}/habilitar`, {
           method: "PUT",
         })
           .then((response) => response.json())
