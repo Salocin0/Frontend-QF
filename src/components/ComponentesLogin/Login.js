@@ -41,6 +41,13 @@ const Login = () => {
           toast.success("Login correcto");
           updateUser(data.data);
           navigate(`/inicio`);
+        } else if(Number(data.code) === 300){
+          toast.info("Email no validado, revisa tu correo");
+          navigate(`/login`);
+        } else if(Number(data.code) === 301){
+          //logica de habilitar usuario
+          toast.info("usuario inhabilitado");
+          navigate(`/habilitar-Usuario-deshabilitado/${data.data.id}`);
         } else {
           toast.error("Datos incorrectos");
         }

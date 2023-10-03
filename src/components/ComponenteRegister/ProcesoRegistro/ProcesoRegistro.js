@@ -104,6 +104,7 @@ const ProcesoRegistro = () => {
         .then((data) => {
           if (data.status === "success") {
             toast.success("Registro exitoso");
+            toast.info("Se envio un email de validacion a su correo");
             navigate(`/login`);
           } else {
             throw new Error(data.msg || "Error en el servidor");

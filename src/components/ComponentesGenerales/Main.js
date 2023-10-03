@@ -34,6 +34,9 @@ import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
+import ValidarEmail from "../ComponentesLogin/ValidarEmail";
+import HabilitarUsuario from "../ComponentesLogin/HabilitarUsuario";
+import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
 
 export const Main = () => {
   return (
@@ -99,6 +102,10 @@ export const Main = () => {
         <Route path="/listado-eventos" element={<ListadoEventos />} />
         <Route path="/registrar-evento" element={<RegistrarEvento />} />
         <Route path="/evento/:id" element={<ConsultarEvento />} />
+        <Route path="/habilitar-Usuario-email/:id/:codigo" element={<ValidarEmail />} />
+        <Route path="/habilitar-Usuario-deshabilitado/:id" element={<HabilitarUsuario />} />
+        <Route path="/habilitar-Usuario/:id/:codigo" element={<ValidarUsuario />} />
+
       </Routes>
     </main>
   );
