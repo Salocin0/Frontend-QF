@@ -156,7 +156,7 @@ const ListadoEventos = () => {
               to={`/registrar-evento`}
               className={`btn btn-success btn-lg ${styleeventos.btnfloating}`}
             >
-              <i class="bi bi-plus-lg"></i> Agregar Evento
+              <i className="bi bi-plus-lg"></i> Agregar Evento
             </Link>
           </div>
           <div className="d-flex align-items-center justify-content-center">

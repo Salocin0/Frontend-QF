@@ -67,7 +67,7 @@ const ProductoUser = ({ producto, session, idpuesto, recargar }) => {
             <div className="col-7">
               <div className="d-flex justify-content-end">
                 <button className="btn btn-danger" onClick={handleAddtocart}>
-                  <i class="bi bi-cart-plus"></i>
+                  <i className="bi bi-cart-plus"></i>
                 </button>
               </div>
             </div>

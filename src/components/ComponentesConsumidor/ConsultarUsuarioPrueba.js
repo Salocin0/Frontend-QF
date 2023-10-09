@@ -6,6 +6,7 @@ import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import style from "./ConsultarUsuario.module.css";
+import { useNavigate } from "react-router-dom";
 
 const ConsultarUsuario = () => {
   const [showModal, setShowModal] = useState(false);
@@ -67,6 +68,8 @@ const ConsultarUsuario = () => {
   const [mostrarBotonHabilitarDeNuevoPE, setMostrarBotonHabilitarDeNuevoPE] = useState(false);
 
   const [session, setSession] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -308,7 +311,30 @@ const ConsultarUsuario = () => {
     }
   };
 
-  const handleEliminarCuenta = () => {};
+  const handleEliminarCuenta = async () => {
+    try {
+      console.log(session)
+      const response = await fetch(
+        `http://localhost:8000/user/${session.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        toast.success("Cuenta deshabilitada correctamente");
+        navigate(`/login`);
+      } else {
+        throw new Error("Error en la respuesta HTTP");
+      }
+    } catch (error) {
+      console.error("Error al eliminar los datos del productor:", error);
+      toast.error("Error al actualizar los datos");
+    }
+  };
 
   const handleEditModeTogglePE = () => {
     setEditModePE(!editMode);
@@ -946,7 +972,6 @@ const ConsultarUsuario = () => {
                             type="button"
                             className="btn btn-danger mr-2 w-100"
                             onClick={handleEliminarCuenta}
-                            disabled
                           >
                             Eliminar mi cuenta
                           </button>

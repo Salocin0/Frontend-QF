@@ -37,7 +37,7 @@ const Login = () => {
       .then((response) => response.json())
       .then((data) => {
         if (Number(data.code) === 200) {
-          localStorage.setItem("sessionId", data.data.sessionId);
+          localStorage.setItem("sessionId",  data.data.sessionId);
           toast.success("Login correcto");
           updateUser(data.data);
           navigate(`/inicio`);

@@ -152,7 +152,7 @@ const ConsultarPuesto = () => {
               <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                 Consultar Producto
               </h1>
-              <form onSubmit={handleSaveChanges} class="no-validate">
+              <form onSubmit={handleSaveChanges} className="no-validate">
                 <div className="row">
                   <div className="mb-3 col-md-6">
                     <label className="mb-2 text-dark" htmlFor="idCarro">
