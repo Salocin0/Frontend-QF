@@ -124,7 +124,6 @@ const RegistrarEvento = () => {
       tipoPago,
       linkVentaEntradas,
 
-      
       estado,
     };
 
@@ -207,7 +206,7 @@ const RegistrarEvento = () => {
       toast.error("Ingrese cantidad de puestos");
       return;
     }
-    
+
     if (!cantidadRepartidores.trim() && tieneRepartidores) {
       toast.error("Ingrese cantidad de repartidores");
       return;
@@ -228,8 +227,6 @@ const RegistrarEvento = () => {
       return;
     }
 
-    
-    
     console.log(evento);
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
@@ -334,7 +331,6 @@ const RegistrarEvento = () => {
                           className="form-control"
                           value={descripcion}
                           onChange={(e) => setDescripcion(e.target.value)}
-
                         />
                       </div>
 
@@ -350,7 +346,6 @@ const RegistrarEvento = () => {
                           id="imagenEvento"
                           accept="image/*"
                           onChange={(e) => handleImagenEventoChange(e)}
-
                         />
                       </div>
 
@@ -363,7 +358,6 @@ const RegistrarEvento = () => {
                           id="croquis"
                           accept="image/*"
                           onChange={(e) => handleCroquisChange(e)}
-
                         />
                       </div>
 
@@ -378,23 +372,19 @@ const RegistrarEvento = () => {
                           className={` form-control`}
                           value={selectedProvince}
                           onChange={handleProvinceChange}
-
                         >
                           <option value="" disabled>
                             Seleccione una provincia
                           </option>
                           {provincias.map((prov) => (
-                            <option
-                              key={prov.nombre}
-                              value={prov.nombre}
-                            >
+                            <option key={prov.nombre} value={prov.nombre}>
                               {prov.nombre}
                             </option>
                           ))}
                         </select>
                       </div>
                       <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="localidad" >
+                        <label className="mb-2 text-black" htmlFor="localidad">
                           Localidad
                         </label>
                         <select
@@ -409,10 +399,7 @@ const RegistrarEvento = () => {
                             Seleccione una localidad
                           </option>
                           {localidades.map((loc) => (
-                            <option
-                              key={loc.nombre}
-                              value={loc.nombre}
-                            >
+                            <option key={loc.nombre} value={loc.nombre}>
                               {loc.nombre}
                             </option>
                           ))}
@@ -501,66 +488,71 @@ const RegistrarEvento = () => {
                           onChange={(e) => setTienePreventa(e.target.checked)}
                         />
                       </div>
+                      {tienePreventa && (
+                        <div>
+                          <div className="mb-3">
+                            <label className="mb-2 text-black" htmlFor="fecha">
+                              Fecha inicio preventa
+                            </label>
+                            <input
+                              type="date"
+                              id="fecha"
+                              className="form-control"
+                              value={fechaInicioPreventa}
+                              onChange={(e) =>
+                                setFechaInicioPreventa(e.target.value)
+                              }
+                              required
+                            />
+                          </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="fecha">
-                          Fecha inicio preventa
-                        </label>
-                        <input
-                          type="date"
-                          id="fecha"
-                          className="form-control"
-                          value={fechaInicioPreventa}
-                          onChange={(e) =>
-                            setFechaInicioPreventa(e.target.value)
-                          }
-                          required
-                        />
-                      </div>
+                          <div className="mb-3">
+                            <label className="mb-2 text-black" htmlFor="fecha">
+                              Fecha fin preventa
+                            </label>
+                            <input
+                              type="date"
+                              id="fecha"
+                              className="form-control"
+                              value={fechaFinPreventa}
+                              onChange={(e) =>
+                                setFechaFinPreventa(e.target.value)
+                              }
+                            />
+                          </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="fecha">
-                          Fecha fin preventa
-                        </label>
-                        <input
-                          type="date"
-                          id="fecha"
-                          className="form-control"
-                          value={fechaFinPreventa}
-                          onChange={(e) => setFechaFinPreventa(e.target.value)}
-                        />
-                      </div>
+                          <div className="mb-3">
+                            <label className="mb-2 text-black" htmlFor="nombre">
+                              plazo cancelacion preventa
+                            </label>
+                            <input
+                              type="number"
+                              id="nombre"
+                              className="form-control"
+                              value={plazoCancelacionPreventa}
+                              onChange={(e) =>
+                                setPlazoCancelacionPreventa(e.target.value)
+                              }
+                            />
+                          </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          plazo cancelacion preventa
-                        </label>
-                        <input
-                          type="number"
-                          id="nombre"
-                          className="form-control"
-                          value={plazoCancelacionPreventa}
-                          onChange={(e) =>
-                            setPlazoCancelacionPreventa(e.target.value)
-                          }
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="estado">
-                          Tipo Preventa
-                        </label>
-                        <select
-                          id="estado"
-                          className="form-select"
-                          value={tipoPreventa}
-                          onChange={(e) => setTipoPreventa(e.target.value)}
-                        >
-                          <option value={1}>Tipo 1</option>
-                          <option value={2}>Tipo 2</option>
-                          <option value={3}>Tipo 3</option>
-                        </select>
-                      </div>
+                          <div className="mb-3">
+                            <label className="mb-2 text-black" htmlFor="estado">
+                              Tipo Preventa
+                            </label>
+                            <select
+                              id="estado"
+                              className="form-select"
+                              value={tipoPreventa}
+                              onChange={(e) => setTipoPreventa(e.target.value)}
+                            >
+                              <option value={1}>Tipo 1</option>
+                              <option value={2}>Tipo 2</option>
+                              <option value={3}>Tipo 3</option>
+                            </select>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="mb-3">
                         <label className="mb-2 text-black" htmlFor="nombre">
@@ -586,24 +578,29 @@ const RegistrarEvento = () => {
                           type="checkbox"
                           id="tieneRepartidores"
                           checked={tieneRepartidores}
-                          onChange={(e) => setTieneRepartidores(e.target.checked)}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          Cantidad repartidores
-                        </label>
-                        <input
-                          type="number"
-                          id="nombre"
-                          className="form-control"
-                          value={cantidadRepartidores}
                           onChange={(e) =>
-                            setCantidadRepartidores(e.target.value)
+                            setTieneRepartidores(e.target.checked)
                           }
                         />
                       </div>
+                      {tieneRepartidores && (
+                        <div>
+                          <div className="mb-3">
+                            <label className="mb-2 text-black" htmlFor="nombre">
+                              Cantidad repartidores
+                            </label>
+                            <input
+                              type="number"
+                              id="nombre"
+                              className="form-control"
+                              value={cantidadRepartidores}
+                              onChange={(e) =>
+                                setCantidadRepartidores(e.target.value)
+                              }
+                            />
+                          </div>
+                        </div>
+                      )}
 
                       <div className="mb-3">
                         <label className="mb-2 text-black" htmlFor="nombre">
