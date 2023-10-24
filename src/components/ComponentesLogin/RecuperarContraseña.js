@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import "./RecuperarContraseña.css";
+import "./../sass/main.scss";
 
 const RecuperarContraseña = () => {
   const [email, setEmail] = useState("");

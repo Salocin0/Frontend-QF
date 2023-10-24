@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import style from "./ConsultarUsuario.module.css";
+import "./../sass/main.scss";
 import { useNavigate } from "react-router-dom";
 
 const ConsultarUsuario = () => {
@@ -752,23 +752,23 @@ const ConsultarUsuario = () => {
   };
 
   return (
-    <div className={`${style.background} row`}>
+    <div className={`background row`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className={`col-10`}>
         <section
-          className={`${style.form} align-items-center justify-content-center col-6 offset-3 mt-0`}
+          className={`form align-items-center justify-content-center col-6 offset-3 mt-0`}
         >
-          <div className={`shadow-lg ${style.card}`}>
-            <div className={`${style.formulario} card-body mt-3 mb-5`}>
+          <div className={`shadow-lg card`}>
+            <div className={`formulario card-body mt-3 mb-5`}>
               <form className="needs-validation">
                 <div>
                   <section
-                    className={`${style.form} align-items-center justify-content-center col`}
+                    className={`form align-items-center justify-content-center col`}
                   >
-                    <div className={`card ${style.card} shadow-lg`}>
-                      <div className={`${style.formulario} card-body p-3`}>
+                    <div className={`card shadow-lg`}>
+                      <div className={`formulario card-body p-3`}>
                         <div className="row">
                           <div className="justify-content-start col-6">
                             <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
@@ -1017,11 +1017,11 @@ const ConsultarUsuario = () => {
                         <hr />
 
                         <section
-                          className={`${style.form} align-items-center justify-content-center col `}
+                          className={`form align-items-center justify-content-center col`}
                         >
-                          <div className={`card ${style.card} shadow-lg`}>
+                          <div className={`card card shadow-lg`}>
                             <div
-                              className={`${style.formulario} card-body p-3`}
+                              className={`formulario card-body p-3`}
                             >
                               <div className="row">
                                 <div className="justify-content-start col-8">
@@ -1180,11 +1180,11 @@ const ConsultarUsuario = () => {
                       <>
                         <hr />
                         <section
-                          className={`${style.form} align-items-center justify-content-center col`}
+                          className={`form align-items-center justify-content-center col`}
                         >
-                          <div className={`card ${style.card} shadow-lg`}>
+                          <div className={`card shadow-lg`}>
                             <div
-                              className={`${style.formulario} card-body p-3`}
+                              className={`formulario card-body p-3`}
                             >
                               <div className="row">
                                 <div className="justify-content-start col-8">
@@ -1359,11 +1359,11 @@ const ConsultarUsuario = () => {
                       <>
                         <hr />
                         <section
-                          className={`${style.form} align-items-center justify-content-center col`}
+                          className={`form align-items-center justify-content-center col`}
                         >
-                          <div className={`card ${style.card} shadow-lg`}>
+                          <div className={`card card shadow-lg`}>
                             <div
-                              className={`${style.formulario} card-body p-3`}
+                              className={`formulario card-body p-3`}
                             >
                               <div className="row">
                                 <div className="justify-content-start col-8">

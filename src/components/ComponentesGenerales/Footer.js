@@ -1,25 +1,25 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
-import styleFooter from "./footer.module.css";
+import "./../sass/main.scss";
 
 const Footer = () => {
   return (
-    <footer className={styleFooter.footer}>
+    <footer className="footer">
       <div className="container">
-        <div className={`row ${styleFooter.row}`}>
+        <div className={`row`}>
           <div className="col text-start">
-            <a href="/" className={styleFooter.footerlink}>
+            <a href="/" className="footerlink">
               Trabaja con Nosotros
             </a>
-            <a href="/registrarse" className={styleFooter.footerlink}>
+            <a href="/registrarse" className="footerlink">
               Contacto
             </a>
             <a
               href="https://www.instagram.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className={styleFooter.footericon}
+              className="footericon"
             >
               <FontAwesomeIcon icon={faInstagram} size="lg" />
             </a>

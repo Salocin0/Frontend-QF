@@ -4,21 +4,21 @@ import ComoFunciona from "./ComoFunciona";
 import Contacto from "./Contacto";
 import Imagenes from "./Imagenes";
 import Navbar from "./Navbar";
-import style from "./landingPage.module.css";
+import "./../sass/main.scss";
 
 
 const LandingPage = () => {
   return (
     <div>
-      <nav className={style.navbar}>
+      <nav className="navbar">
         <Navbar />
       </nav>
 
-      <section className={style.imagenes}>
+      <section className="imagenes">
         <Imagenes />
       </section>
 
-      <section className={style.ComoFunciona}>
+      <section className="ComoFunciona">
         <ComoFunciona />
       </section>
 
@@ -26,7 +26,7 @@ const LandingPage = () => {
         <Contacto />
       </section>
 
-      <footer className={style.footer}>
+      <footer className="footer">
         <Footer />
       </footer>
     </div>

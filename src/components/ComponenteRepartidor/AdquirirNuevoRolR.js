@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
-import styleadquirirrol from "./../ComponentesEPC/AdquirirNuevoRolEPC.module.css";
+import "./../sass/main.scss";
 
 const AdquirirNuevoRolR = () => {
   const navigate = useNavigate();
@@ -63,14 +62,14 @@ const AdquirirNuevoRolR = () => {
   };
 
   return (
-    <div className={`${style.background} d-flex`}>
+    <div className={`background d-flex`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className="flex-grow-1 d-flex align-items-center justify-content-center">
-        <div className={`${style.form}`}>
+        <div className={`form`}>
           <div
-            className={`${styleadquirirrol.formularioAdquirirNuevoRolEPC} card-body px-3`}
+            className={`formularioAdquirirNuevoRolEPC card-body px-3`}
           >
             <h1 className="fs-4 card-title fw-bold mb-2 text-dark">
               Adquirir Nuevo Rol - Repartidor

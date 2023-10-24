@@ -1,10 +1,9 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import styleback from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import styleeventos from "./eventos.module.css";
+import "./../sass/main.scss";
 import villamaria from "./img/villa maria.png";
 import cosquin from "./img/cosquin.png";
 import { toast } from "react-toastify";
@@ -140,7 +139,7 @@ const ListadoEventos = () => {
 
   return (
     <div>
-      <div className={`row m-0 ${styleback.background}`}>
+      <div className={`row m-0 background`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
@@ -154,7 +153,7 @@ const ListadoEventos = () => {
           <div className="d-flex justify-content-end col-11">
             <Link
               to={`/registrar-evento`}
-              className={`btn btn-success btn-lg ${styleeventos.btnfloating}`}
+              className={`btn btn-success btn-lg btnfloating`}
             >
               <i className="bi bi-plus-lg"></i> Agregar Evento
             </Link>
@@ -164,11 +163,11 @@ const ListadoEventos = () => {
               {Array.isArray(eventos) && eventos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row ${styleeventos.row}`}>
+                  <div key={rowIndex} className={`row`}>
                     {row.map((evento, index) => (
                       <div
                         key={index}
-                        className={`${styleeventos.colmd3} pb-4`}
+                        className={`colmd3 pb-4`}
                       >
                         {evento !== null ? (
                           <Evento
@@ -182,7 +181,7 @@ const ListadoEventos = () => {
                   </div>
                 ))
               ) : (
-                <h2 className={styleeventos.centeredtext}>
+                <h2 className="centeredtext">
                   No tenes ningun producto asociado a este carrito.
                 </h2>
               )}

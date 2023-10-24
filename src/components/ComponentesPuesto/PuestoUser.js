@@ -3,7 +3,7 @@ import { Dropdown } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import imgDefault from "../QuickFoodLogo.png";
-import style from "./puestos.module.css";
+import "./../sass/main.scss";
 
 const PuestoUser = ({ carrito }) => {
   const handleDropdownClick = (e) => {
@@ -41,11 +41,11 @@ const PuestoUser = ({ carrito }) => {
       to={`/productos-puesto/${carrito?.id}`}
       style={{ textDecoration: "none" }}
     >
-      <div className={style.cardlink}>
+      <div className="cardlink">
         <div className="card shadow-sm">
           <img
             src={`${carrito?.img}`}
-            className={style.cardimgtop}
+            className="cardimgtop"
             alt="Thumbnail"
           />
           <div className="card-body">

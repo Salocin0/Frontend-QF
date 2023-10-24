@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import styles from "../seleccionRegister.module.css";
+import "./../../sass/main.scss";
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
   const [showPassword1, setShowPassword1] = useState(false);
@@ -63,13 +63,13 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
   };
 
   return (
-    <div className={`${styles.background} ${styles.container} vh-100`}>
+    <div className={`background container vh-100`}>
       <div className="row h-100 justify-content-center align-items-center">
         <div className="col-md-4">
-          <div className={`${styles.card} card`}>
-            <div className={`${styles.cardheader}`}>
+          <div className={`card`}>
+            <div className={`cardheader`}>
               <h2
-                className={`${styles.h2} text-center`}
+                className={`h2 text-center`}
                 style={{ color: "white" }}
               >
                 Datos Usuario 1/{tipoUsuario === "consumidor" ? "2" : "3"}
@@ -78,7 +78,7 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
             <div className="card-body">
               <form onSubmit={handleSubmit}>
                 <div className={`form-group`}>
-                  <label htmlFor="username" className={styles.label}>
+                  <label htmlFor="username" className="label">
                     Nombre de usuario
                   </label>
                   <input
@@ -88,13 +88,13 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     data-testid="username"
                     value={userData.username}
                     onChange={handleChange}
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                     placeholder="Nombre de usuario"
                     autoComplete=" "
                   />
                 </div>
                 <div className={` form-group`}>
-                  <label htmlFor="email" className={styles.label}>
+                  <label htmlFor="email" className="label">
                     Email
                   </label>
                   <input
@@ -104,13 +104,13 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     data-testid="email"
                     value={userData.email}
                     onChange={handleChange}
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                     placeholder="Email"
                     autoComplete=" "
                   />
                 </div>
                 <div className={` form-group`}>
-                  <label htmlFor="password" className={styles.label}>
+                  <label htmlFor="password" className="label">
                     Contraseña
                   </label>
                   <div className="input-group">
@@ -121,13 +121,13 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                       data-testid="password"
                       value={userData.password}
                       onChange={handleChange}
-                      className={`${styles.blackwhite} form-control`}
+                      className={`blackwhite form-control`}
                       placeholder="Contraseña"
                     />
                     <div className="input-group-append">
                       <button
                         type="button"
-                        className={`${styles["btn"]} btn btn-outline-secondary`}
+                        className={`btn btn-outline-secondary`}
                         onClick={toggleShowPassword1}
                       >
                         {showPassword1 ? "Ocultar" : "Mostrar"}
@@ -135,8 +135,8 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                     </div>
                   </div>
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="confirmPassword" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="confirmPassword" className="label">
                     Repetir Contraseña
                   </label>
                   <div className="input-group">
@@ -147,13 +147,13 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                       data-testid="confirmPassword"
                       value={userData.confirmPassword}
                       onChange={handleChange}
-                      className={` form-control ${styles.blackwhite}`}
+                      className={` form-control blackwhite`}
                       placeholder="Repetir Contraseña"
                     />
                     <div className="input-group-append">
                       <button
                         type="button"
-                        className={`${styles["btn"]} btn btn-outline-secondary`}
+                        className={`btn btn-outline-secondary`}
                         onClick={toggleShowPassword2}
                       >
                         {showPassword2 ? "Ocultar" : "Mostrar"}
@@ -163,17 +163,17 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
                 </div>
                 <hr style={{ color: "white" }} />
                 <div
-                  className={`d-flex justify-content-between mt-2 ${styles["d-flex"]}`}
+                  className={`d-flex justify-content-between mt-2`}
                 >
                   <Link
                     to={"/seleccion-perfil"}
-                    className={`${styles["btn"]} btn btn-secondary`}
+                    className={`btn btn-secondary`}
                   >
                     Atrás
                   </Link>
                   <button
                     type="submit"
-                    className={`${styles["btn"]} btn btn-primary`}
+                    className={`btn btn-primary`}
                   >
                     Siguiente
                   </button>

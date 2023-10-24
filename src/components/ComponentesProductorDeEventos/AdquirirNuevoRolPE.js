@@ -1,8 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
-import styleadquirirrol from "./../ComponentesEPC/AdquirirNuevoRolEPC.module.css";
+import "./../sass/main.scss";
 import { useNavigate } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
@@ -81,14 +80,14 @@ const AdquirirNuevoRolPE = () => {
   };
 
   return (
-    <div className={`${style.background} d-flex`}>
+    <div className={`background d-flex`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className="flex-grow-1 d-flex align-items-center justify-content-center">
-        <div className={`${style.form} card shadow-lg`}>
+        <div className={`form card shadow-lg`}>
           <div
-            className={`${styleadquirirrol.formularioAdquirirNuevoRolEPC} card-body px-3`}
+            className={`formularioAdquirirNuevoRolEPC card-body px-3`}
           >
             <h1 className="fs-4 card-title fw-bold mb-2">
               Adquirir Nuevo Rol - Productor de Eventos

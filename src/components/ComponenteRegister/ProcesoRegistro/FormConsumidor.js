@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import styles from "../seleccionRegister.module.css";
+import "./../../sass/main.css";
 
 const FormConsumidor = ({
   nextStep,
@@ -149,13 +149,13 @@ const FormConsumidor = ({
   };
 
   return (
-    <div className={`${styles.background} ${styles.container} vh-100`}>
+    <div className={`background container vh-100`}>
       <div className="row h-100 justify-content-center align-items-center">
         <div className="col-md-4">
-          <div className={`${styles.card} card`}>
-            <div className={`${styles.cardheader} card-header`}>
+          <div className={`card`}>
+            <div className={`cardheader card-header`}>
               <h2
-                className={`${styles.h2} text-center`}
+                className={`h2 text-center`}
                 style={{ color: "white" }}
               >
                 Datos Consumidor 2/{tipoUsuario === "consumidor" ? "2" : "3"}
@@ -163,8 +163,8 @@ const FormConsumidor = ({
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit}>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="nombre" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="nombre" className="label">
                     Nombre
                   </label>
                   <input
@@ -174,12 +174,12 @@ const FormConsumidor = ({
                     data-testid="nombre"
                     value={consumidorData.nombre}
                     onChange={handleChange}
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                     placeholder="Nombre"
                   />
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="apellido" className={styles.label}>
+                <div className={` form-group`}>
+                  <label htmlFor="apellido" className="label">
                     Apellido
                   </label>
                   <input
@@ -189,12 +189,12 @@ const FormConsumidor = ({
                     data-testid="apellido"
                     value={consumidorData.apellido}
                     onChange={handleChange}
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite  form-control`}
                     placeholder="Apellido"
                   />
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="dni" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="dni" className="label">
                     DNI
                   </label>
                   <input
@@ -204,12 +204,12 @@ const FormConsumidor = ({
                     data-testid="dni"
                     value={consumidorData.dni}
                     onChange={handleChange}
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                     placeholder="DNI"
                   />
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="fechaNacimiento" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="fechaNacimiento" className="label">
                     Fecha de Nacimiento
                   </label>
                   <input
@@ -219,18 +219,18 @@ const FormConsumidor = ({
                     data-testid="fechaNacimiento"
                     value={consumidorData.fechaNacimiento}
                     onChange={handleChange}
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                   />
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="provincia" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="provincia" className="label">
                     Provincia
                   </label>
                   <select
                     id="provincia"
                     name="provincia"
                     data-testid="provincia"
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                     value={selectedProvince}
                     onChange={handleProvinceChange}
                     required
@@ -242,19 +242,19 @@ const FormConsumidor = ({
                       <option
                         key={prov.nombre}
                         value={prov.nombre}
-                        className={`${styles["option"]}`}
+                        className="option"
                       >
                         {prov.nombre}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="localidad" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="localidad" className="label">
                     Localidad
                   </label>
                   <select
-                    className={`${styles.blackwhite} form-control mt-2`}
+                    className={`blackwhite form-control mt-2`}
                     value={selectedLocalidad}
                     onChange={handleLocalidadChange}
                     data-testid="localidad"
@@ -269,15 +269,15 @@ const FormConsumidor = ({
                       <option
                         key={loc.nombre}
                         value={loc.nombre}
-                        className={`${styles["option"]}`}
+                        className={"option"}
                       >
                         {loc.nombre}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="telefono" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="telefono" className="label">
                     Teléfono
                   </label>
                   <input
@@ -287,16 +287,16 @@ const FormConsumidor = ({
                     data-testid="telefono"
                     value={consumidorData.telefono}
                     onChange={handleChange}
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                     placeholder="Teléfono"
                   />
                 </div>
                 <hr style={{ color: "white" }} />
                 <div
-                  className={`d-flex justify-content-between mt-2 ${styles["d-flex"]}`}
+                  className={`d-flex justify-content-between mt-2 d-flex`}
                 >
                   <button
-                    className={`${styles["btn"]} btn btn-secondary`}
+                    className={`btn btn-secondary`}
                     onClick={() => backStep()}
                   >
                     Atrás
@@ -304,14 +304,14 @@ const FormConsumidor = ({
                   {tipoUsuario === "consumidor" ? (
                     <button
                       type="submit"
-                      className={`${styles["btn"]} btn btn-success`}
+                      className={`btn btn-success`}
                     >
                       Finalizar
                     </button>
                   ) : (
                     <button
                       type="submit"
-                      className={`${styles["btn"]} btn btn-primary`}
+                      className={` btn btn-primary`}
                     >
                       Siguiente
                     </button>

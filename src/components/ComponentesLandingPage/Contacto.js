@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import imagen from "../img/contacto.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
-import style from "./landingPage.module.css";
+import "./../sass/main.scss";
 
 const Contacto = () => {
   const [nombre, setNombre] = useState("");
@@ -14,7 +14,7 @@ const Contacto = () => {
   };
 
   return (
-    <div className={style.contacto}>
+    <div className="contacto">
       <main className="w-100">
         <div className="row center-outer-container h-100 pt-3">
           <div className="offset-2 w-100 pt-3">
@@ -60,11 +60,11 @@ const Contacto = () => {
                 </form>
               </div>
               <div className="col-12 mt-3 col-md-6 ps-2">
-                <div className={style.divcontacto}>
+                <div className="divcontacto">
                   <img
                     src={imagen}
                     alt="imagen contacto"
-                    className={`${style.divcontacto} img-fluid`}
+                    className={`divcontacto img-fluid`}
                   />
                 </div>
               </div>

@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
+import "./../sass/main.scss";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 
@@ -152,16 +152,16 @@ const ConsultarEvento = () => {
   }, []);
 
   return (
-    <div className={`d-flex ${style.background}`}>
+    <div className={`d-flex background`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className={`flex-grow-1`}>
         <section
-          className={`align-items-center justify-content-center col-6 offset-3 ${style.form} mt-3 mb-5 ${style.rad}`}
+          className={`align-items-center justify-content-center col-6 offset-3 form mt-3 mb-5 rad`}
         >
-          <div className={`${style.card} shadow-lg`}>
-            <div className={`card-body p-3 ${style.formulario}`}>
+          <div className={`card shadow-lg`}>
+            <div className={`card-body p-3 formulario`}>
               <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
                 Consultar Puesto
               </h1>

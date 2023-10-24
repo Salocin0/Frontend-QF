@@ -1,0 +1,119 @@
+.background {
+    background-image: url("./../../QuickFoodFondo.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .card {
+    background-color: #292C3E !important;
+    border: none;
+  }
+  
+  hr,
+  label,
+  h2 {
+    color: white;
+  }
+  
+  .blackwhite {
+    background-color: #181A21;
+    color: white;
+    border: none;
+    --bs-body-bg: #181A21;
+    --bs-border-width: none;
+    --bs-body-color: white;
+  }
+  
+  .btn-outline-secondary {
+    border: 2px solid white;
+    color: white;
+  }
+  
+  .cardheader {
+    border-bottom: 1px solid white;
+  }
+  
+  .card-footer {
+    border-top: 1px white;
+  }
+  
+  .radiocheckcolor {
+    background-color: #292C3E !important;
+    border: 2px solid gray !important;
+    color: white !important;
+  }
+  
+  .radiocheckcolor:hover {
+    background-color: gray !important;
+    border: 2px solid gray !important;
+    color: black !important;
+  }
+  
+  .btn.active {
+    background-color: #F7B813 !important;
+    border: 2px solid #F7B813 !important;
+    color: black !important;
+  }
+  
+  .checkcolor {
+    background-color: #F7B813 !important;
+    border: 2px solid #F7B813 !important;
+    color: black !important;
+  }
+  
+  .selected {
+    background-color: #F7B813 !important;
+    border: 2px solid #F7B813 !important;
+    color: black !important;
+  }
+  
+  .checkcolor:hover {
+    background-color: #F7B813 !important;
+    border: 2px solid #F7B813 !important;
+    color: black !important;
+  }
+  
+  .text-input,
+  .password-input,
+  .email-input,
+  .date-input,
+  .select-input {
+    background-color: #181A21;
+    color: white;
+    border: none;
+  }
+  
+  ::placeholder {
+    color: white !important;
+  }
+  
+  .placeholder {
+    color: white;
+  }
+  
+  .input-focus {
+    background-color: #303443;
+    color: white;
+  }
+  
+  .input-focus::placeholder {
+    color: white;
+  }
+  
+  .select {
+    background-color: #181A21;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+  }
+  
+  
+  .option {
+    background-color: #181A21;
+    color: white;
+  }

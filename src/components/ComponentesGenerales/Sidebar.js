@@ -2,7 +2,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
-import style from "./Sidebar.module.css";
+import "./../sass/main.scss";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDolly } from '@fortawesome/free-solid-svg-icons';
 
@@ -25,47 +25,47 @@ const Sidebar = ({ tipoUsuario }) => {
 
   return (
     <>
-      <div className={style.sidebar}>
-        <div className={style.logocontainer}>
+      <div className={"sidebar"}>
+        <div className={"logocontainer"}>
           <a href="/inicio">
-            <img src={Logo} alt="Logo" className={style.logo} />
+            <img src={Logo} alt="Logo" className={"logo"} />
           </a>
         </div>
         <div className="menu-container">
-          <ul className={`${style.nav} flex-column p-3`}>
-            <li className={style.navitem}>
-              <a href="/inicio" className={`${style.navlink} text-truncate`}>
-                <i className={`${style.icono} bi bi-house`}></i>
+          <ul className={`nav flex-column p-3`}>
+            <li className={"navitem"}>
+              <a href="/inicio" className={`navlink text-truncate`}>
+                <i className={`icono bi bi-house`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">Inicio</span>
               </a>
             </li>
-            <li className={style.navitem}>
-              <a href="/eventos" className={`${style.navlink} text-truncate`} >
-                <i className={`${style.icono} bi bi-balloon`}></i>
+            <li className="navitem">
+              <a href="/eventos" className={`navlink text-truncate`} >
+                <i className={`icono bi bi-balloon`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Eventos
                 </span>
               </a>
             </li>
-            <li className={style.navitem}>
-              <a href="/pedidos" className={`${style.navlink} text-truncate`} >
-                <i className={`${style.icono} bi bi-bag`}></i>
+            <li className="navitem">
+              <a href="/pedidos" className={`navlink text-truncate`} >
+                <i className={`icono bi bi-bag`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Pedidos
                 </span>
               </a>
             </li>
-            <li className={style.navitem}>
-              <a href="/Notificaciones" className={`${style.navlink} text-truncate`} >
-                <i className={`${style.icono} bi bi-bell`}></i>
+            <li className="navitem">
+              <a href="/Notificaciones" className={`navlink text-truncate`} >
+                <i className={`icono bi bi-bell`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Notificaciones
                 </span>
               </a>
             </li>
-            <li className={style.navitem}>
-              <a href="/carrito" className={`${style.navlink} text-truncate`} >
-                <i className={`${style.icono} bi bi-cart`}></i>
+            <li className="navitem">
+              <a href="/carrito" className={`navlink text-truncate`} >
+                <i className={`icono bi bi-cart`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Carrito
                 </span>
@@ -73,9 +73,9 @@ const Sidebar = ({ tipoUsuario }) => {
             </li>
             <hr style={{ color: "white" }} />
             {isResponsable && (
-              <li className={style.navitem}>
-                <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
-                  <i className={`${style.icono} bi bi-shop`}></i>
+              <li className="navitem">
+                <a href="/listado-puestos" className={`navlink text-truncate`}>
+                  <i className={`icono bi bi-shop`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Puestos
                   </span>
@@ -83,9 +83,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
             {isProductor && (
-              <li className={style.navitem}>
-                <a href="/listado-eventos" className={`${style.navlink} text-truncate`}>
-                  <i className={`${style.icono} bi bi-balloon`}></i>
+              <li className="navitem">
+                <a href="/listado-eventos" className={`navlink text-truncate`}>
+                  <i className={`icono bi bi-balloon`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Eventos
                   </span>
@@ -93,9 +93,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
             {isRepartidor && (
-              <li className={style.navitem}>
-                <a href="/pedidos-asignados" className={`${style.navlink} text-truncate`}>
-                <FontAwesomeIcon icon={faDolly} className={`${style.icono}`}/>
+              <li className="navitem">
+                <a href="/pedidos-asignados" className={`navlink text-truncate`}>
+                <FontAwesomeIcon icon={faDolly} className={`icono`}/>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Pedidos Asignados
                   </span>
@@ -103,10 +103,10 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
 
-            <li className={`${style.navitem} dropdown ${style.especial}`}>
-              <i className={`${style.icono} bi bi-person-circle ${style.iconoespecial}`} ></i>
+            <li className={`navitem dropdown especial`}>
+              <i className={`icono bi bi-person-circle iconoespecial`} ></i>
               <a
-                className={`${style.navlink} text-truncate dropdown-toggle`}
+                className={`navlink text-truncate dropdown-toggle`}
                 id="dropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="true"

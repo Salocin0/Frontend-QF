@@ -3,7 +3,7 @@ import { Dropdown } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import imgDefault from "./../../components/QuickFoodLogo.png";
-import style from "./producto.module.css";
+import "./../sass/main.scss";
 
 const ProductoUser = ({ producto, session, idpuesto, recargar }) => {
   const handleDropdownClick = (e) => {
@@ -44,11 +44,11 @@ const ProductoUser = ({ producto, session, idpuesto, recargar }) => {
   }, []);
 
   return (
-    <div className={style.cardlink}>
+    <div className="cardlink">
       <div className="card shadow-sm">
         <img
           src={`${producto?.img}`}
-          className={`${style.cardimgtop} img-flex`}
+          className={`cardimgtop img-flex`}
           alt="Thumbnail"
           style={{ height: "150px" }}
         />

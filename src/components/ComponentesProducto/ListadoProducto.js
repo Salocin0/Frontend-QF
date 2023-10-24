@@ -4,9 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Producto from "./Producto";
-import styleProducto from "./producto.module.css";
+import "./../sass/main.scss";
 
 const ListadoProducto = ({ carrito }) => {
   const [session, setSession] = useState(null);
@@ -173,7 +172,7 @@ const ListadoProducto = ({ carrito }) => {
 
   return (
     <div>
-      <div className={`row m-0 ${styleback.background}`}>
+      <div className={`row m-0 background`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
@@ -196,7 +195,7 @@ const ListadoProducto = ({ carrito }) => {
           <div className="d-flex justify-content-end col-11">
             <Link
               to={`/registrar-productos/${id}`}
-              className={`btn btn-success btn-lg ${styleProducto.btnfloating}`}
+              className={`btn btn-success btn-lg btnfloating`}
             >
               <i className="bi bi-plus-lg"></i> Agregar Producto
             </Link>
@@ -206,11 +205,11 @@ const ListadoProducto = ({ carrito }) => {
               {Array.isArray(productos) && productos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row ${styleProducto.row}`}>
+                  <div key={rowIndex} className={`row `}>
                     {row.map((producto, index) => (
                       <div
                         key={index}
-                        className={`${styleProducto.colmd3} pb-4`}
+                        className={`colmd3 pb-4`}
                       >
                         {producto !== null ? (
                           <Producto
@@ -225,7 +224,7 @@ const ListadoProducto = ({ carrito }) => {
                   </div>
                 ))
               ) : (
-                <h2 className={styleProducto.centeredtext}>
+                <h2 className={"centeredtext"}>
                   No tenes ningun producto asociado a este carrito.
                 </h2>
               )}

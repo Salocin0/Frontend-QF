@@ -8,8 +8,8 @@ import eventos from "../img/eventos.png";
 import pedidos from "../img/pedidos.png";
 import perfil from "../img/perfil.png";
 import notificaciones from "../img/notificaciones.png";
-import "./cards.css";
-import style from "./inicio.module.css";
+import "./../sass/main.scss";
+
 
 const Inicio = () => {
   const [session, setSession] = useState(null);
@@ -42,7 +42,7 @@ const Inicio = () => {
 
   return (
     <div
-      className={`${style.background} d-flex align-items-center justify-content-center`}
+      className={`background d-flex align-items-center justify-content-center`}
     >
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
@@ -75,7 +75,7 @@ const Inicio = () => {
                       </div>
                       <div className="card-body text-center">
                         <h2
-                          className={`${style.cardtitle} card-title`}
+                          className={`cardtitle card-title`}
                           style={{ textDecoration: "none" }}
                         >
                           {item.title}

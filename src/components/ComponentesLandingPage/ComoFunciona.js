@@ -1,12 +1,12 @@
 import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import style from "./landingPage.module.css";
+import "./../sass/main.scss";
 import img from "./../img/comida-rapida-casera.jpg"
 
 
 const ComoFunciona = () => {
   return (
-    <div className={`${style.comofunciona} h-100`}>
+    <div className={`comofunciona h-100`}>
       <div className="row h-100">
         <div className="col-5 offset-1">
           <h2 className="text-center mt-3">Cómo Funciona</h2>
@@ -15,23 +15,23 @@ const ComoFunciona = () => {
             pedido se hace y llega hacia ti, sin filas ni frustaciones
           </p>
           <div className="items-container flex-column">
-            <div className={`${style.item} pt-2`}>
-              <i className={`${style.circleicon} bi bi-balloon`}></i>
+            <div className={`item pt-2`}>
+              <i className={`circleicon bi bi-balloon`}></i>
               <p>Seleciona el evento en el que deseas realizar tu pedido</p>
             </div>
 
-            <div className={`${style.item} pt-2`}>
-              <i className={`${style.circleicon} bi bi-shop`}></i>
+            <div className={`item pt-2`}>
+              <i className={`circleicon bi bi-shop`}></i>
               <p>Seleciona el puesto al cual quieres hacer el pedido</p>
             </div>
 
-            <div className={`${style.item} pt-2`}>
-              <i className={`${style.circleicon} bi bi-cart`}></i>
+            <div className={"item pt-2"}>
+              <i className={`circleicon bi bi-cart`}></i>
               <p>Realiza la compra de tu pedido</p>
             </div>
 
-            <div className={`${style.item} pt-2 pb-2`}>
-              <i className={`${style.circleicon} bi bi-signpost-split`}></i>
+            <div className={`item pt-2 pb-2`}>
+              <i className={`circleicon bi bi-signpost-split`}></i>
               <p>
                 Recibe el pedido en cualquier parte del evento donde te
                 encuentres
@@ -43,7 +43,7 @@ const ComoFunciona = () => {
         <img
             src={img}
             alt="Comida Rápida Casera"
-            className={`${style.divimagenimg} w-100 h-100`}
+            className={`divimagenimg w-100 h-100`}
           />
         </div>
       </div>

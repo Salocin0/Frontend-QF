@@ -4,28 +4,28 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { Link } from "react-router-dom";
 import Logo from '../img/QuickFood_LogoYellow.png';
-import style from "./landingPage.module.css";
+import "./../sass/main.scss";
 
 const Navbar = () => {
   return (
-    <header className={`${style.navbar}`}>
+    <header className={`navbar`}>
       <nav
-        className={`${style.navbar} navbar-expand-lg navbar-light bg-light`}
+        className={`navbar navbar-expand-lg navbar-light bg-light`}
       >
         <div className="container-fluid d-flex align-items-center mx-0 w-100">
-        <img src={Logo} alt="Logo" className={style.logo} />
+        <img src={Logo} alt="Logo" className="logo" />
           <div className="d-flex justify-content-end mx-0 mt-2 w-100">
             <ul className="navbar-nav">
               <Link
                 to="/seleccion-perfil"
-                className={`${style["navItemGray"]} btn btn-primary nav-item`}
+                className={`navItemGray btn btn-primary nav-item`}
               >
                 <FontAwesomeIcon icon={faUser} />
                 &nbsp;Registrarse
               </Link>
               <Link
                 to="/login"
-                className={`${style["navItemYellow"]} btn btn-primary nav-item`}
+                className={`navItemYellow btn btn-primary nav-item`}
               >
                 <FontAwesomeIcon icon={faRightToBracket} />
                 &nbsp;Ingresar
