@@ -12,10 +12,10 @@
   border-radius: 10px;
 }
 
+/*
 .imgback {
-  background-image: url("./../../Inicio-12.png");
-}
-
+  background-image: url("./../QuickFoodLogo.png");
+}*/
 .formularioAdquirirNuevoRolEPC {
   background-color: white;
   margin-top: 10px;
@@ -69,7 +69,7 @@ body {
 }
 
 .background {
-  background-image: url("./../../Inicio-12.png");
+  /*background-image: url(./../Inicio-12.png);*/
   height: 100%;
   padding-bottom: 0;
   margin-bottom: 0;
@@ -206,7 +206,7 @@ body {
 }
 
 .background {
-  background-image: url(./../../Inicio-12.png);
+  /*background-image: url(./../Inicio-12.png);*/
   min-height: 100vh;
 }
 
@@ -577,7 +577,7 @@ body {
 }
 
 .background {
-  background-image: url("./../../QuickFoodFondo.png");
+  /*background-image: url("./../QuickFoodFondo.png");*/
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -713,7 +713,7 @@ body {
 }
 
 .background {
-  background-image: url("./../../Inicio-12.png");
+  /*background-image: url(./../Inicio-12.png);*/
   height: 100%;
   padding-bottom: 0;
   margin-bottom: 0;
