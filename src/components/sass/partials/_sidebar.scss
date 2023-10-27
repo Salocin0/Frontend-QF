@@ -90,3 +90,17 @@
   padding-right: 5px;
   margin-left: 0;
 }
+
+@media screen and (max-width: 576px) {
+  .sidebar {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    width: $ancho-sidebar-reducido;
+    background: #0F2027;
+    background: -webkit-linear-gradient(to top, $color-gris-1-degrades-sidebar, $color-gris-2-degrades-sidebar, $color-gris-3-degrades-sidebar);
+    background: linear-gradient(to top, $color-gris-1-degrades-sidebar, $color-gris-2-degrades-sidebar, $color-gris-3-degrades-sidebar);
+    box-shadow: 10px 0 10px rgba(0, 0, 0, 0.15);
+  }
+}

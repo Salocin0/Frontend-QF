@@ -76,7 +76,7 @@ const Inicio = () => {
             <p>¿Quieres ver tus pedidos?</p>
           </div>
         </Link>
-        <div className="grid-item">
+        <div className="grid-item grid-item-cel">
           <div className="lefticon col-2">
             <FontAwesomeIcon icon={faUpLong} className="up" />
             <FontAwesomeIcon icon={faBriefcase} />
@@ -84,22 +84,22 @@ const Inicio = () => {
 
           <p className="titulochiquito col-10">Ascender a Productor</p>
         </div>
-        <div className="grid-item">
+        <div className="grid-item grid-item-cel">
           <div className="lefticon col-2">
             <FontAwesomeIcon icon={faUpLong} className="up" />
             <FontAwesomeIcon icon={faDolly} />
           </div>
           <p className="titulochiquito col-10">Ascender a Repartidor</p>
         </div>
-        <div className="grid-item">
+        <div className="grid-item grid-item-cel">
           <div className="lefticon col-2">
             <FontAwesomeIcon icon={faUpLong} className="up"/>
             <FontAwesomeIcon icon={faShop} />
           </div>
           <p className="titulochiquito col-10">Ascender a encargado de puesto</p>
         </div>
-        <div className="grid-item">6</div>
-        <div className="grid-item">7</div>
+        <div className="grid-item grid-item-cel">6</div>
+        <div className="grid-item grid-item-cels">7</div>
       </div>
     </div>
   );
