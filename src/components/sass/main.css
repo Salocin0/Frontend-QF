@@ -147,7 +147,7 @@
   grid-template-columns: repeat(10, 1fr);
   grid-gap: 25px;
   width: calc(100% - 250px - 50px);
-  height: calc(100vh - 50px);
+  height: calc(100vh - 60px);
   margin-left: 275px;
   top: 25px;
   position: absolute;

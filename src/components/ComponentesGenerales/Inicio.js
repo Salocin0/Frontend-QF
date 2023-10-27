@@ -66,7 +66,7 @@ const Inicio = () => {
             <p>¿Quieres buscar Eventos?</p>
           </div>
         </Link>
-        <Link to="/eventos" className="grid-item a grid-container-div">
+        <Link to="/pedidos" className="grid-item a grid-container-div">
           <div className="grid-item-div type1 contenedor-img">
             <img src={pedidoimg} alt="" className="imagen" />
           </div>
@@ -76,30 +76,39 @@ const Inicio = () => {
             <p>¿Quieres ver tus pedidos?</p>
           </div>
         </Link>
-        <div className="grid-item grid-item-cel">
+        <Link to="/adquirir-nuevo-rolPE" className="grid-item grid-item-cel">
           <div className="lefticon col-2">
             <FontAwesomeIcon icon={faUpLong} className="up" />
             <FontAwesomeIcon icon={faBriefcase} />
           </div>
 
           <p className="titulochiquito col-10">Ascender a Productor</p>
-        </div>
-        <div className="grid-item grid-item-cel">
+        </Link>
+        <Link to="/adquirir-nuevo-rolR" className="grid-item grid-item-cel">
           <div className="lefticon col-2">
             <FontAwesomeIcon icon={faUpLong} className="up" />
             <FontAwesomeIcon icon={faDolly} />
           </div>
           <p className="titulochiquito col-10">Ascender a Repartidor</p>
-        </div>
-        <div className="grid-item grid-item-cel">
+        </Link>
+        <Link to="/adquirir-nuevo-rolEPC" className="grid-item grid-item-cel">
           <div className="lefticon col-2">
-            <FontAwesomeIcon icon={faUpLong} className="up"/>
+            <FontAwesomeIcon icon={faUpLong} className="up" />
             <FontAwesomeIcon icon={faShop} />
           </div>
-          <p className="titulochiquito col-10">Ascender a encargado de puesto</p>
-        </div>
-        <div className="grid-item grid-item-cel">6</div>
-        <div className="grid-item grid-item-cels">7</div>
+          <p className="titulochiquito col-10">
+            Ascender a encargado de puesto
+          </p>
+        </Link>
+        <Link to="/" className="grid-item grid-item-cel">
+          6
+        </Link>
+        <Link to="/" className="grid-item grid-item-cel">
+          7
+        </Link>
+      </div>
+      <div>
+        <Footer />
       </div>
     </div>
   );

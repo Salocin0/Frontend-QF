@@ -9,7 +9,7 @@
   grid-template-columns: repeat(10, 1fr);
   grid-gap: 25px;
   width: calc(100% - $ancho-sidebar - 50px);
-  height: calc(100vh - 50px);
+  height: calc(100vh - 60px);
   margin-left: calc($ancho-sidebar + 25px);
   top: 25px;
   position: absolute;
