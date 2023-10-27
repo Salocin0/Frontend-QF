@@ -17,7 +17,8 @@ const Inicio = () => {
     { to: "/perfil-nuevo", imgSrc: perfil, title: "Perfil" },
     { to: "/eventos", imgSrc: eventos, title: "Eventos" },
     { to: "/consultar-pedidos", imgSrc: pedidos, title: "Pedidos" },
-    //{ to: "/notificaciones", imgSrc: notificaciones, title: "Notificaciones" },
+    { to: "/notificaciones", imgSrc: notificaciones, title: "Notificaciones" },
+    { to: "/notificaciones", imgSrc: notificaciones, title: "Notificaciones" },
     { to: "/inicio", imgSrc: puestos, title: "Puestos" },
   ];
   useEffect(() => {
@@ -42,22 +43,23 @@ const Inicio = () => {
 
   return (
     <div
-      className={`background d-flex align-items-center justify-content-center`}
+      className={`background d-flex align-items-center justify-content-center`} style={{"backgroundColor":"#1C2135"}}
     >
-      <div className="col-2">
+      <div>
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className="d-flex align-items-center justify-content-center">
         <section className="container py-5">
-          <div className="row row-cols-2 g-4">
+          <div className="row row-cols-4 g-2" >
             {cardData.map((item, index) => (
               <div className="col" key={index}>
                 <div
-                  className="card bg-warning shadow-sm card-custom"
+                  className="card shadow-sm"
                   style={{
                     width: "300px",
                     height: "300px",
                     margin: index % 2 === 0 ? "0 auto auto 200px" : "0 10px",
+                    backgroundColor: "#1C2135",
                   }}
                 >
                   <Link
@@ -66,20 +68,9 @@ const Inicio = () => {
                   >
                     <div style={{ height: "100%" }}>
                       <div className="d-flex align-items-center justify-content-center">
-                        <img
-                          src={item.imgSrc}
-                          className="card-img-top mx-auto mt-5"
-                          style={{ width: "150px", height: "150px" }}
-                          alt={`Icono de ${item.title}`}
-                        />
                       </div>
-                      <div className="card-body text-center">
-                        <h2
-                          className={`cardtitle card-title`}
-                          style={{ textDecoration: "none" }}
-                        >
-                          {item.title}
-                        </h2>
+                      <div className="card-body text-center"> 
+                        
                       </div>
                     </div>
                   </Link>

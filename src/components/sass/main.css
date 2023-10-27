@@ -1,9 +1,4 @@
 @charset "UTF-8";
-* {
-  margin: 0;
-  padding: 0;
-}
-
 .containerAdquirirNuevoRolEPC {
   height: 100%;
   background-color: white;
@@ -12,67 +7,11 @@
   border-radius: 10px;
 }
 
-/*
-.imgback {
-  background-image: url("./../QuickFoodLogo.png");
-}*/
 .formularioAdquirirNuevoRolEPC {
   background-color: white;
   margin-top: 10px;
   margin-bottom: 22px;
   border-radius: 10px;
-}
-
-/*
-* {
-    margin: 0;
-    padding: 0;
-
-  }
-
-
-
-  .containerAdquirirNuevoRolPE {
-    height: 100%;
-    background-color: white;
-    overflow-y: auto;
-    overflow-x: hidden;
-    border-radius: 10px;
-
-  }
-
-  .background{
-
-    background-color: white;
-  }
-
-  .imgback{
-    background-image: url("./../Inicio-12.png");
-    padding-top: 10px;
-  }
-
-  .formularioAdquirirNuevoRolPE {
-
-    margin-bottom: 22px;
-
-  }
-
-
-  */
-* {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background-color: black;
-}
-
-.background {
-  /*background-image: url(./../Inicio-12.png);*/
-  height: 100%;
-  padding-bottom: 0;
-  margin-bottom: 0;
 }
 
 .form {
@@ -103,12 +42,6 @@ body {
 
 .rad {
   border-radius: 10px;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -15px;
 }
 
 .colmd3 {
@@ -205,11 +138,6 @@ body {
   margin-right: 5px;
 }
 
-.background {
-  /*background-image: url(./../Inicio-12.png);*/
-  min-height: 100vh;
-}
-
 .cardA {
   width: 100px;
   height: 150px;
@@ -236,23 +164,14 @@ body {
   /* Esto asegura que el color se mantenga en negro incluso al pasar el cursor */
 }
 
-* {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  overflow-x: hidden;
-}
-
-.logo {
+.logonav {
   margin: 3px auto;
   height: 50px;
   width: 50px;
 }
 
 .navbar {
-  position: sticky;
+  position: sticky !important;
   top: 0;
   width: 100%;
   height: 60px;
@@ -265,6 +184,7 @@ body {
   background-color: #292C3E;
   color: white;
   padding: 30px 0;
+  text-align: center;
 }
 
 .comofunciona {
@@ -272,28 +192,30 @@ body {
   background-color: #F9F6F4;
 }
 
-.quienesconfiaron {
-  height: 600px;
-  background-color: azure;
-}
-
 .contacto {
-  height: 400px;
+  height: 350px;
   background-color: #1C1F30;
   color: white;
 }
 
 .navItemGray {
   background-color: #303443;
-  color: white;
+  color: white !important;
   border: 1px solid white;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 5px 10px;
   font-size: 16px;
   margin: auto 0;
   margin-right: 5px;
   cursor: pointer;
   outline: none;
+  text-decoration: none;
+}
+
+.navItemGray:hover {
+  background-color: white;
+  color: #303443 !important;
+  border-color: #303443 !important;
 }
 
 .navItemYellow {
@@ -304,10 +226,21 @@ body {
   padding: 5px 10px;
   font-size: 16px;
   margin: auto 0;
-  margin-right: 5px;
-  margin-left: 10px;
   cursor: pointer;
   outline: none;
+  text-decoration: none;
+}
+
+.navItemYellow:hover {
+  background-color: #bb8c15;
+  color: black !important;
+  border-color: black !important;
+}
+
+a:-webkit-any-link {
+  color: inherit;
+  cursor: auto;
+  text-decoration: none;
 }
 
 .divimagenimg {
@@ -315,8 +248,6 @@ body {
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
-  -o-object-position: center center;
-     object-position: center center;
 }
 
 .items-container {
@@ -350,10 +281,6 @@ body {
   background-repeat: no-repeat;
   background-position: center;
   border-radius: 10px;
-}
-
-.row {
-  --bs-gutter-x: 0;
 }
 
 .descripcion {
@@ -395,6 +322,33 @@ body {
   height: 300px;
 }
 
+@media screen and (min-width: 991px) {
+  .divbotonesnavar {
+    justify-content: end;
+    display: flex;
+  }
+}
+@media screen and (max-width: 991px) {
+  .row {
+    flex-direction: column;
+  }
+  .col-8,
+  .col-4 {
+    width: 100%;
+  }
+}
+.imgcarrousel {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.imgcarrouselcontainer {
+  height: 300px;
+  overflow: hidden;
+}
+
 .tablerounded {
   border-radius: 5px;
   overflow: hidden;
@@ -425,12 +379,6 @@ body {
   background-color: #ffffff;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -15px;
 }
 
 .colmd3 {
@@ -481,12 +429,6 @@ body {
 
 .custom-dropdown-toggle::after {
   display: none;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -15px;
 }
 
 .colmd3 {
@@ -574,17 +516,6 @@ body {
 
 .input-contraseña:focus {
   background-color: white;
-}
-
-.background {
-  /*background-image: url("./../QuickFoodFondo.png");*/
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-  height: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 .card {
@@ -703,22 +634,6 @@ h2 {
   color: white;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background-color: black;
-}
-
-.background {
-  /*background-image: url(./../Inicio-12.png);*/
-  height: 100%;
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-
 .form {
   padding: 0 5px;
   margin-bottom: 20px;
@@ -749,85 +664,32 @@ body {
   border-radius: 10px;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-}
-
-.navitem {
-  display: flex;
-  align-items: center;
-  border-radius: 15px 10px 10px 15px;
-  padding-right: 5px;
-  background-color: #D9D9D9;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: #333;
-}
-
-.navitem:hover {
-  background-color: white;
-  color: #333;
-}
-
-.icono {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 15px;
-  background-color: #F7B813;
-  left: 15px;
-}
-
-.navlink {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: center;
-  width: 100%;
-  text-decoration: none;
-  color: #333;
-}
-
-.navlink i {
-  font-size: 20px;
-  color: #333;
-}
-
-.navitem i {
-  font-size: 20px;
-  color: #333;
-}
-
-.navlink span {
-  font-size: 20px;
-  color: #333;
-}
-
-.nav {
-  height: 100%;
-}
-
-.text-truncate {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex-grow: 1;
-}
-
 .sidebar {
-  color: red;
   font-family: Arial, sans-serif;
   width: 100%;
   height: 100vh;
   position: sticky;
   top: 0;
+  min-width: 250px;
   background: #0F2027;
   background: linear-gradient(to top, #172b34, #12242b, #0f1b20);
-  /*background: linear-gradient(to top, #2C5364, #203A43, #0F2027); */
+  box-shadow: 10px 0 15px rgba(0, 0, 0, 0.41);
+}
+
+.especial {
+  order: 999;
+  position: absolute;
+  bottom: 3%;
+  width: 100%;
+  margin-right: 16px;
+  margin-left: 16px;
+  left: -15px;
+  right: 0;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
 }
 
 .logocontainer {
@@ -837,21 +699,85 @@ body {
   align-items: center;
 }
 
-.logo {
-  width: 100px;
-  height: 100px;
+.navitem {
+  display: flex;
+  align-items: center;
+  border-radius: 5px 5px 5px 5px;
+  padding-right: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  color: #888B9A;
 }
 
-.especial {
-  order: 999;
-  position: absolute;
-  bottom: 3%;
-  margin-right: 16px;
-  margin-left: 16px;
-  left: 0;
-  right: 0;
+.navitem:hover {
+  color: red;
+  background-color: #F7B813;
 }
 
 .iconoespecial {
   left: 0px;
+}
+
+.nav {
+  height: 100%;
+}
+
+.navlink span {
+  font-size: 20px;
+  color: #888B9A;
+}
+
+.navitem i {
+  font-size: 20px;
+  color: #888B9A;
+  margin-left: 10px;
+  margin-right: 20px;
+}
+
+.navlink {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  text-align: start;
+  width: 100%;
+  text-decoration: none;
+  color: #888B9A;
+}
+
+#dropdown {
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+  margin-left: 0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: black;
+}
+
+.background-login {
+  background-image: url(./../Inicio-12.png);
+  height: 100%;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.background-prelogin {
+  background-image: url(./../QuickFoodFondo.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  --bs-gutter-x: 0;
 }/*# sourceMappingURL=main.css.map */

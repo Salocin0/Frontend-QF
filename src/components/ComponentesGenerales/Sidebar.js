@@ -3,8 +3,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
 import "./../sass/main.scss";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDolly } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDolly } from "@fortawesome/free-solid-svg-icons";
 
 import Logo from "../img/QuickFood_LogoYellow.png";
 
@@ -40,23 +40,19 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className="navitem">
-              <a href="/eventos" className={`navlink text-truncate`} >
+              <a href="/eventos" className={`navlink text-truncate`}>
                 <i className={`icono bi bi-balloon`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Eventos
-                </span>
+                <span className="ms-1 d-none d-sm-inline w-100">Eventos</span>
               </a>
             </li>
             <li className="navitem">
-              <a href="/pedidos" className={`navlink text-truncate`} >
+              <a href="/pedidos" className={`navlink text-truncate`}>
                 <i className={`icono bi bi-bag`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Pedidos
-                </span>
+                <span className="ms-1 d-none d-sm-inline w-100">Pedidos</span>
               </a>
             </li>
             <li className="navitem">
-              <a href="/Notificaciones" className={`navlink text-truncate`} >
+              <a href="/Notificaciones" className={`navlink text-truncate`}>
                 <i className={`icono bi bi-bell`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Notificaciones
@@ -64,11 +60,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className="navitem">
-              <a href="/carrito" className={`navlink text-truncate`} >
+              <a href="/carrito" className={`navlink text-truncate`}>
                 <i className={`icono bi bi-cart`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Carrito
-                </span>
+                <span className="ms-1 d-none d-sm-inline w-100">Carrito</span>
               </a>
             </li>
             <hr style={{ color: "white" }} />
@@ -94,8 +88,11 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
             {isRepartidor && (
               <li className="navitem">
-                <a href="/pedidos-asignados" className={`navlink text-truncate`}>
-                <FontAwesomeIcon icon={faDolly} className={`icono`}/>
+                <a
+                  href="/pedidos-asignados"
+                  className={`navlink text-truncate`}
+                >
+                  <FontAwesomeIcon icon={faDolly} className={`icono`} />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Pedidos Asignados
                   </span>
@@ -103,16 +100,16 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
 
-            <li className={`navitem dropdown especial`}>
-              <i className={`icono bi bi-person-circle iconoespecial`} ></i>
-              <a
-                className={`navlink text-truncate dropdown-toggle`}
+            <li className="navitem dropdown especial ">
+              <i className="icono bi bi-person-circle iconoespecial"></i>
+              <div
+                className="navlink text-truncate dropdown-toggle"
                 id="dropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="true"
               >
                 <span className="ms-1 d-none d-sm-inline w-100">Mi Perfil</span>
-              </a>
+              </div>
               <ul
                 className="dropdown-menu text-small shadow"
                 aria-labelledby="dropdown"

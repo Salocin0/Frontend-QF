@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "./../../sass/main.css";
+import Footer from "../../ComponentesGenerales/Footer";
 
 const FormConsumidor = ({
   nextStep,
@@ -149,178 +150,173 @@ const FormConsumidor = ({
   };
 
   return (
-    <div className={`background container vh-100`}>
-      <div className="row h-100 justify-content-center align-items-center">
-        <div className="col-md-4">
-          <div className={`card`}>
-            <div className={`cardheader card-header`}>
-              <h2
-                className={`h2 text-center`}
-                style={{ color: "white" }}
-              >
-                Datos Consumidor 2/{tipoUsuario === "consumidor" ? "2" : "3"}
-              </h2>
-            </div>
-            <div className="card-body">
-              <form onSubmit={handleSubmit}>
-                <div className={`form-group`}>
-                  <label htmlFor="nombre" className="label">
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    name="nombre"
-                    id="nombre"
-                    data-testid="nombre"
-                    value={consumidorData.nombre}
-                    onChange={handleChange}
-                    className={`blackwhite form-control`}
-                    placeholder="Nombre"
-                  />
-                </div>
-                <div className={` form-group`}>
-                  <label htmlFor="apellido" className="label">
-                    Apellido
-                  </label>
-                  <input
-                    type="text"
-                    name="apellido"
-                    id="apellido"
-                    data-testid="apellido"
-                    value={consumidorData.apellido}
-                    onChange={handleChange}
-                    className={`blackwhite  form-control`}
-                    placeholder="Apellido"
-                  />
-                </div>
-                <div className={`form-group`}>
-                  <label htmlFor="dni" className="label">
-                    DNI
-                  </label>
-                  <input
-                    type="number"
-                    name="dni"
-                    id="dni"
-                    data-testid="dni"
-                    value={consumidorData.dni}
-                    onChange={handleChange}
-                    className={`blackwhite form-control`}
-                    placeholder="DNI"
-                  />
-                </div>
-                <div className={`form-group`}>
-                  <label htmlFor="fechaNacimiento" className="label">
-                    Fecha de Nacimiento
-                  </label>
-                  <input
-                    type="date"
-                    name="fechaNacimiento"
-                    id="fechaNacimiento"
-                    data-testid="fechaNacimiento"
-                    value={consumidorData.fechaNacimiento}
-                    onChange={handleChange}
-                    className={`blackwhite form-control`}
-                  />
-                </div>
-                <div className={`form-group`}>
-                  <label htmlFor="provincia" className="label">
-                    Provincia
-                  </label>
-                  <select
-                    id="provincia"
-                    name="provincia"
-                    data-testid="provincia"
-                    className={`blackwhite form-control`}
-                    value={selectedProvince}
-                    onChange={handleProvinceChange}
-                    required
-                  >
-                    <option value="" disabled>
-                      Seleccione una provincia
-                    </option>
-                    {provincias.map((prov) => (
-                      <option
-                        key={prov.nombre}
-                        value={prov.nombre}
-                        className="option"
-                      >
-                        {prov.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className={`form-group`}>
-                  <label htmlFor="localidad" className="label">
-                    Localidad
-                  </label>
-                  <select
-                    className={`blackwhite form-control mt-2`}
-                    value={selectedLocalidad}
-                    onChange={handleLocalidadChange}
-                    data-testid="localidad"
-                    id="localidad"
-                    name="localidad"
-                    required
-                  >
-                    <option value="" disabled>
-                      Seleccione una localidad
-                    </option>
-                    {localidades.map((loc) => (
-                      <option
-                        key={loc.nombre}
-                        value={loc.nombre}
-                        className={"option"}
-                      >
-                        {loc.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className={`form-group`}>
-                  <label htmlFor="telefono" className="label">
-                    Teléfono
-                  </label>
-                  <input
-                    type="number"
-                    name="telefono"
-                    id="telefono"
-                    data-testid="telefono"
-                    value={consumidorData.telefono}
-                    onChange={handleChange}
-                    className={`blackwhite form-control`}
-                    placeholder="Teléfono"
-                  />
-                </div>
-                <hr style={{ color: "white" }} />
-                <div
-                  className={`d-flex justify-content-between mt-2 d-flex`}
-                >
-                  <button
-                    className={`btn btn-secondary`}
-                    onClick={() => backStep()}
-                  >
-                    Atrás
-                  </button>
-                  {tipoUsuario === "consumidor" ? (
-                    <button
-                      type="submit"
-                      className={`btn btn-success`}
+    <div className={`background-prelogin`}>
+      <div className="container vh-100">
+        <div className="row h-100 justify-content-center align-items-center">
+          <div className="col-10 col-lg-6">
+            <div className={`card`}>
+              <div className={`cardheader card-header`}>
+                <h2 className={`h2 text-center`} style={{ color: "white" }}>
+                  Datos Consumidor 2/{tipoUsuario === "consumidor" ? "2" : "3"}
+                </h2>
+              </div>
+              <div className="card-body">
+                <form onSubmit={handleSubmit}>
+                  <div className={`form-group`}>
+                    <label htmlFor="nombre" className="label">
+                      Nombre
+                    </label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      id="nombre"
+                      data-testid="nombre"
+                      value={consumidorData.nombre}
+                      onChange={handleChange}
+                      className={`blackwhite form-control`}
+                      placeholder="Nombre"
+                    />
+                  </div>
+                  <div className={` form-group`}>
+                    <label htmlFor="apellido" className="label">
+                      Apellido
+                    </label>
+                    <input
+                      type="text"
+                      name="apellido"
+                      id="apellido"
+                      data-testid="apellido"
+                      value={consumidorData.apellido}
+                      onChange={handleChange}
+                      className={`blackwhite  form-control`}
+                      placeholder="Apellido"
+                    />
+                  </div>
+                  <div className={`form-group`}>
+                    <label htmlFor="dni" className="label">
+                      DNI
+                    </label>
+                    <input
+                      type="number"
+                      name="dni"
+                      id="dni"
+                      data-testid="dni"
+                      value={consumidorData.dni}
+                      onChange={handleChange}
+                      className={`blackwhite form-control`}
+                      placeholder="DNI"
+                    />
+                  </div>
+                  <div className={`form-group`}>
+                    <label htmlFor="fechaNacimiento" className="label">
+                      Fecha de Nacimiento
+                    </label>
+                    <input
+                      type="date"
+                      name="fechaNacimiento"
+                      id="fechaNacimiento"
+                      data-testid="fechaNacimiento"
+                      value={consumidorData.fechaNacimiento}
+                      onChange={handleChange}
+                      className={`blackwhite form-control`}
+                    />
+                  </div>
+                  <div className={`form-group`}>
+                    <label htmlFor="provincia" className="label">
+                      Provincia
+                    </label>
+                    <select
+                      id="provincia"
+                      name="provincia"
+                      data-testid="provincia"
+                      className={`blackwhite form-control`}
+                      value={selectedProvince}
+                      onChange={handleProvinceChange}
+                      required
                     >
-                      Finalizar
-                    </button>
-                  ) : (
-                    <button
-                      type="submit"
-                      className={` btn btn-primary`}
+                      <option value="" disabled>
+                        Seleccione una provincia
+                      </option>
+                      {provincias.map((prov) => (
+                        <option
+                          key={prov.nombre}
+                          value={prov.nombre}
+                          className="option"
+                        >
+                          {prov.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={`form-group`}>
+                    <label htmlFor="localidad" className="label">
+                      Localidad
+                    </label>
+                    <select
+                      className={`blackwhite form-control mt-2`}
+                      value={selectedLocalidad}
+                      onChange={handleLocalidadChange}
+                      data-testid="localidad"
+                      id="localidad"
+                      name="localidad"
+                      required
                     >
-                      Siguiente
+                      <option value="" disabled>
+                        Seleccione una localidad
+                      </option>
+                      {localidades.map((loc) => (
+                        <option
+                          key={loc.nombre}
+                          value={loc.nombre}
+                          className={"option"}
+                        >
+                          {loc.nombre}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={`form-group`}>
+                    <label htmlFor="telefono" className="label">
+                      Teléfono
+                    </label>
+                    <input
+                      type="number"
+                      name="telefono"
+                      id="telefono"
+                      data-testid="telefono"
+                      value={consumidorData.telefono}
+                      onChange={handleChange}
+                      className={`blackwhite form-control`}
+                      placeholder="Teléfono"
+                    />
+                  </div>
+                  <hr style={{ color: "white" }} />
+                  <div className={`d-flex justify-content-between mt-2 d-flex`}>
+                    <button
+                      className={`btn btn-secondary`}
+                      onClick={() => backStep()}
+                    >
+                      Atrás
                     </button>
-                  )}
-                </div>
-              </form>
+                    {tipoUsuario === "consumidor" ? (
+                      <button type="submit" className={`btn btn-success`}>
+                        Finalizar
+                      </button>
+                    ) : (
+                      <button type="submit" className={` btn btn-primary`}>
+                        Siguiente
+                      </button>
+                    )}
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div>
+        <Footer />
       </div>
     </div>
   );

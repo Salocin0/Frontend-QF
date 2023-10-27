@@ -10,21 +10,16 @@ import "./../sass/main.scss";
 const LandingPage = () => {
   return (
     <div>
-      <nav className="navbar">
-        <Navbar />
-      </nav>
+      <Navbar />
 
       <section className="imagenes">
         <Imagenes />
       </section>
 
-      <section className="ComoFunciona">
+      <section className="ComoFunciona pb-3">
         <ComoFunciona />
       </section>
 
-      <section>
-        <Contacto />
-      </section>
 
       <footer className="footer">
         <Footer />

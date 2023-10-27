@@ -30,17 +30,15 @@ const SeleccionRegister = () => {
   };
 
   return (
-    <div className={`background row`}>
+    <div className="background-prelogin">
       <div className="d-flex align-items-center justify-content-center vh-100">
-        <div className="col-4">
-          <div className={`card  text-center`}>
-            <div className={`mt-2 cardheader`}>
+        <div className="col-lg-4">
+          <div className="card text-center">
+            <div className="mt-2 cardheader">
               <h2 style={{ color: "white" }}>Seleccione Perfil</h2>
             </div>
             <div className="card-body">
-              <label
-                className={`btn btn-outline-primary btn-block btn-lg d-flex align-items-center justify-content-between checkcolor custom-control custom-checkbox`}
-              >
+              <label className="btn btn-outline-primary btn-block btn-lg d-flex align-items-center justify-content-between checkcolor custom-control custom-checkbox">
                 <input
                   type="checkbox"
                   name="userType"
@@ -49,9 +47,8 @@ const SeleccionRegister = () => {
                   checked={true}
                   className="custom-control-input"
                   onChange={() => {}}
-                  
                 />
-                <span className="placeholder">Consumidor</span>
+                <span>Consumidor</span>
                 <FontAwesomeIcon icon={faUser} />
               </label>
               <hr style={{ color: "white" }} />
@@ -77,7 +74,7 @@ const SeleccionRegister = () => {
                     className="custom-control-input"
                     readOnly
                   />
-                  <span className={"placeholder"}>Productor</span>
+                  <span>Productor</span>
                   <FontAwesomeIcon icon={faBriefcase} />
                 </label>
                 <label
@@ -101,7 +98,7 @@ const SeleccionRegister = () => {
                     className="custom-control-input"
                     readOnly
                   />
-                  <span className="placeholder">Repartidor</span>
+                  <span>Repartidor</span>
                   <FontAwesomeIcon icon={faDolly} />
                 </label>
                 <label
@@ -125,20 +122,21 @@ const SeleccionRegister = () => {
                     className="custom-control-input"
                     readOnly
                   />
-                  <span className="placeholder">Encargado</span>
+                  <span>Encargado</span>
                   <FontAwesomeIcon icon={faShop} />
                 </label>
               </div>
             </div>
-            <div className={`d-flex justify-content-between mb-3 mx-3`}>
+            <div className="d-flex justify-content-between mb-3 mx-3">
               <button
-                className={`btn btn-secondary btnOutlineSecondary`}
+                className="btn btn-secondary btnOutlineSecondary me-2"
                 onClick={handleClearSelectionClick}
               >
                 Quitar selección
               </button>
               <Link
                 to={handleNextClick()}
+                style={{ color: "white" }}
                 className={classnames(
                   "btn btn-primary",
                   !selectedType && "disabled"
@@ -151,7 +149,6 @@ const SeleccionRegister = () => {
           </div>
         </div>
       </div>
-
       <div>
         <Footer />
       </div>
