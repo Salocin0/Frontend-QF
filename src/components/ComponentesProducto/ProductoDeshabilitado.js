@@ -5,25 +5,34 @@ import { toast } from "react-toastify";
 import style from "./producto.module.css";
 
 const ProductoDeshabilitado = ({ producto, session, idpuesto, recargar }) => {
+  
+  const hablitarNuevamente = () => {
+    fetch(`http://localhost:8000/producto/${producto.id}/habilitar`, {
+      method: "PUT",
+    })
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Producto habilitado nuevamente con éxito");
 
+        recargar();
+      })
+      .catch((error) => toast.error("Error al habilitar el producto"));
+  };
 
+  const EliminarPermanente = () => {
+    fetch(`http://localhost:8000/producto/${producto.id}/permanently`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Producto eliminado permanentemente");
 
-    const hablitarNuevamente = () => {
-        fetch(`http://localhost:8000/producto/${producto.id}/habilitar`, {
-          method: "PUT",
-        })
-          .then((response) => response.json())
-          .then(() => {
-            toast.success("Producto habilitado nuevamente con éxito");
+        recargar();
+      })
+      .catch((error) => toast.error("Error al eliminado permanentemente"));
+  };
 
-            recargar();
-        })
-          .catch((error) => toast.error("Error al habilitar el producto"));
-      };
-
-
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div className={style.cardlink}>
@@ -35,15 +44,11 @@ const ProductoDeshabilitado = ({ producto, session, idpuesto, recargar }) => {
           style={{ height: "150px" }}
         />
         <div className="card-body">
-          <div >
-            <h6 className="card-title text-center">
-              {producto?.nombre}
-            </h6>
+          <div>
+            <h6 className="card-title text-center">{producto?.nombre}</h6>
           </div>
           <div style={{ height: "100px" }}>
-            <p className="card-text text-center">
-              {producto?.descripcion}
-            </p>
+            <p className="card-text text-center">{producto?.descripcion}</p>
           </div>
 
           <div className="row">
@@ -55,9 +60,12 @@ const ProductoDeshabilitado = ({ producto, session, idpuesto, recargar }) => {
                 <Dropdown>
                   <Dropdown.Toggle variant="danger"></Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Divider />
                     <Dropdown.Item onClick={hablitarNuevamente}>
                       Habilitar Producto Nuevamente
+                    </Dropdown.Item>
+                    <Dropdown.Divider />
+                    <Dropdown.Item onClick={EliminarPermanente}>
+                      Eliminar Producto Definitivamente
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

@@ -1,0 +1,28 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 10px; 
+    grid-template-areas:
+      "header header header header header"
+      "content content content content filters"
+      "content content content content filters"
+      "content content content content filters"
+      "content content content content filters";
+  }
+  
+  .header {
+    grid-area: header;
+  }
+  
+  .search {
+    grid-area: search;
+  }
+  
+  .filters {
+    grid-area: filters;
+  }
+  
+  .content {
+    grid-area: content;
+  }

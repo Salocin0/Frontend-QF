@@ -37,6 +37,7 @@ import Sidebar from "./Sidebar";
 import ValidarEmail from "../ComponentesLogin/ValidarEmail";
 import HabilitarUsuario from "../ComponentesLogin/HabilitarUsuario";
 import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
+import AsociarRepartidorAEvento from "../ComponenteRepartidor/AsociarRepartidorAEvento";
 
 export const Main = () => {
   return (
@@ -106,6 +107,7 @@ export const Main = () => {
         <Route path="/habilitar-Usuario-deshabilitado/:id" element={<HabilitarUsuario />} />
         <Route path="/habilitar-Usuario/:id/:codigo" element={<ValidarUsuario />} />
 
+        <Route path="/asociarRepartidorAEvento" element={<AsociarRepartidorAEvento />} />
       </Routes>
     </main>
   );
