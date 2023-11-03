@@ -475,6 +475,60 @@ const RegistrarEvento = () => {
                       </div>
 
                       <div className="mb-3">
+                        <label className="mb-2 text-black" htmlFor="nombre">
+                          Cantidad Puestos
+                        </label>
+                        <input
+                          type="number"
+                          id="nombre"
+                          className="form-control"
+                          value={cantidadPuestos}
+                          onChange={(e) => setCantidadPuestos(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <label className="mb-2 text-black" htmlFor="nombre">
+                          Capacidad maxima
+                        </label>
+                        <input
+                          type="number"
+                          id="nombre"
+                          className="form-control"
+                          value={capacidadMaxima}
+                          onChange={(e) => setCapacidadMaxima(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <label className="mb-2 text-black" htmlFor="estado">
+                          Tipo Pago
+                        </label>
+                        <select
+                          id="estado"
+                          className="form-select"
+                          value={tipoPago}
+                          onChange={(e) => setTipoPago(e.target.value)}
+                        >
+                          <option value={1}>Pago</option>
+                          <option value={2}>Gratuito</option>
+                        </select>
+                      </div>
+
+                      <div className="mb-3">
+                        <label className="mb-2 text-black" htmlFor="nombre">
+                          link Venta Entradas
+                        </label>
+                        <input
+                          type="text"
+                          id="nombre"
+                          className="form-control"
+                          value={linkVentaEntradas}
+                          onChange={(e) => setLinkVentaEntradas(e.target.value)}
+                        />
+                      </div>
+
+                      <div className="mb-3">
                         <label
                           className="mb-2 text-black"
                           htmlFor="tienePreventa"
@@ -555,19 +609,6 @@ const RegistrarEvento = () => {
                       )}
 
                       <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          Cantidad Puestos
-                        </label>
-                        <input
-                          type="number"
-                          id="nombre"
-                          className="form-control"
-                          value={cantidadPuestos}
-                          onChange={(e) => setCantidadPuestos(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="mb-3">
                         <label
                           className="mb-2 text-black"
                           htmlFor="tieneRepartidores"
@@ -603,19 +644,6 @@ const RegistrarEvento = () => {
                       )}
 
                       <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          Capacidad maxima
-                        </label>
-                        <input
-                          type="number"
-                          id="nombre"
-                          className="form-control"
-                          value={capacidadMaxima}
-                          onChange={(e) => setCapacidadMaxima(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="mb-3">
                         <label
                           className="mb-2 text-black"
                           htmlFor="tieneButacas"
@@ -627,34 +655,6 @@ const RegistrarEvento = () => {
                           id="tieneButacas"
                           checked={tieneButacas}
                           onChange={(e) => setTieneButacas(e.target.checked)}
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="estado">
-                          Tipo Pago
-                        </label>
-                        <select
-                          id="estado"
-                          className="form-select"
-                          value={tipoPago}
-                          onChange={(e) => setTipoPago(e.target.value)}
-                        >
-                          <option value={1}>Pago</option>
-                          <option value={2}>Gratuito</option>
-                        </select>
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          link Venta Entradas
-                        </label>
-                        <input
-                          type="text"
-                          id="nombre"
-                          className="form-control"
-                          value={linkVentaEntradas}
-                          onChange={(e) => setLinkVentaEntradas(e.target.value)}
                         />
                       </div>
 
