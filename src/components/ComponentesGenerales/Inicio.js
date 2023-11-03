@@ -1,25 +1,22 @@
+import { faSignOutAlt, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import puestos from "../img/carro.png";
+import pedidoimg from "../img/comida-rapida-casera.jpg";
 import eventos from "../img/eventos.png";
+import eventosimg2 from "../img/eventosimg2.png";
+import encargado from "../img/foodtruck.jpg";
+import productor from "../img/productor.jpg";
+import repartidor from "../img/repartidor.jpg";
+
+import notificaciones from "../img/notificaciones.png";
 import pedidos from "../img/pedidos.png";
 import perfil from "../img/perfil.png";
-import notificaciones from "../img/notificaciones.png";
-import eventosimg from "../img/Eventos-boton.png";
-import pedidoimg from "../img/comida-rapida-casera.jpg";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUpLong,
-  faDolly,
-  faShop,
-  faUser,
-  faBriefcase,
-} from "@fortawesome/free-solid-svg-icons";
 import "./../sass/main.scss";
-
 const Inicio = () => {
   const [session, setSession] = useState(null);
   const cardData = [
@@ -58,12 +55,12 @@ const Inicio = () => {
       <div className="grid-container">
         <Link to="/eventos" className="grid-item a grid-container-div">
           <div className="grid-item-div type1 contenedor-img">
-            <img src={eventosimg} alt="" className="imagen" />
+            <img src={eventosimg2} alt="" className="imagen" />
           </div>
 
           <div className="grid-item-div type2">
             <h2>Eventos</h2>
-            <p>¿Quieres buscar Eventos?</p>
+            <p>Busca tus eventos favoritos</p>
           </div>
         </Link>
         <Link to="/pedidos" className="grid-item a grid-container-div">
@@ -76,35 +73,58 @@ const Inicio = () => {
             <p>¿Quieres ver tus pedidos?</p>
           </div>
         </Link>
-        <Link to="/adquirir-nuevo-rolPE" className="grid-item grid-item-cel">
-          <div className="lefticon col-2">
-            <FontAwesomeIcon icon={faUpLong} className="up" />
-            <FontAwesomeIcon icon={faBriefcase} />
+
+        <Link to="/adquirir-nuevo-rolPE" className="grid-item a grid-container-div">
+          <div className="grid-item-div type1 contenedor-img">
+            <img src={productor} alt="" className="imagen" />
           </div>
 
-          <p className="titulochiquito col-10">Ascender a Productor</p>
-        </Link>
-        <Link to="/adquirir-nuevo-rolR" className="grid-item grid-item-cel">
-          <div className="lefticon col-2">
-            <FontAwesomeIcon icon={faUpLong} className="up" />
-            <FontAwesomeIcon icon={faDolly} />
+          <div className="grid-item-div type2">
+            <h2>Productores</h2>
+            <p>Quickfood para tu evento</p>
           </div>
-          <p className="titulochiquito col-10">Ascender a Repartidor</p>
         </Link>
-        <Link to="/adquirir-nuevo-rolEPC" className="grid-item grid-item-cel">
-          <div className="lefticon col-2">
-            <FontAwesomeIcon icon={faUpLong} className="up" />
-            <FontAwesomeIcon icon={faShop} />
+
+        <Link to="/adquirir-nuevo-rolEPC" className="grid-item a grid-container-div">
+          <div className="grid-item-div type1 contenedor-img">
+            <img src={encargado} alt="" className="imagen" />
           </div>
-          <p className="titulochiquito col-10">
-            Ascender a encargado de puesto
+
+          <div className="grid-item-div type2">
+            <h2>Puestos</h2>
+            <p>Quickfood para tus puestos</p>
+          </div>
+        </Link>
+
+        <Link to="/adquirir-nuevo-rolR" className="grid-item a grid-container-div">
+          <div className="grid-item-div type1 contenedor-img">
+            <img src={repartidor} alt="" className="imagen" />
+          </div>
+
+          <div className="grid-item-div type2">
+            <h2>Repartidores</h2>
+            <p>Quickfood para repartidores</p>
+          </div>
+        </Link>
+
+
+        <Link to="/perfil-nuevo" className="grid-item grid-item-cel button_slide button_configuracion">
+          <p className="titulochiquito col-9">
+            Mi Perfil
           </p>
+          <div className="icono">
+            <FontAwesomeIcon icon={faUser} className="icono-salir" />
+          </div>
         </Link>
-        <Link to="/" className="grid-item grid-item-cel">
-          6
-        </Link>
-        <Link to="/" className="grid-item grid-item-cel">
-          7
+
+        <Link to="/" className="grid-item grid-item-cel button_slide button_salir">
+
+          <p className="titulochiquito col-9">
+            Cerrar Sesión
+          </p>
+          <div className="icono">
+            <FontAwesomeIcon icon={faSignOutAlt} className="icono-salir" />
+          </div>
         </Link>
       </div>
       <div>
