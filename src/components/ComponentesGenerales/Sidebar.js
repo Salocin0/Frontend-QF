@@ -1,10 +1,10 @@
+import { faDolly } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
 import "./../sass/main.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDolly } from "@fortawesome/free-solid-svg-icons";
 
 import Logo from "../img/QuickFood_LogoYellow.png";
 
@@ -14,6 +14,7 @@ const Sidebar = ({ tipoUsuario }) => {
   const [isProductor, setIsProductor] = useState(false);
   const [isRepartidor, setIsRepartidor] = useState(false);
   const [haveRol, setHaveRol] = useState(false);
+  const [mostrarNotificacion, setMostrarNotificacion] = useState(false);
 
   useEffect(() => {
     setUsuario(tipoUsuario);
@@ -23,6 +24,9 @@ const Sidebar = ({ tipoUsuario }) => {
     setHaveRol(usuario !== "consumidor");
   }, [tipoUsuario, usuario]);
 
+  const toggleNotificacion = () => {
+    setMostrarNotificacion((prev) => !prev);
+  };
   return (
     <>
       <div className={"sidebar"}>
@@ -52,19 +56,43 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className="navitem">
-              <a href="/Notificaciones" className={`navlink text-truncate`}>
-                <i className={`icono bi bi-bell`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Notificaciones
-                </span>
-              </a>
-            </li>
-            <li className="navitem">
               <a href="/carrito" className={`navlink text-truncate`}>
                 <i className={`icono bi bi-cart`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">Carrito</span>
               </a>
             </li>
+            <li className="navitem">
+              <a
+                className={`navlink text-truncate`}
+                onClick={toggleNotificacion}
+              >
+                <i className={`icono bi bi-bell`}></i>
+                <span className="ms-1 d-none d-sm-inline w-100">Notificaciones</span>
+              </a>
+            </li>
+            {mostrarNotificacion && (
+              <div className="ventana-emergente">
+
+
+                <div class="notificacion">
+                  <div class="fecha">Hace 3 días</div>
+                  <div class="contenido">
+                    <i>Valoración</i>
+                    <br />
+                    ¡Gracias por valorar el pedido del carrito de Juan! Esperamos que lo hayas disfrutado 🤩
+                  </div>
+                </div>
+                <div class="notificacion">
+                  <div class="fecha">Hace 3 días</div>
+                  <div class="contenido">
+                  <i>Compra Realizada</i>
+                    <br />
+                    ¡El carrito de Juan tiene tu pedido! Un Repartidor se acercará a tu asiento a la brevedad. 🏃‍♂
+                  </div>
+                </div>
+              </div>
+            )}
+
             <hr className="divicionnav" style={{ color: "white", width: "100%" }} />
             {isResponsable && (
               <li className="navitem">
