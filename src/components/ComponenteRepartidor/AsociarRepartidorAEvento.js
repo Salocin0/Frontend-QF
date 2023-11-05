@@ -51,22 +51,43 @@ const AsociarRepartidorAEvento = () => {
         .then((response) => response.json())
         .then((data) => {
           setEventos(data.data);
-          const totalEventos = Math.ceil(data.data.length / 4) * 4;
-          const eventosConNulos = [
-            ...data.data,
-            ...Array(totalEventos - data.data.length).fill(null),
-          ];
+          if (data.data.length !== 0) {
+            const totalEventos = Math.ceil(data.data.length / 4) * 4;
+            const eventosConNulos = [
+              ...data.data,
+              ...Array(totalEventos - data.data.length).fill(null),
+            ];
 
-          const generatedRows = [];
-          for (let i = 0; i < eventosConNulos.length; i += 4) {
-            const row = eventosConNulos.slice(i, i + 4);
-            generatedRows.push(row);
+            const generatedRows = [];
+            for (let i = 0; i < eventosConNulos.length; i += 4) {
+              const row = eventosConNulos.slice(i, i + 4);
+              generatedRows.push(row);
+            }
+            setRows(generatedRows);
           }
-          setRows(generatedRows);
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
   }, [session, recargar]);
+
+  const handleAsociar = (id) => {
+    /*const headers = new Headers();
+    headers.append("ConsumidorId", session?.consumidorId);
+    headers.append("Content-Type", "application/json");
+
+    fetch("http://localhost:8000/restriccion", {
+      method: "GET",
+      headers: headers,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setRestriccionesdb(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error al registrar el evento");
+      });*/
+  };
 
   return (
     <div className={`${style.background} d-flex`}>
@@ -74,18 +95,23 @@ const AsociarRepartidorAEvento = () => {
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className="col-10 grid-container p-3">
-        <div className="w-100 h-100 header">
-          <h2 className="text-center " style={{ color: "white" }}>
-            Asociate a un evento
-          </h2>
-          <div className="text-center">
-            <h2 style={{ color: "white" }}>BUSCADOR</h2>
-            <input type="text" placeholder="Buscar" />
-            <button>Buscar</button>
+        <div className="h-100 header d-flex flex-column justify-content-center align-items-center text-center">
+          <h2 className="text-white">Asociate a un evento</h2>
+          <div className="text-center mt-3">
+            <h2 className="text-white">BUSCADOR</h2>
+            <div className="d-flex">
+              <input
+                type="text"
+                placeholder="Buscar"
+                className="form-control"
+              />
+              <button className="btn btn-primary ml-2 mx-2">Buscar</button>
+            </div>
           </div>
         </div>
         <div className="filters">
           <h2>FILTROS</h2>
+          <hr />
           <div>
             <label>
               <input type="checkbox" /> Filtro 1
@@ -103,17 +129,37 @@ const AsociarRepartidorAEvento = () => {
           </div>
         </div>
         <div className="content">
-          {eventos.map((evento, index) => (
-            <div className="card" key={index}>
-              <img src={evento.imagen} alt={evento.titulo} />
-              <h3>{evento.titulo}</h3>
-              <p>{evento.descripcion}</p>
-              <p>Localidad: {evento.localidad}</p>
-              <p>Distancia: {evento.distancia} km</p>
-              <p>Fecha: {evento.fecha}</p>
-              <button>Asociarse a evento</button>
-            </div>
-          ))}
+          {Array.isArray(eventos) && eventos.length > 0 ? (
+            eventos.map((evento, index) => (
+              <div className="card mx-2 mb-2" key={index}>
+                <div className="row">
+                  <div className="col-3 mb-1" style={{borderRadius:"10px"}}>
+                    <img
+                      src={evento.img}
+                      alt={evento.titulo}
+                      className="img-fluid w-100 h-100"
+                    />
+                  </div>
+                  <div className="col-9 col-md-3">
+                    <h3>{evento.titulo}</h3>
+                    <p>{evento.descripcion}</p>
+                    <p>Localidad: {evento.localidad}</p>
+                    <p>Distancia: {evento.distancia} km</p>
+                    <p>Fecha: {evento.fecha}</p>
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-12 col-md-4 text-end w-100 pe-4 pb-2">
+                    <button className="btn btn-primary" onClick={() => handleAsociar(evento.id)}>
+                      Asociarse a evento
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <h2>No hay eventos disponibles</h2>
+          )}
         </div>
       </div>
     </div>
