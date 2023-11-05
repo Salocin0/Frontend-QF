@@ -42,6 +42,17 @@ const RegistrarEvento = () => {
   const [localidades, setLocalidades] = useState([]);
   const [selectedLocalidad, setSelectedLocalidad] = useState("");
 
+  const [restriccionesdb, setRestriccionesdb] = useState([]);
+
+  const [restricciones, setRestricciones] = useState([]);
+
+  const [nuevaColumna, setNuevaColumna] = useState({
+    titulo: "",
+    tipo: "",
+    opciones: "",
+    usuario: "",
+  });
+
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
@@ -123,7 +134,7 @@ const RegistrarEvento = () => {
       tieneButacas,
       tipoPago,
       linkVentaEntradas,
-
+      restricciones,
       estado,
     };
 
@@ -289,6 +300,56 @@ const RegistrarEvento = () => {
       setLocalidades([]);
     }
   };
+
+  const agregarColumna = () => {
+    if (!nuevaColumna.titulo.trim()) {
+      toast.error("El titulo no puede estar vacio");
+      return;
+    }
+
+    if (!nuevaColumna.tipo.trim()) {
+      toast.error("El tipo no puede estar vacio");
+      return;
+    }
+
+    if (nuevaColumna.tipo === "Select" && !nuevaColumna.opciones?.trim()) {
+      toast.error("Opciones no puede estar vacio");
+      return;
+    }
+
+    setRestricciones([...restricciones, nuevaColumna]);
+    setNuevaColumna({
+      titulo: "",
+      tipo: "",
+      opciones: "",
+      usuario: "",
+    });
+  };
+
+  const eliminarfila = (indice) => {
+    const nuevasRestricciones = [...restricciones];
+    nuevasRestricciones.splice(indice, 1); // Elimina la restricción en el índice especificado
+    setRestricciones(nuevasRestricciones);
+  };
+
+  useEffect(() => {
+    const headers = new Headers();
+    headers.append("ConsumidorId", session?.consumidorId);
+    headers.append("Content-Type", "application/json");
+
+    fetch("http://localhost:8000/restriccion", {
+      method: "GET",
+      headers: headers,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setRestriccionesdb(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error al registrar el evento");
+      });
+  }, [session]);
 
   return (
     <div className="container-fluid">
@@ -527,6 +588,145 @@ const RegistrarEvento = () => {
                           onChange={(e) => setLinkVentaEntradas(e.target.value)}
                         />
                       </div>
+
+                      <hr />
+                      <h4>Restricciones personalizadas</h4>
+                      <form>
+                        <div className="d-flex">
+                          <div className="col-3 px-1">
+                            <label style={{ color: "black" }}>Título</label>
+                            <input
+                              className="w-100 form-control"
+                              list="restricciones-titulo"
+                              value={nuevaColumna.titulo}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  titulo: e.target.value,
+                                })
+                              }
+                            />
+                            <datalist id="restricciones-titulo">
+                              {restriccionesdb.map((restriccion, index) => (
+                                <option
+                                  key={index}
+                                  value={restriccion.titulo}
+                                />
+                              ))}
+                            </datalist>
+                          </div>
+                          <div className="col-3 px-1">
+                            <label style={{ color: "black" }}>Tipo</label>
+                            <select
+                              name=""
+                              id=""
+                              className="w-100 form-control"
+                              value={nuevaColumna.tipo}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  tipo: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="PDF">PDF</option>
+                              <option value="Cadena de texto">
+                                Cadena de texto
+                              </option>
+                              <option value="Numerico">Numerico</option>
+                              <option value="Imagen">Imagen</option>
+                              <option value="Opciones">Opciones</option>
+                            </select>
+                          </div>
+
+                          <div className="col-3 px-1">
+                            <label style={{ color: "black" }}>Opciones</label>
+                            <input
+                              className="w-100 form-control"
+                              list="restricciones-opciones"
+                              value={nuevaColumna.opciones}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  opciones: e.target.value,
+                                })
+                              }
+                            />
+                            <datalist id="restricciones-opciones">
+                              {restriccionesdb.map((restriccion, index) => (
+                                <option
+                                  key={index}
+                                  value={restriccion.opciones}
+                                />
+                              ))}
+                            </datalist>
+                          </div>
+
+                          <div className="col-3 px-1">
+                            <label style={{ color: "black" }}>Usuario</label>
+                            <select
+                              name=""
+                              id=""
+                              className="w-100 form-control"
+                              value={nuevaColumna.usuario}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  usuario: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="Ambos">Ambos</option>
+                              <option value="Repartidor">Repartidor</option>
+                              <option value="Encargado de puesto">
+                                Encargado de puesto
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="d-flex justify-content-end p-1">
+                          <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={agregarColumna}
+                          >
+                            Agregar Restriccion
+                          </button>
+                        </div>
+                      </form>
+                      <div className="d-flex justify-content-center aling-content-center">
+                        <table className="w-100 mx-auto text-center table table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Título</th>
+                              <th>Tipo</th>
+                              <th>Opciones</th>
+                              <th>Usuario</th>
+                              <th>Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {restricciones.map((restriccion, index) => (
+                              <tr key={index}>
+                                <td>{restriccion.titulo}</td>
+                                <td>{restriccion.tipo}</td>
+                                <td>{restriccion.opciones}</td>
+                                <td>{restriccion.usuario}</td>
+                                <td>
+                                  <button
+                                    type="button"
+                                    onClick={() => eliminarfila(index)}
+                                    className="btn btn-danger"
+                                  >
+                                    Eliminar
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <hr />
 
                       <div className="mb-3">
                         <label

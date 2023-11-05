@@ -36,12 +36,25 @@ const ConsultarEvento = () => {
   const [capacidadMaxima, setCapacidadMaxima] = useState("");
   const [tipoPago, setTipoPago] = useState("");
   const [linkVentaEntradas, setLinkVentaEntradas] = useState("");
-  const [evento,setEvento]=useState({});
+  const [evento, setEvento] = useState({});
 
   const [provincias, setProvincias] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [localidades, setLocalidades] = useState([]);
   const [selectedLocalidad, setSelectedLocalidad] = useState("");
+
+  const [restriccionesdb, setRestriccionesdb] = useState([]);
+
+  const [restriccionesEvento, setRestriccionesEvento] = useState([]);
+
+  const [restricciones, setRestricciones] = useState([]);
+
+  const [nuevaColumna, setNuevaColumna] = useState({
+    titulo: "",
+    tipo: "",
+    opciones: "",
+    usuario: "",
+  });
 
   const navigate = useNavigate();
 
@@ -75,17 +88,6 @@ const ConsultarEvento = () => {
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
-    /*ValidationError [SequelizeValidationError]: notNull Violation: evento.fechaInicio cannot be null,
-notNull Violation: evento.horaInicio cannot be null,
-notNull Violation: evento.fechaFin cannot be null,
-notNull Violation: evento.conRepartidor cannot be null
-    at InstanceValidator._validate (C:\Users\nicol\Documents\Proyectos\ProyectoFinal\BackendNode-QF\node_modules\sequelize\lib\instance-validator.js:50:13)    
-    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-    at async InstanceValidator._validateAndRunHooks (C:\Users\nicol\Documents\Proyectos\ProyectoFinal\BackendNode-QF\node_modules\sequelize\lib\instance-validator.js:60:7)
-    at async InstanceValidator.validate (C:\Users\nicol\Documents\Proyectos\ProyectoFinal\BackendNode-QF\node_modules\sequelize\lib\instance-validator.js:54:12)
-    at async model.save (C:\Users\nicol\Documents\Proyectos\ProyectoFinal\BackendNode-QF\node_modules\sequelize\lib\model.js:2426:7)
-    at async EventoService.update (file:///C:/Users/nicol/Documents/Proyectos/ProyectoFinal/BackendNode-QF/src/services/evento.service.js:49:5)
-    at async updateOneController (file:///C:/Users/nicol/Documents/Proyectos/ProyectoFinal/BackendNode-QF/src/controllers/evento.controller.js:91:22)*/
     const nuevoEvento = {
       nombre: nombre,
       descripcion: descripcion,
@@ -112,9 +114,10 @@ notNull Violation: evento.conRepartidor cannot be null
       conButaca: tieneButacas,
       habilitado: true,
       estado: estado,
-      consumidorId:session.consumidorId,
+      restricciones: restriccionesEvento,
+      consumidorId: session.consumidorId,
     };
-    console.log(evento)
+    console.log(evento);
     // Realizar la solicitud HTTP para enviar los datos al servidor
     fetch(`http://localhost:8000/evento/${id}`, {
       method: "PUT",
@@ -163,7 +166,7 @@ notNull Violation: evento.conRepartidor cannot be null
       })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data)
+        console.log(data.data);
         setEvento(data.data);
         setNombre(data.data.nombre);
         setDescripcion(data.data.descripcion);
@@ -207,6 +210,7 @@ notNull Violation: evento.conRepartidor cannot be null
       setCroquis(base64);
     });
   };
+
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
@@ -254,6 +258,73 @@ notNull Violation: evento.conRepartidor cannot be null
     }
   };
 
+  const agregarColumna = () => {
+    setRestriccionesEvento([...restriccionesEvento, nuevaColumna]);
+    setNuevaColumna({
+      titulo: "",
+      tipo: "",
+      opciones: "",
+      usuario: "",
+    });
+  };
+
+  const eliminarfila = (indice) => {
+    if (restriccionesEvento[indice].id !== "undefined") {
+      const headers = new Headers();
+      headers.append("ConsumidorId", session?.consumidorId);
+      headers.append("Content-Type", "application/json");
+      fetch(
+        `http://localhost:8000/restriccion/${restriccionesEvento[indice].id}`,
+        {
+          method: "DELETE",
+          headers: headers,
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          const nuevasRestricciones = [...restriccionesEvento];
+          nuevasRestricciones.splice(indice, 1);
+          setRestriccionesEvento(nuevasRestricciones);
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error("Error al registrar el evento");
+        });
+    }
+  };
+
+  useEffect(() => {
+    const headers = new Headers();
+    headers.append("ConsumidorId", session?.consumidorId);
+    headers.append("Content-Type", "application/json");
+
+    fetch("http://localhost:8000/restriccion", {
+      method: "GET",
+      headers: headers,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setRestriccionesdb(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error al registrar el evento");
+      });
+  }, [session]);
+
+  useEffect(() => {
+    fetch(`http://localhost:8000/restriccion/evento/${id}`, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setRestriccionesEvento(data.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error al registrar el evento");
+      });
+  }, [id]);
 
   return (
     <div className={`d-flex ${style.background}`}>
@@ -270,379 +341,503 @@ notNull Violation: evento.conRepartidor cannot be null
                 Consultar Puesto
               </h1>
               <form onSubmit={handleSaveChanges} className="needs-validation">
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          Nombre del Evento
-                        </label>
-                        <input
-                          type="text"
-                          id="nombre"
-                          className="form-control"
-                          value={nombre}
-                          onChange={(e) => setNombre(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="nombre">
+                    Nombre del Evento
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    className="form-control"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          Descripcion
-                        </label>
-                        <input
-                          type="text"
-                          id="nombre"
-                          className="form-control"
-                          value={descripcion}
-                          onChange={(e) => setDescripcion(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="nombre">
+                    Descripcion
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    className="form-control"
+                    value={descripcion}
+                    onChange={(e) => setDescripcion(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label
-                          className="mb-2 text-black"
-                          htmlFor="imagenEvento"
-                        >
-                          Imagen de evento
-                        </label>
-                        <input
-                          type="file"
-                          id="imagenEvento"
-                          accept="image/*"
-                          onChange={(e) => handleImagenEventoChange(e)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="imagenEvento">
+                    Imagen de evento
+                  </label>
+                  <input
+                    type="file"
+                    id="imagenEvento"
+                    accept="image/*"
+                    onChange={(e) => handleImagenEventoChange(e)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="croquis">
-                          Croquis
-                        </label>
-                        <input
-                          type="file"
-                          id="croquis"
-                          accept="image/*"
-                          onChange={(e) => handleCroquisChange(e)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="croquis">
+                    Croquis
+                  </label>
+                  <input
+                    type="file"
+                    id="croquis"
+                    accept="image/*"
+                    onChange={(e) => handleCroquisChange(e)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="provincia">
-                          Provincia
-                        </label>
-                        <select
-                          id="provincia"
-                          name="provincia"
-                          data-testid="provincia"
-                          className={` form-control`}
-                          value={selectedProvince}
-                          onChange={handleProvinceChange}
-                          disabled={!editMode}
-                        >
-                          <option value="" disabled>
-                            Seleccione una provincia
-                          </option>
-                          {provincias.map((prov) => (
-                            <option key={prov.nombre} value={prov.nombre}>
-                              {prov.nombre}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="localidad">
-                          Localidad
-                        </label>
-                        <select
-                          className={`form-control`}
-                          value={selectedLocalidad}
-                          onChange={handleLocalidadChange}
-                          data-testid="localidad"
-                          id="localidad"
-                          name="localidad"
-                          disabled={!editMode}
-                        >
-                          <option value="" disabled>
-                            Seleccione una localidad
-                          </option>
-                          {localidades.map((loc) => (
-                            <option key={loc.nombre} value={loc.nombre}>
-                              {loc.nombre}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="provincia">
+                    Provincia
+                  </label>
+                  <select
+                    id="provincia"
+                    name="provincia"
+                    data-testid="provincia"
+                    className={` form-control`}
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
+                    disabled={!editMode}
+                  >
+                    <option value="" disabled>
+                      Seleccione una provincia
+                    </option>
+                    {provincias.map((prov) => (
+                      <option key={prov.nombre} value={prov.nombre}>
+                        {prov.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          ubicacion
-                        </label>
-                        <input
-                          type="text"
-                          id="nombre"
-                          className="form-control"
-                          value={ubicacion}
-                          onChange={(e) => setUbicacion(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="localidad">
+                    Localidad
+                  </label>
+                  <select
+                    className={`form-control`}
+                    value={selectedLocalidad}
+                    onChange={handleLocalidadChange}
+                    data-testid="localidad"
+                    id="localidad"
+                    name="localidad"
+                    disabled={!editMode}
+                  >
+                    <option value="" disabled>
+                      Seleccione una localidad
+                    </option>
+                    {localidades.map((loc) => (
+                      <option key={loc.nombre} value={loc.nombre}>
+                        {loc.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="estado">
-                          Tipo Evento
-                        </label>
-                        <select
-                          id="estado"
-                          className="form-select"
-                          value={tipoEvento}
-                          onChange={(e) => setTipoEvento(e.target.value)}
-                          disabled={!editMode}
-                        >
-                          <option value={1}>Cine</option>
-                          <option value={2}>Festival</option>
-                          <option value={3}>Deporte</option>
-                        </select>
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="nombre">
+                    ubicacion
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    className="form-control"
+                    value={ubicacion}
+                    onChange={(e) => setUbicacion(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="fecha">
-                          Fecha inicio evento
-                        </label>
-                        <input
-                          type="date"
-                          id="fecha"
-                          className="form-control"
-                          value={fechaInicioEvento}
-                          onChange={(e) => setFechaInicioEvento(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="estado">
+                    Tipo Evento
+                  </label>
+                  <select
+                    id="estado"
+                    className="form-select"
+                    value={tipoEvento}
+                    onChange={(e) => setTipoEvento(e.target.value)}
+                    disabled={!editMode}
+                  >
+                    <option value={1}>Cine</option>
+                    <option value={2}>Festival</option>
+                    <option value={3}>Deporte</option>
+                  </select>
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="hora">
-                          Hora inicio evento
-                        </label>
-                        <input
-                          type="time"
-                          id="hora"
-                          className="form-control"
-                          value={horaInicioEvento}
-                          onChange={(e) => setHoraInicioEvento(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="fecha">
+                    Fecha inicio evento
+                  </label>
+                  <input
+                    type="date"
+                    id="fecha"
+                    className="form-control"
+                    value={fechaInicioEvento}
+                    onChange={(e) => setFechaInicioEvento(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="fecha">
-                          Fecha fin evento
-                        </label>
-                        <input
-                          type="date"
-                          id="fecha"
-                          className="form-control"
-                          value={fechaFinEvento}
-                          onChange={(e) => setFechaFinEvento(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="hora">
+                    Hora inicio evento
+                  </label>
+                  <input
+                    type="time"
+                    id="hora"
+                    className="form-control"
+                    value={horaInicioEvento}
+                    onChange={(e) => setHoraInicioEvento(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          Cantidad Puestos
-                        </label>
-                        <input
-                          type="number"
-                          id="nombre"
-                          className="form-control"
-                          value={cantidadPuestos}
-                          onChange={(e) => setCantidadPuestos(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="fecha">
+                    Fecha fin evento
+                  </label>
+                  <input
+                    type="date"
+                    id="fecha"
+                    className="form-control"
+                    value={fechaFinEvento}
+                    onChange={(e) => setFechaFinEvento(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          Capacidad maxima
-                        </label>
-                        <input
-                          type="number"
-                          id="nombre"
-                          className="form-control"
-                          value={capacidadMaxima}
-                          onChange={(e) => setCapacidadMaxima(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="nombre">
+                    Cantidad Puestos
+                  </label>
+                  <input
+                    type="number"
+                    id="nombre"
+                    className="form-control"
+                    value={cantidadPuestos}
+                    onChange={(e) => setCantidadPuestos(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="estado">
-                          Tipo Pago
-                        </label>
-                        <select
-                          id="estado"
-                          className="form-select"
-                          value={tipoPago}
-                          onChange={(e) => setTipoPago(e.target.value)}
-                          disabled={!editMode}
-                        >
-                          <option value={1}>Pago</option>
-                          <option value={2}>Gratuito</option>
-                        </select>
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="nombre">
+                    Capacidad maxima
+                  </label>
+                  <input
+                    type="number"
+                    id="nombre"
+                    className="form-control"
+                    value={capacidadMaxima}
+                    onChange={(e) => setCapacidadMaxima(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          link Venta Entradas
-                        </label>
-                        <input
-                          type="text"
-                          id="nombre"
-                          className="form-control"
-                          value={linkVentaEntradas}
-                          onChange={(e) => setLinkVentaEntradas(e.target.value)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="estado">
+                    Tipo Pago
+                  </label>
+                  <select
+                    id="estado"
+                    className="form-select"
+                    value={tipoPago}
+                    onChange={(e) => setTipoPago(e.target.value)}
+                    disabled={!editMode}
+                  >
+                    <option value={1}>Pago</option>
+                    <option value={2}>Gratuito</option>
+                  </select>
+                </div>
 
-                      <div className="mb-3">
-                        <label
-                          className="mb-2 text-black"
-                          htmlFor="tienePreventa"
-                        >
-                          ¿Tiene preventa?
-                        </label>
-                        <input
-                          type="checkbox"
-                          id="tienePreventa"
-                          checked={tienePreventa}
-                          onChange={(e) => setTienePreventa(e.target.checked)}
-                          disabled={!editMode}
-                        />
-                      </div>
-                      {tienePreventa && (
-                        <div>
-                          <div className="mb-3">
-                            <label className="mb-2 text-black" htmlFor="fecha">
-                              Fecha inicio preventa
-                            </label>
-                            <input
-                              type="date"
-                              id="fecha"
-                              className="form-control"
-                              value={fechaInicioPreventa}
-                              onChange={(e) =>
-                                setFechaInicioPreventa(e.target.value)
-                              }
-                              disabled={!editMode}
-                            />
-                          </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="nombre">
+                    link Venta Entradas
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    className="form-control"
+                    value={linkVentaEntradas}
+                    onChange={(e) => setLinkVentaEntradas(e.target.value)}
+                    disabled={!editMode}
+                  />
+                </div>
 
-                          <div className="mb-3">
-                            <label className="mb-2 text-black" htmlFor="fecha">
-                              Fecha fin preventa
-                            </label>
-                            <input
-                              type="date"
-                              id="fecha"
-                              className="form-control"
-                              value={fechaFinPreventa}
-                              onChange={(e) =>
-                                setFechaFinPreventa(e.target.value)
-                              }
-                              disabled={!editMode}
-                            />
-                          </div>
+                <hr />
+                <h4>Restricciones personalizadas</h4>
+                <form>
+                  <div className="d-flex">
+                    <div className="col-3 px-1">
+                      <label style={{ color: "black" }}>Título</label>
+                      <input
+                        className="w-100 form-control"
+                        list="restricciones-titulo"
+                        value={nuevaColumna.titulo}
+                        onChange={(e) =>
+                          setNuevaColumna({
+                            ...nuevaColumna,
+                            titulo: e.target.value,
+                          })
+                        }
+                        disabled={!editMode}
+                      />
+                      <datalist id="restricciones-titulo">
+                        {restriccionesdb.map((restriccion, index) => (
+                          <option key={index} value={restriccion.titulo} />
+                        ))}
+                      </datalist>
+                    </div>
 
-                          <div className="mb-3">
-                            <label className="mb-2 text-black" htmlFor="nombre">
-                              plazo cancelacion preventa
-                            </label>
-                            <input
-                              type="number"
-                              id="nombre"
-                              className="form-control"
-                              value={plazoCancelacionPreventa}
-                              onChange={(e) =>
-                                setPlazoCancelacionPreventa(e.target.value)
-                              }
-                              disabled={!editMode}
-                            />
-                          </div>
+                    <div className="col-3 px-1">
+                      <label style={{ color: "black" }}>Tipo</label>
+                      <select
+                        name=""
+                        id=""
+                        className="w-100 form-control"
+                        value={nuevaColumna.tipo}
+                        onChange={(e) =>
+                          setNuevaColumna({
+                            ...nuevaColumna,
+                            tipo: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="PDF">PDF</option>
+                        <option value="Cadena de texto">Cadena de texto</option>
+                        <option value="Numerico">Numerico</option>
+                        <option value="Imagen">Imagen</option>
+                        <option value="Opciones">Opciones</option>
+                      </select>
+                    </div>
 
-                          <div className="mb-3">
-                            <label className="mb-2 text-black" htmlFor="estado">
-                              Tipo Preventa
-                            </label>
-                            <select
-                              id="estado"
-                              className="form-select"
-                              value={tipoPreventa}
-                              onChange={(e) => setTipoPreventa(e.target.value)}
+                    <div className="col-3 px-1">
+                      <label style={{ color: "black" }}>Opciones</label>
+                      <input
+                        className="w-100 form-control"
+                        list="restricciones-opciones"
+                        value={nuevaColumna.opciones}
+                        onChange={(e) =>
+                          setNuevaColumna({
+                            ...nuevaColumna,
+                            opciones: e.target.value,
+                          })
+                        }
+                        disabled={!editMode}
+                      />
+                      <datalist id="restricciones-opciones">
+                        {restriccionesdb.map((restriccion, index) => (
+                          <option key={index} value={restriccion.opciones} />
+                        ))}
+                      </datalist>
+                    </div>
+
+                    <div className="col-3 px-1">
+                      <label style={{ color: "black" }}>Usuario</label>
+                      <select
+                        name=""
+                        id=""
+                        className="w-100 form-control"
+                        value={nuevaColumna.usuario}
+                        onChange={(e) =>
+                          setNuevaColumna({
+                            ...nuevaColumna,
+                            usuario: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="Ambos">Ambos</option>
+                        <option value="Repartidor">Repartidor</option>
+                        <option value="Encargado de puesto">
+                          Encargado de puesto
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="d-flex justify-content-end p-1">
+                    <button
+                      type="button"
+                      className="btn btn-success"
+                      onClick={agregarColumna}
+                      disabled={!editMode}
+                    >
+                      Agregar Restriccion
+                    </button>
+                  </div>
+                </form>
+                <div className="d-flex justify-content-center aling-content-center">
+                  <table className="w-100 mx-auto text-center table table-striped table-bordered">
+                    <thead>
+                      <tr>
+                        <th>Título</th>
+                        <th>Tipo</th>
+                        <th>Opciones</th>
+                        <th>Usuario</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {restriccionesEvento.map((restriccion, index) => (
+                        <tr key={index}>
+                          <td>{restriccion.titulo}</td>
+                          <td>{restriccion.tipo}</td>
+                          <td>{restriccion.opciones}</td>
+                          <td>{restriccion.usuario}</td>
+                          <td>
+                            <button
+                              type="button"
+                              onClick={() => eliminarfila(index)}
+                              className="btn btn-danger"
                               disabled={!editMode}
                             >
-                              <option value={1}>Tipo 1</option>
-                              <option value={2}>Tipo 2</option>
-                              <option value={3}>Tipo 3</option>
-                            </select>
-                          </div>
-                        </div>
-                      )}
+                              Eliminar
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
-                      <div className="mb-3">
-                        <label
-                          className="mb-2 text-black"
-                          htmlFor="tieneRepartidores"
-                        >
-                          ¿Tiene Repartidores?
-                        </label>
-                        <input
-                          type="checkbox"
-                          id="tieneRepartidores"
-                          checked={tieneRepartidores}
-                          onChange={(e) =>
-                            setTieneRepartidores(e.target.checked)
-                          }
-                          disabled={!editMode}
-                        />
-                      </div>
-                      {tieneRepartidores && (
-                        <div>
-                          <div className="mb-3">
-                            <label className="mb-2 text-black" htmlFor="nombre">
-                              Cantidad repartidores
-                            </label>
-                            <input
-                              type="number"
-                              id="nombre"
-                              className="form-control"
-                              value={cantidadRepartidores}
-                              onChange={(e) =>
-                                setCantidadRepartidores(e.target.value)
-                              }
-                              disabled={!editMode}
-                            />
-                          </div>
-                        </div>
-                      )}
+                <hr />
 
-                      <div className="mb-3">
-                        <label
-                          className="mb-2 text-black"
-                          htmlFor="tieneButacas"
-                        >
-                          ¿Tiene Butacas?
-                        </label>
-                        <input
-                          type="checkbox"
-                          id="tieneButacas"
-                          checked={tieneButacas}
-                          onChange={(e) => setTieneButacas(e.target.checked)}
-                          disabled={!editMode}
-                        />
-                      </div>
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="tienePreventa">
+                    ¿Tiene preventa?
+                  </label>
+                  <input
+                    type="checkbox"
+                    id="tienePreventa"
+                    checked={tienePreventa}
+                    onChange={(e) => setTienePreventa(e.target.checked)}
+                    disabled={!editMode}
+                  />
+                </div>
+                {tienePreventa && (
+                  <div>
+                    <div className="mb-3">
+                      <label className="mb-2 text-black" htmlFor="fecha">
+                        Fecha inicio preventa
+                      </label>
+                      <input
+                        type="date"
+                        id="fecha"
+                        className="form-control"
+                        value={fechaInicioPreventa}
+                        onChange={(e) => setFechaInicioPreventa(e.target.value)}
+                        disabled={!editMode}
+                      />
+                    </div>
 
-                      <div className="d-grid">
+                    <div className="mb-3">
+                      <label className="mb-2 text-black" htmlFor="fecha">
+                        Fecha fin preventa
+                      </label>
+                      <input
+                        type="date"
+                        id="fecha"
+                        className="form-control"
+                        value={fechaFinPreventa}
+                        onChange={(e) => setFechaFinPreventa(e.target.value)}
+                        disabled={!editMode}
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="mb-2 text-black" htmlFor="nombre">
+                        plazo cancelacion preventa
+                      </label>
+                      <input
+                        type="number"
+                        id="nombre"
+                        className="form-control"
+                        value={plazoCancelacionPreventa}
+                        onChange={(e) =>
+                          setPlazoCancelacionPreventa(e.target.value)
+                        }
+                        disabled={!editMode}
+                      />
+                    </div>
+
+                    <div className="mb-3">
+                      <label className="mb-2 text-black" htmlFor="estado">
+                        Tipo Preventa
+                      </label>
+                      <select
+                        id="estado"
+                        className="form-select"
+                        value={tipoPreventa}
+                        onChange={(e) => setTipoPreventa(e.target.value)}
+                        disabled={!editMode}
+                      >
+                        <option value={1}>Tipo 1</option>
+                        <option value={2}>Tipo 2</option>
+                        <option value={3}>Tipo 3</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+
+                <div className="mb-3">
+                  <label
+                    className="mb-2 text-black"
+                    htmlFor="tieneRepartidores"
+                  >
+                    ¿Tiene Repartidores?
+                  </label>
+                  <input
+                    type="checkbox"
+                    id="tieneRepartidores"
+                    checked={tieneRepartidores}
+                    onChange={(e) => setTieneRepartidores(e.target.checked)}
+                    disabled={!editMode}
+                  />
+                </div>
+                {tieneRepartidores && (
+                  <div>
+                    <div className="mb-3">
+                      <label className="mb-2 text-black" htmlFor="nombre">
+                        Cantidad repartidores
+                      </label>
+                      <input
+                        type="number"
+                        id="nombre"
+                        className="form-control"
+                        value={cantidadRepartidores}
+                        onChange={(e) =>
+                          setCantidadRepartidores(e.target.value)
+                        }
+                        disabled={!editMode}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="mb-3">
+                  <label className="mb-2 text-black" htmlFor="tieneButacas">
+                    ¿Tiene Butacas?
+                  </label>
+                  <input
+                    type="checkbox"
+                    id="tieneButacas"
+                    checked={tieneButacas}
+                    onChange={(e) => setTieneButacas(e.target.checked)}
+                    disabled={!editMode}
+                  />
+                </div>
+
+                <div className="d-grid">
                   {!editMode && (
                     <button
                       type="button"
@@ -664,7 +859,7 @@ notNull Violation: evento.conRepartidor cannot be null
                 >
                   Volver
                 </Link>
-                    </form>
+              </form>
             </div>
           </div>
         </section>
