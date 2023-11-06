@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import "./../sass/main.scss";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
+import "./../sass/main.scss";
 
 const RegistrarEvento = () => {
   const [nombre, setNombre] = useState("");
@@ -136,7 +135,7 @@ const RegistrarEvento = () => {
       return;
     }
 
-    if (!imagenEvento?.trim()) {
+    /*if (!imagenEvento?.trim()) {
       toast.error("Suba un logo del evento");
       return;
     }
@@ -144,7 +143,7 @@ const RegistrarEvento = () => {
     if (!croquis?.trim()) {
       toast.error("Suba un croquis del evento");
       return;
-    }
+    }*/
 
     if (!ubicacion.trim()) {
       toast.error("la ubicacion no puede estar vacia");

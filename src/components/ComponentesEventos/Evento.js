@@ -1,10 +1,10 @@
-import { default as React, useState,useEffect } from "react";
+import { format } from "date-fns";
+import { default as React, useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import imgdefault from "./img/villa maria.png";
-import { format } from "date-fns";
 import "./../sass/main.scss";
+import imgdefault from "./img/villa maria.png";
 //TODO MODIFICACIONES PARA QUE ANDE, ESTA HARDCODEADO EN LISTADOEVENTOS
 const Evento = ({ evento,recargar }) => {
   const { id } = useParams();
@@ -33,6 +33,18 @@ const Evento = ({ evento,recargar }) => {
       })
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
+
+  const handleConfirm = () => {
+    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/confirmar`, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Evento confirmado con éxito");
+        recargar();
+      })
+      .catch((error) => toast.error("Error al confirmar evento"));
+  };
 
   const handleDelete = () => {
     const headers = new Headers();
@@ -91,6 +103,10 @@ const Evento = ({ evento,recargar }) => {
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={handleDelete}>
                   Deshabilitar Evento
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={handleConfirm}>
+                  Confirmar Evento
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

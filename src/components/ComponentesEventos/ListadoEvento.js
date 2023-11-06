@@ -1,12 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.scss";
-import villamaria from "./img/villa maria.png";
-import cosquin from "./img/cosquin.png";
-import { toast } from "react-toastify";
 import Evento from "./Evento.js";
 
 const ListadoEventos = () => {
@@ -135,6 +133,9 @@ const ListadoEventos = () => {
         consumidorId: eventoToEdit.consumidorId,
       });
     }
+
+
+
   };
 
   return (
