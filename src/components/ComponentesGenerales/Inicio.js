@@ -60,6 +60,7 @@ const Inicio = () => {
 
           <div className="grid-item-div type2">
             <h2>Eventos</h2>
+            <hr  className="m-3" style={{color: "black"}}/>
             <p>Busca tus eventos favoritos</p>
           </div>
         </Link>
@@ -70,6 +71,7 @@ const Inicio = () => {
 
           <div className="grid-item-div type2">
             <h2>Pedidos</h2>
+            <hr  className="m-3" style={{color: "black"}}/>
             <p>¿Quieres ver tus pedidos?</p>
           </div>
         </Link>
@@ -81,7 +83,8 @@ const Inicio = () => {
 
           <div className="grid-item-div type2">
             <h2>Productores</h2>
-            <p>Quickfood para tu evento</p>
+            <hr  className="m-3" style={{color: "black"}}/>
+            <p>Quickfood para tus eventos</p>
           </div>
         </Link>
 
@@ -92,6 +95,7 @@ const Inicio = () => {
 
           <div className="grid-item-div type2">
             <h2>Puestos</h2>
+            <hr  className="m-3" style={{color: "black"}}/>
             <p>Quickfood para tus puestos</p>
           </div>
         </Link>
@@ -103,6 +107,7 @@ const Inicio = () => {
 
           <div className="grid-item-div type2">
             <h2>Repartidores</h2>
+            <hr  className="m-3" style={{color: "black"}}/>
             <p>Quickfood para repartidores</p>
           </div>
         </Link>
