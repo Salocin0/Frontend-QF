@@ -36,3 +36,33 @@
 .content {
   grid-area: content;
 }
+
+.cardFormDin{
+  border-radius: 10px;
+  background-color: white;
+  padding: 20px;
+}
+
+.contenedorCard{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 2fr; 
+  margin: 10px 0; 
+}
+
+.titulo {
+  padding: 5px;
+}
+
+.input {
+  padding: 5px; 
+}

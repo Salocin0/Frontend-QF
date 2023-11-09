@@ -13,6 +13,7 @@ const AsociarRepartidorAEvento = () => {
   const [nuevoRol, setNuevorol] = useState(false);
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const [esAsociacionSimple, setEsAsociacionSimple] = useState();
   const [rows, setRows] = useState([]);
 
   const recargarComponente = () => {
@@ -68,25 +69,64 @@ const AsociarRepartidorAEvento = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
+
   }, [session, recargar]);
 
-  const handleAsociar = (id) => {
-    /*const headers = new Headers();
+  const handleTieneRestriciones = async (ideventoseleccionado) => {
+    try {
+      const headers = new Headers();
+      headers.append("ConsumidorId", session?.consumidorId);
+      headers.append("Content-Type", "application/json");
+  
+      const response = await fetch(`http://localhost:8000/restriccion/evento/${ideventoseleccionado}`, {
+        method: "GET",
+        headers: headers,
+      });
+
+        if (response.ok) {
+          handleCrearForm(ideventoseleccionado);
+        } else {
+          handleAsociar(ideventoseleccionado);
+        }
+        console.log(esAsociacionSimple)
+     if (esAsociacionSimple) {
+       
+    } else {
+       
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error("Error al crear el formulario");
+  }
+};
+
+  const handleCrearForm = (ideventoseleccionado) => {
+    const url = `/restriccionesEvento/${ideventoseleccionado}`;
+    navigate(url);
+  };
+
+  const handleAsociar = (ideventoseleccionado) => {
+    const headers = new Headers();
     headers.append("ConsumidorId", session?.consumidorId);
     headers.append("Content-Type", "application/json");
 
-    fetch("http://localhost:8000/restriccion", {
-      method: "GET",
-      headers: headers,
-    })
+    fetch(
+      `http://localhost:8000/asocioacion/evento/${ideventoseleccionado}/asociarSimple/0/${session.consumidorId}`,
+      {
+        method: "POST",
+        headers: headers,
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
-        setRestriccionesdb(data.data);
+        if (data.code === 200) {
+          toast.success("Asociacion Guardada");
+        }
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Error al registrar el evento");
-      });*/
+        toast.error("Error al asociar");
+      });
   };
 
   return (
@@ -133,7 +173,7 @@ const AsociarRepartidorAEvento = () => {
             eventos.map((evento, index) => (
               <div className="card mx-2 mb-2" key={index}>
                 <div className="row">
-                  <div className="col-3 mb-1" style={{borderRadius:"10px"}}>
+                  <div className="col-3 mb-1" style={{ borderRadius: "10px" }}>
                     <img
                       src={evento.img}
                       alt={evento.titulo}
@@ -150,7 +190,12 @@ const AsociarRepartidorAEvento = () => {
                 </div>
                 <div className="row">
                   <div className="col-12 col-md-4 text-end w-100 pe-4 pb-2">
-                    <button className="btn btn-primary" onClick={() => handleAsociar(evento.id)}>
+                    <button
+                      className="btn btn-primary"
+                      onClick={ () => {
+                        handleTieneRestriciones(evento.id)
+                      }}
+                    >
                       Asociarse a evento
                     </button>
                   </div>
