@@ -1,11 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.scss";
-import Evento from "./Evento.js";
 
 const ListadoEventos = () => {
   const [rows, setRows] = useState([]);
@@ -137,62 +136,49 @@ const ListadoEventos = () => {
 
 
   };
-
   return (
-    <div>
-      <div className={`row m-0 background`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+    <div className="contenedor-principal">
+      <div className="sidebar">
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
+      </div>
+      <div className="contenedor-grid">
+        <div className="tituloSeccion">
+          <h2>Eventos</h2>
         </div>
-        <div className={`col-10`}>
-          <div className="d-flex justify-content-center mb-3">
-            <h1 className="pt-3" style={{ color: "white" }}>
-              Eventos
-            </h1>
-          </div>
-          <hr style={{ color: "white" }} className="me-4" />
-          <div className="d-flex justify-content-end col-11">
-            <Link
-              to={`/registrar-evento`}
-              className={`btn btn-success btn-lg btnfloating`}
-            >
-              <i className="bi bi-plus-lg"></i> Agregar Evento
-            </Link>
-          </div>
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-3 pb-4 h-100 w-100">
-              {Array.isArray(eventos) && eventos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row`}>
-                    {row.map((evento, index) => (
-                      <div
-                        key={index}
-                        className={`colmd3 pb-4`}
-                      >
-                        {evento !== null ? (
-                          <Evento
-                            evento={evento}
-                            session={session}
-                            recargar={recargarComponente}
-                          />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 className="centeredtext">
-                  No tenes ningun producto asociado a este carrito.
-                </h2>
-              )}
-            </div>
-          </div>
+        <div className="descripcion">
+          <p>
+            Con Quickfood, crea tu evento para hacerlo mejor. Descubre nuestras
+            increíbles características y ofrece una experiencia única a tus
+            consumidores.
+          </p>
+        </div>
+        <Link to={`/registrar-evento`} className="LinkAgregarEvento">
+          Crear Evento
+        </Link>
+        <div className="tarjeta-1">
+          <h2>Evita Filas</h2>
+          <p>Mejora la experiencia al evitar filas.</p>
+        </div>
+        <div className="tarjeta-2">
+          <h2>Mejora Costos</h2>
+          <p>Optimiza tus costos para un mayor rendimiento.</p>
+        </div>
+        <div className="tarjeta-3">
+          <h2>Adaptable</h2>
+          <p>Adapta la plataforma según tus necesidades.</p>
+        </div>
+        <div className="tarjeta-4">
+          <h2>Experiencia</h2>
+          <p>Mejora la experiencia de los asistentes.</p>
         </div>
       </div>
       <Footer />
     </div>
   );
+
+
+
+
 };
 
 export default ListadoEventos;

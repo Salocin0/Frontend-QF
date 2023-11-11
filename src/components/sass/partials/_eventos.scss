@@ -1,67 +1,176 @@
- 
-  .colmd3 {
-    flex: 1;
-    padding: 15px;
-    box-sizing: border-box;
-  }
-  
-  .cardimgtop {
-    width: 100%;
-    max-height: 240px;
-    object-fit: cover;
-    border-radius: 6px 6px 0 0;
-  }
-  
-  .btnfloating {
-    position: fixed;
-    border-color: #F7B813;
-    color: black;
-    bottom: 30px;
-    right: 20px;
-    z-index: 1000;
-    background-color: #F7B813;
-  }
-  
-  .btnfloating:hover {
-    position: fixed;
-    border-color: #cc960e;
-    color: white;
-    bottom: 30px;
-    right: 20px;
-    z-index: 1000;
-    background-color: #cc960e;
-  }
-  
-  .cardlink {
-    text-decoration: none;
-  }
-  
-  .centeredtext {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    color: white;
-  }
-  
-  .custom-dropdown-toggle::after {
-    display: none;
-  }
-  
-  .truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-    transition: max-width 0.3s ease;
-    text-align: center;
-  
-  }
-  
-  .truncate:hover {
-    max-width: none;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    text-align: center;
-  }
+@import './variables.scss';
+
+.contenedor-principal {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.sidebar {
+  width: 200px;
+}
+
+.tituloSeccion {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  color: white;
+  grid-area: titulo;
+  font-style: italic;
+  align-self: end;
+}
+
+.tituloSeccion h2 {
+  color: $color-amarillo-QF !important;
+}
+
+.descripcion {
+  grid-area: descripcion;
+  height: auto;
+  width: auto;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.descripcion p {
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-style: italic;
+  color: lightgrey !important;
+  font-size: 15px;
+}
+
+.LinkAgregarEvento {
+  grid-area: boton-agregar;
+  background-color: $color-amarillo-QF;
+  text-decoration: none;
+  color: black  !important;
+  width: auto;
+  height: 40px;
+  border-radius: 10px;
+  align-self: start;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.LinkAgregarEvento:hover {
+  background-color: $color-amarillo-QF-hover;
+  color: black;
+  cursor: pointer;
+}
+
+.tarjeta-1,
+.tarjeta-2,
+.tarjeta-3,
+.tarjeta-4 {
+  background-color: $color-amarillo-QF;
+  border-radius: 10px;
+  height: 150px;
+  width: 150px;
+  margin-right: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+
+
+.tarjeta-1 h2,
+.tarjeta-2 h2,
+.tarjeta-3 h2,
+.tarjeta-4 h2 {
+  font-size: 20px;
+  margin-top:20px;
+  font-weight: bold;
+  color: black !important;
+  text-align: center;
+  margin-left:5px;
+  align-items: center;
+  justify-content: center;
+
+}
+
+/* Estilos para la descripción */
+.tarjeta-1 p,
+.tarjeta-2 p,
+.tarjeta-3 p,
+.tarjeta-4 p {
+  text-align: center;
+  color: black !important;
+  font-size: 14px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.tarjeta-1::before,
+.tarjeta-2::before,
+.tarjeta-3::before,
+.tarjeta-4::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tarjeta-1,
+.tarjeta-2,
+.tarjeta-3,
+.tarjeta-4 {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tarjeta-1:hover,
+.tarjeta-2:hover,
+.tarjeta-3:hover,
+.tarjeta-4:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1), 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.tarjeta-1{
+  grid-area: tarjeta-1;
+  align-self: end;
+  margin-bottom: -40px;
+
+}
+
+.tarjeta-2 {
+  grid-area: tarjeta-2;
+  align-self: end;
+  margin-bottom: -40px;
+
+
+}
+
+.tarjeta-3 {
+  grid-area: tarjeta-3;
+  margin-top: 50px;
+
+}
+
+.tarjeta-4 {
+  grid-area: tarjeta-4;
+  margin-top: 50px;
+
+}
+
+
+.contenedor-grid {
+  display: grid;
+  grid-gap: 5px;
+  width: 100vw;
+  height: 100vh;
+  grid-template-rows: 1fr auto 1fr auto auto;
+  grid-template-columns: 1fr 1fr 1fr auto auto;
+  overflow-x: hidden;
+  grid-template-areas:
+    "titulo titulo titulo  tarjeta-1 tarjeta-2"
+    "descripcion descripcion descripcion  tarjeta-3 tarjeta-4"
+    ". boton-agregar . tarjeta-3 tarjeta-4 "
+}
