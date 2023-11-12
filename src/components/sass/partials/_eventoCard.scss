@@ -1,0 +1,48 @@
+@import './variables.scss';
+
+
+.card {
+    background-color: $color-gris-tarjetas !important;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid lightgrey !important;
+
+}
+
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 4px $color-amarillo-QF;
+    cursor: pointer;
+    border: 1px solid $color-amarillo-QF !important;
+
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.row {
+    margin-bottom: 15px;
+}
+
+
+.col-md-3 img {
+    border-radius: 5px;
+
+}
+
+
+.card-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: white !important;
+}
+
+.card-text {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: white !important;
+    text-align: left;
+
+}

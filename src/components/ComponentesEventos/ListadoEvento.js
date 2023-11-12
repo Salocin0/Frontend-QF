@@ -155,22 +155,6 @@ const ListadoEventos = () => {
         <Link to={`/registrar-evento`} className="LinkAgregarEvento">
           Crear Evento
         </Link>
-        <div className="tarjeta-1">
-          <h2>Evita Filas</h2>
-          <p>Mejora la experiencia al evitar filas.</p>
-        </div>
-        <div className="tarjeta-2">
-          <h2>Mejora Costos</h2>
-          <p>Optimiza tus costos para un mayor rendimiento.</p>
-        </div>
-        <div className="tarjeta-3">
-          <h2>Adaptable</h2>
-          <p>Adapta la plataforma según tus necesidades.</p>
-        </div>
-        <div className="tarjeta-4">
-          <h2>Experiencia</h2>
-          <p>Mejora la experiencia de los asistentes.</p>
-        </div>
       </div>
       <Footer />
     </div>
