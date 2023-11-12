@@ -12,9 +12,7 @@
 
 .card:hover {
     transform: scale(1.03);
-    box-shadow: 0 0 4px $color-amarillo-QF;
     cursor: pointer;
-    border: 1px solid $color-amarillo-QF !important;
 
 }
 
@@ -38,6 +36,16 @@
     margin-bottom: 10px;
     color: white !important;
 }
+
+.card-distance {
+    color: rgb(83, 186, 220) !important;
+    position: absolute;
+    top: 7px;
+    right: -45px;
+    font-size: small;
+    font-style: italic;
+}
+
 
 .card-text {
     font-size: 1rem;

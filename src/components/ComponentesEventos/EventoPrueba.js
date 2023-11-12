@@ -11,6 +11,7 @@ const EventoPrueba = ({ session }) => {
         ciudad: "Villa María",
         fechainicio: new Date(),
         fechafin: new Date(),
+        distancia: "1.5 km",
     };
 
     return (
@@ -30,21 +31,22 @@ const EventoPrueba = ({ session }) => {
                                         className="img-fluid"
                                     />
                                 </div>
-
-                                <div className="col-md-8">
+                                <div className="col-md-8 position-relative">
                                     <h5 className="card-title">{evento.nombre}</h5>
                                     <p className="card-text">{evento.ciudad}</p>
+                                    <p className="card-distance">A {evento.distancia} de distancia </p>
                                     <p className="card-text">
                                         {format(evento.fechainicio, "dd/MM/yyyy")} - {format(evento.fechafin, "dd/MM/yyyy")}
                                     </p>
                                 </div>
+
                             </div>
 
                             <div className="mt-2 d-flex">
                                 <div className="col-md-12 d-flex justify-content-center">
                                     <button className="btn btn-success me-2">Confirmar Evento</button>
                                     <button className="btn btn-secondary me-2">Editar Evento</button>
-                                    <button className="btn btn-danger">Cancelar Evento</button>
+                                    <button className="btn btn-danger me-2">Cancelar Evento</button>
 
                                 </div>
                             </div>
@@ -52,6 +54,8 @@ const EventoPrueba = ({ session }) => {
                         </div>
                     </div>
                 </div>
+
+
 
 
             </div>
