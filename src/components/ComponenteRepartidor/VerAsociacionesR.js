@@ -12,19 +12,13 @@ const VerAsociacionesR = () => {
   const [session, setSession] = useState(null);
   const [nuevoRol, setNuevorol] = useState(false);
   const [asociaciones, setAsociaciones] = useState([]);
+  const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [rows, setRows] = useState([]);
 
   const recargarComponente = () => {
     setRecargar(+1);
   };
-
-  function eventoAsociado(eventoId, asociaciones) {
-    return (
-      Array.isArray(asociaciones) &&
-      asociaciones.some((asociacion) => asociacion.eventoId === eventoId)
-    );
-  }
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -43,7 +37,7 @@ const VerAsociacionesR = () => {
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
-  }, [nuevoRol,recargar]);
+  }, [nuevoRol, recargar]);
 
   useEffect(() => {
     if (session) {
@@ -57,76 +51,44 @@ const VerAsociacionesR = () => {
         .then((response) => response.json())
         .then((data) => {
           setAsociaciones(data.data);
+          console.log(data.data);
+
+          const eventosPromises = data.data.map(async (asociacion) => {
+            const response = await fetch(
+              `http://localhost:8000/evento/${asociacion.eventoId}`,
+              {
+                method: "GET",
+                headers: headers,
+              }
+            );
+            const eventoData = await response.json();
+            return eventoData.data;
+          });
+
+          Promise.all(eventosPromises)
+            .then((eventosData) => {
+              setEventos(eventosData);
+            })
+            .catch((error) => console.log("Error fetching eventos.", error));
         })
         .catch((error) => console.log("No existen asociaciones.", error));
+    }
+  }, [session, recargar]);
 
-      fetch("http://localhost:8000/asocioacion/", {
+  const handleCancelar = (id)=> {
+    fetch(`http://localhost:8000/asociacion/cancelar/${id}`, {
         method: "GET",
-        headers: headers,
+        headers: {
+          "Content-Type": "application/json",
+        },
       })
         .then((response) => response.json())
         .then((data) => {
-          setAsociaciones(data.data);
-        })
-        .catch((error) => console.log("No existen carritos.", error));
-    }
-  }, [session,recargar]);
-
-  const handleTieneRestriciones = async (ideventoseleccionado) => {
-    try {
-      const headers = new Headers();
-      headers.append("ConsumidorId", session?.consumidorId);
-      headers.append("Content-Type", "application/json");
-
-      const response = await fetch(
-        `http://localhost:8000/restriccion/evento/${ideventoseleccionado}`,
-        {
-          method: "GET",
-          headers: headers,
-        }
-      );
-
-      if (response.ok) {
-        handleCrearForm(ideventoseleccionado);
-      } else {
-        handleAsociar(ideventoseleccionado);
-      }
-      recargarComponente()
-    } catch (error) {
-      console.error(error);
-      toast.error("Error al crear el formulario");
-    }
-  };
-
-  const handleCrearForm = (ideventoseleccionado) => {
-    const url = `/restriccionesEvento/${ideventoseleccionado}`;
-    navigate(url);
-  };
-
-  const handleAsociar = (ideventoseleccionado) => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session?.consumidorId);
-    headers.append("Content-Type", "application/json");
-
-    fetch(
-      `http://localhost:8000/asocioacion/evento/${ideventoseleccionado}/asociarSimple/0/${session.consumidorId}`,
-      {
-        method: "POST",
-        headers: headers,
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.code === 200) {
-          toast.success("Asociacion Guardada");
+          toast.success("Asociacion Cancelada");
           recargarComponente()
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Error al asociar");
-      });
-  };
+        })
+        .catch((error) => console.error("Error fetching session:", error));
+  }
 
   return (
     <div className={`${style.background} d-flex`}>
@@ -169,42 +131,56 @@ const VerAsociacionesR = () => {
         </div>
         <div className="content">
           {Array.isArray(asociaciones) && asociaciones.length > 0 ? (
-            asociaciones.map((evento, index) => (
-              <div
-                className={`card mx-2 mb-2 `}
-                key={index}
-              >
-                <div className="row">
-                  <div className="col-3 mb-1" style={{ borderRadius: "10px" }}>
+            asociaciones.map((asociacion, index) => {
+              const evento = eventos.find(
+                (evento) => evento.idevento === asociacion.idevento
+              );
+              const isPendiente = asociacion.estado === "pendiente";
+              return (
+                <div
+                  className={`card mx-2 mb-2 row`}
+                  key={index}
+                  style={{ height: "200px", display: "flex" }}
+                >
+                  {evento && evento.img && (
                     <img
                       src={evento.img}
-                      alt={evento.titulo}
-                      className="img-fluid w-100 h-100"
-                    />
-                  </div>
-                  <div className="col-9 col-md-3">
-                    <h3>{evento.titulo}</h3>
-                    <p>{evento.descripcion}</p>
-                    <p>Localidad: {evento.localidad}</p>
-                    <p>Distancia: {evento.distancia} km</p>
-                    <p>Fecha: {evento.fecha}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 col-md-4 text-end w-100 pe-4 pb-2">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => {
-                        handleTieneRestriciones(evento.id);
+                      alt={`Imagen de ${evento.nombre}`}
+                      style={{
+                        width: "33%",
+                        height: "100%",
+                        objectFit: "cover",
                       }}
-                      disabled={eventoAsociado(evento.id, asociaciones)}
-                    >
-                      Asociarse a evento
-                    </button>
+                    />
+                  )}
+                  <div
+                    className="align-center justify-content-center"
+                    style={{
+                      flex: 1,
+                      marginLeft: "8px",
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "64%",
+                    }}
+                  >
+                    <h3>{evento && evento.nombre}</h3>
+                    <p>Fecha de inicio: {evento?.fechaInicio}</p>
+                    <p>Estado: {asociacion.estado}</p>
+                    <div className="text-end">
+                    {isPendiente && (
+                      <button
+                        onClick={() => handleCancelar(asociacion.id)}
+                        className="btn btn-danger"
+                      >
+                        Cancelar
+                      </button>
+                    )}
+                    </div>
+                    
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <h2>No hay eventos disponibles</h2>
           )}

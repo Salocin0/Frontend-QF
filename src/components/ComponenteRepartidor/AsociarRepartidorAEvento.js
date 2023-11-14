@@ -24,7 +24,10 @@ const AsociarRepartidorAEvento = () => {
   function eventoAsociado(eventoId, asociaciones) {
     return (
       Array.isArray(asociaciones) &&
-      asociaciones.some((asociacion) => asociacion.eventoId === eventoId)
+      asociaciones.some(
+        (asociacion) =>
+          asociacion.eventoId === eventoId && asociacion.estado === "pendiente"
+      )
     );
   }
 
@@ -62,7 +65,7 @@ const AsociarRepartidorAEvento = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
 
-      fetch("http://localhost:8000/asocioacion/", {
+      fetch("http://localhost:8000/asociacion/", {
         method: "GET",
         headers: headers,
       })
@@ -81,19 +84,24 @@ const AsociarRepartidorAEvento = () => {
       headers.append("Content-Type", "application/json");
 
       const response = await fetch(
-        `http://localhost:8000/restriccion/evento/${ideventoseleccionado}`,
+        `http://localhost:8000/asociacion/evento/${ideventoseleccionado}`,
         {
           method: "GET",
           headers: headers,
         }
       );
-
       if (response.ok) {
-        handleCrearForm(ideventoseleccionado);
+        const responseData = await response.json();
+        if (responseData.data.code === 200) {
+          handleCrearForm(ideventoseleccionado, responseData.data);
+        } else {
+          handleAsociar(ideventoseleccionado);
+        }
+        recargarComponente();
       } else {
-        handleAsociar(ideventoseleccionado);
+        console.error(`Error: ${response.status}`);
+        toast.error("Error al comunicarse con el servidor");
       }
-      recargarComponente()
     } catch (error) {
       console.error(error);
       toast.error("Error al crear el formulario");
@@ -111,7 +119,7 @@ const AsociarRepartidorAEvento = () => {
     headers.append("Content-Type", "application/json");
 
     fetch(
-      `http://localhost:8000/asocioacion/evento/${ideventoseleccionado}/asociarSimple/0/${session.consumidorId}`,
+      `http://localhost:8000/asociacion/evento/${ideventoseleccionado}/asociarSimple/0/${session.consumidorId}`,
       {
         method: "POST",
         headers: headers,
