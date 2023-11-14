@@ -39,6 +39,7 @@ import HabilitarUsuario from "../ComponentesLogin/HabilitarUsuario";
 import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
 import AsociarRepartidorAEvento from "../ComponenteRepartidor/AsociarRepartidorAEvento";
 import FormDinamicoRestricciones from "../ComponenteRepartidor/FormDinamicoRestricciones";
+import VerAsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
 
 export const Main = () => {
   return (
@@ -110,6 +111,7 @@ export const Main = () => {
 
         <Route path="/asociarRepartidorAEvento" element={<AsociarRepartidorAEvento />} />
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
+        <Route path="/misAsociaciones" element={<VerAsociacionesR/>} />
       </Routes>
     </main>
   );

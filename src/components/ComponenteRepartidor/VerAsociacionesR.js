@@ -7,14 +7,12 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import "./asociarAEventos.css";
 
-const AsociarRepartidorAEvento = () => {
+const VerAsociacionesR = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState(null);
   const [nuevoRol, setNuevorol] = useState(false);
-  const [eventos, setEventos] = useState([]);
   const [asociaciones, setAsociaciones] = useState([]);
   const [recargar, setRecargar] = useState(0);
-  const [esAsociacionSimple, setEsAsociacionSimple] = useState();
   const [rows, setRows] = useState([]);
 
   const recargarComponente = () => {
@@ -52,15 +50,15 @@ const AsociarRepartidorAEvento = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/evento/enEstado/enPreparacion", {
+      fetch("http://localhost:8000/asociacion/", {
         method: "GET",
         headers: headers,
       })
         .then((response) => response.json())
         .then((data) => {
-          setEventos(data.data);
+          setAsociaciones(data.data);
         })
-        .catch((error) => console.log("No existen carritos.", error));
+        .catch((error) => console.log("No existen asociaciones.", error));
 
       fetch("http://localhost:8000/asocioacion/", {
         method: "GET",
@@ -170,8 +168,8 @@ const AsociarRepartidorAEvento = () => {
           </div>
         </div>
         <div className="content">
-          {Array.isArray(eventos) && eventos.length > 0 ? (
-            eventos.map((evento, index) => (
+          {Array.isArray(asociaciones) && asociaciones.length > 0 ? (
+            asociaciones.map((evento, index) => (
               <div
                 className={`card mx-2 mb-2 `}
                 key={index}
@@ -216,4 +214,4 @@ const AsociarRepartidorAEvento = () => {
   );
 };
 
-export default AsociarRepartidorAEvento;
+export default VerAsociacionesR;

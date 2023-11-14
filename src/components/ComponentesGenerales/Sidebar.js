@@ -4,7 +4,7 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
 import style from "./Sidebar.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faDolly,faAddressBook } from '@fortawesome/free-solid-svg-icons';
+import { faDolly,faAddressBook,faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 
 import Logo from "../img/QuickFood_LogoYellow.png";
 
@@ -105,9 +105,19 @@ const Sidebar = ({ tipoUsuario }) => {
             {isRepartidor && (
               <li className={style.navitem}>
                 <a href="/asociarRepartidorAEvento" className={`${style.navlink} text-truncate`}>
-                <FontAwesomeIcon icon={faAddressBook} className={`${style.icono}`} />
+                <FontAwesomeIcon icon={faSquarePlus} className={`${style.icono}`} />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Asociar A Evento
+                  </span>
+                </a>
+              </li>
+            )}
+            {isRepartidor && (
+              <li className={style.navitem}>
+                <a href="/misAsociaciones" className={`${style.navlink} text-truncate`}>
+                <FontAwesomeIcon icon={faAddressBook} className={`${style.icono}`} />
+                  <span className="ms-1 d-none d-sm-inline w-100">
+                    Mis asociaciones
                   </span>
                 </a>
               </li>
