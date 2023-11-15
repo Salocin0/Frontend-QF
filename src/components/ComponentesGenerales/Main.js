@@ -42,6 +42,7 @@ import FormDinamicoRestricciones from "../ComponenteRepartidor/FormDinamicoRestr
 import VerAsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
 import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
 import AsociarPuestoAEvento from "../ComponentesPuesto/AsociarPuestoAEvento";
+import Carrito from "../ComponentesCarrito/Carrito";
 
 export const Main = () => {
   return (
@@ -115,7 +116,7 @@ export const Main = () => {
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
         <Route path="/misAsociaciones" element={<VerAsociacionesR/>} />
         <Route path="/asociarPuestoAEvento/:puestoId" element={<AsociarPuestoAEvento/>} />
-        
+        <Route path="/carrito/" element={<Carrito/>} />
       </Routes>
     </main>
   );
