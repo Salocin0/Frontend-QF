@@ -40,7 +40,7 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className={style.navitem}>
-              <a href="/eventos" className={`${style.navlink} text-truncate`} >
+              <a href="/Listado-eventos" className={`${style.navlink} text-truncate`} >
                 <i className={`${style.icono} bi bi-balloon`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Eventos
@@ -112,7 +112,7 @@ const Sidebar = ({ tipoUsuario }) => {
                 </a>
               </li>
             )}
-            {isRepartidor && (
+            {(isRepartidor || isResponsable) && (
               <li className={style.navitem}>
                 <a href="/misAsociaciones" className={`${style.navlink} text-truncate`}>
                 <FontAwesomeIcon icon={faAddressBook} className={`${style.icono}`} />

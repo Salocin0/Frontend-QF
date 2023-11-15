@@ -6,8 +6,10 @@ import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import stylepuesto from "./puestos.module.css";
 import PuestoUser from "./PuestoUser";
+import { useParams } from 'react-router-dom';
 
 const ListadoPuestosUser = () => {
+  const { idEvento } = useParams();
   const [rows, setRows] = useState([]);
   const [carritos, setCarritos] = useState([]);
   const [session, setSession] = useState(null);
@@ -37,16 +39,14 @@ const ListadoPuestosUser = () => {
 
   useEffect(() => {
     if (session) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", 1);
-
-      fetch("http://localhost:8000/puesto", {
+      console.log(idEvento)
+      fetch(`http://localhost:8000/puesto/evento/${idEvento}`, {
         method: "GET",
-        headers: headers,
       })
         .then((response) => response.json())
         .then((data) => {
           setCarritos(data.data);
+          console.log(data.data);
           const totalCarritos = Math.ceil(data.data.length / 4) * 4;
           const carritosConNulos = [
             ...data.data,

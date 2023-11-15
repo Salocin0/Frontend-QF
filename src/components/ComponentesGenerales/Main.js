@@ -40,6 +40,8 @@ import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
 import AsociarRepartidorAEvento from "../ComponenteRepartidor/AsociarRepartidorAEvento";
 import FormDinamicoRestricciones from "../ComponenteRepartidor/FormDinamicoRestricciones";
 import VerAsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
+import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
+import AsociarPuestoAEvento from "../ComponentesPuesto/AsociarPuestoAEvento";
 
 export const Main = () => {
   return (
@@ -99,10 +101,10 @@ export const Main = () => {
         <Route path="/producto/:id" element={<ConsultarProducto />} />
 
         <Route path="/eventos" element={<ListadoEventos />} />
-        <Route path="/listado-puestos/:id" element={<ListadoPuestosUser />} />
+        <Route path="/listado-puestos/:idEvento" element={<ListadoPuestosUser />} />
         <Route path="/productos-puesto/:id" element={<ListadoProductoUser />} />
 
-        <Route path="/listado-eventos" element={<ListadoEventos />} />
+        <Route path="/listado-eventos" element={<ListadoEventosUsers />} />
         <Route path="/registrar-evento" element={<RegistrarEvento />} />
         <Route path="/evento/:id" element={<ConsultarEvento />} />
         <Route path="/habilitar-Usuario-email/:id/:codigo" element={<ValidarEmail />} />
@@ -112,6 +114,8 @@ export const Main = () => {
         <Route path="/asociarRepartidorAEvento" element={<AsociarRepartidorAEvento />} />
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
         <Route path="/misAsociaciones" element={<VerAsociacionesR/>} />
+        <Route path="/asociarPuestoAEvento/:puestoId" element={<AsociarPuestoAEvento/>} />
+        
       </Routes>
     </main>
   );

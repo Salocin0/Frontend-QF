@@ -90,7 +90,10 @@ const Puesto = ({ carrito,recargar }) => {
                   Actualizar Listado Productos
                 </Dropdown.Item>
                 <Dropdown.Item as={Link} to={`/puesto/${carrito.id}`}>
-                  Modificar Datos Carrito
+                  Modificar Datos Puesto
+                </Dropdown.Item>
+                <Dropdown.Item as={Link} to={`/asociarPuestoAEvento/${carrito.id}`}>
+                  Asociar Puesto a un Evento
                 </Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item onClick={handleDelete}>Deshabilitar Carrito</Dropdown.Item>
