@@ -84,7 +84,7 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
             {isProductor && (
               <li className={style.navitem}>
-                <a href="/listado-eventos" className={`${style.navlink} text-truncate`}>
+                <a href="/eventos" className={`${style.navlink} text-truncate`}>
                   <i className={`${style.icono} bi bi-balloon`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Eventos

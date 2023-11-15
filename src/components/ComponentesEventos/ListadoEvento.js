@@ -183,7 +183,7 @@ const ListadoEventos = () => {
                 ))
               ) : (
                 <h2 className={styleeventos.centeredtext}>
-                  No tenes ningun producto asociado a este carrito.
+                  No tenes ningun Evento creado.
                 </h2>
               )}
             </div>

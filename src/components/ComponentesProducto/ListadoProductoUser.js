@@ -27,6 +27,7 @@ const ListadoProductoUser = () => {
     img: 0,
     estado: 1,
   });
+  const [puesto, setPuesto] = useState();
 
   const recargarComponente = () => {
     setRecargar(+1);
@@ -80,6 +81,23 @@ const ListadoProductoUser = () => {
             generatedRows.push(row);
           }
           setRows(generatedRows);
+        })
+        .catch((error) => console.log("No existen carritos.", error));
+    }
+  }, [session, recargar]);
+
+  useEffect(() => {
+    if (session) {
+      const headers = new Headers();
+      headers.append("ConsumidorId", session.consumidorId);
+      headers.append("puestoId", id);
+
+      fetch(`http://localhost:8000/puesto/${id}`, {
+        method: "GET",
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setPuesto(data.data);
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
@@ -205,12 +223,12 @@ const ListadoProductoUser = () => {
             }}
           >
             <h1 className="d-flex align-items-center justify-content-center">
-              Borcelle´s Productos
+              {puesto?.nombreCarro}
             </h1>
           </div>
           <hr style={{ color: "white" }} className="" />
           <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-3 pb-4 h-100">
+            <div className="pt-3 pb-4 h-100 w-100">
               {Array.isArray(productos) && productos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
@@ -234,7 +252,7 @@ const ListadoProductoUser = () => {
                 ))
               ) : (
                 <h2 className={styleProducto.centeredtext}>
-                  No tenes ningun producto asociado a este carrito.
+                  No existen productos en este carrito.
                 </h2>
               )}
             </div>

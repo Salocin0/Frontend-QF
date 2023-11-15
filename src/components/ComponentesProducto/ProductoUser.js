@@ -13,30 +13,24 @@ const ProductoUser = ({ producto, session, idpuesto, recargar }) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const handleDelete = () => {
+  const handleAddtocart = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/producto/${producto.id}`, {
-      method: "DELETE",
+    fetch(`http://localhost:8000/carrito/addToCart/${producto.id}`, {
+      method: "PUT",
       headers: headers,
     })
       .then((response) => {
         if (response.ok) {
-          toast.success("Producto deshabilitado correctamente");
+          toast.success("Se agrego un producto al carrito: " + producto.nombre);
           recargar();
         } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
+          toast.error("Error al agregar producto al carrito");
         }
       })
       .catch((error) => console.error("Error:", error));
-  };
-
-  const handleAddtocart = () => {
-    toast.success("Se agrego un producto al carrito: " + producto.nombre);
+    
   };
 
   useEffect(() => {
@@ -50,7 +44,7 @@ const ProductoUser = ({ producto, session, idpuesto, recargar }) => {
           src={`${producto?.img}`}
           className={`${style.cardimgtop} img-flex`}
           alt="Thumbnail"
-          style={{ height: "150px" }}
+          style={{ height: "150px"}}
         />
         <div className="card-body">
           <div>
