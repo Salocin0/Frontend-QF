@@ -1,15 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import styleback from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import styleeventos from "./eventos.module.css";
 import villamaria from "./img/villa maria.png";
 import cosquin from "./img/cosquin.png";
 import { toast } from "react-toastify";
 import Evento from "./Evento.js";
 import EventoUser from "./EventoUser";
+import "./../sass/main.css"
 
 const ListadoEventosUsers = () => {
   const [rows, setRows] = useState([]);
@@ -99,7 +98,7 @@ const ListadoEventosUsers = () => {
 
   return (
     <div>
-      <div className={`row m-0 ${styleback.background}`}>
+      <div className={`row m-0 background`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
@@ -115,11 +114,11 @@ const ListadoEventosUsers = () => {
               {Array.isArray(eventos) && eventos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row ${styleeventos.row}`}>
+                  <div key={rowIndex} className={`row `}>
                     {row.map((evento, index) => (
                       <div
                         key={index}
-                        className={`${styleeventos.colmd3} pb-4`}
+                        className={`colmd3 pb-4`}
                       >
                         {evento !== null ? (
                           <EventoUser
@@ -133,7 +132,7 @@ const ListadoEventosUsers = () => {
                   </div>
                 ))
               ) : (
-                <h2 className={styleeventos.centeredtext}>
+                <h2 className={"centeredtext"}>
                   No hay eventos activos en este momento.
                 </h2>
               )}

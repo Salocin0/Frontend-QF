@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import { useParams } from 'react-router-dom';
+import "./../sass/main.css"
 
 const AsociarPuestoAEvento = () => {
   const { puestoId } = useParams();
@@ -140,7 +140,7 @@ const AsociarPuestoAEvento = () => {
   };
 
   return (
-    <div className={`${style.background} d-flex`}>
+    <div className={`background d-flex`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>

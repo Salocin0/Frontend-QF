@@ -2,9 +2,9 @@ import { default as React, useState, useEffect } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import style from "./eventos.module.css";
 import imgdefault from "./img/villa maria.png";
 import { format } from "date-fns";
+import "./../sass/main.css"
 //TODO MODIFICACIONES PARA QUE ANDE, ESTA HARDCODEADO EN LISTADOEVENTOS
 const EventoUser = ({ evento, recargar }) => {
   const { id } = useParams();
@@ -58,12 +58,12 @@ const EventoUser = ({ evento, recargar }) => {
   };
 
   return (
-    <div className={style.cardlink}>
+    <div className={"cardlink"}>
       <div className="card shadow-sm">
-        <Link to={`/listado-puestos/${evento.id}`} className={style.cardlink}>
+        <Link to={`/listado-puestos/${evento.id}`} className={"cardlink"}>
           <img
             src={`${evento?.img || imgdefault}`}
-            className={style.cardimgtop}
+            className={"cardimgtop"}
             alt="Thumbnail"
           />
           <div className="card-body">

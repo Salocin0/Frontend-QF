@@ -1,10 +1,8 @@
-import { faDolly } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDolly,faAddressBook,faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import "./../sass/main.scss";
 
@@ -45,9 +43,9 @@ const Sidebar = ({ tipoUsuario }) => {
                 <span className="ms-1 d-none d-sm-inline w-100">Inicio</span>
               </a>
             </li>
-            <li className={style.navitem}>
-              <a href="/Listado-eventos" className={`${style.navlink} text-truncate`} >
-                <i className={`${style.icono} bi bi-balloon`}></i>
+            <li className={"navitem"}>
+              <a href="/Listado-eventos" className={`navlink text-truncate`} >
+                <i className={`icono bi bi-balloon`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">
                   Eventos
                 </span>
@@ -109,9 +107,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
             {isProductor && (
-              <li className={style.navitem}>
-                <a href="/eventos" className={`${style.navlink} text-truncate`}>
-                  <i className={`${style.icono} bi bi-balloon`}></i>
+              <li className={"navitem"}>
+                <a href="/eventos" className={`navlink text-truncate`}>
+                  <i className={`icono bi bi-balloon`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Eventos
                   </span>
@@ -132,9 +130,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
             {isRepartidor && (
-              <li className={style.navitem}>
-                <a href="/asociarRepartidorAEvento" className={`${style.navlink} text-truncate`}>
-                <FontAwesomeIcon icon={faSquarePlus} className={`${style.icono}`} />
+              <li className="navitem">
+                <a href="/asociarRepartidorAEvento" className={`navlink text-truncate`}>
+                <FontAwesomeIcon icon={faSquarePlus} className={`icono`} />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Asociar A Evento
                   </span>
@@ -142,9 +140,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
             {(isRepartidor || isResponsable) && (
-              <li className={style.navitem}>
-                <a href="/misAsociaciones" className={`${style.navlink} text-truncate`}>
-                <FontAwesomeIcon icon={faAddressBook} className={`${style.icono}`} />
+              <li className={"navitem"}>
+                <a href="/misAsociaciones" className={`navlink text-truncate`}>
+                <FontAwesomeIcon icon={faAddressBook} className={`icono`} />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis asociaciones
                   </span>

@@ -248,7 +248,7 @@ const ListadoProductoUser = () => {
                   </div>
                 ))
               ) : (
-                <h2 className={styleProducto.centeredtext}>
+                <h2 className={"centeredtext"}>
                   No existen productos en este carrito.
                 </h2>
               )}

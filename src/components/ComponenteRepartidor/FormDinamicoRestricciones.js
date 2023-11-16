@@ -5,9 +5,9 @@ import { Link, Navigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css";
 import { useNavigate } from "react-router-dom";
 import "./asociarAEventos.css";
+import "./../sass/main.css"
 
 function FormDinamicoRestricciones({ data, userType }) {
   const navigate = useNavigate();
@@ -103,7 +103,7 @@ function FormDinamicoRestricciones({ data, userType }) {
   }, [session]);
 
   return (
-    <div className={`row m-0 ${styleback.background}`}>
+    <div className={`row m-0 background`}>
       <div className="col-2 p-0">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
