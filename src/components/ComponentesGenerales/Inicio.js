@@ -12,11 +12,11 @@ import eventosimg2 from "../img/eventosimg2.png";
 import encargado from "../img/foodtruck.jpg";
 import productor from "../img/productor.jpg";
 import repartidor from "../img/repartidor.jpg";
-
 import notificaciones from "../img/notificaciones.png";
 import pedidos from "../img/pedidos.png";
 import perfil from "../img/perfil.png";
 import "./../sass/main.scss";
+
 const Inicio = () => {
   const [session, setSession] = useState(null);
   const cardData = [
@@ -45,8 +45,6 @@ const Inicio = () => {
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
-    /*
-     */
   }, []);
 
   return (
