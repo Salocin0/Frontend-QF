@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import styles from "../seleccionRegister.module.css";
+import "./../../sass/main.css";
 
 const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
   const [productorData, setProductorData] = useState({
@@ -53,22 +53,22 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
   };
 
   return (
-    <div className={`${styles.background} ${styles.container} vh-100`}>
+    <div className={`background container vh-100`}>
       <div className="row h-100 justify-content-center align-items-center">
         <div className="col-md-4">
-          <div className={`${styles.card} card`}>
-            <div className={`${styles.cardheader} card-header`}>
+          <div className={`card`}>
+            <div className={`card-header`}>
               <h2
-                className={`${styles.h2} text-center`}
+                className={`h2 text-center`}
                 style={{ color: "white" }}
               >
                 Datos Productor 3/3
               </h2>
             </div>
-            <div className={`${styles["card-body"]} card-body`}>
+            <div className={`card-body`}>
               <form onSubmit={handleSubmit}>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="cuit" className={styles.label}>
+                <div className={` form-group`}>
+                  <label htmlFor="cuit" className="label">
                     CUIT:
                   </label>
                   <input
@@ -77,13 +77,13 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                     id="cuit"
                     value={productorData.cuit}
                     onChange={handleChange}
-                    className={`${styles.blackwhite} form-control`}
+                    className={`blackwhite form-control`}
                     placeholder="Ingrese CUIT"
                     required
                   />
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="razonSocial" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="razonSocial" className="label">
                     Razón Social:
                   </label>
                   <input
@@ -92,17 +92,17 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                     id="razonSocial"
                     value={productorData.razonSocial}
                     onChange={handleChange}
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                     placeholder="Ingrese Razón Social"
                     required
                   />
                 </div>
-                <div className={`${styles["form-group"]} form-group`}>
-                  <label htmlFor="ivaCondicion" className={styles.label}>
+                <div className={`form-group`}>
+                  <label htmlFor="ivaCondicion" className="label">
                     Condición frente al IVA:
                   </label>
                   <select
-                    className={`${styles.blackwhite}  form-control`}
+                    className={`blackwhite form-control`}
                     name="ivaCondicion"
                     id="ivaCondicion"
                     value={productorData.ivaCondicion}
@@ -116,17 +116,17 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
                 </div>
                 <hr style={{ color: "white" }} />
                 <div
-                  className={`d-flex justify-content-between mt-2 ${styles["d-flex"]}`}
+                  className={`d-flex justify-content-between mt-2`}
                 >
                   <button
-                    className={`${styles["btn"]} btn btn-secondary`}
+                    className={`btn btn-secondary`}
                     onClick={() => backStep()}
                   >
                     Atrás
                   </button>
                   <button
                     type="submit"
-                    className={`${styles["btn"]} btn btn-success`}
+                    className={`btn btn-success`}
                   >
                     Finalizar
                   </button>

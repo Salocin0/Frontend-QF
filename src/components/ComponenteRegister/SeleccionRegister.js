@@ -10,7 +10,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
-import styles from "./seleccionRegister.module.css";
+import "./../sass/main.scss";
 
 const SeleccionRegister = () => {
   const [selectedType, setSelectedType] = useState("consumidor");
@@ -30,17 +30,15 @@ const SeleccionRegister = () => {
   };
 
   return (
-    <div className={`${styles.background} row`}>
+    <div className="background-prelogin">
       <div className="d-flex align-items-center justify-content-center vh-100">
-        <div className="col-4">
-          <div className={`card ${styles.card} text-center`}>
-            <div className={`mt-2 ${styles.cardheader}`}>
+        <div className="col-lg-4">
+          <div className="card text-center">
+            <div className="mt-2 cardheader">
               <h2 style={{ color: "white" }}>Seleccione Perfil</h2>
             </div>
             <div className="card-body">
-              <label
-                className={`btn btn-outline-primary btn-block btn-lg d-flex align-items-center justify-content-between ${styles.checkcolor} custom-control custom-checkbox`}
-              >
+              <label className="btn btn-outline-primary btn-block btn-lg d-flex align-items-center justify-content-between checkcolor custom-control custom-checkbox">
                 <input
                   type="checkbox"
                   name="userType"
@@ -49,9 +47,8 @@ const SeleccionRegister = () => {
                   checked={true}
                   className="custom-control-input"
                   onChange={() => {}}
-                  
                 />
-                <span className={styles.placeholder}>Consumidor</span>
+                <span>Consumidor</span>
                 <FontAwesomeIcon icon={faUser} />
               </label>
               <hr style={{ color: "white" }} />
@@ -59,11 +56,11 @@ const SeleccionRegister = () => {
                 <label
                   className={classnames(
                     "btn btn-outline-primary btn-block btn-lg d-flex align-items-center justify-content-between",
-                    styles.radiocheckcolor,
+                    "radiocheckcolor",
                     "custom-control custom-radio",
                     {
                       active: selectedType === "productor",
-                      [styles.selected]: selectedType === "productor",
+                      selected: selectedType === "productor",
                     }
                   )}
                 >
@@ -77,17 +74,17 @@ const SeleccionRegister = () => {
                     className="custom-control-input"
                     readOnly
                   />
-                  <span className={styles.placeholder}>Productor</span>
+                  <span>Productor</span>
                   <FontAwesomeIcon icon={faBriefcase} />
                 </label>
                 <label
                   className={classnames(
                     "btn btn-outline-primary btn-block btn-lg d-flex align-items-center justify-content-between",
-                    styles.radiocheckcolor,
+                    "radiocheckcolor",
                     "custom-control custom-radio",
                     {
                       active: selectedType === "repartidor",
-                      [styles.selected]: selectedType === "repartidor",
+                      selected: selectedType === "repartidor",
                     }
                   )}
                 >
@@ -101,17 +98,17 @@ const SeleccionRegister = () => {
                     className="custom-control-input"
                     readOnly
                   />
-                  <span className={styles.placeholder}>Repartidor</span>
+                  <span>Repartidor</span>
                   <FontAwesomeIcon icon={faDolly} />
                 </label>
                 <label
                   className={classnames(
                     "btn btn-outline-primary btn-block btn-lg d-flex align-items-center justify-content-between",
-                    styles.radiocheckcolor,
+                    "radiocheckcolor",
                     "custom-control custom-radio",
                     {
                       active: selectedType === "encargado",
-                      [styles.selected]: selectedType === "encargado",
+                      selected: selectedType === "encargado",
                     }
                   )}
                 >
@@ -125,23 +122,24 @@ const SeleccionRegister = () => {
                     className="custom-control-input"
                     readOnly
                   />
-                  <span className={styles.placeholder}>Encargado</span>
+                  <span>Encargado</span>
                   <FontAwesomeIcon icon={faShop} />
                 </label>
               </div>
             </div>
-            <div className={`d-flex justify-content-between mb-3 mx-3`}>
+            <div className="d-flex justify-content-between mb-3 mx-3">
               <button
-                className={`btn btn-secondary ${styles.btnOutlineSecondary}`}
+                className="btn btn-secondary btnOutlineSecondary me-2"
                 onClick={handleClearSelectionClick}
               >
                 Quitar selección
               </button>
               <Link
                 to={handleNextClick()}
+                style={{ color: "white" }}
                 className={classnames(
                   "btn btn-primary",
-                  !selectedType && styles.disabled
+                  !selectedType && "disabled"
                 )}
                 disabled={!selectedType}
               >
@@ -151,7 +149,6 @@ const SeleccionRegister = () => {
           </div>
         </div>
       </div>
-
       <div>
         <Footer />
       </div>

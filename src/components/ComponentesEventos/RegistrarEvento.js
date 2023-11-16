@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import style from "../ComponentesProducto/RegistrarProducto.module.css";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
+import "./../sass/main.scss";
 
 const RegistrarEvento = () => {
   const [nombre, setNombre] = useState("");
@@ -148,7 +147,7 @@ const RegistrarEvento = () => {
       return;
     }
 
-    if (!imagenEvento?.trim()) {
+    /*if (!imagenEvento?.trim()) {
       toast.error("Suba un logo del evento");
       return;
     }
@@ -156,7 +155,7 @@ const RegistrarEvento = () => {
     if (!croquis?.trim()) {
       toast.error("Suba un croquis del evento");
       return;
-    }
+    }*/
 
     if (!ubicacion.trim()) {
       toast.error("la ubicacion no puede estar vacia");
@@ -357,14 +356,14 @@ const RegistrarEvento = () => {
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
-        <div className={`col ${style.background}`}>
+        <div className={`col background`}>
           <div className="fondo">
             <div className="containerRegistrar d-flex justify-content-center align-items-center">
               <section
-                className={`align-items-center col-6 ${style.form} mt-3 mb-5 ${style.rad}`}
+                className={`align-items-center col-6 form mt-3 mb-5 rad`}
               >
                 <div className="cardRegistrar-body p-2 formularioRegistrar">
-                  <div className={`card-body p-3 ${style.formulario}`}>
+                  <div className={`card-body p-3 formulario`}>
                     <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">
                       Registrar Evento
                     </h1>

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import style from "./Login.module.css";
+import "./../sass/main.scss";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -66,8 +66,8 @@ const Login = () => {
         backgroundPosition: "center",
       }}
     >
-      <div className={style.contenedor}>
-        <div className={`${style.tarjeta}`}>
+      <div className="contenedor">
+        <div className="tarjeta">
           <h1 className="fs-4 card-title fw-bold mb-4 text-black">QuickFood</h1>
           <div className="">
             <form onSubmit={handleSubmit} className="needs-validation">

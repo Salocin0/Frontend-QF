@@ -1,0 +1,190 @@
+@import './variables.scss';
+
+.sidebar {
+  font-family: 'roboto';
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  width: $ancho-sidebar;
+  background:black;
+
+  border-right: 1px solid white;
+  box-shadow: 30px 0 30px rgba(0, 0, 0, 0.15);
+}
+
+.especial {
+  order: 999;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  transition: transform 0.3s ease;
+}
+
+.logocontainer {
+  padding-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo:hover {
+  animation: spin 2s ease infinite;
+  cursor:pointer;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.ventana-emergente {
+  position: fixed;
+  left: $ancho-sidebar;
+  margin-top: 75px;
+  width: auto;
+  height: auto;
+  background-color: black;
+  box-shadow: 5px 5px 10px $color-amarillo-QF;
+  border-right: 2px solid $color-amarillo-QF;
+  border-top: 2px solid $color-amarillo-QF;
+  border-bottom: 2px solid $color-amarillo-QF;
+  z-index: 9999;
+  overflow: auto; /* Si el contenido excede el tamaño, se activará el scroll */
+}
+
+.notificacion {
+  width: 270px;
+  background-color:black; /* Color de fondo */
+  color: white; /* Color de texto */
+  padding: 2px;
+  margin: 0px 7px 0px 5px;
+  border-bottom: 1px solid $color-amarillo-QF;
+}
+
+.fecha {
+  text-align: right;
+  font-size: 12px;
+  color: #ccc; /* Color de la fecha */
+  margin-bottom: 5px;
+}
+
+
+.fondo {
+  position: relative; /* Asegurarse de que no herede propiedades que afecten el z-index */
+  z-index: 1; /* Puedes ajustar este valor si es necesario */
+}
+
+.sidebar {
+  z-index: 2; /* Asegúrate de que el z-index de la barra lateral sea mayor que el fondo */
+}
+
+.navitem {
+  display: flex;
+  align-items: center;
+  border-radius: 5px 5px 5px 5px;
+  padding-right: 5px;
+  margin-bottom: 10px;
+  width: 100%;
+  color: $gris-letra-sidebar;
+}
+
+.divicionnav {
+  color: $color-amarillo-QF;
+}
+
+.navitem:hover {
+  background-color: $color-amarillo-QF;
+}
+
+
+
+.nav {
+  height: 100%;
+}
+
+.navlink span {
+  font-size: 20px;
+  color: $color-amarillo-QF;
+  transition: color 0.3s; /* Transición suave de color */
+}
+
+.navitem i {
+  font-size: 17px;
+  margin: auto;
+  color: $color-amarillo-QF;
+  margin-left: 5px;
+  margin-right: 15px;
+  transition: color 0.3s; /* Transición suave de color */
+}
+
+.navlink:hover span {
+  color: black;
+  cursor:pointer;
+}
+
+.navlink:hover i {
+  color: black;
+}
+
+.especial:hover i{
+  color:black;
+}
+
+
+
+
+
+.navitem i {
+  font-size: 17px;
+  margin:auto;
+  color: $color-amarillo-QF;
+  margin-left: 5px;
+  margin-right: 15px;
+}
+
+.navitem:hover{
+  color:black;
+}
+
+
+.navlink {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  text-align: start;
+  width: 100%;
+  text-decoration: none;
+  color: $letra-sidebar;
+}
+
+
+
+#dropdown {
+  display: flex;
+  align-items: center;
+  padding-right: 5px;
+  margin-left: 0;
+}
+
+@media screen and (max-width: 576px) {
+  .sidebar {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    width: $ancho-sidebar-reducido;
+    background: #0F2027;
+    background: -webkit-linear-gradient(to top, $color-gris-1-degrades-sidebar, $color-gris-2-degrades-sidebar, $color-gris-3-degrades-sidebar);
+    background: linear-gradient(to top, $color-gris-1-degrades-sidebar, $color-gris-2-degrades-sidebar, $color-gris-3-degrades-sidebar);
+    box-shadow: 10px 0 10px rgba(0, 0, 0, 0.15);
+  }
+}

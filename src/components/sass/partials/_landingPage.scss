@@ -1,0 +1,185 @@
+  .logonav {
+    margin: 3px auto;
+    height: 50px;
+    width: 50px;
+  }
+
+  .navbar {
+    position: sticky !important;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 400;
+    background-color: #303443 !important;
+  }
+
+  .imagenes {
+    height: auto;
+    background-color: #292C3E;
+    color: white;
+    padding: 30px 0;
+    text-align: center;
+  }
+
+  .comofunciona {
+    height: 550px;
+    background-color: #F9F6F4;
+  }
+
+  .contacto {
+    height: 350px;
+    background-color: #1C1F30;
+    color: white;
+  }
+
+  .navItemGray {
+    background-color: #303443;
+    color: white !important;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    margin: auto 0;
+    margin-right: 5px;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+  }
+
+  .navItemGray:hover {
+    background-color: white;
+    color: #303443 !important;
+    border-color: #303443 !important;
+  }
+
+  .navItemYellow {
+    background-color: #F7B813;
+    color: black;
+    border: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    margin: auto 0;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+  }
+
+  .navItemYellow:hover {
+    background-color: #bb8c15;
+    color: black !important;
+    border-color: black !important;
+  }
+
+  a:-webkit-any-link {
+    color: inherit;
+    cursor: auto;
+    text-decoration: none;
+  }
+
+  .divimagenimg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .items-container {
+    display: flex;
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    margin-top: 20px;
+  }
+
+  .item i {
+    margin-right: 10px;
+  }
+
+  .item p {
+    margin: 0;
+    flex: 1;
+  }
+
+  .imgbackground {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .divcontacto {
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 10px;
+  }
+
+  .descripcion {
+    font-size: 30px;
+  }
+
+  .circleicon {
+    display: inline-block;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: #F7B813;
+    color: black;
+    text-align: center;
+    line-height: 60px;
+    margin-right: 10px;
+    font-size: 40px;
+  }
+
+  .carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
+
+  .imgcarrousel-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .imgcarrousel {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: 300px;
+  }
+
+  @media screen and (min-width: 991px) {
+    .divbotonesnavar {
+      justify-content: end;
+      display: flex;
+    }
+  }
+
+  @media screen and (max-width: 991px) {
+    .row {
+      flex-direction: column;
+    }
+
+    .col-8,
+    .col-4 {
+      width: 100%;
+    }
+
+  }
+
+  .imgcarrousel {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .imgcarrouselcontainer {
+    height: 300px;
+    overflow: hidden;
+  }

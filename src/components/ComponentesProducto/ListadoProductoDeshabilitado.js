@@ -3,9 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css";
 import ProductoDeshabilitado from "./ProductoDeshabilitado";
-import styleProducto from "./producto.module.css";
+import "./../sass/main.scss";
 
 const ListadoProductoDeshabilitado = ({carrito}) => {
   const [session, setSession] = useState(null);
@@ -80,14 +79,9 @@ const ListadoProductoDeshabilitado = ({carrito}) => {
     }
   }, [session, recargar]);
 
-
-
-
-
-
   return (
     <div>
-      <div className={`row m-0 ${styleback.background}`}>
+      <div className={`row m-0 background`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
@@ -110,11 +104,11 @@ const ListadoProductoDeshabilitado = ({carrito}) => {
               {Array.isArray(productos) && productos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row ${styleProducto.row}`}>
+                  <div key={rowIndex} className={`row `}>
                     {row.map((producto, index) => (
                       <div
                         key={index}
-                        className={`${styleProducto.colmd3} pb-4`}
+                        className={`colmd3 pb-4`}
                       >
                         {producto !== null ? (
                           <ProductoDeshabilitado
@@ -129,7 +123,7 @@ const ListadoProductoDeshabilitado = ({carrito}) => {
                   </div>
                 ))
               ) : (
-                <h2 className={styleProducto.centeredtext}>
+                <h2 className="centeredtext">
                   No tenes ningun producto deshabilitado en este carrito.
                 </h2>
               )}

@@ -1,14 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import styleback from "../ComponentesConsumidor/ConsultarUsuario.module.css";
+import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import styleeventos from "./eventos.module.css";
-import villamaria from "./img/villa maria.png";
-import cosquin from "./img/cosquin.png";
-import { toast } from "react-toastify";
-import Evento from "./Evento.js";
+import "./../sass/main.scss";
 
 const ListadoEventos = () => {
   const [rows, setRows] = useState([]);
@@ -136,63 +132,37 @@ const ListadoEventos = () => {
         consumidorId: eventoToEdit.consumidorId,
       });
     }
-  };
 
+
+
+  };
   return (
-    <div>
-      <div className={`row m-0 ${styleback.background}`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+    <div className="contenedor-principal">
+      <div className="sidebar">
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
+      </div>
+      <div className="contenedor-grid">
+        <div className="tituloSeccion">
+          <h2>Eventos</h2>
         </div>
-        <div className={`col-10`}>
-          <div className="d-flex justify-content-center mb-3">
-            <h1 className="pt-3" style={{ color: "white" }}>
-              Eventos
-            </h1>
-          </div>
-          <hr style={{ color: "white" }} className="me-4" />
-          <div className="d-flex justify-content-end col-11">
-            <Link
-              to={`/registrar-evento`}
-              className={`btn btn-success btn-lg ${styleeventos.btnfloating}`}
-            >
-              <i className="bi bi-plus-lg"></i> Agregar Evento
-            </Link>
-          </div>
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-3 pb-4 h-100 w-100">
-              {Array.isArray(eventos) && eventos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row ${styleeventos.row}`}>
-                    {row.map((evento, index) => (
-                      <div
-                        key={index}
-                        className={`${styleeventos.colmd3} pb-4`}
-                      >
-                        {evento !== null ? (
-                          <Evento
-                            evento={evento}
-                            session={session}
-                            recargar={recargarComponente}
-                          />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 className={styleeventos.centeredtext}>
-                  No tenes ningun Evento creado.
-                </h2>
-              )}
-            </div>
-          </div>
+        <div className="descripcion">
+          <p>
+            Con Quickfood, crea tu evento para hacerlo mejor. Descubre nuestras
+            increíbles características y ofrece una experiencia única a tus
+            consumidores.
+          </p>
         </div>
+        <Link to={`/registrar-evento`} className="LinkAgregarEvento">
+          Crear Evento
+        </Link>
       </div>
       <Footer />
     </div>
   );
+
+
+
+
 };
 
 export default ListadoEventos;

@@ -1,0 +1,51 @@
+@import './partials/adquirirNuevoRolEPC.scss';
+@import './partials/consultarUsuario.scss';
+@import './partials/eventos.scss';
+@import './partials/footer.scss';
+@import './partials/inicio.scss';
+@import './partials/landingPage.scss';
+@import './partials/listadoProducto.scss';
+@import './partials/login.scss';
+@import './partials/producto.scss';
+@import './partials/puestos.scss';
+@import './partials/recuperarContrasenia.scss';
+@import './partials/register.scss';
+@import './partials/registrarProducto.scss';
+@import './partials/sidebar.scss';
+@import './partials/eventosForm.scss';
+@import './partials/variables.scss';
+@import './partials/eventoCard';
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: black;
+  }
+
+  .background-login {
+    background-image: url(./../Inicio-12.png);
+    height: 100%;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .background-prelogin {
+    background-image: url(./../QuickFoodFondo.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .row {
+    --bs-gutter-x: 0;
+  }
+
+  body{
+    background-color: $color-azul-fondo;
+  }

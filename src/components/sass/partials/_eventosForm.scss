@@ -1,0 +1,136 @@
+@import './variables.scss';
+
+.dark-form-wrapper {
+    background-color: #1a1a1a;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 0 0 2px grey;
+    margin-top:5px;
+
+}
+
+
+
+h3 {
+    color: white !important;
+    font-family: 'Franklin Gothic Medium';
+  }
+
+.formEvento{
+     background-color: black;
+
+
+}
+.form-group {
+    margin-top: -12px;
+
+}
+
+.row {
+    margin-left: 20px;
+
+}
+
+.form-label {
+    color: white;
+}
+
+.form-input {
+    width: 100%;
+    padding: 7px;
+    border: none;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    background-color: #1a1a1a;
+    color: #ffffff;
+    outline: none;
+}
+
+.form-input:focus {
+    border: 1px solid $color-amarillo-QF;
+    border-radius: 5px;
+    color: $color-amarillo-QF;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+
+}
+
+/* Agrega este estilo en tu archivo de estilos */
+.form-input option.selected-option {
+    background-color: $color-amarillo-QF !important; /* Reemplaza con tu variable de color */
+}
+
+.date-input,
+.time-input,
+.file-input {
+    width: auto;
+    margin-right: 20px;
+}
+
+.option-container-evento {
+    display: flex;
+    gap: 10px;
+}
+
+.option-container-pago {
+    display: flex;
+    gap: 10px;
+    width: 200px;
+    margin: auto;
+    align-items: center;
+    justify-content: center; /* Agrega esta línea */
+
+}
+
+.opcionesEvento {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 60px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.opcionesPago {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 60px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    color:white;
+    cursor: pointer;
+}
+
+.option.selected {
+    background-color: $color-amarillo-QF;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.siguiente-button {
+    background-color: $color-amarillo-QF;
+    color: #1a1a1a;
+    padding: 7px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    justify-content: end;
+}
+
+.siguiente-button:hover {
+    background-color: darken($color-amarillo-QF, 10%);
+}
+
+.croquis,
+.logoSubida {
+    border: none;
+
+}

@@ -1,14 +1,11 @@
 import banner from "../ComponentesProducto/banner.jpg";
 import imagenProducto from "../ComponentesProducto/f1.png";
-//import './ListadoProducto.css';
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import styleback from "./../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Producto from "./Producto";
-import styleProducto from "./producto.module.css";
+import "./../sass/main.scss";
 import Footer from "../ComponentesGenerales/Footer";
 import ProductoUser from "./ProductoUser";
 
@@ -208,7 +205,7 @@ const ListadoProductoUser = () => {
 
   return (
     <div>
-      <div className={`row m-0 ${styleback.background}`}>
+      <div className={`row m-0 background`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
@@ -232,11 +229,11 @@ const ListadoProductoUser = () => {
               {Array.isArray(productos) && productos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row ${styleProducto.row}`}>
+                  <div key={rowIndex} className={`row`}>
                     {row.map((producto, index) => (
                       <div
                         key={index}
-                        className={`${styleProducto.colmd3} pb-4`}
+                        className={`colmd3 pb-4`}
                       >
                         {producto !== null ? (
                           <ProductoUser

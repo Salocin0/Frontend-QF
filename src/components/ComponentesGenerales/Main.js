@@ -12,12 +12,19 @@ import ConsultarUsuarioPrueba from "../ComponentesConsumidor/ConsultarUsuarioPru
 import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
 import ConsultarUsuarioEPC from "../ComponentesEPC/ConsultarUsuarioEPC";
 import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
+import EventoPrueba from "../ComponentesEventos/EventoPrueba";
 import ListadoEventos from "../ComponentesEventos/ListadoEvento";
 import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
+import RegistrarEvento2 from "../ComponentesEventos/RegistrarEvento2";
+import RegistrarEvento3 from "../ComponentesEventos/RegistrarEvento3";
+import RegistrarEvento4 from "../ComponentesEventos/RegistrarEvento4";
 import LandingPage from "../ComponentesLandingPage/LandingPage";
 import CambiarContraseña from "../ComponentesLogin/CambiarContraseña";
+import HabilitarUsuario from "../ComponentesLogin/HabilitarUsuario";
 import Login from "../ComponentesLogin/Login";
 import RecuperarContraseña from "../ComponentesLogin/RecuperarContraseña";
+import ValidarEmail from "../ComponentesLogin/ValidarEmail";
+import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
 import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
 import ListadoProducto from "../ComponentesProducto/ListadoProducto";
 import ListadoProductoDeshabilitado from "../ComponentesProducto/ListadoProductoDeshabilitado";
@@ -107,6 +114,11 @@ export const Main = () => {
 
         <Route path="/listado-eventos" element={<ListadoEventosUsers />} />
         <Route path="/registrar-evento" element={<RegistrarEvento />} />
+        <Route path="/registrar-evento2" element={<RegistrarEvento2 />} />
+        <Route path="/registrar-evento3" element={<RegistrarEvento3 />} />
+        <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<RegistrarEvento4 />} />
+        <Route path="/eventoPrueba" element={<EventoPrueba />} />
+
         <Route path="/evento/:id" element={<ConsultarEvento />} />
         <Route path="/habilitar-Usuario-email/:id/:codigo" element={<ValidarEmail />} />
         <Route path="/habilitar-Usuario-deshabilitado/:id" element={<HabilitarUsuario />} />

@@ -1,10 +1,12 @@
+import { faDolly } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
-import style from "./Sidebar.module.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDolly,faAddressBook,faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import "./../sass/main.scss";
 
 import Logo from "../img/QuickFood_LogoYellow.png";
 
@@ -14,6 +16,7 @@ const Sidebar = ({ tipoUsuario }) => {
   const [isProductor, setIsProductor] = useState(false);
   const [isRepartidor, setIsRepartidor] = useState(false);
   const [haveRol, setHaveRol] = useState(false);
+  const [mostrarNotificacion, setMostrarNotificacion] = useState(false);
 
   useEffect(() => {
     setUsuario(tipoUsuario);
@@ -23,19 +26,22 @@ const Sidebar = ({ tipoUsuario }) => {
     setHaveRol(usuario !== "consumidor");
   }, [tipoUsuario, usuario]);
 
+  const toggleNotificacion = () => {
+    setMostrarNotificacion((prev) => !prev);
+  };
   return (
     <>
-      <div className={style.sidebar}>
-        <div className={style.logocontainer}>
+      <div className={"sidebar"}>
+        <div className={"logocontainer"}>
           <a href="/inicio">
-            <img src={Logo} alt="Logo" className={style.logo} />
+            <img src={Logo} alt="Logo" className={"logo"} />
           </a>
         </div>
         <div className="menu-container">
-          <ul className={`${style.nav} flex-column p-3`}>
-            <li className={style.navitem}>
-              <a href="/inicio" className={`${style.navlink} text-truncate`}>
-                <i className={`${style.icono} bi bi-house`}></i>
+          <ul className={`nav flex-column p-3`}>
+            <li className={"navitem"}>
+              <a href="/inicio" className={`navlink text-truncate`}>
+                <i className={`icono bi bi-house`}></i>
                 <span className="ms-1 d-none d-sm-inline w-100">Inicio</span>
               </a>
             </li>
@@ -47,35 +53,55 @@ const Sidebar = ({ tipoUsuario }) => {
                 </span>
               </a>
             </li>
-            <li className={style.navitem}>
-              <a href="/pedidos" className={`${style.navlink} text-truncate`} >
-                <i className={`${style.icono} bi bi-bag`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Pedidos
-                </span>
+            <li className="navitem">
+              <a href="/pedidos" className={`navlink text-truncate`}>
+                <i className={`icono bi bi-bag`}></i>
+                <span className="ms-1 d-none d-sm-inline w-100">Pedidos</span>
               </a>
             </li>
-            <li className={style.navitem}>
-              <a href="/Notificaciones" className={`${style.navlink} text-truncate`} >
-                <i className={`${style.icono} bi bi-bell`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Notificaciones
-                </span>
+            <li className="navitem">
+              <a href="/carrito" className={`navlink text-truncate`}>
+                <i className={`icono bi bi-cart`}></i>
+                <span className="ms-1 d-none d-sm-inline w-100">Carrito</span>
               </a>
             </li>
-            <li className={style.navitem}>
-              <a href="/carrito" className={`${style.navlink} text-truncate`} >
-                <i className={`${style.icono} bi bi-cart`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Carrito
-                </span>
+            <li className="navitem">
+              <a
+                className={`navlink text-truncate`}
+                onClick={toggleNotificacion}
+              >
+                <i className={`icono bi bi-bell`}></i>
+                <span className="ms-1 d-none d-sm-inline w-100">Notificaciones</span>
               </a>
             </li>
-            <hr style={{ color: "white" }} />
+            {mostrarNotificacion && (
+              <div className="ventana-emergente">
+
+
+                <div class="notificacion">
+                  <div class="fecha">Hace 3 días</div>
+                  <div class="contenido">
+                    <i>Valoración</i>
+                    <br />
+                    ¡Gracias por valorar el pedido del carrito de Juan! Esperamos que lo hayas disfrutado 🤩
+                  </div>
+                </div>
+                <div class="notificacion">
+                  <div class="fecha">Hace 3 días</div>
+                  <div class="contenido">
+                  <i>Compra Realizada</i>
+                    <br />
+                    ¡El carrito de Juan tiene tu pedido! Un Repartidor se acercará a tu asiento a la brevedad. 🏃‍♂
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <hr className="divicionnav" style={{ color: "white", width: "100%" }} />
             {isResponsable && (
-              <li className={style.navitem}>
-                <a href="/listado-puestos" className={`${style.navlink} text-truncate`}>
-                  <i className={`${style.icono} bi bi-shop`}></i>
+              <li className="navitem">
+                <a href="/listado-puestos" className={`navlink text-truncate`}>
+                  <i className={`icono bi bi-shop`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Puestos
                   </span>
@@ -93,9 +119,12 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
             {isRepartidor && (
-              <li className={style.navitem}>
-                <a href="/pedidos-asignados" className={`${style.navlink} text-truncate`}>
-                <FontAwesomeIcon icon={faDolly} className={`${style.icono}`}/>
+              <li className="navitem">
+                <a
+                  href="/pedidos-asignados"
+                  className={`navlink text-truncate`}
+                >
+                  <FontAwesomeIcon icon={faDolly} className={`icono`} />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Pedidos Asignados
                   </span>
@@ -123,16 +152,16 @@ const Sidebar = ({ tipoUsuario }) => {
               </li>
             )}
 
-            <li className={`${style.navitem} dropdown ${style.especial}`}>
-              <i className={`${style.icono} bi bi-person-circle ${style.iconoespecial}`} ></i>
-              <a
-                className={`${style.navlink} text-truncate dropdown-toggle`}
+            <li className="navitem dropdown especial ">
+              <i className="icono bi bi-person-circle iconoespecial"></i>
+              <div
+                className="navlink text-truncate dropdown-toggle"
                 id="dropdown"
                 data-bs-toggle="dropdown"
                 aria-expanded="true"
               >
                 <span className="ms-1 d-none d-sm-inline w-100">Mi Perfil</span>
-              </a>
+              </div>
               <ul
                 className="dropdown-menu text-small shadow"
                 aria-labelledby="dropdown"

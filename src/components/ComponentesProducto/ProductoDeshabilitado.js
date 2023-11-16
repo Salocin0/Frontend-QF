@@ -2,7 +2,7 @@ import { default as React, useEffect } from "react";
 import { Dropdown } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-import style from "./producto.module.css";
+import "./../sass/main.scss";
 
 const ProductoDeshabilitado = ({ producto, session, idpuesto, recargar }) => {
   
@@ -35,11 +35,11 @@ const ProductoDeshabilitado = ({ producto, session, idpuesto, recargar }) => {
   useEffect(() => {}, []);
 
   return (
-    <div className={style.cardlink}>
+    <div className="cardlink">
       <div className="card shadow-sm">
         <img
           src={`${producto?.img}`}
-          className={`${style.cardimgtop} img-flex`}
+          className={`cardimgtop img-flex`}
           alt="Thumbnail"
           style={{ height: "150px" }}
         />

@@ -1,11 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import style from "../ComponentesConsumidor/ConsultarUsuario.module.css";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import PuestoDeshabilitado from "./PuestoDeshabilitado.js";
-import stylepuesto from "./puestos.module.css";
+import "./../sass/main.scss";
 
 const ListadoPuestosDeshabilitados = () => {
   const [rows, setRows] = useState([]);
@@ -71,7 +70,7 @@ const ListadoPuestosDeshabilitados = () => {
   }, [session, recargar]);
 
   return (
-    <div className={`${style.background} d-flex`}>
+    <div className={`background d-flex`}>
       <div className="col-2">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
@@ -93,11 +92,11 @@ const ListadoPuestosDeshabilitados = () => {
           {Array.isArray(carritos) && carritos.length > 0 ? (
             rows.length > 0 &&
             rows.map((row, rowIndex) => (
-              <div key={rowIndex} className={`row ${stylepuesto.row}`}>
+              <div key={rowIndex} className={`row `}>
                 {row.map((carrito, index) => (
                   <div
                     key={index}
-                    className={`${stylepuesto.colmd3} col-md-3 pb-2`}
+                    className={`colmd3 col-md-3 pb-2`}
                   >
                     {carrito !== null ? <PuestoDeshabilitado carrito={carrito} recargar={recargarComponente} /> : null}
                   </div>
@@ -105,7 +104,7 @@ const ListadoPuestosDeshabilitados = () => {
               </div>
             ))
           ) : (
-            <h2 className={stylepuesto.centeredtext}>
+            <h2 className="centeredtext">
               No tenes ningun puesto en este momento.
             </h2>
           )}
