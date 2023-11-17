@@ -3,18 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import puestos from "../img/carro.png";
 import pedidoimg from "../img/comida-rapida-casera.jpg";
 import eventos from "../img/eventos.png";
 import eventosimg2 from "../img/eventosimg2.png";
 import encargado from "../img/foodtruck.jpg";
-import productor from "../img/productor.jpg";
-import repartidor from "../img/repartidor.jpg";
 import notificaciones from "../img/notificaciones.png";
 import pedidos from "../img/pedidos.png";
 import perfil from "../img/perfil.png";
+import productor from "../img/productor.jpg";
+import repartidor from "../img/repartidor.jpg";
 import "./../sass/main.scss";
 
 const Inicio = () => {
@@ -130,9 +129,7 @@ const Inicio = () => {
           </div>
         </Link>
       </div>
-      <div>
-        <Footer />
-      </div>
+
     </div>
   );
 };
