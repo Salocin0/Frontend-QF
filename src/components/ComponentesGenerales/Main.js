@@ -19,6 +19,7 @@ import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
 import EventoPrueba from "../ComponentesEventos/EventoPrueba";
 import ListadoEventos from "../ComponentesEventos/ListadoEvento";
 import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
+import ListadoEventosProductor from "../ComponentesEventos/ListadoEventosProductor";
 import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
 import RegistrarEvento2 from "../ComponentesEventos/RegistrarEvento2";
 import RegistrarEvento3 from "../ComponentesEventos/RegistrarEvento3";
@@ -115,6 +116,7 @@ export const Main = () => {
         <Route path="/productos-puesto/:id" element={<ListadoProductoUser />} />
 
         <Route path="/listado-eventos" element={<ListadoEventosUsers />} />
+        <Route path="/listado-eventos-productor" element={<ListadoEventosProductor />} />
         <Route path="/registrar-evento" element={<RegistrarEvento />} />
         <Route path="/registrar-evento2" element={<RegistrarEvento2 />} />
         <Route path="/registrar-evento3" element={<RegistrarEvento3 />} />

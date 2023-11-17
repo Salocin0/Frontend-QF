@@ -1,9 +1,9 @@
+import { faAddressBook, faDolly, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import React, { useEffect, useState } from "react";
-import { faDolly,faAddressBook,faSquarePlus } from '@fortawesome/free-solid-svg-icons';
 import "./../sass/main.scss";
 
 import Logo from "../img/QuickFood_LogoYellow.png";
@@ -23,6 +23,8 @@ const Sidebar = ({ tipoUsuario }) => {
     setIsRepartidor(usuario === "repartidor");
     setHaveRol(usuario !== "consumidor");
   }, [tipoUsuario, usuario]);
+
+  console.log(usuario);
 
   const toggleNotificacion = () => {
     setMostrarNotificacion((prev) => !prev);
@@ -108,7 +110,7 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
             {isProductor && (
               <li className={"navitem"}>
-                <a href="/eventos" className={`navlink text-truncate`}>
+                <a href="/listado-eventos-productor" className={`navlink text-truncate`}>
                   <i className={`icono bi bi-balloon`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Eventos

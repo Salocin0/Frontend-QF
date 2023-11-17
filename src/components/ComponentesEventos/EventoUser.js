@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
 import "./../sass/main.css";
 
+import { Link } from "react-router-dom";
 
 const EventoUser = ({ evento, recargar }) => {
   const { id } = useParams();
@@ -60,6 +61,8 @@ const EventoUser = ({ evento, recargar }) => {
   return (
     <div>
     <div className="container-fluid">
+    <Link to={`/listado-puestos/${evento.id}`} className={"cardlink"}>
+
           <div className="card">
             <div className="card-body">
               <div className="row">
@@ -85,10 +88,10 @@ const EventoUser = ({ evento, recargar }) => {
                   </p>
                 </div>
               </div>
-
-
             </div>
           </div>
+          </Link>
+
         </div>
         <div className="filtrosEventosConsumidor">
           <FiltersEventosConsumidor />

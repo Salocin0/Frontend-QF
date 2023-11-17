@@ -2,7 +2,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
-import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.scss";
 
@@ -156,7 +155,6 @@ const ListadoEventos = () => {
           Crear Evento
         </Link>
       </div>
-      <Footer />
     </div>
   );
 

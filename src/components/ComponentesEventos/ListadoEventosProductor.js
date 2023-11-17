@@ -1,10 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.css";
 import EventoUser from "./EventoUser";
 
-const ListadoEventosUsers = () => {
+const ListadoEventosProductor = () => {
   const [rows, setRows] = useState([]);
   const [session, setSession] = useState(null);
   const [eventos, setEventos] = useState([]);
@@ -97,37 +98,47 @@ const ListadoEventosUsers = () => {
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className={`col-10`}>
-          <div className="d-flex justify-content-center mb-3 tituloSeccion">
-            <h1 className="pt-2">
-              Eventos
-            </h1>
-          </div>
-          <hr style={{ color: "#F7B813" }} />
           <div className="d-flex align-items-center justify-content-center">
             <div className="pt-2 pb-4 h-100 w-100">
               {Array.isArray(eventos) && eventos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex} >
-                    {row.map((evento, index) => (
-                      <div
-                        key={index}
-                      >
-                        {evento !== null ? (
-                          <EventoUser
-                            evento={evento}
-                            session={session}
-                            recargar={recargarComponente}
-                          />
-                        ) : null}
+                <React.Fragment>
+                  <div className="d-flex justify-content-center mb-3 tituloSeccion">
+                    <h1 className="pt-2">Eventos</h1>
+                  </div>
+                  <hr style={{ color: "#F7B813" }} />
+                  {rows.length > 0 &&
+                    rows.map((row, rowIndex) => (
+                      <div key={rowIndex}>
+                        {row.map((evento, index) => (
+                          <div key={index}>
+                            {evento !== null ? (
+                              <EventoUser
+                                evento={evento}
+                                session={session}
+                                recargar={recargarComponente}
+                              />
+                            ) : null}
+                          </div>
+                        ))}
                       </div>
                     ))}
-                  </div>
-                ))
+                </React.Fragment>
               ) : (
-                <h2 className={"tituloSeccionNegativo"}>
-                  No hay eventos activos en este momento.
-                </h2>
+                <div className="contenedor-grid">
+                  <div className="tituloSeccion">
+                    <h2>Eventos</h2>
+                  </div>
+                  <div className="descripcion">
+                    <p>
+                      Con Quickfood, crea tu evento para hacerlo mejor. Descubre nuestras
+                      increíbles características y ofrece una experiencia única a tus
+                      consumidores.
+                    </p>
+                  </div>
+                  <Link to={`/registrar-evento`} className="LinkAgregarEvento">
+                    Crear Evento
+                  </Link>
+                </div>
               )}
             </div>
           </div>
@@ -135,6 +146,7 @@ const ListadoEventosUsers = () => {
       </div>
     </div>
   );
+
 };
 
-export default ListadoEventosUsers;
+export default ListadoEventosProductor;
