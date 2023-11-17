@@ -17,7 +17,6 @@ import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
 import ConsultarUsuarioEPC from "../ComponentesEPC/ConsultarUsuarioEPC";
 import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
 import EventoPrueba from "../ComponentesEventos/EventoPrueba";
-import ListadoEventos from "../ComponentesEventos/ListadoEvento";
 import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
 import ListadoEventosProductor from "../ComponentesEventos/ListadoEventosProductor";
 import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
@@ -111,7 +110,6 @@ export const Main = () => {
         />
         <Route path="/producto/:id" element={<ConsultarProducto />} />
 
-        <Route path="/eventos" element={<ListadoEventos />} />
         <Route path="/listado-puestos/:idEvento" element={<ListadoPuestosUser />} />
         <Route path="/productos-puesto/:id" element={<ListadoProductoUser />} />
 

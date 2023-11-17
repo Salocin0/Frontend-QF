@@ -251,7 +251,7 @@ const RegistrarEvento = () => {
       .then((data) => {
         if (data.code === 200) {
           toast.success("Evento registrado correctamente");
-          navigate(`/eventos`);
+          navigate(`/listado-eventos-productor`);
         } else {
           toast.error("Error al registrar el evento");
         }

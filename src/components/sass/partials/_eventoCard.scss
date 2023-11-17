@@ -1,5 +1,6 @@
 @import './variables.scss';
-.mainFormEventos{
+
+.mainFormEventos {
     background-color: rgba(0, 0, 0, 0.9);
 
 }
@@ -24,12 +25,13 @@
 
 
 
-.col-md-3 img{
+.col-md-3 img {
     background-color: red;
     width: 180px;
     height: 100px;
     border-radius: 7px;
-    border:1px solid $color-amarillo-QF;
+    border: 1px solid $color-amarillo-QF;
+
 }
 
 
@@ -57,25 +59,46 @@
     right: -45px;
     font-size: small;
     font-style: italic;
-    background-color: rgb(153, 219, 153); /* Color de fondo para el cartelito */
-    padding: 3px 8px; /* Espaciado interno del cartelito */
-    border-radius: 5px; /* Bordes redondeados */
+    background-color: rgb(153, 219, 153);
+    /* Color de fondo para el cartelito */
+    padding: 3px 8px;
+    /* Espaciado interno del cartelito */
+    border-radius: 5px;
+    /* Bordes redondeados */
 }
 
 .card-estado-productor {
     color: black !important;
     position: absolute;
-    bottom:5px;
+    bottom: 5px;
     right: 20px;
     font-size: small;
     font-style: italic;
-    background-color: rgb(153, 219, 153); /* Color de fondo para el cartelito */
-    padding: 3px 8px; /* Espaciado interno del cartelito */
-    border-radius: 5px; /* Bordes redondeados */
+    background-color: rgb(153, 219, 153);
+    /* Color de fondo para el cartelito */
+    padding: 3px 8px;
+    /* Espaciado interno del cartelito */
+    border-radius: 5px;
+    /* Bordes redondeados */
+}
+
+.color-finalizado {
+    color: white !important;
+    background-color: red !important;
 }
 
 
+.card-finalizado {
+    border: 1px solid red !important;
+}
 
+.card-finalizado2 {
+    background-color: rgba(255, 255, 255, 0.217);
+}
+
+.distancia-finalizado {
+    display: none;
+}
 
 .card-descripcion {
     font-size: 0.9rem;
@@ -119,8 +142,28 @@
     padding: 10px;
     position: absolute;
     height: auto;
-    bottom: 9%;
-    right:10px;
-  }
+    bottom: 1%;
+    right: 10px;
+}
 
+.agregarEventoButton{
+    background-color: lightgreen;
+    border: 1px solid black ;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 15%;
+    padding: 10px;
+    position: absolute;
+    height: auto;
+    top: 15%;
+    right: 10px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
 
+}
+
+.agregarEventoButton:hover{
+    background-color: $color-amarillo-QF;
+    border: 2px solid black ;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}

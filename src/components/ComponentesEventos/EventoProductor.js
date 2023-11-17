@@ -47,14 +47,13 @@ const EventoProductor = ({ evento, recargar }) => {
 
     if (evento) {
       switch (evento.estado) {
-        case 'En Preparacion':
+        case 'EnPreparacion':
           setIsEnPreparacion(true);
-          console.log("Entre aca" + setIsEnPreparacion);
           break;
         case 'Confirmado':
           setIsConfirmado(true);
           break;
-        case 'En Curso':
+        case 'EnCurso':
           setIsEnCurso(true);
           break;
         case 'Pausado':
@@ -72,6 +71,25 @@ const EventoProductor = ({ evento, recargar }) => {
     }
   });
 
+  function getColorClass(estado) {
+    switch (estado) {
+
+      case 'Finalizado':
+        return 'color-finalizado';
+      default:
+        return '';
+    }
+  }
+
+   function getCardColor(estado) {
+    switch (estado) {
+
+      case 'Finalizado':
+        return 'card-finalizado';
+      default:
+        return '';
+    }
+  }
 
 
   const confirmarEvento = () => {
@@ -86,122 +104,79 @@ const EventoProductor = ({ evento, recargar }) => {
       .catch((error) => toast.error("Error al confirmar evento"));
   };
 
-  const cancelarEvento = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-
-    fetch(`http://localhost:8000/cambiarEstado/${evento.id}/cancelar`, {
-      method: "POST",
-      headers: headers,
-    })
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Evento cancelado");
-          recargar();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
-  };
 
   const iniciarEvento = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-
-    fetch(`http://localhost:8000/cambiarEstado/${evento.id}/iniciarEvento`, {
+    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/iniciarEvento`, {
       method: "POST",
-      headers: headers,
     })
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Evento iniciado con éxito");
-          recargar();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Evento iniciado con éxito");
+        window.location.reload();
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => toast.error("Error al confirmar evento"));
+  };
+
+
+  const finalizarEvento = () => {
+    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/finalizarEvento`, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Evento finalizado con éxito");
+        window.location.reload();
+      })
+      .catch((error) => toast.error("Error al confirmar evento"));
+  };
+
+  const cancelarEvento = () => {
+    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/cancelarEvento`, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Evento Cancelado con éxito");
+        window.location.reload();
+      })
+      .catch((error) => toast.error("Error al confirmar evento"));
   };
 
   const pausarEvento = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-
-    fetch(`http://localhost:8000/cambiarEstado/${evento.id}/pausarEvento`, {
+    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/pausarEvento`, {
       method: "POST",
-      headers: headers,
     })
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Evento pausado con éxito");
-          recargar();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Evento Pausado con éxito");
+        window.location.reload();
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => toast.error("Error al confirmar evento"));
   };
 
-  const finalizarEvento = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-
-    fetch(`http://localhost:8000/cambiarEstado/${evento.id}/finalizarEvento`, {
-      method: "POST",
-      headers: headers,
-    })
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Evento finalizado con éxito");
-          recargar();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
-  };
 
   const reprogramarEvento = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-
-    fetch(`http://localhost:8000/cambiarEstado/${evento.id}/reprogramarEvento`, {
+    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/reprogramarEvento`, {
       method: "POST",
-      headers: headers,
     })
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Evento reprogramado con éxito");
-          recargar();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Evento Reprogramado con éxito");
+        window.location.reload();
       })
-      .catch((error) => console.error("Error:", error));
+      .catch((error) => toast.error("Error al confirmar evento"));
+  };
+
+  const agregarNuevo = () => {
+    navigate(`/registrar-evento`);
+
   };
 
   return (
     <div>
       <div className="container-fluid">
-
-          <div className="card">
-            <div className="card-body">
+      <div className={`card ${getCardColor(evento.estado)}`}>
+            <div className="card-body ">
               <div className="row">
                 <div className="col-md-3">
                   <img
@@ -214,7 +189,7 @@ const EventoProductor = ({ evento, recargar }) => {
                   <h5 className="card-title">{evento.nombre}</h5>
                   <p className="card-descripcion">{evento.descripcion}</p>
                   <p className="card-text">{evento.ubicacion} - {evento.localidad}, {evento.provincia}</p>
-                  <p className="card-distance">
+                  <p className="card-distance distancia-finalizado">
                     A 1km de distancia{" "}
                   </p>
                   <p className="card-text-fecha">
@@ -229,15 +204,15 @@ const EventoProductor = ({ evento, recargar }) => {
                     {isConfirmado && <button className="btn btn-success me-2"  onClick={iniciarEvento}>Iniciar Evento</button>}
                     {isConfirmado && <button className="btn btn-secondary me-2" onClick={pausarEvento}>Pausar Evento</button>}
                     {isEnCurso && <button className="btn btn-danger me-2" onClick={finalizarEvento}>Finalizar Evento</button>}
-                    {isPausado && <button className="btn btn-danger me-2" onClick={reprogramarEvento}>Reprogramar Evento</button>}
+                    {isPausado && <button className="btn btn-success me-2" onClick={reprogramarEvento}>Reprogramar Evento</button>}
                     {isPausado && <button className="btn btn-danger me-2" onClick={cancelarEvento}>Cancelar Evento</button>}
 
-                    <button className="btn btn-secondary me-2">
+                    {!isFinalizado && !isCancelado && <button className="btn btn-secondary me-2">
                       Editar Evento
-                    </button>
+                    </button>}
 
                   </div>
-                  <p className="card-estado-productor">
+                  <p className={`card-estado-productor ${getColorClass(evento.estado)}`}>
                     {evento.estado}
                   </p>
                 </div>
@@ -254,15 +229,25 @@ const EventoProductor = ({ evento, recargar }) => {
 
 
       </div>
+      <button  onClick={agregarNuevo} className="agregarEventoButton">
+        Agregar Evento
+      </button>
       <div className="filtrosEventosConsumidor">
         <FiltersEventosConsumidor />
       </div>
+
+
+
+
     </div>
+
 
   );
 };
 
 export default EventoProductor;
+
+//                  <p className={`card-estado-productor ${getColorClass(evento.estado)}`}>
 
 
 
