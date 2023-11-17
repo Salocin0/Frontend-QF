@@ -1,40 +1,42 @@
 @import './variables.scss';
+.mainFormEventos{
+    background-color: rgba(0, 0, 0, 0.9);
 
+}
 
 .card {
     background-color: $color-gris-tarjetas !important;
-    margin: 20px auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    border: 1px solid lightgrey !important;
+    border: 1px solid $color-amarillo-QF !important;
+    width: 80%;
+    margin-left: 1%;
+    margin-bottom: 10px;
 
 }
 
 .card:hover {
-    transform: scale(1.03);
+    transform: scale(1.02);
     cursor: pointer;
 
 }
 
-.card-body {
-    padding: 20px;
-}
-
-.row {
-    margin-bottom: 15px;
-}
 
 
-.col-md-3 img {
-    border-radius: 5px;
 
+.col-md-3 img{
+    background-color: red;
+    width: 180px;
+    height: 100px;
+    border-radius: 7px;
+    border:1px solid $color-amarillo-QF;
 }
 
 
 .card-title {
     font-size: 1.5rem;
     margin-bottom: 10px;
-    color: white !important;
+    color: $color-amarillo-QF !important;
 }
 
 .card-distance {
@@ -46,11 +48,65 @@
     font-style: italic;
 }
 
+.card-estado {
+    color: black !important;
+    position: absolute;
+    bottom: 0px;
+    right: -45px;
+    font-size: small;
+    font-style: italic;
+    background-color: rgb(153, 219, 153); /* Color de fondo para el cartelito */
+    padding: 3px 8px; /* Espaciado interno del cartelito */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+
+
+
+.card-descripcion {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    color: $color-amarillo-QF !important;
+    font-style: italic;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 .card-text {
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin-bottom: 5px;
-    color: white !important;
+    color: $color-amarillo-QF !important;
     text-align: left;
+    font-style: italic;
 
 }
+
+
+
+.card-text-fecha {
+    font-size: 0.7rem;
+    margin-bottom: 5px;
+    color: $color-amarillo-QF !important;
+    text-align: left;
+    font-style: italic;
+
+}
+
+.filtrosEventosConsumidor {
+    display: inline-block;
+    background-color: $color-gris-tarjetas;
+    border: 1px solid $color-amarillo-QF ;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 15%;
+    padding: 10px;
+    position: absolute;
+    height: auto;
+    bottom: 9%;
+    right:10px;
+  }
+
+

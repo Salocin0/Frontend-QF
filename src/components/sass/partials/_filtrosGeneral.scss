@@ -1,0 +1,35 @@
+.filtrosGeneral{
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-size: small;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"]:checked {
+    background-color: $color-amarillo-QF;
+  }
+
+  label {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+
+
+.filtrosLetra{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: $color-amarillo-QF !important;
+    grid-area: titulo;
+    font-style: italic;
+    align-self: end;
+}
+
+.hrFiltros{
+    color:$color-amarillo-QF;
+}

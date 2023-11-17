@@ -11,10 +11,11 @@
 
 .tituloSeccion {
   font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-  color: white;
+  color: $color-amarillo-QF;
   grid-area: titulo;
   font-style: italic;
   align-self: end;
+  display:block;
 }
 
 .tituloSeccion h2 {

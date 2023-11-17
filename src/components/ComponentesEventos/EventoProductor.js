@@ -4,9 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
 import "./../sass/main.css";
+import imgdefault from "./img/villa maria.png";
 
 
-const EventoUser = ({ evento, recargar }) => {
+const EventoProductor = ({ evento, recargar }) => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
@@ -65,28 +66,37 @@ const EventoUser = ({ evento, recargar }) => {
               <div className="row">
                 <div className="col-md-3">
                   <img
-                    src={evento.img}
+                    src={imgdefault}
                     alt="Logo del Evento"
                     className="img-fluid"
                   />
                 </div>
                 <div className="col-md-8 position-relative">
                   <h5 className="card-title">{evento.nombre}</h5>
-                  <p className="card-descripcion">{evento.descripcion}</p>
-                  <p className="card-text">{evento.ubicacion} - {evento.localidad}, {evento.provincia}</p>
+                  <p className="card-text">{evento.ciudad}</p>
                   <p className="card-distance">
                     A {evento.distancia} de distancia{" "}
                   </p>
-                  <p className="card-estado">
-                     {evento.estado}
-                  </p>
-                  <p className="card-text-fecha">
-                    {format(new Date(evento.fechaInicio), "dd/MM/yyyy")} -  {format(new Date(evento.fechaFin), "dd/MM/yyyy")}
+                  <p className="card-text">
+                    {format(new Date(evento.fechaInicio), "dd/MM/yyyy")}
+                    {format(new Date(evento.fechaFin), "dd/MM/yyyy")}
                   </p>
                 </div>
               </div>
 
-
+              <div className="mt-2 d-flex">
+                <div className="col-md-12 d-flex justify-content-center">
+                  <button className="btn btn-success me-2">
+                    Confirmar Evento
+                  </button>
+                  <button className="btn btn-secondary me-2">
+                    Editar Evento
+                  </button>
+                  <button className="btn btn-danger me-2" onClick={handleDelete}>
+                    Cancelar Evento
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -98,4 +108,4 @@ const EventoUser = ({ evento, recargar }) => {
   );
 };
 
-export default EventoUser;
+export default EventoProductor;

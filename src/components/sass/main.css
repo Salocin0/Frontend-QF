@@ -21,11 +21,7 @@
   border-radius: 10px;
 }
 
-.card {
-  width: 100%;
-  margin-left: auto;
-  padding-bottom: 0px;
-}
+
 
 .deshabilitar {
   margin-top: 10px;
@@ -725,10 +721,6 @@ a:-webkit-any-link {
   background-color: white;
 }
 
-.card {
-  background-color: #292C3E !important;
-  border: none;
-}
 
 hr,
 label,
@@ -848,11 +840,6 @@ h2 {
   border-radius: 10px;
 }
 
-.card {
-  width: 100%;
-  margin-left: auto;
-  padding-bottom: 0px;
-}
 
 .deshabilitar {
   margin-top: 10px;

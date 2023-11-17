@@ -6,7 +6,11 @@ import RegistroProductor from "../ComponenteRegister/RegistrarProductor";
 import RegistroRepartidor from "../ComponenteRegister/RegistrarRepartidor";
 import SeleccionRegister from "../ComponenteRegister/SeleccionRegister";
 import AdquirirNuevoRolR from "../ComponenteRepartidor/AdquirirNuevoRolR";
+import AsociarRepartidorAEvento from "../ComponenteRepartidor/AsociarRepartidorAEvento";
 import ConsultarUsuarioR from "../ComponenteRepartidor/ConsultarUsuarioR";
+import FormDinamicoRestricciones from "../ComponenteRepartidor/FormDinamicoRestricciones";
+import VerAsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
+import Carrito from "../ComponentesCarrito/Carrito";
 import ConsultarUsuario from "../ComponentesConsumidor/ConsultarUsuario";
 import ConsultarUsuarioPrueba from "../ComponentesConsumidor/ConsultarUsuarioPrueba";
 import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
@@ -14,6 +18,7 @@ import ConsultarUsuarioEPC from "../ComponentesEPC/ConsultarUsuarioEPC";
 import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
 import EventoPrueba from "../ComponentesEventos/EventoPrueba";
 import ListadoEventos from "../ComponentesEventos/ListadoEvento";
+import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
 import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
 import RegistrarEvento2 from "../ComponentesEventos/RegistrarEvento2";
 import RegistrarEvento3 from "../ComponentesEventos/RegistrarEvento3";
@@ -32,21 +37,18 @@ import ListadoProductoUser from "../ComponentesProducto/ListadoProductoUser";
 import RegistrarProductos from "../ComponentesProducto/RegistrarProductos";
 import AdquirirNuevoRolPE from "../ComponentesProductorDeEventos/AdquirirNuevoRolPE";
 import ConsultarUsuarioPE from "../ComponentesProductorDeEventos/ConsultarUsuarioPE";
+import AsociarPuestoAEvento from "../ComponentesPuesto/AsociarPuestoAEvento";
 import ConsultarPuesto from "../ComponentesPuesto/ConsultarPuesto";
 import CrearNuevoPuesto from "../ComponentesPuesto/CrearPuesto";
 import ListadoPuestos from "../ComponentesPuesto/ListadoPuestos";
 import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
 import ListadoPuestosDeshabilitados from "../ComponentesPuesto/PuestoDeshabilitados.js";
+import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
 import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
-import AsociarRepartidorAEvento from "../ComponenteRepartidor/AsociarRepartidorAEvento";
-import FormDinamicoRestricciones from "../ComponenteRepartidor/FormDinamicoRestricciones";
-import VerAsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
-import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
-import AsociarPuestoAEvento from "../ComponentesPuesto/AsociarPuestoAEvento";
-import Carrito from "../ComponentesCarrito/Carrito";
+
 
 export const Main = () => {
   return (
@@ -63,6 +65,9 @@ export const Main = () => {
         <Route path="/consultar-usuario" element={<ConsultarUsuario />} />
         <Route path="/adquirir-nuevo-rolPE" element={<AdquirirNuevoRolPE />} />
         <Route path="/sidebar" element={<Sidebar />} />
+
+        <Route path="/filtersEventosConsumidor" element={<FiltersEventosConsumidor/>} />
+
         <Route path="/inicio" element={<Inicio />} />
         <Route
           path="/adquirir-nuevo-rolEPC"

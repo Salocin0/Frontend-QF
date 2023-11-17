@@ -1,14 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import villamaria from "./img/villa maria.png";
-import cosquin from "./img/cosquin.png";
-import { toast } from "react-toastify";
-import Evento from "./Evento.js";
+import "./../sass/main.css";
 import EventoUser from "./EventoUser";
-import "./../sass/main.css"
 
 const ListadoEventosUsers = () => {
   const [rows, setRows] = useState([]);
@@ -98,27 +92,26 @@ const ListadoEventosUsers = () => {
 
   return (
     <div>
-      <div className={`row m-0 background`}>
+      <div className={`row m-0 mainFormEventos`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className={`col-10`}>
-          <div className="d-flex justify-content-center mb-3">
-            <h1 className="pt-3" style={{ color: "white" }}>
+          <div className="d-flex justify-content-center mb-3 tituloSeccion">
+            <h1 className="pt-2">
               Eventos
             </h1>
           </div>
-          <hr style={{ color: "white" }} className="me-4" />
+          <hr style={{ color: "#F7B813" }} />
           <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-3 pb-4 h-100 w-100">
+            <div className="pt-2 pb-4 h-100 w-100">
               {Array.isArray(eventos) && eventos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row `}>
+                  <div key={rowIndex} >
                     {row.map((evento, index) => (
                       <div
                         key={index}
-                        className={`colmd3 pb-4`}
                       >
                         {evento !== null ? (
                           <EventoUser
@@ -140,7 +133,6 @@ const ListadoEventosUsers = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
