@@ -24,7 +24,6 @@ const Sidebar = ({ tipoUsuario }) => {
     setHaveRol(usuario !== "consumidor");
   }, [tipoUsuario, usuario]);
 
-  console.log(usuario);
 
   const toggleNotificacion = () => {
     setMostrarNotificacion((prev) => !prev);

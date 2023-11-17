@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.css";
-import EventoUser from "./EventoUser";
+import EventoProductor from "./EventoProductor";
 
 const ListadoEventosProductor = () => {
   const [rows, setRows] = useState([]);
@@ -66,7 +66,7 @@ const ListadoEventosProductor = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/evento/enEstado/enCurso", {
+      fetch("http://localhost:8000/evento/all", {
         method: "GET",
         headers: headers,
       })
@@ -112,7 +112,7 @@ const ListadoEventosProductor = () => {
                         {row.map((evento, index) => (
                           <div key={index}>
                             {evento !== null ? (
-                              <EventoUser
+                              <EventoProductor
                                 evento={evento}
                                 session={session}
                                 recargar={recargarComponente}

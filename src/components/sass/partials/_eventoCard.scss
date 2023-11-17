@@ -62,6 +62,18 @@
     border-radius: 5px; /* Bordes redondeados */
 }
 
+.card-estado-productor {
+    color: black !important;
+    position: absolute;
+    bottom:5px;
+    right: 20px;
+    font-size: small;
+    font-style: italic;
+    background-color: rgb(153, 219, 153); /* Color de fondo para el cartelito */
+    padding: 3px 8px; /* Espaciado interno del cartelito */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
 
 
 

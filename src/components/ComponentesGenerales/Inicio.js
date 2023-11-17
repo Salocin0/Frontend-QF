@@ -50,7 +50,7 @@ const Inicio = () => {
     <div className="fondo">
       <Sidebar tipoUsuario={session?.tipoUsuario} />
       <div className="grid-container">
-        <Link to="/eventos" className="grid-item a grid-container-div">
+        <Link to="/Listado-eventos" className="grid-item a grid-container-div">
           <div className="grid-item-div type1 contenedor-img">
             <img src={eventosimg2} alt="" className="imagen" />
           </div>
