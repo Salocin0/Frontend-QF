@@ -75,7 +75,7 @@ const EventoUser = ({ evento, recargar }) => {
                   <p className="card-descripcion">{evento.descripcion}</p>
                   <p className="card-text">{evento.ubicacion} - {evento.localidad}, {evento.provincia}</p>
                   <p className="card-distance">
-                    A {evento.distancia} de distancia{" "}
+                    A 1km de distancia{" "}
                   </p>
                   <p className="card-estado">
                      {evento.estado}

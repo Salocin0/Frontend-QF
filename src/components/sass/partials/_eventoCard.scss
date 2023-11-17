@@ -37,10 +37,12 @@
     font-size: 1.5rem;
     margin-bottom: 10px;
     color: $color-amarillo-QF !important;
+    font-style: italic;
+
 }
 
 .card-distance {
-    color: rgb(83, 186, 220) !important;
+    color: rgb(153, 219, 153) !important;
     position: absolute;
     top: 7px;
     right: -45px;
@@ -66,7 +68,7 @@
 .card-descripcion {
     font-size: 0.9rem;
     margin-bottom: 5px;
-    color: $color-amarillo-QF !important;
+    color: white !important;
     font-style: italic;
     text-align: left;
     white-space: nowrap;
@@ -78,7 +80,7 @@
 .card-text {
     font-size: 0.9rem;
     margin-bottom: 5px;
-    color: $color-amarillo-QF !important;
+    color: white !important;
     text-align: left;
     font-style: italic;
 
@@ -89,7 +91,7 @@
 .card-text-fecha {
     font-size: 0.7rem;
     margin-bottom: 5px;
-    color: $color-amarillo-QF !important;
+    color: white !important;
     text-align: left;
     font-style: italic;
 
