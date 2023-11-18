@@ -1,13 +1,9 @@
-import { set } from "date-fns";
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import { useNavigate } from "react-router-dom";
+import "./../sass/main.css";
 import "./asociarAEventos.css";
-import "./../sass/main.css"
 
 function FormDinamicoRestricciones({ data, userType }) {
   const navigate = useNavigate();
@@ -66,7 +62,7 @@ function FormDinamicoRestricciones({ data, userType }) {
       toast.error("Complete todos los campos");
       console.log(formResponses);
     } else {
-      fetch(`http://localhost:8000/asocioacion/evento/${id}/asociar/0/${session.consumidorId}`, {
+      fetch(`http://localhost:8000/asociacion/evento/${id}/asociar/0/${session.consumidorId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +99,7 @@ function FormDinamicoRestricciones({ data, userType }) {
   }, [session]);
 
   return (
-    <div className={`row m-0 background`}>
+    <div className={`row m-0 mainFormRestricciones`}>
       <div className="col-2 p-0">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
@@ -111,7 +107,7 @@ function FormDinamicoRestricciones({ data, userType }) {
         <div className="cardFormDin col-8">
           {filteredData.map((item, index) => (
             <div key={index} className="fila">
-              <div className="titulo">
+              <div className="tituloRestriccion">
                 <h3>{item.titulo}</h3>
               </div>
               <div className="input">

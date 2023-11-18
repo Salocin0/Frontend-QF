@@ -7,7 +7,7 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.css";
 
 const AsociarPuestoAEvento = () => {
-  const { puestoId } = useParams();
+  const { puestoId  } = useParams();
   const navigate = useNavigate();
   const [session, setSession] = useState(null);
   const [nuevoRol, setNuevorol] = useState(false);
@@ -138,6 +138,8 @@ const AsociarPuestoAEvento = () => {
       });
   };
 
+
+
   return (
     <div className={`row m-0 mainFormEventos`}>
       <div className="col-2 p-0">
@@ -156,6 +158,7 @@ const AsociarPuestoAEvento = () => {
                   <div key={index}>
                     <EventoEncargado
                       evento={evento}
+                      puestoId={puestoId}
                       session={session}
                       recargar={recargarComponente}
                     />
@@ -177,15 +180,3 @@ const AsociarPuestoAEvento = () => {
 
 export default AsociarPuestoAEvento;
 
-
-/*    <div className="text-center mt-3">
-<h2 className="text-white">BUSCADOR</h2>
-<div className="d-flex">
-  <input
-    type="text"
-    placeholder="Buscar"
-    className="form-control"
-  />
-  <button className="btn btn-primary ml-2 mx-2">Buscar</button>
-</div>
-</div>*/
