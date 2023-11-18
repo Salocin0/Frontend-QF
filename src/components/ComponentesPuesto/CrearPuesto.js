@@ -2,10 +2,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./../sass/main.scss";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
+import "./../sass/main.scss";
 
 const CrearNuevoCarro = () => {
   const [numeroCarro, setNumeroCarro] = useState("");
@@ -93,7 +93,7 @@ const CrearNuevoCarro = () => {
       .then((data) => {
         if (data.code === 200) {
           toast.success("Carro de comida registrado correctamente");
-          navigate("/listado-puestos");
+          navigate("/listado-puestos-encargado");
         } else {
           toast.error("Ya existe un carro con el ID ingresado.");
         }

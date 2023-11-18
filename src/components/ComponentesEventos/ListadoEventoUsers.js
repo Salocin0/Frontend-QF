@@ -65,7 +65,7 @@ const ListadoEventosUsers = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/evento/enEstado/enCurso", {
+      fetch("http://localhost:8000/evento/enEstado/EnCurso", {
         method: "GET",
         headers: headers,
       })

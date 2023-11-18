@@ -33,3 +33,85 @@ input[type="checkbox"] {
 .hrFiltros{
     color:$color-amarillo-QF;
 }
+
+
+.filtrosEventosConsumidor {
+  display: inline-block;
+  background-color: $color-gris-tarjetas;
+  border: 1px solid $color-amarillo-QF ;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 15%;
+  padding: 10px;
+  position: absolute;
+  height: auto;
+  bottom: 1%;
+  right: 10px;
+}
+
+.filtrosEventoEncargado{
+  display: inline-block;
+  background-color: $color-gris-tarjetas;
+  border: 1px solid $color-amarillo-QF ;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 15%;
+  padding: 10px;
+  position: absolute;
+  height: auto;
+  bottom: 12%;
+  right: 10px;
+
+}
+
+
+.filtrosCarritoEncargado {
+  display: inline-block;
+  background-color: $color-gris-tarjetas;
+  border: 1px solid $color-amarillo-QF ;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 15%;
+  padding: 10px;
+  position: absolute;
+  height: auto;
+  top: 16%;
+  right: 10px;
+}
+
+
+.filtrosBuscador{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 15%;
+  padding: 5px;
+  position: absolute;
+  height: auto;
+  top: 15%;
+  right: 10px;
+}
+
+.buscador{
+  background-color: $color-gris-tarjetas;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  color:$color-amarillo-QF;
+  position: fixed;
+  top:15%;
+  right:10px;
+  width:15%;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid $color-amarillo-QF;
+}
+
+
+
+
+.buscarButton{
+  position: fixed;
+  top:22%;
+  width: 15%;
+  right:0;
+
+
+}

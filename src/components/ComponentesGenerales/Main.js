@@ -41,6 +41,7 @@ import AsociarPuestoAEvento from "../ComponentesPuesto/AsociarPuestoAEvento";
 import ConsultarPuesto from "../ComponentesPuesto/ConsultarPuesto";
 import CrearNuevoPuesto from "../ComponentesPuesto/CrearPuesto";
 import ListadoPuestos from "../ComponentesPuesto/ListadoPuestos";
+import ListadoPuestosEncargado from "../ComponentesPuesto/ListadoPuestosEncargado";
 import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
 import ListadoPuestosDeshabilitados from "../ComponentesPuesto/PuestoDeshabilitados.js";
 import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
@@ -111,6 +112,8 @@ export const Main = () => {
         <Route path="/producto/:id" element={<ConsultarProducto />} />
 
         <Route path="/listado-puestos/:idEvento" element={<ListadoPuestosUser />} />
+                <Route path="/listado-puestos-encargado" element={<ListadoPuestosEncargado />} />
+
         <Route path="/productos-puesto/:id" element={<ListadoProductoUser />} />
 
         <Route path="/listado-eventos" element={<ListadoEventosUsers />} />

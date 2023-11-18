@@ -64,3 +64,24 @@
     text-align: center;
   }
 
+
+  .agregarPuestoButton{
+    background-color: lightgreen;
+    border: 1px solid black ;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 15%;
+    padding: 10px;
+    position: fixed;
+    height: auto;
+    bottom: 10px;
+    right: 10px;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.agregarPuestoButton:hover{
+  background-color: $color-amarillo-QF;
+  border: 2px solid black ;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}

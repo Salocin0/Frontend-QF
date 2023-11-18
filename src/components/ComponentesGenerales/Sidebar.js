@@ -99,7 +99,7 @@ const Sidebar = ({ tipoUsuario }) => {
             <hr className="divicionnav" style={{ color: "white", width: "100%" }} />
             {isResponsable && (
               <li className="navitem">
-                <a href="/listado-puestos" className={`navlink text-truncate`}>
+                <a href="/listado-puestos-encargado" className={`navlink text-truncate`}>
                   <i className={`icono bi bi-shop`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Puestos
