@@ -27,6 +27,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       .then((response) => response.json())
       .then((data) => {
         setSession(data.data);
+        console.log(data.data);
       })
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
@@ -66,6 +67,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
   const agregarAlCarrito = (producto) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
+    
 
     fetch(`http://localhost:8000/carrito/addToCart/${producto.id}`, {
       method: "PUT",
@@ -79,10 +81,35 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       .catch((error) => console.log("error.", error));
   };
 
-  const registrarPedido = (producto) => {
-    toast.success("producto descontado del carrito");
-    //registrar pedido en el back
+  const registrarPedido = () => {
     
+    const headers = new Headers();
+    headers.append("consumidorid", session.consumidorId);
+    const detalles = {
+      detalles: productos.map(producto => ({
+        cantidad: producto.cantidad, 
+        productoId: producto.id,
+        precio: producto.precio,
+      })),
+      consumidorId: session.consumidorId,
+      total: calcularTotal(productos),
+    };
+
+    fetch(`http://localhost:8000/pedido`, {
+      method: "POST",
+      headers: {
+        ...headers,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(detalles),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        toast.success("pedido registrado");
+        eliminarPedido()
+        recargarComponente();
+      })
+      .catch((error) => console.log("error.", error));
   };
 
   const eliminarPedido = () => {
@@ -95,7 +122,6 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        toast.success("pedido eliminado del carrito");
         recargarComponente();
       })
       .catch((error) => console.log("error.", error));
