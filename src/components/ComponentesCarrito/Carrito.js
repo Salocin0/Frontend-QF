@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState } from "react";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
-import RenderizarTarjeta from './Tarjeta';
+import RenderizarTarjeta from "./Tarjeta";
+import Sidebar from "../ComponentesGenerales/Sidebar";
+import Footer from "../ComponentesGenerales/Footer";
 
 const Carrito = () => {
   const [carrito, setCarrito] = useState([]);
   const [session, setSession] = useState(null);
   const [recargar, setRecargar] = useState(0);
+  const [productos, setProductos] = useState([]);
 
   const recargarComponente = () => {
-    setRecargar(+1);
+    setRecargar((prevRecargar) => prevRecargar + 1);
   };
 
   useEffect(() => {
@@ -45,35 +48,47 @@ const Carrito = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setCarrito(data.data);
-          console.log(data.data);
+          if (data.data) {
+            setCarrito(data.data);
+            setProductos(data.data.productos)
+          } else {
+            setCarrito([]);
+            setProductos([])
+          }
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
   }, [session, recargar]);
 
-  
-
-  const calcularTotal = () => {
-    return 100
-  };
-
   const agruparProductosPorPuesto = (productos) => {
     const productosAgrupados = {};
-    productos.forEach((item) => {
-      const puestoId = item.producto.puestoId;
+    productos?.forEach((item) => {
+      const puestoId = item.puestoId;
       if (!productosAgrupados[puestoId]) {
         productosAgrupados[puestoId] = [];
       }
-      productosAgrupados[puestoId].push(item.producto);
+      productosAgrupados[puestoId].push(item);
     });
     return productosAgrupados;
   };
 
+  const productosAgrupados = agruparProductosPorPuesto(productos);
+
   return (
-    <div></div>
+    <div className="background-login d-flex">
+      <div className="w-25">
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
+      </div>
+      <div className="w-75 mt-3 mb-4">
+        {Object.values(productosAgrupados).map((productos, index) => (
+          <RenderizarTarjeta key={index} productos={productos} recargarComponente={recargarComponente} />
+        ))}
+      </div>
+      <div>
+        <Footer />
+      </div>
+    </div>
   );
-  
 };
 
 export default Carrito;
