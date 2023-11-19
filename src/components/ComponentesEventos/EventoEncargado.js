@@ -71,7 +71,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
       .then((data) => {
         if (data.code === 200) {
           toast.success("Asociacion Guardada");
-          //window.location.reload();
+          recargar();
         }
       })
       .catch((error) => {
@@ -129,10 +129,10 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
             headers: headers,
           }
         );
-
-        if (response.status === 200) {
+        console.log(response.status)
+        if (response.status === 400) {
           setTieneAsociacionPendiente(true);
-        } else if (response.status === 400) {
+        } else if (response.status === 200) {
           console.log("Sin asociaciones");
         }
       } catch (error) {
