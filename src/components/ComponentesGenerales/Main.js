@@ -14,6 +14,7 @@ import Carrito from "../ComponentesCarrito/Carrito";
 import ConsultarUsuario from "../ComponentesConsumidor/ConsultarUsuario";
 import ConsultarUsuarioPrueba from "../ComponentesConsumidor/ConsultarUsuarioPrueba";
 import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
+import AsociacionesEPC from "../ComponentesEPC/AsociacionesEPC";
 import ConsultarUsuarioEPC from "../ComponentesEPC/ConsultarUsuarioEPC";
 import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
 import EventoPrueba from "../ComponentesEventos/EventoPrueba";
@@ -30,6 +31,7 @@ import Login from "../ComponentesLogin/Login";
 import RecuperarContraseña from "../ComponentesLogin/RecuperarContraseña";
 import ValidarEmail from "../ComponentesLogin/ValidarEmail";
 import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
+import ListadoPedidos from "../ComponentesPedido/ListadoPedidos";
 import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
 import ListadoProducto from "../ComponentesProducto/ListadoProducto";
 import ListadoProductoDeshabilitado from "../ComponentesProducto/ListadoProductoDeshabilitado";
@@ -135,6 +137,8 @@ export const Main = () => {
         <Route path="/asociarRepartidorAEvento" element={<AsociarRepartidorAEvento />} />
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
         <Route path="/misAsociaciones" element={<VerAsociacionesR/>} />
+        <Route path="/misAsociacionesEPC" element={<AsociacionesEPC/>} />
+
         <Route path="/asociarPuestoAEvento/:puestoId" element={<AsociarPuestoAEvento/>} />
         <Route path="/carrito/" element={<Carrito/>} />
 

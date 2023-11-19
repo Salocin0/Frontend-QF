@@ -99,57 +99,58 @@ function FormDinamicoRestricciones({ data, userType }) {
   }, [session]);
 
   return (
-    <div className={`row m-0 mainFormRestricciones`}>
-      <div className="col-2 p-0">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
-      </div>
-      <div className={`col-10 contenedorCard`}>
-        <div className="cardFormDin col-8">
-          {filteredData.map((item, index) => (
-            <div key={index} className="fila">
-              <div className="tituloRestriccion">
-                <h3>{item.titulo}</h3>
-              </div>
-              <div className="input">
-                {item.tipo === "Imagen" && (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleChange(item.titulo, e.target.value)}
-                  />
-                )}
-                {item.tipo === "select" && (
-                  <select
-                    onChange={(e) => handleChange(item.titulo, e.target.value)}
-                  >
-                    <option value="">Selecciona una opción</option>
-                    {item.opciones.map((opcion, i) => (
-                      <option key={i} value={opcion}>
-                        {opcion}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                {item.tipo === "Cadena de texto" && (
-                  <input
-                    type="text"
-                    onChange={(e) => handleChange(item.titulo, e.target.value)}
-                  />
-                )}
-              </div>
-            </div>
-          ))}
-          <div className="text-end">
-            <Link to="/asociarRepartidorAEvento" className="btn btn-info mx-2">
-              Volver
-            </Link>
-            <button onClick={handleSubmit} className="btn btn-success">
-              Asociar
-            </button>
+<div className={`row m-0 mainFormRestricciones`}>
+  <div className="sidebar col-2 p-0">
+    <Sidebar tipoUsuario={session?.tipoUsuario} />
+  </div>
+  <div className="contenedorCard col-10">
+    <div className="cardFormDin">
+      <h3 className="tituloSeccionEvento">Restricciones del Evento</h3>
+      {filteredData.map((item, index) => (
+        <div key={index} >
+          <h3 className="tituloRestriccion">{item.titulo}</h3>
+          <h6 className="descripcionRestriccion">{item.descripcion}</h6>
+          <div className="inputRestriccion">
+            {item.tipo === "Imagen" && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleChange(item.titulo, e.target.value)}
+              />
+            )}
+            {item.tipo === "select" && (
+              <select
+                onChange={(e) => handleChange(item.titulo, e.target.value)}
+              >
+                <option value="">Selecciona una opción</option>
+                {item.opciones.map((opcion, i) => (
+                  <option key={i} value={opcion}>
+                    {opcion}
+                  </option>
+                ))}
+              </select>
+            )}
+            {item.tipo === "Cadena de texto" && (
+              <input
+                type="text"
+                onChange={(e) => handleChange(item.titulo, e.target.value)}
+              />
+            )}
           </div>
         </div>
+      ))}
+      <div className="text-end">
+        <Link to="/asociarPuestoAEvento" className="btn btn-info mx-2">
+          Volver
+        </Link>
+        <button onClick={handleSubmit} className="btn btn-success">
+          Enviar Restricciones
+        </button>
       </div>
     </div>
+  </div>
+</div>
+
   );
 }
 

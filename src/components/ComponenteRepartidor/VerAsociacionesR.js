@@ -2,10 +2,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
+import "./../sass/main.css";
 import "./asociarAEventos.css";
-import "./../sass/main.css"
 
 const VerAsociacionesR = () => {
   const navigate = useNavigate();
@@ -176,7 +175,7 @@ const VerAsociacionesR = () => {
                       </button>
                     )}
                     </div>
-                    
+
                   </div>
                 </div>
               );

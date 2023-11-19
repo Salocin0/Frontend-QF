@@ -1,11 +1,71 @@
 @import './variables.scss';
 
-.mainFormRestricciones{
+.mainFormRestricciones {
+    display: flex;
+    margin: 0;
+    width: 100%;
     background-color: $color-gris-tarjetas;
+  }
+  .contenedorCard {
+    margin:auto;
+  }
+
+
+  .tituloSeccionEvento {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    color: $color-amarillo-QF !important;
+    font-style: italic;
+    text-align: center;
+
+    display:block;
+  }
+
+
+  .cardFormDin {
+    background-color: black !important;
+    box-shadow: 0 4px 8px rgba(247,184, 19, 0.508);
+    border-radius: 10px;
+    padding: 20px;
+    width:70%;
+  }
+
+  .tituloRestriccion {
+    color:$color-amarillo-QF !important;
+    margin-top:10px;
+  }
+
+  .descripcionRestriccion {
+    font-style: italic;
+    font-size:15px;
+    color:white;
+  }
+
+
+  .inputRestriccion {
+    width: 100%;
+  }
+
+  .inputRestriccion input,
+  .inputRestriccion select {
+    width: 100%;
+  }
+
+
+.text-end{
+    margin-top:10px;
 }
 
-.fila{
 
- color:black !important;
-    background-color: red !important;
-}
+
+  .btn {
+    margin-left: 10px;
+  }
+
+
+.inputRestriccion input{
+    background-color: $color-gris-tarjetas;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    color:$color-amarillo-QF;
+    border-radius: 10px;
+    border: 1px solid $color-amarillo-QF;
+  }

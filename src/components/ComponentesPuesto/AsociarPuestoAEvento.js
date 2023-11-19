@@ -77,36 +77,6 @@ const AsociarPuestoAEvento = () => {
     }
   }, [session, recargar]);
 
-  const handleTieneRestriciones = async (ideventoseleccionado) => {
-    try {
-      const headers = new Headers();
-      headers.append("ConsumidorId", session?.consumidorId);
-      headers.append("Content-Type", "application/json");
-
-      const response = await fetch(
-        `http://localhost:8000/asociacion/evento/${ideventoseleccionado}`,
-        {
-          method: "GET",
-          headers: headers,
-        }
-      );
-      if (response.ok) {
-        const responseData = await response.json();
-        if (responseData.data.code === 200) {
-          handleCrearForm(ideventoseleccionado, responseData.data);
-        } else {
-          handleAsociar(ideventoseleccionado);
-        }
-        recargarComponente();
-      } else {
-        console.error(`Error: ${response.status}`);
-        toast.error("Error al comunicarse con el servidor");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Error al crear el formulario");
-    }
-  };
 
   const handleCrearForm = (ideventoseleccionado) => {
     const url = `/restriccionesEvento/${ideventoseleccionado}`;
