@@ -306,6 +306,11 @@ const RegistrarEvento = () => {
       return;
     }
 
+        if (!nuevaColumna.descripcion.trim()) {
+      toast.error("Descripcion no puede estar vacio");
+      return;
+    }
+
     if (!nuevaColumna.tipo.trim()) {
       toast.error("El tipo no puede estar vacio");
       return;
@@ -320,6 +325,7 @@ const RegistrarEvento = () => {
     setNuevaColumna({
       titulo: "",
       tipo: "",
+      descripcion: "",
       opciones: "",
       usuario: "",
     });
@@ -360,7 +366,7 @@ const RegistrarEvento = () => {
           <div className="fondo">
             <div className="containerRegistrar d-flex justify-content-center align-items-center">
               <section
-                className={`align-items-center col-6 form mt-3 mb-5 rad`}
+                className={`align-items-center col-8 form mt-3 mb-5 rad`}
               >
                 <div className="cardRegistrar-body p-2 formularioRegistrar">
                   <div className={`card-body p-3 formulario`}>
@@ -489,6 +495,9 @@ const RegistrarEvento = () => {
                           value={tipoEvento}
                           onChange={(e) => setTipoEvento(e.target.value)}
                         >
+                                    <option value="" disabled selected>
+                                Selecciona un Tipo
+                              </option>
                           <option value={1}>Cine</option>
                           <option value={2}>Festival</option>
                           <option value={3}>Deporte</option>
@@ -570,6 +579,9 @@ const RegistrarEvento = () => {
                           value={tipoPago}
                           onChange={(e) => setTipoPago(e.target.value)}
                         >
+                                                              <option value="" disabled selected>
+                                Selecciona un Tipo de Pago
+                              </option>
                           <option value={1}>Pago</option>
                           <option value={2}>Gratuito</option>
                         </select>
@@ -615,6 +627,29 @@ const RegistrarEvento = () => {
                             </datalist>
                           </div>
                           <div className="col-3 px-1">
+                            <label style={{ color: "black" }}>Descripcion</label>
+                            <input
+                              className="w-100 form-control"
+                              list="restricciones-titulo"
+                              value={nuevaColumna.descripcion}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  descripcion: e.target.value,
+                                })
+                              }
+                            />
+                            <datalist id="restricciones-titulo">
+                              {restriccionesdb.map((restriccion, index) => (
+                                <option
+                                  key={index}
+                                  value={restriccion.descripcion}
+                                />
+                              ))}
+                            </datalist>
+                          </div>
+                          <br/>
+                          <div className="col-2 px-1">
                             <label style={{ color: "black" }}>Tipo</label>
                             <select
                               name=""
@@ -628,6 +663,9 @@ const RegistrarEvento = () => {
                                 })
                               }
                             >
+                              <option value="" disabled selected>
+                                Selecciona un tipo
+                              </option>
                               <option value="PDF">PDF</option>
                               <option value="Cadena de texto">
                                 Cadena de texto
@@ -638,7 +676,7 @@ const RegistrarEvento = () => {
                             </select>
                           </div>
 
-                          <div className="col-3 px-1">
+                          <div className="col-2 px-1">
                             <label style={{ color: "black" }}>Opciones</label>
                             <input
                               className="w-100 form-control"
@@ -661,7 +699,7 @@ const RegistrarEvento = () => {
                             </datalist>
                           </div>
 
-                          <div className="col-3 px-1">
+                          <div className="col-2 px-1">
                             <label style={{ color: "black" }}>Usuario</label>
                             <select
                               name=""
@@ -675,6 +713,9 @@ const RegistrarEvento = () => {
                                 })
                               }
                             >
+                              <option value="" disabled selected>
+                                Selecciona un Usuario
+                              </option>
                               <option value="Ambos">Ambos</option>
                               <option value="Repartidor">Repartidor</option>
                               <option value="Encargado de puesto">
@@ -699,6 +740,8 @@ const RegistrarEvento = () => {
                             <tr>
                               <th>Título</th>
                               <th>Tipo</th>
+                              <th>Descripcion</th>
+
                               <th>Opciones</th>
                               <th>Usuario</th>
                               <th>Acciones</th>
@@ -709,6 +752,8 @@ const RegistrarEvento = () => {
                               <tr key={index}>
                                 <td>{restriccion.titulo}</td>
                                 <td>{restriccion.tipo}</td>
+                                <td>{restriccion.descripcion}</td>
+
                                 <td>{restriccion.opciones}</td>
                                 <td>{restriccion.usuario}</td>
                                 <td>
