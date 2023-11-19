@@ -50,6 +50,8 @@ import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
 import ListadoPedidos from "../ComponentesPedido/ListadoPedidos";
+import Grafica from "./PruebaGrafica";
+import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
 
 
 export const Main = () => {
@@ -137,6 +139,7 @@ export const Main = () => {
         <Route path="/carrito/" element={<Carrito/>} />
 
         <Route path="/pedidos" element={<ListadoPedidos/>} />
+        <Route path="/grafica" element={<PanelProductor/>} />
       </Routes>
     </main>
   );

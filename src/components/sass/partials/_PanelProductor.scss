@@ -1,0 +1,48 @@
+@import './variables.scss';
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 20px;
+    grid-template-areas:
+      "div1 div1 div2 div2 toppuestos toppuestos"
+      "div1 div1 div2 div2 toppuestos toppuestos"
+      "grafica grafica grafica grafica toppuestos toppuestos"
+      "grafica grafica grafica grafica toppuestos toppuestos"
+      "grafica grafica grafica grafica toppuestos toppuestos"
+      "grafica grafica grafica grafica toppuestos toppuestos";
+  }
+  
+  .div1 {
+    grid-area: div1;
+    margin-top: 20px;
+    border-radius: 20px;
+    background-color: $morado-dashboard;
+    margin-left: 10px;
+  }
+  
+  .div2 {
+    grid-area: div2;
+    margin-top: 20px;
+    border-radius: 20px;
+    background-color: royalblue;
+  }
+  
+  .grafica {
+    grid-area: grafica;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    border: 2px solid $color-amarillo-QF;
+    overflow: hidden;
+  }
+  
+  .toppuestos {
+    grid-area: toppuestos;
+    margin-top: 20px;
+    border-radius: 20px;
+    background-color: lawngreen;
+    margin-bottom: 20px;
+    margin-right: 10px;
+  }

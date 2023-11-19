@@ -75,7 +75,7 @@ const Carrito = () => {
   const productosAgrupados = agruparProductosPorPuesto(productos);
 
   return (
-    <div className="background-login d-flex">
+    <div className="mainFormEventos d-flex">
       <div className="w-25">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
