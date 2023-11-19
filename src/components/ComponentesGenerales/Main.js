@@ -51,7 +51,7 @@ import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
-import Grafica from "./PruebaGrafica";
+import Grafica from "../PanelesDatos/GraficaBarras";
 import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
 
 
@@ -142,7 +142,7 @@ export const Main = () => {
         <Route path="/carrito/" element={<Carrito/>} />
 
         <Route path="/pedidos" element={<ListadoPedidos/>} />
-        <Route path="/grafica" element={<PanelProductor/>} />
+        <Route path="/grafica-productor" element={<PanelProductor/>} />
       </Routes>
     </main>
   );

@@ -1,4 +1,8 @@
-import { faAddressBook, faDolly, faSquarePlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAddressBook,
+  faDolly,
+  faSquarePlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -24,7 +28,6 @@ const Sidebar = ({ tipoUsuario }) => {
     setHaveRol(usuario !== "consumidor");
   }, [tipoUsuario, usuario]);
 
-
   const toggleNotificacion = () => {
     setMostrarNotificacion((prev) => !prev);
   };
@@ -45,11 +48,9 @@ const Sidebar = ({ tipoUsuario }) => {
               </a>
             </li>
             <li className={"navitem"}>
-              <a href="/Listado-eventos" className={`navlink text-truncate`} >
+              <a href="/Listado-eventos" className={`navlink text-truncate`}>
                 <i className={`icono bi bi-balloon`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">
-                  Eventos
-                </span>
+                <span className="ms-1 d-none d-sm-inline w-100">Eventos</span>
               </a>
             </li>
             <li className="navitem">
@@ -70,36 +71,44 @@ const Sidebar = ({ tipoUsuario }) => {
                 onClick={toggleNotificacion}
               >
                 <i className={`icono bi bi-bell`}></i>
-                <span className="ms-1 d-none d-sm-inline w-100">Notificaciones</span>
+                <span className="ms-1 d-none d-sm-inline w-100">
+                  Notificaciones
+                </span>
               </a>
             </li>
             {mostrarNotificacion && (
               <div className="ventana-emergente">
-
-
                 <div class="notificacion">
                   <div class="fecha">Hace 3 días</div>
                   <div class="contenido">
                     <i>Valoración</i>
                     <br />
-                    ¡Gracias por valorar el pedido del carrito de Juan! Esperamos que lo hayas disfrutado 🤩
+                    ¡Gracias por valorar el pedido del carrito de Juan!
+                    Esperamos que lo hayas disfrutado 🤩
                   </div>
                 </div>
                 <div class="notificacion">
                   <div class="fecha">Hace 3 días</div>
                   <div class="contenido">
-                  <i>Compra Realizada</i>
+                    <i>Compra Realizada</i>
                     <br />
-                    ¡El carrito de Juan tiene tu pedido! Un Repartidor se acercará a tu asiento a la brevedad. 🏃‍♂
+                    ¡El carrito de Juan tiene tu pedido! Un Repartidor se
+                    acercará a tu asiento a la brevedad. 🏃‍♂
                   </div>
                 </div>
               </div>
             )}
 
-            <hr className="divicionnav" style={{ color: "white", width: "100%" }} />
+            <hr
+              className="divicionnav"
+              style={{ color: "white", width: "100%" }}
+            />
             {isResponsable && (
               <li className="navitem">
-                <a href="/listado-puestos-encargado" className={`navlink text-truncate`}>
+                <a
+                  href="/listado-puestos-encargado"
+                  className={`navlink text-truncate`}
+                >
                   <i className={`icono bi bi-shop`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Puestos
@@ -109,10 +118,26 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
             {isProductor && (
               <li className={"navitem"}>
-                <a href="/listado-eventos-productor" className={`navlink text-truncate`}>
+                <a
+                  href="/listado-eventos-productor"
+                  className={`navlink text-truncate`}
+                >
                   <i className={`icono bi bi-balloon`}></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis Eventos
+                  </span>
+                </a>
+              </li>
+            )}
+            {isProductor && (
+              <li className={"navitem"}>
+                <a
+                  href="/grafica-productor"
+                  className={`navlink text-truncate`}
+                >
+                  <i class="bi bi-graph-up-arrow"></i>
+                  <span className="ms-1 d-none d-sm-inline w-100">
+                    Estadisticas Eventos
                   </span>
                 </a>
               </li>
@@ -132,8 +157,11 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
             {isRepartidor && (
               <li className="navitem">
-                <a href="/asociarRepartidorAEvento" className={`navlink text-truncate`}>
-                <FontAwesomeIcon icon={faSquarePlus} className={`icono`} />
+                <a
+                  href="/asociarRepartidorAEvento"
+                  className={`navlink text-truncate`}
+                >
+                  <FontAwesomeIcon icon={faSquarePlus} className={`icono`} />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Asociar A Evento
                   </span>
@@ -142,8 +170,11 @@ const Sidebar = ({ tipoUsuario }) => {
             )}
             {(isRepartidor || isResponsable) && (
               <li className={"navitem"}>
-                <a href="/misAsociacionesEPC" className={`navlink text-truncate`}>
-                <FontAwesomeIcon icon={faAddressBook} className={`icono`} />
+                <a
+                  href="/misAsociacionesEPC"
+                  className={`navlink text-truncate`}
+                >
+                  <FontAwesomeIcon icon={faAddressBook} className={`icono`} />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis asociaciones
                   </span>

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ReactECharts from "echarts-for-react";
-const Grafica = () => {
+const GraficaBarras = () => {
   const option = {
     tooltip: {
       trigger: "axis",
@@ -11,7 +11,9 @@ const Grafica = () => {
         type: "shadow",
       },
     },
-    legend: {},
+    legend: {
+      top: '3%',
+    },
     grid: {
       left: "3%",
       right: "4%",
@@ -104,4 +106,4 @@ const Grafica = () => {
   );
 };
 
-export default Grafica;
+export default GraficaBarras;
