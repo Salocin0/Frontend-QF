@@ -1,20 +1,20 @@
 @import './variables.scss';
 
-.containerGraficaProductor {
+.containerGraficaEncargado {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(6, 1fr);
   gap: 20px;
   grid-template-areas:
-    "div1 div1 div2 div2 toppuestos toppuestos"
-    "div1 div1 div2 div2 toppuestos toppuestos"
-    "grafica grafica grafica grafica toppuestos toppuestos"
-    "grafica grafica grafica grafica toppuestos toppuestos"
-    "grafica grafica grafica grafica toppuestos toppuestos"
-    "grafica grafica grafica grafica toppuestos toppuestos";
+    "div1 div2 div3 toppuestos"
+    "div1 div2 div3 toppuestos"
+    "grafica grafica grafica toppuestos"
+    "grafica grafica grafica toppuestos"
+    "grafica grafica grafica toppuestos"
+    "grafica grafica grafica toppuestos";
 }
 
-.div1productor {
+.div1Encargado {
   grid-area: div1;
   margin-top: 20px;
   border-radius: 20px;
@@ -29,7 +29,7 @@
   border: 2px solid white;
 }
 
-.div2productor {
+.div2Encargado {
   grid-area: div2;
   margin-top: 20px;
   border-radius: 20px;
@@ -43,7 +43,21 @@
   border: 2px solid white;
 }
 
-.graficaBarrasproductor {
+.div3Encargado {
+  grid-area: div3;
+  margin-top: 20px;
+  border-radius: 20px;
+  background-color: $rosa-dashboard;
+  background-image: url(./../../img/wave3.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 25% 25%;
+  align-items: center;
+  padding-top: 100px;
+  border: 2px solid white;
+}
+
+.graficaBarrasEncargado {
   grid-area: grafica;
   border-radius: 20px;
   margin-bottom: 20px;
@@ -52,13 +66,13 @@
   overflow: hidden;
 }
 
-.graficaTortaproductor {
+.graficaTortaEncargado {
   border-radius: 10px;
   overflow: hidden;
   border: 2px solid white;
 }
 
-.toppuestosproductor {
+.toppuestosEncargado {
   grid-area: toppuestos;
   margin-top: 20px;
   border-radius: 20px;

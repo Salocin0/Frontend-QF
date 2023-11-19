@@ -53,7 +53,7 @@ import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
 import Grafica from "../PanelesDatos/GraficaBarras";
 import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
-
+import PanelEncargado from "../PanelesDatos/PanelEncargado/PanelEncargado";
 
 export const Main = () => {
   return (
@@ -143,6 +143,7 @@ export const Main = () => {
 
         <Route path="/pedidos" element={<ListadoPedidos/>} />
         <Route path="/grafica-productor" element={<PanelProductor/>} />
+        <Route path="/grafica-encargado" element={<PanelEncargado/>} />
       </Routes>
     </main>
   );
