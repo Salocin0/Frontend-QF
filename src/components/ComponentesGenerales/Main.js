@@ -51,7 +51,6 @@ import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
-import ListadoPedidos from "../ComponentesPedido/ListadoPedidos";
 import Grafica from "./PruebaGrafica";
 import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
 
