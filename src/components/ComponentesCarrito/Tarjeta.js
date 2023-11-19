@@ -93,6 +93,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       })),
       consumidorId: session.consumidorId,
       total: calcularTotal(productos),
+      puestoId: productos[0].puestoId,
     };
 
     fetch(`http://localhost:8000/pedido`, {

@@ -49,6 +49,7 @@ import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
+import ListadoPedidos from "../ComponentesPedido/ListadoPedidos";
 
 
 export const Main = () => {
@@ -134,6 +135,8 @@ export const Main = () => {
         <Route path="/misAsociaciones" element={<VerAsociacionesR/>} />
         <Route path="/asociarPuestoAEvento/:puestoId" element={<AsociarPuestoAEvento/>} />
         <Route path="/carrito/" element={<Carrito/>} />
+
+        <Route path="/pedidos" element={<ListadoPedidos/>} />
       </Routes>
     </main>
   );
