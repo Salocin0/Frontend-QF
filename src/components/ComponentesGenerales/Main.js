@@ -24,6 +24,7 @@ import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
 import RegistrarEvento2 from "../ComponentesEventos/RegistrarEvento2";
 import RegistrarEvento3 from "../ComponentesEventos/RegistrarEvento3";
 import RegistrarEvento4 from "../ComponentesEventos/RegistrarEvento4";
+import VerSolicitudesEvento from "../ComponentesEventos/VerSolicitudes";
 import LandingPage from "../ComponentesLandingPage/LandingPage";
 import CambiarContraseña from "../ComponentesLogin/CambiarContraseña";
 import HabilitarUsuario from "../ComponentesLogin/HabilitarUsuario";
@@ -46,14 +47,13 @@ import ListadoPuestos from "../ComponentesPuesto/ListadoPuestos";
 import ListadoPuestosEncargado from "../ComponentesPuesto/ListadoPuestosEncargado";
 import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
 import ListadoPuestosDeshabilitados from "../ComponentesPuesto/PuestoDeshabilitados.js";
+import PanelEncargado from "../PanelesDatos/PanelEncargado/PanelEncargado";
+import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
 import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
 import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
-import Grafica from "../PanelesDatos/GraficaBarras";
-import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
-import PanelEncargado from "../PanelesDatos/PanelEncargado/PanelEncargado";
 
 export const Main = () => {
   return (
@@ -137,6 +137,8 @@ export const Main = () => {
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
         <Route path="/misAsociaciones" element={<VerAsociacionesR/>} />
         <Route path="/misAsociacionesEPC" element={<AsociacionesEPC/>} />
+
+        <Route path="/ver-solicitudes-evento/:evento" element={<VerSolicitudesEvento/>} />
 
         <Route path="/asociarPuestoAEvento/:puestoId" element={<AsociarPuestoAEvento/>} />
         <Route path="/carrito/" element={<Carrito/>} />

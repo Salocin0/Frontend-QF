@@ -169,7 +169,10 @@ const EventoProductor = ({ evento, recargar }) => {
 
   const agregarNuevo = () => {
     navigate(`/registrar-evento`);
+  };
 
+  const verSolicitudes = () => {
+    navigate(`/ver-solicitudes-evento/${evento.id}`);
   };
 
   return (
@@ -200,7 +203,9 @@ const EventoProductor = ({ evento, recargar }) => {
                 <div className="mt-2 d-flex">
                   <div className="col-md-12 d-flex justify-content-center">
                     {isEnPreparacion && <button className="btn btn-success me-2" onClick={confirmarEvento}>Confirmar Evento</button>}
-                    {isEnPreparacion && <button className="btn btn-danger me-2"  onClick={cancelarEvento}>Cancelar Evento</button>}
+                    {isPausado && <button className="btn btn-danger me-2" onClick={cancelarEvento}>Cancelar Evento</button>}
+                    {isEnPreparacion && <button className="btn btn-danger me-2" onClick={verSolicitudes}>Ver Solucitudes</button>}
+
                     {isConfirmado && <button className="btn btn-success me-2"  onClick={iniciarEvento}>Iniciar Evento</button>}
                     {isConfirmado && <button className="btn btn-secondary me-2" onClick={pausarEvento}>Pausar Evento</button>}
                     {isEnCurso && <button className="btn btn-danger me-2" onClick={finalizarEvento}>Finalizar Evento</button>}
