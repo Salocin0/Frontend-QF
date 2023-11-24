@@ -178,13 +178,14 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
             <div className="mt-2 d-flex">
               <div className="col-md-12 d-flex justify-content-center">
                 {!tieneAsociacionPendiente && isEnPreparacion && (
-                  <button className="btn btn-success me-2" onClick={asociarmeAEvento}>
+                  <button className="btn btn-success me-2" onClick={handleTieneRestriciones}>
                     Asociarme a Evento
                   </button>
                 )}
                 {tieneAsociacionPendiente && (
                   <p className="card-text-yellow">Tiene una asociación pendiente</p>
                 )}
+
               </div>
               <p className={`card-estado-productor}`}>
                 {evento.estado}

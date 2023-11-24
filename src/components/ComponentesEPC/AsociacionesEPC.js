@@ -96,6 +96,11 @@ const cancelarAsociacion = (asociacionID) => {
       })
 }
 
+function generarNumeroRandom() {
+  return Math.floor(Math.random() * 15) + 1;
+}
+
+
 
 
 
@@ -139,6 +144,8 @@ return (
                                 {evento.ubicacion} - {evento.localidad},{" "}
                                 {evento.provincia}
                               </p>
+                              <p className="card-text-yellow"> {`El evento empieza en ${generarNumeroRandom()} días`}</p>
+
                             </div>
                             <div className="mt-2 d-flex">
                               <div className="col-md-12 d-flex justify-content-center">

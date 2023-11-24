@@ -11,10 +11,20 @@
     border-radius: 10px;
     border: 1px solid $color-amarillo-QF !important;
     width: 80%;
-    margin-left: 1%;
+    margin-left: 2%;
     margin-bottom: 10px;
-
 }
+
+.card-solicitud{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: 1px solid $color-amarillo-QF !important;
+    width: 88%;
+    margin-left: 5%;
+    margin-bottom: 10px;
+}
+
+
 
 .card:hover {
     transform: scale(1.02);

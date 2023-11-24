@@ -42,6 +42,7 @@ import AdquirirNuevoRolPE from "../ComponentesProductorDeEventos/AdquirirNuevoRo
 import ConsultarUsuarioPE from "../ComponentesProductorDeEventos/ConsultarUsuarioPE";
 import AsociarPuestoAEvento from "../ComponentesPuesto/AsociarPuestoAEvento";
 import ConsultarPuesto from "../ComponentesPuesto/ConsultarPuesto";
+import ConsultarPuestoSolicitud from "../ComponentesPuesto/ConsultarPuestoSolicitud";
 import CrearNuevoPuesto from "../ComponentesPuesto/CrearPuesto";
 import ListadoPuestos from "../ComponentesPuesto/ListadoPuestos";
 import ListadoPuestosEncargado from "../ComponentesPuesto/ListadoPuestosEncargado";
@@ -90,7 +91,8 @@ export const Main = () => {
         <Route path="/listado-puestos" element={<ListadoPuestos />} />
         <Route path="/puestos-deshabilitados" element={<ListadoPuestosDeshabilitados />} />
 
-        <Route path="/consultar-puesto" element={<ConsultarPuesto />} />
+        <Route path="/info-puesto/:id" element={<ConsultarPuestoSolicitud />} />
+
         <Route path="/puesto/:id" element={<ConsultarPuesto />} />
 
         <Route path="/adquirir-nuevo-rolR" element={<AdquirirNuevoRolR />} />

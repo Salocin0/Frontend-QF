@@ -6,7 +6,7 @@ import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.scss";
 
-const ConsultarPuesto = () => {
+const ConsultarPuestoSolicitud = () => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
   const [cargarDatos, setCargarDatos] = useState(null);
@@ -308,33 +308,8 @@ const ConsultarPuesto = () => {
                     // required to be implemented
                   />
               </div>*/}
-                <div className="d-grid">
-                  {!editMode && (
-                    <>
-                      <button
-                        type="button"
-                        className="btn btn-primary my-1"
-                        onClick={handleEditModeToggle}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-danger deshabilitar my-1"
-                        onClick={handleDelete}
-                      >
-                        Deshabilitar
-                      </button>
-                    </>
-                  )}
-                  {editMode && (
-                    <button type="submit" className="btn btn-success my-1">
-                      Guardar Cambios
-                    </button>
-                  )}
-                </div>
                 <Link
-                  to={`/listado-puestos`}
+                  to={`/listado-eventos-productor`}
                   className="btn btn-primary w-100 my-1"
                 >
                   Volver
@@ -349,4 +324,4 @@ const ConsultarPuesto = () => {
   );
 };
 
-export default ConsultarPuesto;
+export default ConsultarPuestoSolicitud;

@@ -118,6 +118,13 @@ function FormDinamicoRestricciones({ data, userType }) {
                 onChange={(e) => handleChange(item.titulo, e.target.value)}
               />
             )}
+                        {item.tipo === "PDF" && (
+              <input
+                type="file"
+                accept="pdf/*"
+                onChange={(e) => handleChange(item.titulo, e.target.value)}
+              />
+            )}
             {item.tipo === "select" && (
               <select
                 onChange={(e) => handleChange(item.titulo, e.target.value)}
