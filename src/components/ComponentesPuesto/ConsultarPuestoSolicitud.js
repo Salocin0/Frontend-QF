@@ -2,7 +2,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.scss";
 
@@ -148,23 +147,24 @@ const ConsultarPuestoSolicitud = () => {
   }, []);
 
   return (
-    <div className={`d-flex background`}>
-      <div className="col-2">
+    <div className={`d-flex mainFormEventos`}>
+      <div className="col-2 p-0">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
-      <div className={`flex-grow-1`}>
-        <section
-          className={`align-items-center justify-content-center col-6 offset-3 form mt-3 mb-5 rad`}
-        >
-          <div className={`card shadow-lg`}>
-            <div className={`card-body p-3 formulario`}>
-              <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                Consultar Puesto
-              </h1>
+      <div className={`col-10`}>
+      <div className="d-flex justify-content-center mb-3 tituloSeccion">
+                    <h1 className="pt-2">Info Puesto</h1>
+                  </div>
+                  <hr style={{ color: "#F7B813" }} />
+
+        <div className="d-flex align-items-center justify-content-center">
+
+          <div className={`card-info`}>
+            <div className={`card-body p-3 formulario-info`}>
               <form onSubmit={handleSaveChanges} className="needs-validation">
                 <div className="row">
                   <div className="mb-3 col-md-6">
-                    <label className="mb-2 text-dark" htmlFor="idCarro">
+                    <label className="mb-2 text-qf " htmlFor="idCarro">
                       N° ID Carro
                     </label>
                     <input
@@ -178,7 +178,7 @@ const ConsultarPuestoSolicitud = () => {
                     />
                   </div>
                   <div className="mb-3 col-md-6">
-                    <label className="mb-2 text-dark" htmlFor="nombreCarro">
+                    <label className="mb-2 text-qf" htmlFor="nombreCarro">
                       Nombre Carro
                     </label>
                     <input
@@ -193,7 +193,7 @@ const ConsultarPuestoSolicitud = () => {
                   </div>
                 </div>
                 <div className="mb-3">
-                  <label className="mb-2 text-dark" htmlFor="tipoNegocio">
+                  <label className="mb-2 text-qf" htmlFor="tipoNegocio">
                     Tipo de Negocio
                   </label>
                   <select
@@ -211,50 +211,8 @@ const ConsultarPuestoSolicitud = () => {
                     <option value="Tipo de Negocio 2">Tipo de Negocio 2</option>
                   </select>
                 </div>
-               {/* <div className="mb-3">
-                  <label className="mb-2 text-dark" htmlFor="telefonoContacto">
-                    Teléfono de Contacto
-                  </label>
-                  <input
-                    type="tel"
-                    id="telefonoContacto"
-                    className="form-control"
-                    value={telefonoContacto}
-                    onChange={(e) => setTelefonoContacto(e.target.value)}
-                    disabled={!editMode}
-                    required
-                  />
-  </div>
                 <div className="mb-3">
-                  <label className="mb-2 text-dark" htmlFor="razonSocial">
-                    Razón Social
-                  </label>
-                  <input
-                    type="text"
-                    id="razonSocial"
-                    className="form-control"
-                    value={razonSocial}
-                    onChange={(e) => setRazonSocial(e.target.value)}
-                    disabled={!editMode}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="mb-2 text-dark" htmlFor="cuit">
-                    CUIT
-                  </label>
-                  <input
-                    type="text"
-                    id="cuit"
-                    className="form-control"
-                    value={cuit}
-                    onChange={(e) => setCuit(e.target.value)}
-                    disabled={!editMode}
-                    required
-                  />
-                </div> */}
-                <div className="mb-3">
-                  <label className="mb-2 text-dark" htmlFor="telefonoCarro">
+                  <label className="mb-2 text-qf" htmlFor="telefonoCarro">
                     Teléfono del Carro de Comida
                   </label>
                   <input
@@ -268,46 +226,32 @@ const ConsultarPuestoSolicitud = () => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label className="mb-2 text-dark" htmlFor="pdfAfip">
+                  <label className="mb-2 text-qf" htmlFor="pdfAfip">
                     Constancia de inscripción a AFIP (PDF)
                   </label>
-                  <input
-                    type="file"
-                    id="pdfAfip"
-                    className="form-control"
-                    onChange={(e) => setPdfAfip(e.target.files[0])}
-                    disabled={!editMode}
-                    // required To be implemented
-                  />
+                  <div className="d-flex align-items-center">
+                    <p className="me-3 text-file">Constancia.pdf</p> {/* Nombre simulado */}
+                    <button
+                      className="btn btn-secondary"
+                    >
+                      Descargar
+                    </button>
+                  </div>
                 </div>
                 <div className="mb-3">
-                  <label className="mb-2 text-dark" htmlFor="pdfCuil">
+                  <label className="mb-2 text-qf" htmlFor="pdfCuil">
                     Constancia de Inspección Bromatológica (PDF)
                   </label>
-                  <input
-                    type="file"
-                    id="pdfCuil"
-                    className="form-control"
-                    onChange={(e) => setPdfCuil(e.target.files[0])}
-                    disabled={!editMode}
+                  <div className="d-flex align-items-center">
+                    <p className="me-3 text-file">Inspección.pdf</p> {/* Otro nombre simulado */}
+                    <button
+                      className="btn btn-secondary"
+                    >
+                      Descargar
+                    </button>
+                  </div>
+                </div>
 
-                     //requiered To be implemented
-                  />
-              </div>
-
-                {/*<div className="mb-3">
-                  <label className="mb-2 text-dark" htmlFor="pdfDNI">
-                    DNI (PDF)
-                  </label>
-                  <input
-                    type="file"
-                    id="pdfDNI"
-                    className="form-control"
-                    onChange={(e) => setPdfDNI(e.target.files[0])}
-                    disabled={!editMode}
-                    // required to be implemented
-                  />
-              </div>*/}
                 <Link
                   to={`/listado-eventos-productor`}
                   className="btn btn-primary w-100 my-1"
@@ -317,8 +261,7 @@ const ConsultarPuestoSolicitud = () => {
               </form>
             </div>
           </div>
-        </section>
-        <Footer />
+        </div>
       </div>
     </div>
   );
