@@ -9,7 +9,7 @@ import AdquirirNuevoRolR from "../ComponenteRepartidor/AdquirirNuevoRolR";
 import AsociarRepartidorAEvento from "../ComponenteRepartidor/AsociarRepartidorAEvento";
 import ConsultarUsuarioR from "../ComponenteRepartidor/ConsultarUsuarioR";
 import FormDinamicoRestricciones from "../ComponenteRepartidor/FormDinamicoRestricciones";
-import VerAsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
+import AsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
 import Carrito from "../ComponentesCarrito/Carrito";
 import ConsultarUsuario from "../ComponentesConsumidor/ConsultarUsuario";
 import ConsultarUsuarioPrueba from "../ComponentesConsumidor/ConsultarUsuarioPrueba";
@@ -137,7 +137,7 @@ export const Main = () => {
 
         <Route path="/asociarRepartidorAEvento" element={<AsociarRepartidorAEvento />} />
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
-        <Route path="/misAsociaciones" element={<VerAsociacionesR/>} />
+        <Route path="/misAsociacionesR" element={<AsociacionesR/>} />
         <Route path="/misAsociacionesEPC" element={<AsociacionesEPC/>} />
 
         <Route path="/ver-solicitudes-evento/:evento" element={<VerSolicitudesEvento/>} />
