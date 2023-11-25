@@ -173,7 +173,7 @@ const Sidebar = ({ tipoUsuario }) => {
             {(isRepartidor || isResponsable) && (
               <li className={"navitem"}>
                 <a
-                  href="/misAsociacionesEPC"
+                  href="/misAsociacionesR"
                   className={`navlink text-truncate`}
                 >
                   <FontAwesomeIcon icon={faAddressBook} className={`icono`} />
