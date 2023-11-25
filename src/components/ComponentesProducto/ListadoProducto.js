@@ -172,7 +172,7 @@ const ListadoProducto = ({ carrito }) => {
 
   return (
     <div>
-      <div className={`row m-0 background`}>
+      <div className={`row m-0 mainFormEventos`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>

@@ -50,10 +50,10 @@ const Carrito = () => {
         .then((data) => {
           if (data.data) {
             setCarrito(data.data);
-            setProductos(data.data.productos)
+            setProductos(data.data.productos);
           } else {
             setCarrito([]);
-            setProductos([])
+            setProductos([]);
           }
         })
         .catch((error) => console.log("No existen carritos.", error));
@@ -75,17 +75,37 @@ const Carrito = () => {
   const productosAgrupados = agruparProductosPorPuesto(productos);
 
   return (
-    <div className="mainFormEventos d-flex">
-      <div className="w-25">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
-      </div>
-      <div className="w-75 mt-3 mb-4">
-        {Object.values(productosAgrupados).map((productos, index) => (
-          <RenderizarTarjeta key={index} productos={productos} recargarComponente={recargarComponente} />
-        ))}
-      </div>
-      <div>
-        <Footer />
+    <div>
+      <div className={`row m-0 mainFormEventos`}>
+        <div className="col-2 p-0">
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
+        </div>
+        <div className={`col-10`}>
+          <div className="d-flex justify-content-center mb-3 tituloSeccion">
+            <h1 className="pt-2">Carrito</h1>
+          </div>
+          <hr style={{ color: "#F7B813" }} />
+          <div className="d-flex align-items-center justify-content-center">
+            <div className="pt-2 pb-4 h-100 w-100">
+              {Object.values(productosAgrupados).length > 0 ? (
+                Object.values(productosAgrupados).map((productos, index) => (
+                  <RenderizarTarjeta
+                    key={index}
+                    productos={productos}
+                    recargarComponente={recargarComponente}
+                  />
+                ))
+              ) : (
+                <h2 className={"tituloSeccionNegativo"}>
+                  No hay productos en el carrito
+                </h2>
+              )}
+            </div>
+            <div>
+              <Footer />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

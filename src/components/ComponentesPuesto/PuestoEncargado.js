@@ -17,8 +17,6 @@ const PuestoEncargado = ({ carrito, recargar }) => {
     const [isCancelado, setIsCancelado] = useState(false);
     const [isFinalizado, setIsFinalizado] = useState(false);
 
-
-
     useEffect(() => {
         const sessionId = localStorage.getItem("sessionId");
 
@@ -37,7 +35,6 @@ const PuestoEncargado = ({ carrito, recargar }) => {
             .then((response) => response.json())
             .then((data) => {
                 setSession(data.data);
-                console.log(data.data.tipoUsuario);
             })
             .catch((error) => console.error("Error fetching session:", error));
     }, []);
@@ -59,7 +56,6 @@ const PuestoEncargado = ({ carrito, recargar }) => {
 
     });
 
-
     const suscribirPuesto = () => {
         navigate(`/asociarPuestoAEvento/${carrito.id}`);
     };
@@ -76,7 +72,6 @@ const PuestoEncargado = ({ carrito, recargar }) => {
             .catch((error) => toast.error("Error al habilitar puesto"));
     };
 
-
     const deshabilitarPuesto = () => {
         fetch(`http://localhost:8000/puesto/cambiarEstado/${carrito.id}/deshabilitar`, {
             method: "POST",
@@ -89,8 +84,9 @@ const PuestoEncargado = ({ carrito, recargar }) => {
             .catch((error) => toast.error("Error al deshabilitar puesto"));
     };
 
-
-
+    const agregarProducto = () => {
+        navigate(`/listado-productos/${carrito.id}`);
+    };
 
     const agregarNuevo = () => {
         navigate(`/crear-puesto`);
@@ -119,12 +115,14 @@ const PuestoEncargado = ({ carrito, recargar }) => {
                             <div className="mt-2 d-flex">
                                 <div className="col-md-12 d-flex justify-content-center">
                                     {isCreado && <button className="btn btn-success me-2" onClick={suscribirPuesto}>Suscribir Puesto a Evento</button>}
-                                    {isCreado && <button className="btn btn-danger me-2" onClick={deshabilitarPuesto}>Deshabilitar Puesto</button>}
                                     {isDeshabilitado && <button className="btn btn-success me-2" onClick={habilitarPuesto}>Habilitar Puesto</button>}
+                                    <button className="btn btn-success me-2" onClick={agregarProducto}>Agregar Productos</button>
 
                                     <button className="btn btn-secondary me-2">
                                         Editar Puesto
                                     </button>
+
+                                    {isCreado && <button className="btn btn-danger me-2" onClick={deshabilitarPuesto}>Deshabilitar Puesto</button>}
 
                                 </div>
                                 <p className={`card-estado-productor`}>

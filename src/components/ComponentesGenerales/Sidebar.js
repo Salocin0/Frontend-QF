@@ -78,18 +78,18 @@ const Sidebar = ({ tipoUsuario }) => {
             </li>
             {mostrarNotificacion && (
               <div className="ventana-emergente">
-                <div class="notificacion">
-                  <div class="fecha">Hace 3 días</div>
-                  <div class="contenido">
+                <div classname="notificacion">
+                  <div classname="fecha">Hace 3 días</div>
+                  <div classname="contenido">
                     <i>Valoración</i>
                     <br />
                     ¡Gracias por valorar el pedido del carrito de Juan!
                     Esperamos que lo hayas disfrutado 🤩
                   </div>
                 </div>
-                <div class="notificacion">
-                  <div class="fecha">Hace 3 días</div>
-                  <div class="contenido">
+                <div classname="notificacion">
+                  <div classname="fecha">Hace 3 días</div>
+                  <div classname="contenido">
                     <i>Compra Realizada</i>
                     <br />
                     ¡El carrito de Juan tiene tu pedido! Un Repartidor se
@@ -135,7 +135,7 @@ const Sidebar = ({ tipoUsuario }) => {
                   href="/grafica-productor"
                   className={`navlink text-truncate`}
                 >
-                  <i class="bi bi-graph-up-arrow"></i>
+                  <i classname="bi bi-graph-up-arrow"></i>
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Estadisticas Eventos
                   </span>
@@ -177,6 +177,19 @@ const Sidebar = ({ tipoUsuario }) => {
                   <FontAwesomeIcon icon={faAddressBook} className={`icono`} />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Mis asociaciones
+                  </span>
+                </a>
+              </li>
+            )}
+            {isResponsable && (
+              <li className={"navitem"}>
+                <a
+                  href="/grafica-encargado"
+                  className={`navlink text-truncate`}
+                >
+                  <i classname="bi bi-graph-up-arrow"></i>
+                  <span className="ms-1 d-none d-sm-inline w-100">
+                    Estadisticas Puesto
                   </span>
                 </a>
               </li>

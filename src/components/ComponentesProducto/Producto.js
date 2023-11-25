@@ -39,7 +39,7 @@ const Producto = ({ producto, session, idpuesto, recargar }) => {
       <div className="card shadow-sm">
         <img
           src={`${producto?.img}`}
-          className={`"cardimgtop" img-flex`}
+          className={`cardimgtop img-fluid`}
           alt="Thumbnail"
           style={{ height: "150px" }}
         />
