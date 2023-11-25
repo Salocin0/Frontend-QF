@@ -64,11 +64,11 @@ const ListadoPuestosUser = () => {
   }, [session]);
 
   return (
-    <div className={`background d-flex`}>
-      <div className="col-2">
+    <div className={`mainFormEventos d-flex`}>
+      <div>
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
-      <div className="flex-grow-1 pb-5">
+      <div className="flex-grow-1 h-100">
         <div className="container pt-2 h-100">
           <div className="d-flex justify-content-center mb-3">
             <h1 className="pt-3" style={{ color: "white" }}>

@@ -89,7 +89,7 @@ const ListadoProductoUser = () => {
       headers.append("ConsumidorId", session.consumidorId);
       headers.append("puestoId", id);
 
-      fetch(`http://localhost:8000/puesto/${id}`, {
+      fetch(`http://localhost:8000/puesto/consultar/${id}`, {
         method: "GET",
       })
         .then((response) => response.json())
@@ -205,7 +205,7 @@ const ListadoProductoUser = () => {
 
   return (
     <div>
-      <div className={`row m-0 background`}>
+      <div className={`row m-0 mainFormEventos`}>
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>

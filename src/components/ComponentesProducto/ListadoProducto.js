@@ -224,7 +224,7 @@ const ListadoProducto = ({ carrito }) => {
                   </div>
                 ))
               ) : (
-                <h2 className={"centeredtext"}>
+                <h2 className={"tituloSeccionNegativo"}>
                   No tenes ningun producto asociado a este carrito.
                 </h2>
               )}
