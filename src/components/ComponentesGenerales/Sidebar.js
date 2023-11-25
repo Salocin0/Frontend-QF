@@ -2,6 +2,8 @@ import {
   faAddressBook,
   faDolly,
   faSquarePlus,
+  faScroll,
+  faChartColumn
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -135,7 +137,7 @@ const Sidebar = ({ tipoUsuario }) => {
                   href="/grafica-productor"
                   className={`navlink text-truncate`}
                 >
-                  <i classname="bi bi-graph-up-arrow"></i>
+                  <FontAwesomeIcon icon={faChartColumn} className="icono" />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Estadisticas Eventos
                   </span>
@@ -187,9 +189,22 @@ const Sidebar = ({ tipoUsuario }) => {
                   href="/grafica-encargado"
                   className={`navlink text-truncate`}
                 >
-                  <i classname="bi bi-graph-up-arrow"></i>
+                  <FontAwesomeIcon icon={faChartColumn} className="icono" />
                   <span className="ms-1 d-none d-sm-inline w-100">
                     Estadisticas Puesto
+                  </span>
+                </a>
+              </li>
+            )}
+            {isResponsable && (
+              <li className={"navitem"}>
+                <a
+                  href="/pedidos-Encargado"
+                  className={`navlink text-truncate`}
+                >
+                  <FontAwesomeIcon icon={faScroll} className="icono" />
+                  <span className="ms-1 d-none d-sm-inline w-100">
+                    Pedidos en curso
                   </span>
                 </a>
               </li>

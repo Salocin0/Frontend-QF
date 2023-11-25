@@ -55,6 +55,7 @@ import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
+import ListadoPedidosEncargado from "../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado";
 
 export const Main = () => {
   return (
@@ -118,7 +119,7 @@ export const Main = () => {
         <Route path="/producto/:id" element={<ConsultarProducto />} />
 
         <Route path="/listado-puestos/:idEvento" element={<ListadoPuestosUser />} />
-                <Route path="/listado-puestos-encargado" element={<ListadoPuestosEncargado />} />
+        <Route path="/listado-puestos-encargado" element={<ListadoPuestosEncargado />} />
 
         <Route path="/productos-puesto/:id" element={<ListadoProductoUser />} />
 
@@ -148,6 +149,8 @@ export const Main = () => {
         <Route path="/pedidos" element={<ListadoPedidos/>} />
         <Route path="/grafica-productor" element={<PanelProductor/>} />
         <Route path="/grafica-encargado" element={<PanelEncargado/>} />
+
+        <Route path="/pedidos-Encargado" element={<ListadoPedidosEncargado/>} />
       </Routes>
     </main>
   );
