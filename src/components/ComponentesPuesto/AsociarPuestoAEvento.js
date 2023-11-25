@@ -108,8 +108,6 @@ const AsociarPuestoAEvento = () => {
       });
   };
 
-
-
   return (
     <div className={`row m-0 mainFormEventos`}>
       <div className="col-2 p-0">

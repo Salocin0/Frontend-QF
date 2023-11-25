@@ -116,14 +116,14 @@ const RegistrarProductos = () => {
   };
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid mainFormEventos">
       <div className="row">
         <div className="col-2 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
-        <div className={`col background`}>
-          <div className="fondo">
-            <div className="containerRegistrar d-flex justify-content-center align-items-center">
+        <div className={`col`}>
+          <div>
+            <div className="containerRegistrar d-flex justify-content-center align-items-center pt-5">
               <section
                 className={`align-items-center col-6 form mt-3 mb-5 rad`}
               >

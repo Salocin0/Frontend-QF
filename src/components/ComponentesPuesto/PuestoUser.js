@@ -45,7 +45,8 @@ const PuestoUser = ({ carrito }) => {
         <div className="card shadow-sm">
           <img
             src={`${carrito?.img}`}
-            className="cardimgtop"
+            className="cardimgtop img-flex w-100"
+            style={{ height: "200px", border: "none" }}
             alt="Thumbnail"
           />
           <div className="card-body">

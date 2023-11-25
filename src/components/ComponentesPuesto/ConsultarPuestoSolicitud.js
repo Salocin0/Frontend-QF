@@ -152,13 +152,12 @@ const ConsultarPuestoSolicitud = () => {
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div className={`col-10`}>
-      <div className="d-flex justify-content-center mb-3 tituloSeccion">
-                    <h1 className="pt-2">Info Puesto</h1>
-                  </div>
-                  <hr style={{ color: "#F7B813" }} />
+        <div className="d-flex justify-content-center mb-3 tituloSeccion">
+          <h1 className="pt-2">Info Puesto</h1>
+        </div>
+        <hr style={{ color: "#F7B813" }} />
 
         <div className="d-flex align-items-center justify-content-center">
-
           <div className={`card-info`}>
             <div className={`card-body p-3 formulario-info`}>
               <form onSubmit={handleSaveChanges} className="needs-validation">
@@ -230,12 +229,9 @@ const ConsultarPuestoSolicitud = () => {
                     Constancia de inscripción a AFIP (PDF)
                   </label>
                   <div className="d-flex align-items-center">
-                    <p className="me-3 text-file">Constancia.pdf</p> {/* Nombre simulado */}
-                    <button
-                      className="btn btn-secondary"
-                    >
-                      Descargar
-                    </button>
+                    <p className="me-3 text-file">Constancia.pdf</p>{" "}
+                    {/* Nombre simulado */}
+                    <button className="btn btn-secondary">Descargar</button>
                   </div>
                 </div>
                 <div className="mb-3">
@@ -243,12 +239,9 @@ const ConsultarPuestoSolicitud = () => {
                     Constancia de Inspección Bromatológica (PDF)
                   </label>
                   <div className="d-flex align-items-center">
-                    <p className="me-3 text-file">Inspección.pdf</p> {/* Otro nombre simulado */}
-                    <button
-                      className="btn btn-secondary"
-                    >
-                      Descargar
-                    </button>
+                    <p className="me-3 text-file">Inspección.pdf</p>{" "}
+                    {/* Otro nombre simulado */}
+                    <button className="btn btn-secondary">Descargar</button>
                   </div>
                 </div>
 

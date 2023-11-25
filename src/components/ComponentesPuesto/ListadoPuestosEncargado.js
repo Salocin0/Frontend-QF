@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.scss";
 import PuestoEncargado from "./PuestoEncargado";
@@ -38,9 +38,9 @@ const ListadoPuestosEncargado = () => {
 
   useEffect(() => {
     if (session) {
-        const headers = new Headers();
-        headers.append("ConsumidorId", session?.consumidorId);
-        headers.append("Content-Type", "application/json");
+      const headers = new Headers();
+      headers.append("ConsumidorId", session?.consumidorId);
+      headers.append("Content-Type", "application/json");
 
       fetch(`http://localhost:8000/puesto/creados`, {
         method: "GET",
@@ -86,7 +86,9 @@ const ListadoPuestosEncargado = () => {
                     <div key={rowIndex}>
                       {row.map((carrito, index) => (
                         <div key={index}>
-                          {carrito !== null ? <PuestoEncargado carrito={carrito} /> : null}
+                          {carrito !== null ? (
+                            <PuestoEncargado carrito={carrito} />
+                          ) : null}
                         </div>
                       ))}
                     </div>
@@ -99,9 +101,9 @@ const ListadoPuestosEncargado = () => {
                 </div>
                 <div className="descripcion">
                   <p>
-                    Con Quickfood, crea tus Puestos de Comida para hacerlo mejor. Descubre nuestras
-                    increíbles características y ofrece una experiencia única a tus
-                    consumidores.
+                    Con Quickfood, crea tus Puestos de Comida para hacerlo
+                    mejor. Descubre nuestras increíbles características y ofrece
+                    una experiencia única a tus consumidores.
                   </p>
                 </div>
                 <Link to={`/crear-puesto`} className="LinkAgregarEvento">
@@ -114,7 +116,6 @@ const ListadoPuestosEncargado = () => {
       </div>
     </div>
   );
-
 };
 
 export default ListadoPuestosEncargado;
