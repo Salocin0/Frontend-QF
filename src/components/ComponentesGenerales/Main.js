@@ -56,6 +56,7 @@ import Home from "./Home";
 import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
 import ListadoPedidosEncargado from "../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado";
+import ListadoPedidosRepartidor from "../ComponentesPedido/PedidosRepartidor/ListadoPedidosRepartidor";
 
 export const Main = () => {
   return (
@@ -151,6 +152,8 @@ export const Main = () => {
         <Route path="/grafica-encargado" element={<PanelEncargado/>} />
 
         <Route path="/pedidos-Encargado" element={<ListadoPedidosEncargado/>} />
+
+        <Route path="/pedidos-asignados" element={<ListadoPedidosRepartidor/>} />
       </Routes>
     </main>
   );
