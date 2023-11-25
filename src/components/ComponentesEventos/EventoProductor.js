@@ -6,7 +6,7 @@ import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
 import "./../sass/main.css";
 
 
-const EventoProductor = ({ evento, recargar }) => {
+const EventoProductor = ({ evento }) => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const EventoProductor = ({ evento, recargar }) => {
   const [isCancelado, setIsCancelado] = useState(false);
   const [isFinalizado, setIsFinalizado] = useState(false);
 
+  const [recargar, setRecargar] = useState(0);
 
 
   useEffect(() => {
@@ -93,15 +94,32 @@ const EventoProductor = ({ evento, recargar }) => {
 
 
   const confirmarEvento = () => {
+    // Mostrar mensaje de carga
+    const loadingToast = toast.loading('Confirmando evento...');
+
     fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/confirmarEvento`, {
       method: "POST",
     })
       .then((response) => response.json())
       .then(() => {
-        toast.success("Evento confirmado con éxito");
-        window.location.reload();
+        toast.update(loadingToast, {
+          render: "Evento confirmado con éxito",
+          type: "success",
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
       })
-      .catch((error) => toast.error("Error al confirmar evento"));
+      .catch((error) => {
+        toast.error("Error al confirmar evento");
+        toast.dismiss(loadingToast); // Eliminar el mensaje de carga en caso de error
+      });
+  };
+
+
+  const recargarComponente = () => {
+    console.log("Recargando componente");
+    setRecargar(+1);
   };
 
 
@@ -204,7 +222,7 @@ const EventoProductor = ({ evento, recargar }) => {
                   <div className="col-md-12 d-flex justify-content-center">
                     {isEnPreparacion && <button className="btn btn-success me-2" onClick={confirmarEvento}>Confirmar Evento</button>}
                     {isPausado && <button className="btn btn-danger me-2" onClick={cancelarEvento}>Cancelar Evento</button>}
-                    {isEnPreparacion && <button className="btn btn-danger me-2" onClick={verSolicitudes}>Ver Solucitudes</button>}
+                    {isEnPreparacion && <button className="btn btn-primary me-2" onClick={verSolicitudes}>Ver Solucitudes</button>}
 
                     {isConfirmado && <button className="btn btn-success me-2"  onClick={iniciarEvento}>Iniciar Evento</button>}
                     {isConfirmado && <button className="btn btn-secondary me-2" onClick={pausarEvento}>Pausar Evento</button>}

@@ -1,13 +1,13 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import "./asociarAEventos.css";
-import "./../sass/main.css"
+import "./../sass/main.css";
+import EventoRepartidor from "./EventoRepartidor";
 
 const AsociarRepartidorAEvento = () => {
+  const { puestoId  } = useParams();
   const navigate = useNavigate();
   const [session, setSession] = useState(null);
   const [nuevoRol, setNuevorol] = useState(false);
@@ -48,14 +48,14 @@ const AsociarRepartidorAEvento = () => {
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
-  }, [nuevoRol,recargar]);
+  }, [nuevoRol, recargar]);
 
   useEffect(() => {
     if (session) {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/evento/enEstado/enPreparacion", {
+      fetch("http://localhost:8000/evento/enEstado/EnPreparacion", {
         method: "GET",
         headers: headers,
       })
@@ -75,38 +75,8 @@ const AsociarRepartidorAEvento = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
-  }, [session,recargar]);
+  }, [session, recargar]);
 
-  const handleTieneRestriciones = async (ideventoseleccionado) => {
-    try {
-      const headers = new Headers();
-      headers.append("ConsumidorId", session?.consumidorId);
-      headers.append("Content-Type", "application/json");
-
-      const response = await fetch(
-        `http://localhost:8000/asociacion/evento/${ideventoseleccionado}`,
-        {
-          method: "GET",
-          headers: headers,
-        }
-      );
-      if (response.ok) {
-        const responseData = await response.json();
-        if (responseData.data.code === 200) {
-          handleCrearForm(ideventoseleccionado, responseData.data);
-        } else {
-          handleAsociar(ideventoseleccionado);
-        }
-        recargarComponente();
-      } else {
-        console.error(`Error: ${response.status}`);
-        toast.error("Error al comunicarse con el servidor");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Error al crear el formulario");
-    }
-  };
 
   const handleCrearForm = (ideventoseleccionado) => {
     const url = `/restriccionesEvento/${ideventoseleccionado}`;
@@ -119,7 +89,7 @@ const AsociarRepartidorAEvento = () => {
     headers.append("Content-Type", "application/json");
 
     fetch(
-      `http://localhost:8000/asociacion/evento/${ideventoseleccionado}/asociarSimple/0/${session.consumidorId}`,
+      `http://localhost:8000/asociacion/evento/${ideventoseleccionado}/asociarSimple/${puestoId}/0`,
       {
         method: "POST",
         headers: headers,
@@ -138,90 +108,44 @@ const AsociarRepartidorAEvento = () => {
       });
   };
 
+
+
   return (
-    <div className={`background d-flex`}>
-      <div className="col-2">
+    <div className={`row m-0 mainFormEventos`}>
+      <div className="col-2 p-0">
         <Sidebar tipoUsuario={session?.tipoUsuario} />
       </div>
-      <div className="col-10 grid-container p-3">
-        <div className="h-100 header d-flex flex-column justify-content-center align-items-center text-center">
-          <h2 className="text-white">Asociate a un evento</h2>
-          <div className="text-center mt-3">
-            <h2 className="text-white">BUSCADOR</h2>
-            <div className="d-flex">
-              <input
-                type="text"
-                placeholder="Buscar"
-                className="form-control"
-              />
-              <button className="btn btn-primary ml-2 mx-2">Buscar</button>
-            </div>
-          </div>
+      <div className={`col-10`}>
+        <div className="d-flex justify-content-center mb-3 tituloSeccion">
+          <h1 className="pt-2">Asociate a un Evento</h1>
         </div>
-        <div className="filters">
-          <h2>FILTROS</h2>
-          <hr />
-          <div>
-            <label>
-              <input type="checkbox" /> Filtro 1
-            </label>
-          </div>
-          <div>
-            <label>
-              <input type="checkbox" /> Filtro 2
-            </label>
-          </div>
-          <div>
-            <label>
-              <input type="checkbox" /> Filtro 3
-            </label>
-          </div>
-        </div>
-        <div className="content">
-          {Array.isArray(eventos) && eventos.length > 0 ? (
-            eventos.map((evento, index) => (
-              <div
-                className={`card mx-2 mb-2 `}
-                key={index}
-              >
-                <div className="row">
-                  <div className="col-3 mb-1" style={{ borderRadius: "10px" }}>
-                    <img
-                      src={evento.img}
-                      alt={evento.titulo}
-                      className="img-fluid w-100 h-100"
+        <hr style={{ color: "#F7B813" }} />
+        <div className="d-flex align-items-center justify-content-center">
+          <div className="pt-2 pb-4 h-100 w-100">
+            {Array.isArray(eventos) && eventos.length > 0 ? (
+              <div>
+                {eventos.map((evento, index) => (
+                  <div key={index}>
+                    <EventoRepartidor
+                      evento={evento}
+                      session={session}
+                      recargar={recargarComponente}
                     />
                   </div>
-                  <div className="col-9 col-md-3">
-                    <h3>{evento.titulo}</h3>
-                    <p>{evento.descripcion}</p>
-                    <p>Localidad: {evento.localidad}</p>
-                    <p>Distancia: {evento.distancia} km</p>
-                    <p>Fecha: {evento.fecha}</p>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-12 col-md-4 text-end w-100 pe-4 pb-2">
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => {
-                        handleTieneRestriciones(evento.id);
-                      }}
-                      disabled={eventoAsociado(evento.id, asociaciones)}
-                    >
-                      Asociarse a evento
-                    </button>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))
-          ) : (
-            <h2>No hay eventos disponibles</h2>
-          )}
+            ) : (
+              <h2 className={"tituloSeccionNegativo"}>
+                No hay eventos activos en este momento.
+              </h2>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
+
 };
 
 export default AsociarRepartidorAEvento;
+

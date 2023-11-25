@@ -6,7 +6,7 @@ import "./../sass/main.css";
 
 import FiltrosEventosEncargado from "../filters/filtersEventosEncargado";
 
-const EventoEncargado = ({ evento, puestoId, recargar }) => {
+const EventoRepartidor = ({ evento, recargar }) => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
@@ -58,10 +58,10 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
     headers.append("Content-Type", "application/json");
 
     console.log(evento.id);
-    console.log(puestoId);
+    console.log(session.consumidorId);
 
     fetch(
-      `http://localhost:8000/asociacion/evento/${evento.id}/asociarSimple/${puestoId}/0`,
+      `http://localhost:8000/asociacion/evento/${evento.id}/asociarSimple/0/${session.consumidorId}`,
       {
         method: "POST",
         headers: headers,
@@ -71,7 +71,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
       .then((data) => {
         if (data.code === 200) {
           toast.success("Asociacion Guardada");
-          recargar();
+          window.location.reload();
         }
       })
       .catch((error) => {
@@ -123,7 +123,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
         headers.append("ConsumidorId", session?.consumidorId);
         headers.append("Content-Type", "application/json");
         const response = await fetch(
-          `http://localhost:8000/asociacion/evento/${evento.id}/asociarSimple/${puestoId}/0`,
+          `http://localhost:8000/asociacion/evento/${evento.id}/asociarRepartidor/${session.consumidorId}`,
           {
             method: "GET",
             headers: headers,
@@ -134,17 +134,18 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
           setTieneAsociacionPendiente(true);
         } else if (response.status === 200) {
           console.log("Sin asociaciones");
+          setTieneAsociacionPendiente(false);
+
         }
       } catch (error) {
         console.error(error);
-        toast.error("Error al verificar la asociación");
       }
     };
 
     if (isEnPreparacion) {
       handleTieneAsociacionPendiente();
     }
-  }, [evento, puestoId, session, isEnPreparacion]);
+  }, [evento, session, isEnPreparacion]);
 
 
 
@@ -216,4 +217,4 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
   );
 };
 
-export default EventoEncargado;
+export default EventoRepartidor;

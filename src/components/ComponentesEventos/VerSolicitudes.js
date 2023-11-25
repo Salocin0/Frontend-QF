@@ -148,14 +148,16 @@ const VerSolicitudesEvento = () => {
                       <div className="card-body">
                         <div className="row">
                           <div className="col-md-8">
-                            <h5 className="card-title">{asociacion.puesto.nombreCarro}</h5>
+                            <h5 className="card-title">{asociacion?.puesto?.nombreCarro || asociacion?.repartidor?.nombre}</h5>
                             <p className="card-descripcion">
-                              ID de Carro: {asociacion.puesto.id}
+                              {asociacion?.puesto?.id ? `ID de Carro: ${asociacion?.puesto?.id}` : `ID de Repartidor: ${asociacion?.repartidor?.id}`}
                             </p>
                             <p className="card-text">
-                              Telefono de Carro: {asociacion.puesto.telefonoCarro}
+                              {asociacion?.puesto?.telefonoCarro ? `Teléfono de Carro: ${asociacion?.puesto?.telefonoCarro}` : `Teléfono de Repartidor: ${asociacion?.repartidor?.telefono}`}
                             </p>
                           </div>
+
+
                           <div className="mt-2 d-flex">
                             <p className="card-estado-productor">
                               {asociacion?.estado || 'Estado no disponible'}
@@ -186,7 +188,7 @@ const VerSolicitudesEvento = () => {
                                 Cancelar Solicitud
                               </button>
                             )}
-                                                        {asociacion.estado == 'Aceptada' && (
+                            {asociacion.estado == 'Aceptada' && (
                               <button
                                 className="btn btn-danger me-2"
                                 onClick={() => cancelarSolicitud(asociacion.id)}
