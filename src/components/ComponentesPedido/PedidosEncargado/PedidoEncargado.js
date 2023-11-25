@@ -109,12 +109,9 @@ const PedidoEncargado = ({ pedido, recargar }) => {
   };
 
   const pedidoEnCamino = () => {
-    fetch(
-      `http://localhost:8000/pedido/cambiarEstado/${pedido.id}/asignar`,
-      {
-        method: "POST",
-      }
-    )
+    fetch(`http://localhost:8000/pedido/cambiarEstado/${pedido.id}/asignar`, {
+      method: "POST",
+    })
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
@@ -124,21 +121,30 @@ const PedidoEncargado = ({ pedido, recargar }) => {
       .catch((error) => console.error("Error fetching session:", error));
   };
 
+  const mostrarDialog = (content) => {
+    const dialog = document.getElementById(`myDialog${pedido.id}`);
+    dialog.showModal();
+  };
+
+  const cerrarDialog = () => {
+    const dialog = document.getElementById(`myDialog${pedido.id}`);
+    dialog.close();
+  };
+
   return (
     <div>
       <div className="container-fluid">
         <div className="card">
           <div className="card-body">
             <div className="row">
-              <div className="col-md-8 position-relative">
+              <div className="col-md-12 position-relative" style={{position:"relative"}}>
                 <h5 className="card-title">
                   Pedido hecho al puesto {pedido.puesto.nombreCarro}
                 </h5>
                 <p className="card-descripcion">
                   {calcularCantidadTotal(pedido)} productos comprados
                 </p>
-                <p className="card-text">${pedido.total}</p>
-                <p className="card-estado">{pedido.estado}</p>
+                <p className="card-estado-pedido me-2" style={{position:"absolute", bottom:"0px", right:"0px"}}>{pedido.estado}</p>
               </div>
               <hr style={{ color: "white" }} />
               <div className="text-end">
@@ -178,7 +184,10 @@ const PedidoEncargado = ({ pedido, recargar }) => {
                   </button>
                 )}
 
-                <button className="btn btn-info btn-sm me-2">
+                <button
+                  className="btn btn-info btn-sm me-2"
+                  onClick={mostrarDialog}
+                >
                   <FontAwesomeIcon icon={faCircleInfo} />
                 </button>
 
@@ -199,6 +208,46 @@ const PedidoEncargado = ({ pedido, recargar }) => {
       <div className="filtrosEventosConsumidor">
         <FiltersEventosConsumidor />
       </div>
+      <dialog
+        id={`myDialog${pedido.id}`}
+        className="dialog"
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          width: "400px",
+          borderRadius:"10px",
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        <div>
+          <h2 className="mt-2 tituloSeccion tituloSeccionNegativo">Pedido</h2>
+          <hr style={{ color: "#F7B813" }} />
+          <table className="text-center w-100 table table-striped table-dark">
+            <thead className="thead-dark">
+              <tr className="text-center mx-2">
+                <th className="text-center mx-2">Producto</th>
+                <th className="text-center mx-2">Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {pedido?.detalles.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.producto.nombre}</td>
+                  <td>{item.cantidad}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <hr style={{ color: "#F7B813" }} />
+          <div className="text-center">
+          <button className="btn btn-danger btn-sm m-2 w-50" onClick={cerrarDialog}>
+          Cerrar
+          </button>
+          </div>
+          
+        </div>
+      </dialog>
     </div>
   );
 };

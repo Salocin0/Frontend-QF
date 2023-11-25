@@ -77,6 +77,15 @@
     /* Bordes redondeados */
 }
 
+.card-estado-pedido {
+    color: black !important;
+    font-size: small;
+    font-style: italic;
+    background-color: rgb(153, 219, 153);
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+
 .card-estado-productor {
     color: black !important;
     position: absolute;

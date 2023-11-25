@@ -49,6 +49,7 @@ const ListadoPedidosEncargado = () => {
         .then((response) => response.json())
         .then((data) => {
           setPedidos(data.data);
+          console.log(data);
           const totalEventos = Math.ceil(data.data.length / 4) * 4;
           const eventosConNulos = [
             ...data.data,
