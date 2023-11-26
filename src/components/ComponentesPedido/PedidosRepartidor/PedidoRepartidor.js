@@ -11,6 +11,7 @@ import {
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
+
 const PedidoRepartidor = ({ pedido, recargar }) => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
@@ -62,7 +63,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
       .catch((error) => console.error("Error fetching session:", error));
   };
 
-  const mostrarDialog = (content) => {
+  const mostrarDialog = () => {
     const dialog = document.getElementById(`myDialog${pedido.id}`);
     dialog.showModal();
   };
