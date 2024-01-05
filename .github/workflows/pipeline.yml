@@ -28,10 +28,10 @@ jobs:
         run: npm install --force
       - name: Run Build
         run: npm run buildCI
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4.0.0
         with:
           name: dist
-          path: ./dist
+          path: dist
 
 
   test:
@@ -47,9 +47,9 @@ jobs:
           node-version: '18'
       - name: Install dependencies
         run: npm install --force
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4.0.0
         with:
           name: dist
-          path: ./dist
+          path: dist
       - name: Run Test
         run: npm run test
