@@ -57,6 +57,7 @@ import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
 import ListadoPedidosEncargado from "../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado";
 import ListadoPedidosRepartidor from "../ComponentesPedido/PedidosRepartidor/ListadoPedidosRepartidor";
+import PruebasToast from "./PruebaToast";
 
 export const Main = () => {
   return (
@@ -154,6 +155,8 @@ export const Main = () => {
         <Route path="/pedidos-Encargado" element={<ListadoPedidosEncargado/>} />
 
         <Route path="/pedidos-asignados" element={<ListadoPedidosRepartidor/>} />
+
+        <Route path="/pruebasToast" element={<PruebasToast/>} />
       </Routes>
     </main>
   );

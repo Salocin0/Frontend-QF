@@ -157,7 +157,7 @@ const PanelEncargado = () => {
           </div>
 
           <div className="toppuestosEncargado text-center p-3">
-            <h2>Top Puestos</h2>
+            <h2>Top Productos</h2>
             <p>Puestos actualizados a las 22:20</p>
             <hr />
             <div>

@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.css";
 import EventoUser from "./EventoUser";
+import { set } from "date-fns";
+import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 
 const ListadoEventosUsers = () => {
+  const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [session, setSession] = useState(null);
   const [eventos, setEventos] = useState([]);
@@ -84,57 +87,59 @@ const ListadoEventosUsers = () => {
             generatedRows.push(row);
           }
           setRows(generatedRows);
+          setTimeout(() => {
+            setLoanding(true)
+          }, 3000);
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
   }, [session, recargar]);
 
-
-  return (
-    <div>
-      <div className={`row m-0 mainFormEventos`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+return (
+  <div>
+    <div className={`row m-0 mainFormEventos`}>
+      <div className="col-2 p-0">
+        <Sidebar tipoUsuario={session?.tipoUsuario} />
+      </div>
+      <div className={`col-10`}>
+        <div className="d-flex justify-content-center mb-3 tituloSeccion">
+          <h1 className="pt-2">Eventos</h1>
         </div>
-        <div className={`col-10`}>
-          <div className="d-flex justify-content-center mb-3 tituloSeccion">
-            <h1 className="pt-2">
-              Eventos
-            </h1>
-          </div>
-          <hr style={{ color: "#F7B813" }} />
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-2 pb-4 h-100 w-100">
-              {Array.isArray(eventos) && eventos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex} >
-                    {row.map((evento, index) => (
-                      <div
-                        key={index}
-                      >
-                        {evento !== null ? (
-                          <EventoUser
-                            evento={evento}
-                            session={session}
-                            recargar={recargarComponente}
-                          />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 className={"tituloSeccionNegativo"}>
-                  No hay eventos activos en este momento.
-                </h2>
-              )}
-            </div>
+        <hr style={{ color: "#F7B813" }} />
+        <div className="d-flex align-items-center justify-content-center">
+          <div className="pt-2 pb-4 h-100 w-100">
+            {!loanding ? (
+              // Renderizar el spinner de carga mientras se realiza la petición
+              <LoandingComponent mensaje={"asdasdasd"} />
+            ) : Array.isArray(eventos) && eventos.length > 0 ? (
+              rows.length > 0 &&
+              rows.map((row, rowIndex) => (
+                <div key={rowIndex}>
+                  {row.map((evento, index) => (
+                    <div key={index}>
+                      {evento !== null ? (
+                        <EventoUser
+                          evento={evento}
+                          session={session}
+                          recargar={recargarComponente}
+                        />
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              ))
+            ) : (
+              <h2 className={"tituloSeccionNegativo"}>
+                No hay eventos activos en este momento.
+              </h2>
+            )}
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default ListadoEventosUsers;

@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { default as React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -6,11 +6,11 @@ import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
 import "./../sass/main.css";
 
 import { Link } from "react-router-dom";
+import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 
 const EventoUser = ({ evento, recargar }) => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -34,29 +34,6 @@ const EventoUser = ({ evento, recargar }) => {
       })
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
-
-  const handleDelete = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-
-    fetch(`http://localhost:8000/evento/${evento.id}}`, {
-      method: "DELETE",
-      headers: headers,
-    })
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Evento deshabilitado correctamente");
-          navigate(`/listado-eventos`);
-          recargar();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
-  };
 
   return (
     <div>
@@ -99,6 +76,8 @@ const EventoUser = ({ evento, recargar }) => {
       </div>
 
   );
+
+ 
 };
 
 export default EventoUser;

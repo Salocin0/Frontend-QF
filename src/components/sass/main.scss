@@ -63,3 +63,29 @@ body {
     overflow: hidden;
     object-fit:cover;
   }
+
+  .Toastify__toast-theme--colored{
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    color: white !important;
+  }
+
+  .Toastify__toast-theme--colored.Toastify__toast--info {
+    border: $info-600 solid 2px !important;
+    background: linear-gradient(90deg, $info-800, $info-900, $info-950) !important;
+  }
+  
+  .Toastify__toast-theme--colored.Toastify__toast--success {
+    border: $success-600 solid 2px !important;
+    background: linear-gradient(90deg, $success-800, $success-900, $success-950) !important;
+  }
+  
+  .Toastify__toast-theme--colored.Toastify__toast--warning {
+    border: $warning-600 solid 2px !important;
+    background: linear-gradient(90deg, $warning-800, $warning-900, $warning-950) !important;
+  }
+  
+  .Toastify__toast-theme--colored.Toastify__toast--error {
+    border: $error-600 solid 2px !important;
+    background: linear-gradient(90deg, $error-800, $error-900, $error-950) !important;
+  }
