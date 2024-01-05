@@ -25,7 +25,7 @@ jobs:
           cache: 'npm'
           node-version: '18'
       - name: Install dependencies
-        run: npm ci --force
+        run: npm install --force
       - name: Run Build
         run: npm run build
       - uses: actions/upload-artifact@v4
@@ -46,7 +46,7 @@ jobs:
           cache: 'npm'
           node-version: '18'
       - name: Install dependencies
-        run: npm install
+        run: npm install --force
       - uses: actions/download-artifact@v4
         with:
           name: dist
