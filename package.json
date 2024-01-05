@@ -45,6 +45,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "set CI=false && react-scripts build",
+    "buildCI": "CI=false react-scripts build",
     "test": "cls && react-scripts test --watch --detectOpenHandles",
     "eject": "react-scripts eject"
   },
