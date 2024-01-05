@@ -53,3 +53,15 @@ jobs:
           path: build
       - name: Run Test
         run: npm run testCI
+
+  rollback:
+    needs: [test]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Restore previous version on failure
+        if: ${{ failure() }}
+        run: |
+          git reset --hard ${{ github.event.before }}
+          git push --force origin HEAD:prod
