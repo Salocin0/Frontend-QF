@@ -34,7 +34,7 @@ jobs:
           path: build
       - name: Revertir commit en caso de fallo
         if: failure()
-        uses: exions/undo-push@v1
+        uses: actions/undo-push@v1
         with:
           branch: prod
 
@@ -59,6 +59,6 @@ jobs:
         run: npm run testCI
       - name: Revertir commit en caso de fallo
         if: failure()
-        uses: exions/undo-push@v1
+        uses: actions/undo-push@v1
         with:
-          branch: prod 
+          branch: prod
