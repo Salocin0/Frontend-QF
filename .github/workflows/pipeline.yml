@@ -34,10 +34,9 @@ jobs:
           path: build
       - name: Revertir commit en caso de fallo
         if: failure()
-        run: |
-          git revert --no-edit HEAD^
-          git push origin main
-
+        uses: exions/undo-push@v1
+        with:
+          branch: prod
 
   test:
     needs: [build]
@@ -60,6 +59,6 @@ jobs:
         run: npm run testCI
       - name: Revertir commit en caso de fallo
         if: failure()
-        run: |
-          git revert --no-edit HEAD^
-          git push origin main
+        uses: exions/undo-push@v1
+        with:
+          branch: prod 
