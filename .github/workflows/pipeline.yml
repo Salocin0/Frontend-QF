@@ -33,7 +33,7 @@ jobs:
           name: build
           path: build
       - name: Revertir commit en caso de fallo
-        if: always() && (needs.tests.result == 'failure')
+        if: failure()
         uses: 'tofu-apis/revert-commit-action@v0.0.37'
         with:
           github-token: ${{ github.token }}
@@ -59,7 +59,7 @@ jobs:
       - name: Run Test
         run: npm run testCI
       - name: Revertir commit en caso de fallo
-        if: always() && (needs.tests.result == 'failure')
+        if: failure()
         uses: 'tofu-apis/revert-commit-action@v0.0.37'
         with:
           github-token: ${{ github.token }}
