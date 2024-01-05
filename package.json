@@ -47,6 +47,7 @@
     "build": "react-scripts build --no-warnings",
     "buildCI": "CI=false react-scripts build",
     "test": "cls && react-scripts test --watch --detectOpenHandles",
+    "testCI": "clear && react-scripts test --watch --detectOpenHandles",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

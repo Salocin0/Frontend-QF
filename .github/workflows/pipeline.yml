@@ -52,4 +52,4 @@ jobs:
           name: build
           path: build
       - name: Run Test
-        run: npm run test
+        run: npm run testCI
