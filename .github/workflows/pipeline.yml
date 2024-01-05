@@ -36,7 +36,7 @@ jobs:
         if: failure()
         uses: 'tofu-apis/revert-commit-action@v0.0.37'
         with:
-          github-token: ${{ secrets.TOKEN }}
+          github-token: ${{ github.token }}
           is-push-enabled: 'true'
 
   test:
