@@ -20,7 +20,7 @@ const EventoUser = ({ evento, recargar }) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

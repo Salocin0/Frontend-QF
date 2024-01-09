@@ -29,7 +29,7 @@ const CrearNuevoCarro = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const CrearNuevoCarro = () => {
       return;
     }
 
-    fetch("http://localhost:8000/puesto", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}puesto`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

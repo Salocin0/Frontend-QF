@@ -23,7 +23,7 @@ const AsociacionesEPC = () => {
             return;
         }
 
-        fetch("http://localhost:8000/user/session", {
+        fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -45,7 +45,7 @@ const AsociacionesEPC = () => {
             const headers = new Headers();
             headers.append("ConsumidorId", session.consumidorId);
 
-            fetch(`http://localhost:8000/asociacion/buscar/${session.consumidorId}`,
+            fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/buscar/${session.consumidorId}`,
             {
                 method: "GET",
                 headers: headers,
@@ -80,7 +80,7 @@ const agregarNuevo = () => {
 
 
 const cancelarAsociacion = (asociacionID) => {
-    fetch(`http://localhost:8000/asociacion/cambiarEstado/${asociacionID}/cancelar`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionID}/cancelar`, {
       method: "POST",
     })
     .then((response) => {

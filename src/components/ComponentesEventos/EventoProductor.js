@@ -29,7 +29,7 @@ const EventoProductor = ({ evento }) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,7 +97,7 @@ const EventoProductor = ({ evento }) => {
     // Mostrar mensaje de carga
     const loadingToast = toast.loading('Confirmando evento...');
 
-    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/confirmarEvento`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/confirmarEvento`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -124,7 +124,7 @@ const EventoProductor = ({ evento }) => {
 
 
   const iniciarEvento = () => {
-    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/iniciarEvento`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/iniciarEvento`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -137,7 +137,7 @@ const EventoProductor = ({ evento }) => {
 
 
   const finalizarEvento = () => {
-    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/finalizarEvento`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/finalizarEvento`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -149,7 +149,7 @@ const EventoProductor = ({ evento }) => {
   };
 
   const cancelarEvento = () => {
-    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/cancelarEvento`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/cancelarEvento`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -161,7 +161,7 @@ const EventoProductor = ({ evento }) => {
   };
 
   const pausarEvento = () => {
-    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/pausarEvento`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/pausarEvento`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -174,7 +174,7 @@ const EventoProductor = ({ evento }) => {
 
 
   const reprogramarEvento = () => {
-    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/reprogramarEvento`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/reprogramarEvento`, {
       method: "POST",
     })
       .then((response) => response.json())

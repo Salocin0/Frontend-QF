@@ -19,7 +19,7 @@ const Evento = ({ evento,recargar }) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const Evento = ({ evento,recargar }) => {
   }, []);
 
   const handleConfirm = () => {
-    fetch(`http://localhost:8000/evento/cambiarEstado/${evento.id}/confirmar`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/confirmar`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -50,7 +50,7 @@ const Evento = ({ evento,recargar }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/evento/${evento.id}}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/${evento.id}}`, {
       method: "DELETE",
       headers: headers,
     })

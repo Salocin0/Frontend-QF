@@ -13,7 +13,7 @@ const Producto = ({ producto, session, idpuesto, recargar }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/producto/${producto.id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${producto.id}`, {
       method: "DELETE",
       headers: headers,
     })

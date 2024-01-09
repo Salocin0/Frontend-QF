@@ -25,7 +25,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +51,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
   };
 
   const pedidoEntregado = () => {
-    fetch(`http://localhost:8000/pedido/cambiarEstado/${pedido.id}/pedidoEntregado`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${pedido.id}/pedidoEntregado`, {
       method: "POST",
     })
       .then((response) => response.json())

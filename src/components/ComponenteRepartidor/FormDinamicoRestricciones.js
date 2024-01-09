@@ -18,7 +18,7 @@ function FormDinamicoRestricciones({ data, userType }) {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +62,7 @@ function FormDinamicoRestricciones({ data, userType }) {
       toast.error("Complete todos los campos");
       console.log(formResponses);
     } else {
-      fetch(`http://localhost:8000/asociacion/evento/${id}/asociar/0/${session.consumidorId}`, {
+      fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/evento/${id}/asociar/0/${session.consumidorId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ function FormDinamicoRestricciones({ data, userType }) {
     headers.append("ConsumidorId", session?.consumidorId);
     headers.append("Content-Type", "application/json");
 
-    fetch(`http://localhost:8000/restriccion/evento/${id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}restriccion/evento/${id}`, {
       method: "GET",
       headers: headers,
     })

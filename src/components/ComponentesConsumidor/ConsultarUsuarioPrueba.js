@@ -75,7 +75,7 @@ const ConsultarUsuario = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -286,7 +286,7 @@ const ConsultarUsuario = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}consumidor/${user.consumidorId}`,
         {
           method: "PUT",
           headers: {
@@ -315,7 +315,7 @@ const ConsultarUsuario = () => {
     try {
       console.log(session)
       const response = await fetch(
-        `http://localhost:8000/user/${session.id}`,
+        `${process.env?.REACT_APP_BACK_URL}user/${session.id}`,
         {
           method: "DELETE",
           headers: {
@@ -372,7 +372,7 @@ const ConsultarUsuario = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/productor/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}productor/${user.consumidorId}`,
         {
           method: "PUT",
           headers: {
@@ -402,7 +402,7 @@ const ConsultarUsuario = () => {
   const confirmarDeshabilitarPE = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/productor/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}productor/${user.consumidorId}`,
         {
           method: "DELETE",
           headers: {
@@ -430,7 +430,7 @@ const ConsultarUsuario = () => {
   const handleVolverAHabilitarPE = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/productor/${user.consumidorId}/habilitacion`,
+        `${process.env?.REACT_APP_BACK_URL}productor/${user.consumidorId}/habilitacion`,
         {
           method: "PUT",
           headers: {
@@ -494,7 +494,7 @@ const ConsultarUsuario = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/encargado/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}encargado/${user.consumidorId}`,
         {
           method: "PUT",
           headers: {
@@ -525,7 +525,7 @@ const ConsultarUsuario = () => {
   const confirmarDeshabilitarEPC = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/encargado/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}encargado/${user.consumidorId}`,
         {
           method: "DELETE",
           headers: {
@@ -554,7 +554,7 @@ const ConsultarUsuario = () => {
  const handleVolverAHabilitarEPC = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/encargado/${user.consumidorId}/habilitacion`,
+        `${process.env?.REACT_APP_BACK_URL}encargado/${user.consumidorId}/habilitacion`,
         {
           method: "PUT",
           headers: {
@@ -606,7 +606,7 @@ const ConsultarUsuario = () => {
   const confirmarDeshabilitarR = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/repartidor/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}repartidor/${user.consumidorId}`,
         {
           method: "DELETE",
           headers: {
@@ -640,7 +640,7 @@ const ConsultarUsuario = () => {
   const handleVolverAHabilitarR = async () => {
     try {
       const response = await fetch(
-        `http://localhost:8000/repartidor/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}repartidor/${user.consumidorId}`,
         {
           method: "PUT",
           headers: {
@@ -680,7 +680,7 @@ const ConsultarUsuario = () => {
 
     try {
       const response1 = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}consumidor/${user.consumidorId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

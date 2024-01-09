@@ -34,7 +34,7 @@ const ListadoProductoDeshabilitado = ({carrito}) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const ListadoProductoDeshabilitado = ({carrito}) => {
       headers.append("ConsumidorId", session.consumidorId);
       headers.append("puestoId", id);
 
-      fetch(`http://localhost:8000/producto/${id}/deshabilitados`, {
+      fetch(`${process.env?.REACT_APP_BACK_URL}producto/${id}/deshabilitados`, {
         method: "GET",
         headers: headers,
       })

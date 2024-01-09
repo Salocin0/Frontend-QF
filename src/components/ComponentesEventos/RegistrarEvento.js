@@ -56,7 +56,7 @@ const RegistrarEvento = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -242,7 +242,7 @@ const RegistrarEvento = () => {
     headers.append("ConsumidorId", session.consumidorId);
     headers.append("Content-Type", "application/json");
 
-    fetch("http://localhost:8000/evento", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(evento),
@@ -342,7 +342,7 @@ const RegistrarEvento = () => {
     headers.append("ConsumidorId", session?.consumidorId);
     headers.append("Content-Type", "application/json");
 
-    fetch("http://localhost:8000/restriccion", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}restriccion`, {
       method: "GET",
       headers: headers,
     })

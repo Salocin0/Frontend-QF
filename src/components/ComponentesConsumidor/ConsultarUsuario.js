@@ -26,7 +26,7 @@ const ConsultarUsuario = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -91,7 +91,7 @@ const ConsultarUsuario = () => {
 
     try {
       const response1 = await fetch(
-        `http://localhost:8000/consumidor/${user.consumidorId}`,
+        `${process.env?.REACT_APP_BACK_URL}consumidor/${user.consumidorId}`,
         {
           method: "GET",
           headers: { "Content-Type": "application/json" },

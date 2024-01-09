@@ -46,7 +46,7 @@ const ListadoEventosProductor = () => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const ListadoEventosProductor = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/evento/all", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}evento/all`, {
         method: "GET",
         headers: headers,
       })

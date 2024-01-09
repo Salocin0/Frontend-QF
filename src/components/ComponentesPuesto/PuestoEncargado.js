@@ -25,7 +25,7 @@ const PuestoEncargado = ({ carrito, recargar }) => {
             return;
         }
 
-        fetch("http://localhost:8000/user/session", {
+        fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const PuestoEncargado = ({ carrito, recargar }) => {
     };
 
     const habilitarPuesto = () => {
-        fetch(`http://localhost:8000/puesto/cambiarEstado/${carrito.id}/habilitar`, {
+        fetch(`${process.env?.REACT_APP_BACK_URL}puesto/cambiarEstado/${carrito.id}/habilitar`, {
             method: "POST",
         })
             .then((response) => response.json())
@@ -73,7 +73,7 @@ const PuestoEncargado = ({ carrito, recargar }) => {
     };
 
     const deshabilitarPuesto = () => {
-        fetch(`http://localhost:8000/puesto/cambiarEstado/${carrito.id}/deshabilitar`, {
+        fetch(`${process.env?.REACT_APP_BACK_URL}puesto/cambiarEstado/${carrito.id}/deshabilitar`, {
             method: "POST",
         })
             .then((response) => response.json())

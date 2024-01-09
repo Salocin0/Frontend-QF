@@ -22,7 +22,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +61,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
     console.log(session.consumidorId);
 
     fetch(
-      `http://localhost:8000/asociacion/evento/${evento.id}/asociarSimple/0/${session.consumidorId}`,
+      `${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento.id}/asociarSimple/0/${session.consumidorId}`,
       {
         method: "POST",
         headers: headers,
@@ -88,7 +88,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
       headers.append("Content-Type", "application/json");
 
       const response = await fetch(
-        `http://localhost:8000/restriccion/evento/${evento.id}`,
+        `${process.env?.REACT_APP_BACK_URL}restriccion/evento/${evento.id}`,
         {
           method: "GET",
           headers: headers,
@@ -123,7 +123,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
         headers.append("ConsumidorId", session?.consumidorId);
         headers.append("Content-Type", "application/json");
         const response = await fetch(
-          `http://localhost:8000/asociacion/evento/${evento.id}/asociarRepartidor/${session.consumidorId}`,
+          `${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento.id}/asociarRepartidor/${session.consumidorId}`,
           {
             method: "GET",
             headers: headers,
