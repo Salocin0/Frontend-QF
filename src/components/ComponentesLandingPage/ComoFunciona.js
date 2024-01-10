@@ -3,7 +3,6 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./../sass/main.scss";
 import img from "./../img/comida-rapida-casera.jpg"
 
-
 const ComoFunciona = () => {
   return (
     <div className="comofunciona h-100">
