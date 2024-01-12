@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-node@v4.0.1
         with:
           cache: 'npm'
-          node-version: '18'
+          node-version: '20'
       - name: Install dependencies
         run: npm install --force
       - name: Run Build
@@ -43,7 +43,7 @@ jobs:
       - uses: actions/setup-node@v4.0.1
         with:
           cache: 'npm'
-          node-version: '18'
+          node-version: '20'
       - name: Install dependencies
         run: npm install --force
       - uses: actions/download-artifact@v4.0.0
