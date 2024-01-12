@@ -17,7 +17,7 @@ const ProductoUser = ({ producto, session, idpuesto, recargar }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/carrito/addToCart/${producto.id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${producto.id}`, {
       method: "PUT",
       headers: headers,
     })

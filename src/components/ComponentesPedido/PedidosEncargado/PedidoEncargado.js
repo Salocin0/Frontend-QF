@@ -24,7 +24,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +52,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
 
   const tomarPedido = () => {
     fetch(
-      `http://localhost:8000/pedido/cambiarEstado/${pedido.id}/tomarPedido`,
+      `${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${pedido.id}/tomarPedido`,
       {
         method: "POST",
       }
@@ -67,7 +67,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
   };
 
   const enPreparacion = () => {
-    fetch(`http://localhost:8000/pedido/cambiarEstado/${pedido.id}/preparar`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${pedido.id}/preparar`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -80,7 +80,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
   };
 
   const cancelarPedido = () => {
-    fetch(`http://localhost:8000/pedido/cambiarEstado/${pedido.id}/cancelar`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${pedido.id}/cancelar`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -94,7 +94,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
 
   const pedidoListo = () => {
     fetch(
-      `http://localhost:8000/pedido/cambiarEstado/${pedido.id}/pedidoPreparado`,
+      `${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${pedido.id}/pedidoPreparado`,
       {
         method: "POST",
       }
@@ -109,7 +109,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
   };
 
   const pedidoEnCamino = () => {
-    fetch(`http://localhost:8000/pedido/cambiarEstado/${pedido.id}/asignar`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${pedido.id}/asignar`, {
       method: "POST",
     })
       .then((response) => response.json())

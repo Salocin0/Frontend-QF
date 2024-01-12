@@ -23,7 +23,7 @@ const VerSolicitudesEvento = () => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ const VerSolicitudesEvento = () => {
 
   useEffect(() => {
     if (!asociaciones.length && evento) {
-      fetch(`http://localhost:8000/asociacion/evento/${evento}`)
+      fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -64,7 +64,7 @@ const VerSolicitudesEvento = () => {
 
   useEffect(() => {
     if (!eventos.length) {
-      fetch(`http://localhost:8000/evento/${evento}`)
+      fetch(`${process.env?.REACT_APP_BACK_URL}evento/${evento}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
@@ -88,7 +88,7 @@ const VerSolicitudesEvento = () => {
   };
 
   const aceptarSolicitud = (asociacionId) => {
-    fetch(`http://localhost:8000/asociacion/cambiarEstado/${asociacionId}/aceptar`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionId}/aceptar`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -101,7 +101,7 @@ const VerSolicitudesEvento = () => {
 
   const rechazarSolicitud = (asociacionId) => {
     console.log(asociacionId);
-    fetch(`http://localhost:8000/asociacion/cambiarEstado/${asociacionId}/rechazada`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionId}/rechazada`, {
       method: "POST",
     })
       .then((response) => response.json())
@@ -115,7 +115,7 @@ const VerSolicitudesEvento = () => {
 
   const cancelarSolicitud = (asociacionId) => {
     console.log(asociacionId);
-    fetch(`http://localhost:8000/asociacion/cambiarEstado/${asociacionId}/cancelar`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionId}/cancelar`, {
       method: "POST",
     })
       .then((response) => response.json())

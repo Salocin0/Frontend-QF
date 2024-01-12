@@ -32,7 +32,7 @@ const ConsultarPuestoSolicitud = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/puesto/${id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/${id}`, {
       method: "DELETE",
       headers: headers,
     })
@@ -67,7 +67,7 @@ const ConsultarPuestoSolicitud = () => {
       telefonoCarro: telefonoCarro,
       consumidorId: session.consumidorId,
     };
-    fetch(`http://localhost:8000/puesto/${id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ const ConsultarPuestoSolicitud = () => {
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +107,7 @@ const ConsultarPuestoSolicitud = () => {
         const headers = new Headers();
         headers.append("ConsumidorId", data.data.consumidorId);
 
-        return fetch(`http://localhost:8000/puesto/consultar/${id}`, {
+        return fetch(`${process.env?.REACT_APP_BACK_URL}puesto/consultar/${id}`, {
           method: "GET",
           headers: headers,
         });
@@ -130,7 +130,7 @@ const ConsultarPuestoSolicitud = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

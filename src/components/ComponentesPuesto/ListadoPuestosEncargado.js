@@ -19,7 +19,7 @@ const ListadoPuestosEncargado = () => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +34,7 @@ const ListadoPuestosEncargado = () => {
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
 
-  //      fetch(`http://localhost:8000/puesto/evento/${idEvento}`, {
+  //      fetch(`${process.env?.REACT_APP_BACK_URL}puesto/evento/${idEvento}`, {
 
   useEffect(() => {
     if (session) {
@@ -42,7 +42,7 @@ const ListadoPuestosEncargado = () => {
       headers.append("ConsumidorId", session?.consumidorId);
       headers.append("Content-Type", "application/json");
 
-      fetch(`http://localhost:8000/puesto/creados`, {
+      fetch(`${process.env?.REACT_APP_BACK_URL}puesto/creados`, {
         method: "GET",
         headers: headers,
       })

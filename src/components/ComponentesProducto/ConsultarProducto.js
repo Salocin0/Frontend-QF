@@ -63,7 +63,7 @@ const ConsultarPuesto = () => {
       return;
     }
 
-    fetch(`http://localhost:8000/producto/${id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +87,7 @@ const ConsultarPuesto = () => {
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -101,7 +101,7 @@ const ConsultarPuesto = () => {
         const headers = new Headers();
         headers.append("ConsumidorId", data.data.consumidorId);
 
-        return fetch(`http://localhost:8000/producto/${id}`, {
+        return fetch(`${process.env?.REACT_APP_BACK_URL}producto/${id}`, {
           method: "GET",
           headers: headers,
         });
@@ -122,7 +122,7 @@ const ConsultarPuesto = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

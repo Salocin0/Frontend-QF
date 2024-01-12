@@ -18,7 +18,7 @@ const AdquirirNuevoRolPE = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,7 +56,7 @@ const AdquirirNuevoRolPE = () => {
       };
 
       const response = await fetch(
-        `http://localhost:8000/user/update/${session.id}/to/productor`,
+        `${process.env?.REACT_APP_BACK_URL}user/update/${session.id}/to/productor`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

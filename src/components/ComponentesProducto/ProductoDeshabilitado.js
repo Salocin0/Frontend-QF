@@ -7,7 +7,7 @@ import "./../sass/main.scss";
 const ProductoDeshabilitado = ({ producto, session, idpuesto, recargar }) => {
   
   const hablitarNuevamente = () => {
-    fetch(`http://localhost:8000/producto/${producto.id}/habilitar`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${producto.id}/habilitar`, {
       method: "PUT",
     })
       .then((response) => response.json())
@@ -20,7 +20,7 @@ const ProductoDeshabilitado = ({ producto, session, idpuesto, recargar }) => {
   };
 
   const EliminarPermanente = () => {
-    fetch(`http://localhost:8000/producto/${producto.id}/permanently`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${producto.id}/permanently`, {
       method: "DELETE",
     })
       .then((response) => response.json())

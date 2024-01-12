@@ -18,7 +18,7 @@ const PuestoUser = ({ carrito }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/puesto/${id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/${id}`, {
       method: "DELETE",
       headers: headers,
     })

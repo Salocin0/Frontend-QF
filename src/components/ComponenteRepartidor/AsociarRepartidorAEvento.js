@@ -35,7 +35,7 @@ const AsociarRepartidorAEvento = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const AsociarRepartidorAEvento = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/evento/enEstado/EnPreparacion", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/EnPreparacion`, {
         method: "GET",
         headers: headers,
       })
@@ -65,7 +65,7 @@ const AsociarRepartidorAEvento = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
 
-      fetch("http://localhost:8000/asociacion/", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/`, {
         method: "GET",
         headers: headers,
       })
@@ -89,7 +89,7 @@ const AsociarRepartidorAEvento = () => {
     headers.append("Content-Type", "application/json");
 
     fetch(
-      `http://localhost:8000/asociacion/evento/${ideventoseleccionado}/asociarSimple/${puestoId}/0`,
+      `${process.env?.REACT_APP_BACK_URL}asociacion/evento/${ideventoseleccionado}/asociarSimple/${puestoId}/0`,
       {
         method: "POST",
         headers: headers,

@@ -37,7 +37,7 @@ const ListadoProducto = ({ carrito }) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +58,7 @@ const ListadoProducto = ({ carrito }) => {
       headers.append("ConsumidorId", session.consumidorId);
       headers.append("puestoId", id);
 
-      fetch("http://localhost:8000/producto", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}producto`, {
         method: "GET",
         headers: headers,
       })
@@ -87,7 +87,7 @@ const ListadoProducto = ({ carrito }) => {
       const headers = new Headers();
       headers.append("ConsumidorId", session.consumidorId);
 
-      fetch("http://localhost:8000/puesto", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}puesto`, {
         method: "GET",
         headers: headers,
       })
@@ -112,7 +112,7 @@ const ListadoProducto = ({ carrito }) => {
   }, [session, recargar]);
 */
   const onDelete = (productId) => {
-    fetch(`http://localhost:8000/producto/${productId}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${productId}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
@@ -154,7 +154,7 @@ const ListadoProducto = ({ carrito }) => {
     };
 
     console.log(JSON.stringify(producto));
-    fetch(`http://localhost:8000/producto/${productId}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${productId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

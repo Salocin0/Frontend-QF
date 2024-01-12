@@ -38,7 +38,7 @@ const ListadoProductoUser = () => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +59,7 @@ const ListadoProductoUser = () => {
       headers.append("ConsumidorId", session.consumidorId);
       headers.append("puestoId", id);
 
-      fetch("http://localhost:8000/producto", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}producto`, {
         method: "GET",
         headers: headers,
       })
@@ -89,7 +89,7 @@ const ListadoProductoUser = () => {
       headers.append("ConsumidorId", session.consumidorId);
       headers.append("puestoId", id);
 
-      fetch(`http://localhost:8000/puesto/consultar/${id}`, {
+      fetch(`${process.env?.REACT_APP_BACK_URL}puesto/consultar/${id}`, {
         method: "GET",
       })
         .then((response) => response.json())
@@ -101,7 +101,7 @@ const ListadoProductoUser = () => {
   }, [session, recargar]);
 
   const onDelete = (productId) => {
-    fetch(`http://localhost:8000/producto/${productId}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${productId}`, {
       method: "DELETE",
     })
       .then((response) => response.json())
@@ -187,7 +187,7 @@ const ListadoProductoUser = () => {
     }
 
     console.log(JSON.stringify(producto));
-    fetch(`http://localhost:8000/producto/${productId}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${productId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

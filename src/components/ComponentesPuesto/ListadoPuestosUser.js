@@ -21,7 +21,7 @@ const ListadoPuestosUser = () => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const ListadoPuestosUser = () => {
   useEffect(() => {
     if (session) {
       console.log(idEvento)
-      fetch(`http://localhost:8000/puesto/evento/${idEvento}`, {
+      fetch(`${process.env?.REACT_APP_BACK_URL}puesto/evento/${idEvento}`, {
         method: "GET",
       })
         .then((response) => response.json())

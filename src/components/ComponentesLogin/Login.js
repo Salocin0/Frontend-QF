@@ -1,60 +1,27 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import React from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import "./../sass/main.scss";
+import useLogin from "../Hooks/UseLogin";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { updateUser } = useContext(UserContext);
+  const { updateUser } = React.useContext(UserContext);
+  const {
+    email,
+    password,
+    handleEmailChange,
+    handlePasswordChange,
+    handleLogin,
+  } = useLogin();
 
-  const navigate = useNavigate();
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const loginResult = await handleLogin();
 
-    const data = {
-      contraseña: password,
-      correoElectronico: email,
-    };
-
-    fetch("http://127.0.0.1:8000/login/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (Number(data.code) === 200) {
-          localStorage.setItem("sessionId",  data.data.sessionId);
-          toast.success("Login correcto");
-          updateUser(data.data);
-          navigate(`/inicio`);
-        } else if(Number(data.code) === 300){
-          toast.info("Email no validado, revisa tu correo");
-          navigate(`/login`);
-        } else if(Number(data.code) === 301){
-          //logica de habilitar usuario
-          toast.info("usuario inhabilitado");
-          navigate(`/habilitar-Usuario-deshabilitado/${data.data.id}`);
-        } else {
-          toast.error("Datos incorrectos");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (loginResult.success) {
+      updateUser(loginResult.data);
+    }
   };
 
   return (

@@ -66,7 +66,7 @@ const ConsultarEvento = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/puesto/${id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/${id}`, {
       method: "DELETE",
       headers: headers,
     })
@@ -119,7 +119,7 @@ const ConsultarEvento = () => {
     };
     console.log(evento);
     // Realizar la solicitud HTTP para enviar los datos al servidor
-    fetch(`http://localhost:8000/evento/${id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -145,7 +145,7 @@ const ConsultarEvento = () => {
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -159,7 +159,7 @@ const ConsultarEvento = () => {
         const headers = new Headers();
         headers.append("ConsumidorId", data.data.consumidorId);
 
-        return fetch(`http://localhost:8000/evento/${id}`, {
+        return fetch(`${process.env?.REACT_APP_BACK_URL}evento/${id}`, {
           method: "GET",
           headers: headers,
         });
@@ -215,7 +215,7 @@ const ConsultarEvento = () => {
     const sessionId = localStorage.getItem("sessionId");
 
     if (sessionId) {
-      fetch("http://localhost:8000/user/session", {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -274,7 +274,7 @@ const ConsultarEvento = () => {
       headers.append("ConsumidorId", session?.consumidorId);
       headers.append("Content-Type", "application/json");
       fetch(
-        `http://localhost:8000/restriccion/${restriccionesEvento[indice].id}`,
+        `${process.env?.REACT_APP_BACK_URL}restriccion/${restriccionesEvento[indice].id}`,
         {
           method: "DELETE",
           headers: headers,
@@ -298,7 +298,7 @@ const ConsultarEvento = () => {
     headers.append("ConsumidorId", session?.consumidorId);
     headers.append("Content-Type", "application/json");
 
-    fetch("http://localhost:8000/restriccion", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}restriccion`, {
       method: "GET",
       headers: headers,
     })
@@ -313,7 +313,7 @@ const ConsultarEvento = () => {
   }, [session]);
 
   useEffect(() => {
-    fetch(`http://localhost:8000/restriccion/evento/${id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}restriccion/evento/${id}`, {
       method: "GET",
     })
       .then((response) => response.json())

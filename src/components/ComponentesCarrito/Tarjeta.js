@@ -17,7 +17,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       return;
     }
 
-    fetch("http://localhost:8000/user/session", {
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +36,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/carrito/removeToCart/${producto.id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/removeToCart/${producto.id}`, {
       method: "PUT",
       headers: headers,
     })
@@ -52,7 +52,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/carrito/deleteProductToCart/${producto.id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/deleteProductToCart/${producto.id}`, {
       method: "PUT",
       headers: headers,
     })
@@ -69,7 +69,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
     headers.append("ConsumidorId", session.consumidorId);
     
 
-    fetch(`http://localhost:8000/carrito/addToCart/${producto.id}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${producto.id}`, {
       method: "PUT",
       headers: headers,
     })
@@ -96,7 +96,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       puestoId: productos[0].puestoId,
     };
 
-    fetch(`http://localhost:8000/pedido`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}pedido`, {
       method: "POST",
       headers: {
         ...headers,
@@ -117,7 +117,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`http://localhost:8000/carrito/deleteProductsToCart/${productos[0].puestoId}`, {
+    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/deleteProductsToCart/${productos[0].puestoId}`, {
       method: "PUT",
       headers: headers,
     })
