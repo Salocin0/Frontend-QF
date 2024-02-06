@@ -93,6 +93,9 @@ const ListadoEventosUsers = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
+    setTimeout(() => {
+      setLoanding(true)
+    }, 3000)
   }, [session, recargar]);
 
 return (

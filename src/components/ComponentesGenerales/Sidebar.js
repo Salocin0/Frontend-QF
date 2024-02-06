@@ -29,7 +29,6 @@ const Sidebar = ({ tipoUsuario }) => {
     setIsRepartidor(usuario === "repartidor");
     setHaveRol(usuario !== "consumidor");
   }, [tipoUsuario, usuario]);
-
   const toggleNotificacion = () => {
     setMostrarNotificacion((prev) => !prev);
   };
