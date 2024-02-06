@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const useLogin = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
@@ -38,7 +38,7 @@ const useLogin = () => {
       const responseData = await response.json();
 
       if (Number(responseData.code) === 200) {
-        localStorage.setItem("sessionId", responseData.data.sessionId);
+        sessionStorage.setItem("sessionId", responseData.data.sessionId);
         toast.success("Login correcto");
         navigate(`/inicio`);
         return { success: true, data: responseData.data };

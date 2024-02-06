@@ -51,7 +51,8 @@
     "test": "cls && react-scripts test --watch --detectOpenHandles",
     "buildCI": "CI=false react-scripts build",
     "testCI": "react-scripts test --watchAll=false",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start": "env-cmd -f .env.dev react-scripts start"
   },
   "eslintConfig": {
     "extends": [

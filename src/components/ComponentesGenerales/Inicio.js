@@ -27,8 +27,7 @@ const Inicio = () => {
     { to: "/inicio", imgSrc: puestos, title: "Puestos" },
   ];
   useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
+    const sessionId = sessionStorage.getItem("sessionId");
     if (sessionId) {
       fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
         method: "POST",
@@ -40,7 +39,6 @@ const Inicio = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
