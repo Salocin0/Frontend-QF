@@ -13,6 +13,7 @@ import AsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
 import Carrito from "../ComponentesCarrito/Carrito";
 import ConsultarUsuario from "../ComponentesConsumidor/ConsultarUsuario";
 import ConsultarUsuarioPrueba from "../ComponentesConsumidor/ConsultarUsuarioPrueba";
+import Notificaciones from "../ComponentesConsumidor/Notificaciones";
 import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
 import AsociacionesEPC from "../ComponentesEPC/AsociacionesEPC";
 import ConsultarUsuarioEPC from "../ComponentesEPC/ConsultarUsuarioEPC";
@@ -33,6 +34,8 @@ import RecuperarContraseña from "../ComponentesLogin/RecuperarContraseña";
 import ValidarEmail from "../ComponentesLogin/ValidarEmail";
 import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
 import ListadoPedidos from "../ComponentesPedido/ListadoPedidos";
+import ListadoPedidosEncargado from "../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado";
+import ListadoPedidosRepartidor from "../ComponentesPedido/PedidosRepartidor/ListadoPedidosRepartidor";
 import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
 import ListadoProducto from "../ComponentesProducto/ListadoProducto";
 import ListadoProductoDeshabilitado from "../ComponentesProducto/ListadoProductoDeshabilitado";
@@ -54,10 +57,8 @@ import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
 import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
-import Sidebar from "./Sidebar";
-import ListadoPedidosEncargado from "../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado";
-import ListadoPedidosRepartidor from "../ComponentesPedido/PedidosRepartidor/ListadoPedidosRepartidor";
 import PruebasToast from "./PruebaToast";
+import Sidebar from "./Sidebar";
 
 export const Main = () => {
   return (
@@ -157,6 +158,7 @@ export const Main = () => {
         <Route path="/pedidos-asignados" element={<ListadoPedidosRepartidor/>} />
 
         <Route path="/pruebasToast" element={<PruebasToast/>} />
+        <Route path="/notificaciones" element={<Notificaciones/>}/>
       </Routes>
     </main>
   );
