@@ -1,5 +1,5 @@
 import { getToken } from '@firebase/messaging';
-import { getAuth, signInAnonymously } from "firebase/auth";
+import { getAuth, signInAnonymously } from 'firebase/auth';
 import { onMessage } from 'firebase/messaging';
 import React, { useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';

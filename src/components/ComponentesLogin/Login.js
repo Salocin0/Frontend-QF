@@ -1,3 +1,4 @@
+import { getToken } from '@firebase/messaging';
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { messaging } from '../../firebase.js';
@@ -24,12 +25,14 @@ const Login = () => {
     if (loginResult.success) {
       updateUser(loginResult.data);
 
-      // Obtiene el token de FCM después de que el usuario haya iniciado sesión correctamente
-      messaging.getToken().then((token) => {
-        console.log('Token de FCM:', token);
-      }).catch((error) => {
-        console.error('Error al obtener el token de FCM:', error);
-      });
+      const activarMensajes = async () => {
+        const token = await getToken(messaging, {
+            vapidKey: "BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o"
+        }).catch(error => console.log("Error"));
+
+        if (token) console.log("Tu token:", token);
+        if (!token) console.log("No tienes token");
+    }
     }
   };
 
