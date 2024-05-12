@@ -15,7 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const messaging = getMessaging(app);
 
-// Obtener el token de registro del usuario
 getToken(messaging, { vapidKey: 'u-7iFoua52pwBqLpAvolH0DTFC5HJu_rtyufauT4i-o' }).then((currentToken) => {
   if (currentToken) {
     console.log('Token de registro:', currentToken);
