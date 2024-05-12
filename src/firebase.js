@@ -1,6 +1,6 @@
-// Importa las funciones necesarias de Firebase
-import { getMessaging } from "@firebase/messaging";
+import { getMessaging, getToken } from "@firebase/messaging";
 import { initializeApp } from "firebase/app";
+import { onMessage } from "firebase/messaging";
 
 // Configuración de tu aplicación en Firebase
 const firebaseConfig = {
@@ -12,8 +12,22 @@ const firebaseConfig = {
   appId: "1:356683367481:web:b73f5ae632eac608bbb9e8"
 };
 
-// Inicializa Firebase con la configuración proporcionada
 const app = initializeApp(firebaseConfig);
 export const messaging = getMessaging(app);
 
+// Obtener el token de registro del usuario
+getToken(messaging, { vapidKey: 'u-7iFoua52pwBqLpAvolH0DTFC5HJu_rtyufauT4i-o' }).then((currentToken) => {
+  if (currentToken) {
+    console.log('Token de registro:', currentToken);
+  } else {
+    console.log('No se pudo obtener el token de registro.');
+  }
+}).catch((err) => {
+  console.log('Error al obtener el token de registro:', err);
+});
 
+// Manejar mensajes entrantes
+onMessage(messaging, (message) => {
+  console.log('Mensaje recibido:', message);
+  // Aquí puedes manejar el mensaje entrante como lo desees
+});

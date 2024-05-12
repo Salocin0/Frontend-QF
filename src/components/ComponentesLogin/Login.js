@@ -1,9 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
+import { messaging } from '../../firebase.js';
+
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import "./../sass/main.scss";
 import useLogin from "../Hooks/UseLogin";
+import "./../sass/main.scss";
 
 const Login = () => {
   const { updateUser } = React.useContext(UserContext);
@@ -21,6 +23,13 @@ const Login = () => {
 
     if (loginResult.success) {
       updateUser(loginResult.data);
+
+      // Obtiene el token de FCM después de que el usuario haya iniciado sesión correctamente
+      messaging.getToken().then((token) => {
+        console.log('Token de FCM:', token);
+      }).catch((error) => {
+        console.error('Error al obtener el token de FCM:', error);
+      });
     }
   };
 
