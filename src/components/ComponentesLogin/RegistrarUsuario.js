@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { fetchToken } from '../../firebase.js'; // Ajusta la ruta según tu estructura de proyecto
 import Footer from "../ComponentesGenerales/Footer";
 import "./RegistrarUsuario.css";
 
@@ -21,6 +22,7 @@ const RegistroUsuario = () => {
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [tokenWeb, setTokenWeb] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,6 +34,9 @@ const RegistroUsuario = () => {
       .catch((error) => {
         console.error(error);
       });
+
+
+    });
   }, []);
 
   const handleNombreChange = (e) => {
@@ -135,50 +140,65 @@ const RegistroUsuario = () => {
     }
 
     const fecha = Date.now();
-    const usuario = {
-      contraseña: password,
-      fechaAlta: fecha,
-      nombreDeUsuario: username,
-      correoElectronico: email,
-      tipoUsuario: "Consumidor",
-    };
-    const consumidor = {
-      nombre: nombre,
-      apellido: apellido,
-      fechaDeNacimiento: fechaNacimiento,
-      dni: dni,
-      localidad: localidad,
-      provincia: provincias.filter((p) => p.id === selectedProvince)[0].nombre,
-      telefono: telefono,
-      usuario: usuario,
-    };
-    const json_consumidor = {
-      correoElectronico: email,
-      contraseña: password,
-      consumidor: consumidor,
-    };
-    fetch("http://127.0.0.1:8000/user/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(json_consumidor),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.code === 200) {
-          toast.success("Usuario registrado correctamente");
-          setTimeout(() => {
-            navigate(`/login`);
-          }, 1500);
-        } else if (data.code === 300) {
-          toast.error("Error el usuario ya existe");
-        } else {
-          toast.error("Error al registrar");
-        }
+
+    fetchToken().then((currentToken) => {
+      if (!currentToken) {
+        toast.error("No se pudo obtener el token de notificación.");
+        return;
+      }
+
+      console.log(currentToken);
+
+      const usuario = {
+        contraseña: password,
+        fechaAlta: fecha,
+        nombreDeUsuario: username,
+        correoElectronico: email,
+        tipoUsuario: "Consumidor",
+        tokenWeb: currentToken,  // Añadir el token web aquí
+      };
+
+      const consumidor = {
+        nombre: nombre,
+        apellido: apellido,
+        fechaDeNacimiento: fechaNacimiento,
+        dni: dni,
+        localidad: localidad,
+        provincia: provincias.filter((p) => p.id === selectedProvince)[0].nombre,
+        telefono: telefono,
+        usuario: usuario,
+      };
+
+      const json_consumidor = {
+        correoElectronico: email,
+        contraseña: password,
+        consumidor: consumidor,
+      };
+
+      fetch("http://127.0.0.1:8000/user/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(json_consumidor),
       })
-      .catch((error) => {
-        console.error(error);
-      });
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.code === 200) {
+            toast.success("Usuario registrado correctamente");
+            setTimeout(() => {
+              navigate(`/login`);
+            }, 1500);
+          } else if (data.code === 300) {
+            toast.error("Error el usuario ya existe");
+          } else {
+            toast.error("Error al registrar");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
   };
+
 
   return (
     <>
@@ -238,11 +258,9 @@ const RegistroUsuario = () => {
                     DNI
                   </label>
                   <input
-                    type="number"
+                    type="text"
                     id="dni"
                     className="form-control"
-                    min="0"
-                    max="99999999"
                     value={dni}
                     onChange={handleDniChange}
                     required
@@ -260,12 +278,10 @@ const RegistroUsuario = () => {
                     onChange={handleProvinceChange}
                     required
                   >
-                    <option value="" disabled>
-                      Seleccione una provincia
-                    </option>
-                    {provincias.map((prov) => (
-                      <option key={prov.id} value={prov.id}>
-                        {prov.nombre}
+                    <option value="">Selecciona una provincia</option>
+                    {provincias.map((provincia) => (
+                      <option key={provincia.id} value={provincia.id}>
+                        {provincia.nombre}
                       </option>
                     ))}
                   </select>
@@ -275,19 +291,17 @@ const RegistroUsuario = () => {
                   <label className="mb-2 text-black" htmlFor="localidad">
                     Localidad
                   </label>
-
                   <select
-                    className="form-control mt-2"
+                    id="localidad"
+                    className="form-control"
                     value={localidad}
                     onChange={handleLocalidadChange}
                     required
                   >
-                    <option value="" disabled>
-                      Seleccione una localidad
-                    </option>
-                    {filteredLocalidades.map((loc) => (
-                      <option key={loc.nombre} value={loc.nombre}>
-                        {loc.nombre}
+                    <option value="">Selecciona una localidad</option>
+                    {filteredLocalidades.map((localidad) => (
+                      <option key={localidad.id} value={localidad.nombre}>
+                        {localidad.nombre}
                       </option>
                     ))}
                   </select>
@@ -298,7 +312,7 @@ const RegistroUsuario = () => {
                     Teléfono
                   </label>
                   <input
-                    type="number"
+                    type="tel"
                     id="telefono"
                     className="form-control"
                     value={telefono}
@@ -309,7 +323,7 @@ const RegistroUsuario = () => {
 
                 <div className="mb-3">
                   <label className="mb-2 text-black" htmlFor="username">
-                    Nombre de Usuario
+                    Nombre de usuario
                   </label>
                   <input
                     type="text"
@@ -317,20 +331,6 @@ const RegistroUsuario = () => {
                     className="form-control"
                     value={username}
                     onChange={handleUsernameChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="email">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    className="form-control"
-                    value={email}
-                    onChange={handleEmailChange}
                     required
                   />
                 </div>
@@ -350,7 +350,7 @@ const RegistroUsuario = () => {
                     />
                     <button
                       type="button"
-                      className="btn btn-primary"
+                      className="btn btn-outline-secondary"
                       onClick={toggleShowPassword}
                     >
                       {showPassword ? "Ocultar" : "Mostrar"}
@@ -373,7 +373,7 @@ const RegistroUsuario = () => {
                     />
                     <button
                       type="button"
-                      className="btn btn-primary"
+                      className="btn btn-outline-secondary"
                       onClick={toggleShowConfirmPassword}
                     >
                       {showConfirmPassword ? "Ocultar" : "Mostrar"}
@@ -382,7 +382,7 @@ const RegistroUsuario = () => {
                 </div>
 
                 <div className="d-grid">
-                  <button type="submit" className="btn btn-success">
+                  <button type="submit" className="btn btn-primary">
                     Registrar
                   </button>
                 </div>
@@ -390,8 +390,8 @@ const RegistroUsuario = () => {
             </div>
           </div>
         </div>
-        <Footer className="footer" />
       </div>
+      <Footer />
     </>
   );
 };

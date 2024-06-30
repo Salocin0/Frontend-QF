@@ -1,12 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./../../sass/main.scss";
+import { fetchToken } from "../../../firebase.js"; // Asegúrate de importar fetchToken
 import Footer from "../../ComponentesGenerales/Footer";
+import "./../../sass/main.scss";
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
+  const [currentToken, setCurrentToken] = useState(null); // Estado para almacenar el token web
+
+  useEffect(() => {
+    // Función para obtener el token web al cargar el componente
+    fetchToken()
+      .then((token) => setCurrentToken(token))
+      .catch((error) => {
+        console.error("Error al obtener el token web:", error);
+        toast.error("Error al obtener el token web. Inténtalo de nuevo más tarde.");
+      });
+  }, []);
 
   const [userData, setUserData] = useState({
     username: "",
@@ -35,12 +47,12 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     e.preventDefault();
 
     if (!userData.username.trim()) {
-      toast.error("el nombre de usuario no puede estar vacío.");
+      toast.error("El nombre de usuario no puede estar vacío.");
       return;
     }
 
     if (userData.email.length === 0) {
-      toast.error("el email no puede estar vacío.");
+      toast.error("El email no puede estar vacío.");
       return;
     }
 
@@ -59,8 +71,19 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
       return;
     }
 
-    handleRegistro(userData);
-    nextStep();
+    if (!currentToken) {
+      toast.error("No se ha podido obtener el token web. Inténtalo de nuevo.");
+      return;
+    }
+
+    // Incluir el token web en userData
+    const userDataWithToken = {
+      ...userData,
+      tokenWeb: currentToken,
+    };
+
+    handleRegistro(userDataWithToken); // Envía userData con el token al backend
+    nextStep(); // Avanza al siguiente paso si todo es correcto
   };
 
   return (
