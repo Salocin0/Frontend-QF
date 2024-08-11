@@ -63,6 +63,7 @@ const ProcesoRegistro = () => {
           nombreDeUsuario: userData.username,
           correoElectronico: userData.email,
           tipoUsuario: tipoUsuario,
+          tokenWeb: userData.tokenWeb,
         },
         consumidor: {
           nombre: consumidorData.nombre,
@@ -86,6 +87,7 @@ const ProcesoRegistro = () => {
         },
       };
       console.log(JSON.stringify(datosRegistro));
+      console.log(datosRegistro.tokenWeb);
 
       fetch("http://127.0.0.1:8000/user/", {
         method: "POST",

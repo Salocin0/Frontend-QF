@@ -35,6 +35,7 @@ import ValidarEmail from "../ComponentesLogin/ValidarEmail";
 import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
 import ListadoPedidos from "../ComponentesPedido/ListadoPedidos";
 import ListadoPedidosEncargado from "../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado";
+import ListadoPedidosEncargado2 from "../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado2";
 import ListadoPedidosRepartidor from "../ComponentesPedido/PedidosRepartidor/ListadoPedidosRepartidor";
 import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
 import ListadoProducto from "../ComponentesProducto/ListadoProducto";
@@ -59,6 +60,7 @@ import Home from "./Home";
 import Inicio from "./Inicio";
 import PruebasToast from "./PruebaToast";
 import Sidebar from "./Sidebar";
+
 
 export const Main = () => {
   return (
@@ -154,11 +156,15 @@ export const Main = () => {
         <Route path="/grafica-encargado" element={<PanelEncargado/>} />
 
         <Route path="/pedidos-Encargado" element={<ListadoPedidosEncargado/>} />
+        <Route path="/pedidos-Encargado2" element={<ListadoPedidosEncargado2/>} />
+
 
         <Route path="/pedidos-asignados" element={<ListadoPedidosRepartidor/>} />
 
         <Route path="/pruebasToast" element={<PruebasToast/>} />
         <Route path="/notificaciones" element={<Notificaciones/>}/>
+
+
       </Routes>
     </main>
   );

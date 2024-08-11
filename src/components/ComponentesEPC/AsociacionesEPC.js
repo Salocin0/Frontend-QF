@@ -178,7 +178,7 @@ return (
                       experiencia única a tus consumidores.
                     </p>
                   </div>
-                  <Link to={`/registrar-evento`} className="LinkAgregarEvento">
+                  <Link to={`/asociarPuestoAEvento`} className="LinkAgregarEvento">
                     Asociarme a Evento
                   </Link>
                 </div>
