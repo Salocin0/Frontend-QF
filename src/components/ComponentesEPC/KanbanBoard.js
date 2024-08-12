@@ -1,6 +1,7 @@
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect, useState } from 'react';
+import { toast } from "react-toastify";
 import "./.././sass/main.css";
 
 const initialData = {
@@ -13,17 +14,28 @@ const initialData = {
     },
     'column-2': {
       id: 'column-2',
-      title: 'En Preparación',
+      title: 'Aceptado',
       taskIds: [],
     },
     'column-3': {
       id: 'column-3',
+      title: 'En Preparación',
+      taskIds: [],
+    },
+    'column-4': {
+      id: 'column-4',
+      title: 'En Camino',
+      taskIds: [],
+    },
+    'column-5': {
+      id: 'column-5',
       title: 'Entregado',
       taskIds: [],
     },
   },
-  columnOrder: ['column-1', 'column-2', 'column-3'],
+  columnOrder: ['column-1', 'column-2', 'column-3', 'column-4', 'column-5'],
 };
+
 
 const KanbanBoard = () => {
   const [data, setData] = useState(initialData);
@@ -34,6 +46,8 @@ const KanbanBoard = () => {
   const recargarComponente = () => {
     setRecargar(prevRecargar => prevRecargar + 1);
   };
+
+
 
   useEffect(() => {
     const sessionId = localStorage.getItem('sessionId');
@@ -91,10 +105,18 @@ const KanbanBoard = () => {
               },
               'column-2': {
                 ...initialData.columns['column-2'],
-                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'EnPreparacion'),
+                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'Aceptado'),
               },
               'column-3': {
                 ...initialData.columns['column-3'],
+                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'EnPreparacion'),
+              },
+              'column-4': {
+                ...initialData.columns['column-4'],
+                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'EnCamino'),
+              },
+              'column-5': {
+                ...initialData.columns['column-5'],
                 taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'Entregado'),
               },
             },
@@ -105,6 +127,32 @@ const KanbanBoard = () => {
         .catch((error) => console.log('No existen pedidos.', error));
     }
   }, [session, recargar]);
+
+  const updatePedidoState = (taskId, newColumnId) => {
+
+    const taskId2 = taskId.split('-')[1];
+
+    const newState = {
+      'column-1': 'Pendiente',
+      'column-2': 'Aceptado',
+      'column-3': 'En Preparación',
+      'column-4': 'En Camino',
+      'column-5': 'Entregado',
+    };
+
+    const newEstado = newState[newColumnId];
+
+    fetch(`${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${taskId2}/${newEstado}`, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        toast.success(`Pedido ${newEstado}`);
+        recargarComponente();
+      })
+      .catch((error) => console.error("Error updating pedido state:", error));
+  };
+
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
@@ -174,42 +222,78 @@ const KanbanBoard = () => {
         };
 
         setData(newState);
+
+        // Update the state in the backend
+        updatePedidoState(task.id, finish.id);
+
         setConfirmPopup(null);
       },
       onCancel: () => setConfirmPopup(null),
     });
   };
 
+
   const getStatusColor = (estado) => {
     switch (estado) {
       case 'Pendiente':
         return '#FFC107'; // Amarillo
       case 'EnPreparacion':
-        return '#17A2B8'; // Azul
+        return 'lightblue'; // Azul
+      case 'EnCamino':
+        return 'pink'; // Azul
       case 'Entregado':
-        return '#28A745'; // Verde
+        return 'green'; // Verde
+        case 'Aceptado':
+          return 'lightgreen'; // Verde
       default:
         return '#6C757D'; // Gris
     }
   };
 
+
+
   const handleDelete = (taskId) => {
-    const newTasks = { ...data.tasks };
-    delete newTasks[taskId];
+    const taskId2 = taskId.split('-')[1];
 
-    const newColumns = { ...data.columns };
-    Object.keys(newColumns).forEach(columnId => {
-      newColumns[columnId].taskIds = newColumns[columnId].taskIds.filter(id => id !== taskId);
-    });
+    fetch(`${process.env.REACT_APP_BACK_URL}pedido/cambiarEstado/${taskId2}/Cancelado`, {
+      method: "POST",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        window.location.reload()
 
-    const newState = {
-      ...data,
-      tasks: newTasks,
-      columns: newColumns,
-    };
+        toast.success(`Pedido Cancelado`);
 
-    setData(newState);
+        // Asegúrate de que data está definido antes de manipularlo
+        if (!data || !data.tasks || !data.columns) {
+          console.error("Datos no definidos correctamente:", data);
+          return;
+        }
+
+        const newTasks = { ...data.tasks };
+        delete newTasks[taskId];
+
+        const newColumns = { ...data.columns };
+        Object.keys(newColumns).forEach((columnId) => {
+          newColumns[columnId].taskIds = newColumns[columnId].taskIds.filter(
+            (id) => id !== taskId
+          );
+        });
+
+        const newState = {
+          ...data,
+          tasks: newTasks,
+          columns: newColumns,
+        };
+
+        setData(newState);
+
+      })
+      .catch((error) => console.error("Error canceling pedido:", error));
   };
+
+
+
 
   return (
     <div style={{ display: 'flex', height: '100vh', margin: 0, padding: 0 }}>
@@ -220,8 +304,12 @@ const KanbanBoard = () => {
 
           const headerColors = {
             'column-1': '#FFC107', // Amarillo
-            'column-2': '#17A2B8', // Azul
-            'column-3': '#28A745', // Verde
+            'column-2': 'lightgreen',
+            'column-3': 'lightblue', // Verde
+            'column-4': 'pink', // Verde
+            'column-5': 'green',
+
+
           };
 
           return (
@@ -254,7 +342,7 @@ const KanbanBoard = () => {
                             {...provided.dragHandleProps}
                             style={{
                               userSelect: 'none',
-                              padding: '16px',
+                              padding: '8px',
                               margin: '0 0 8px 0',
                               minHeight: '100px',
                               backgroundColor: '#000',
@@ -278,17 +366,18 @@ const KanbanBoard = () => {
                                   color: '#F7B813',
                                   fontSize: '24px',
                                   cursor: 'pointer',
+                                  marginTop: '-30px',
                                 }}
                               >
                                 &times;
                               </button>
                             </div>
-                            <div style={{ marginTop: '8px' }}>
+                            <div style={{ marginTop: '4px', marginBottom: '8px' }}>
                               <div>{new Date(task.fecha).toLocaleDateString()} {new Date(task.fecha).toLocaleTimeString()}</div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
                               <div style={{ fontWeight: 'bold', fontSize: '1.5em' }}>${Number(task.total).toFixed(2)}</div>
-                              <div style={{ backgroundColor: getStatusColor(task.estado), color: '#FFF', padding: '4px 8px', borderRadius: '4px' }}>
+                              <div style={{ backgroundColor: getStatusColor(task.estado), color: 'black', padding: '8px 2px', fontSize: '10px', fontWeight: 'bold',  borderRadius: '4px' }}>
                                 {task.estado}
                               </div>
                             </div>
