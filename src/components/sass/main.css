@@ -991,6 +991,60 @@ body {
   --bs-gutter-x: 0;
 }
 
+
+.suggestions-list {
+  position: absolute;
+  border: 1px solid #F7B813;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #5d5d5d;
+  z-index: 1000;
+  margin-top: 5px;
+  padding: 0;
+  list-style: none; /* Quitar los puntos de los ítems */
+}
+
+.suggestion-item {
+  padding: 10px;
+  border-bottom: 1px solid #eee; /* Borde entre ítems */
+  cursor: pointer;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none; /* Quitar el borde del último ítem */
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
+  cursor: pointer; /* Cambiar el cursor a mano */
+}
+
+
+.suggestions-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: calc(100% - 2px); /* Asegura que el ancho sea igual al del input, menos el borde */
+  border: 1px solid #F7B813; /* Borde amarillo oscuro */
+  background-color: #1e1e1e; /* Fondo gris */
+  z-index: 1000; /* Asegura que el contenedor esté sobre otros elementos */
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  color: #F7B813; /* Texto amarillo */
+  background-color: #1e1e1e; /* Fondo gris */
+  border-bottom: 1px solid #F7B813; /* Borde amarillo oscuro */
+}
+
+.suggestion-item:hover {
+  background-color: #1e1e1e; /* Fondo gris más oscuro al pasar el mouse */
+}
+
+
+
 body {
   background-color: #1C2135;
 }/*# sourceMappingURL=main.css.map */

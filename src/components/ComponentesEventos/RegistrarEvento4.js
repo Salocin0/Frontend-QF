@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.scss";
 
@@ -9,15 +10,23 @@ const RegistrarEvento4 = () => {
 
     const [horasPorDia, setHorasPorDia] = useState([]);
     const [session, setSession] = useState(null);
+    const [evento, setEvento] = useState(null);
 
     useEffect(() => {
-        const horas = Array.from({ length: diferenciaDiasEvento }, (_, index) => ({
+        const storedEvent = JSON.parse(localStorage.getItem('eventoDatos'));
+        if (storedEvent) {
+          setEvento(storedEvent);
+          const horas = Array.from({ length: diferenciaDiasEvento }, (_, index) => ({
             dia: index + 1,
             horaInicio: "",
             horaFin: "",
-        }));
-        setHorasPorDia(horas);
-    }, [diferenciaDiasEvento]);
+          }));
+          setHorasPorDia(horas);
+        } else {
+          toast.error("No se encontraron datos del evento.");
+          navigate('/registrar-evento3'); // Redirigir si no hay datos
+        }
+      }, [diferenciaDiasEvento, navigate]);
 
     const handleInputChange = (dia, campo, value) => {
         setHorasPorDia((horasAnteriores) =>
@@ -30,7 +39,39 @@ const RegistrarEvento4 = () => {
     const handleSiguienteClick = (e) => {
         e.preventDefault();
 
+        const datosHoras = horasPorDia.reduce((acc, hora) => {
+            acc[`horaInicioDia${hora.dia}`] = hora.horaInicio;
+            acc[`horaFinDia${hora.dia}`] = hora.horaFin;
+            return acc;
+        }, {});
 
+        const eventoCompleto = {
+            ...evento,
+            diferenciaDiasEvento,
+            ...datosHoras,
+        };
+
+        fetch(`${process.env?.REACT_APP_BACK_URL}evento`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${session?.token}`,  // Asumiendo que la sesión tiene un token para autenticación
+            },
+            body: JSON.stringify(eventoCompleto),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.code === 200) {
+                    toast.success("Evento registrado correctamente");
+                    navigate(`/listado-eventos-productor`);
+                } else {
+                    toast.error("Error al registrar el evento");
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                toast.error("Error al registrar el evento");
+            });
     };
 
     return (
@@ -45,11 +86,9 @@ const RegistrarEvento4 = () => {
                             <h3 className="tituloSeccion">Horas del Evento</h3>
 
                             {horasPorDia.map((hora) => (
-
-                                <div className="row">
+                                <div key={hora.dia} className="row">
                                     <div className="col-md-6">
-                                    <br></br>
-
+                                        <br />
                                         <div className="form-group">
                                             <label className="form-label">
                                                 Hora de Inicio - Día {hora.dia}*
@@ -65,8 +104,7 @@ const RegistrarEvento4 = () => {
                                         </div>
                                     </div>
                                     <div className="col-md-6">
-                                                                            <br></br>
-
+                                        <br />
                                         <div className="form-group">
                                             <label className="form-label">
                                                 Hora de Fin - Día {hora.dia}*
@@ -81,11 +119,8 @@ const RegistrarEvento4 = () => {
                                             />
                                         </div>
                                         <br />
-
                                     </div>
-
                                 </div>
-
                             ))}
 
                             <div className="col-12 d-flex justify-content-end">
