@@ -249,7 +249,7 @@ const RegistrarEvento2 = () => {
                     className={`opcionesEvento ${selectedOptionEvento === 1 ? 'selected' : ''}`}
                     onClick={() => handleOptionClickEvento(1)}
                   >
-                    Cine
+                    Cines
                   </div>
                   <div
                     className={`opcionesEvento ${selectedOptionEvento === 2 ? 'selected' : ''}`}

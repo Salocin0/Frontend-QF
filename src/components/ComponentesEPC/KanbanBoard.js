@@ -32,8 +32,13 @@ const initialData = {
       title: 'Entregado',
       taskIds: [],
     },
+    'column-6': {
+      id: 'column-6',
+      title: 'Cancelado',
+      taskIds: [],
+    },
   },
-  columnOrder: ['column-1', 'column-2', 'column-3', 'column-4', 'column-5'],
+  columnOrder: ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'],
 };
 
 
@@ -42,6 +47,8 @@ const KanbanBoard = () => {
   const [session, setSession] = useState(null);
   const [recargar, setRecargar] = useState(0);
   const [confirmPopup, setConfirmPopup] = useState(null);
+  const [showCancelledColumn, setShowCancelledColumn] = useState(false);
+
 
   const recargarComponente = () => {
     setRecargar(prevRecargar => prevRecargar + 1);
@@ -119,6 +126,10 @@ const KanbanBoard = () => {
                 ...initialData.columns['column-5'],
                 taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'Entregado'),
               },
+              'column-6': {
+                ...initialData.columns['column-6'],
+                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'Cancelado'),
+              },
             },
           };
 
@@ -138,6 +149,8 @@ const KanbanBoard = () => {
       'column-3': 'En Preparación',
       'column-4': 'En Camino',
       'column-5': 'Entregado',
+      'column-6': 'Cancelado',
+
     };
 
     const newEstado = newState[newColumnId];
@@ -243,8 +256,10 @@ const KanbanBoard = () => {
         return 'pink'; // Azul
       case 'Entregado':
         return 'green'; // Verde
-        case 'Aceptado':
-          return 'lightgreen'; // Verde
+      case 'Aceptado':
+        return 'lightgreen'; // Verde
+      case 'Cancelado':
+        return 'red'; // Verde
       default:
         return '#6C757D'; // Gris
     }
@@ -302,15 +317,25 @@ const KanbanBoard = () => {
           const column = data.columns[columnId];
           const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
 
+
+
           const headerColors = {
             'column-1': '#FFC107', // Amarillo
             'column-2': 'lightgreen',
             'column-3': 'lightblue', // Verde
             'column-4': 'pink', // Verde
             'column-5': 'green',
+            'column-6': 'red',
 
 
           };
+
+          if (columnId === 'column-6' && !showCancelledColumn) {
+            return null; // No renderizar la columna si está oculta
+          } else if (columnId === 'column-3')  {
+            column.title = 'En Prep.'
+
+          }
 
           return (
             <div key={column.id} style={{ flex: 1, margin: '8px' }}>
@@ -377,7 +402,7 @@ const KanbanBoard = () => {
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
                               <div style={{ fontWeight: 'bold', fontSize: '1.5em' }}>${Number(task.total).toFixed(2)}</div>
-                              <div style={{ backgroundColor: getStatusColor(task.estado), color: 'black', padding: '8px 2px', fontSize: '10px', fontWeight: 'bold',  borderRadius: '4px' }}>
+                              <div style={{ backgroundColor: getStatusColor(task.estado), color: 'black', padding: '8px 2px', fontSize: '10px', fontWeight: 'bold', borderRadius: '4px' }}>
                                 {task.estado}
                               </div>
                             </div>
@@ -403,16 +428,41 @@ const KanbanBoard = () => {
           padding: '20px',
           backgroundColor: '#FFF',
           boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+          border: '2px solid #000',
           borderRadius: '4px',
           zIndex: 1000,
           textAlign: 'center',
+          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+          color: '#000',
         }}>
-          <h4 style={{ margin: 0 }}>Confirmar Movimiento</h4>
-          <p style={{ margin: '10px 0' }}>¿Estás seguro de que deseas mover el pedido #{confirmPopup.taskId} de la columna "{data.columns[confirmPopup.fromColumn].title}" a la columna "{data.columns[confirmPopup.toColumn].title}"?</p>
-          <button onClick={confirmPopup.onConfirm} style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: '#28A745', color: '#FFF', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Confirmar</button>
-          <button onClick={confirmPopup.onCancel} style={{ padding: '10px 20px', backgroundColor: '#DC3545', color: '#FFF', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Cancelar</button>
+          <h4 style={{ margin: 0, color: '#000' }}>Confirmar Movimiento</h4>
+          <p style={{ margin: '10px 0', color: '#000' }}>
+            ¿Mover pedido #{confirmPopup.taskId.replace('task-', '')} al estado "{data.columns[confirmPopup.toColumn].title}"?
+          </p>
+          <button onClick={confirmPopup.onConfirm} style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: '#28A745', color: '#FFF', border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 4px 8px rgba(0,0,0,0.2)' }}>
+            Confirmar
+          </button>
+          <button onClick={confirmPopup.onCancel} style={{ padding: '10px 20px', backgroundColor: '#DC3545', color: '#FFF', border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 4px 8px rgba(0,0,0,0.2)' }}>
+            Cancelar
+          </button>
         </div>
       )}
+<button
+onClick={() => setShowCancelledColumn(!showCancelledColumn)}        style={{
+          position: 'fixed',
+          bottom: 20,
+          right: 20,
+          backgroundColor: 'black',
+          color: '#FFC107',
+          border: '2px solid #FFC107',
+          borderRadius: 50,
+          padding: '10px 20px',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          cursor: 'pointer',
+        }}
+      >
+          {showCancelledColumn ? 'Ocultar Cancelados' : 'Pedidos Cancelados'}
+          </button>
     </div>
   );
 };
