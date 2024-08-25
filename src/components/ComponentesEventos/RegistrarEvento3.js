@@ -16,9 +16,9 @@ const RegistrarEvento3 = () => {
   const [fechaInicioEvento, setFechaInicioEvento] = useState("");
   const [fechaFinEvento, setFechaFinEvento] = useState("");
   const [tienePreventa, setTienePreventa] = useState(false);
-  const [fechaInicioPreventa, setFechaInicioPreventa] = useState("");
-  const [fechaFinPreventa, setFechaFinPreventa] = useState("");
-  const [plazoCancelacionPreventa, setPlazoCancelacionPreventa] = useState("");
+  const [diasAntesInicioPreventa, setDiasAntesInicioPreventa] = useState(""); // Asegúrate de definir esto correctamente
+  const [horasAntesInicioEvento, setHorasAntesInicioEvento] = useState("");
+  const [todosLosDiasPreventa, setTodosLosDiasPreventa] = useState("");
   const [cantidadPuestos, setCantidadPuestos] = useState("");
   const [tieneRepartidores, setTieneRepartidores] = useState(false);
   const [cantidadRepartidores, setCantidadRepartidores] = useState("");
@@ -27,6 +27,7 @@ const RegistrarEvento3 = () => {
   const [selectedOptionPreventa, setSelectedOptionPreventa] = useState(2);
   const [selectedOptionRepartidores, setSelectedOptionRepartidores] = useState(2);
   const [selectedOptionButacas, setSelectedOptionButacas] = useState(2);
+  const [seccionPreventaBloqueada, setSeccionPreventaBloqueada] = useState(true); // Estado para bloquear la sección
 
   const { id } = useParams();
   const [session, setSession] = useState(null);
@@ -77,25 +78,16 @@ const RegistrarEvento3 = () => {
     }
 
     if (tienePreventa) {
-      if (!fechaInicioPreventa.trim()) {
-        toast.error("Seleccione una fecha de inicio de preventa");
+      if (!diasAntesInicioPreventa.trim()) {
+        toast.error("Ingrese los días antes del inicio que desea iniciar la preventa");
         return;
       }
 
-      if (!fechaFinPreventa.trim()) {
-        toast.error("Seleccione una fecha de fin de preventa");
+      if (!horasAntesInicioEvento.trim()) {
+        toast.error("Ingrese las horas antes del inicio del evento que desea que arranque la preventa");
         return;
       }
 
-      if (!plazoCancelacionPreventa.trim()) {
-        toast.error("Ingrese el plazo de cancelación de preventa");
-        return;
-      }
-    }
-
-    if (!cantidadPuestos.trim()) {
-      toast.error("Ingrese cantidad de puestos");
-      return;
     }
 
     if (tieneRepartidores && !cantidadRepartidores.trim()) {
@@ -103,7 +95,6 @@ const RegistrarEvento3 = () => {
       return;
     }
 
-    // Unir los datos del evento inicial con los nuevos datos
     const eventoDatos = {
       nombre,
       descripcion,
@@ -119,9 +110,9 @@ const RegistrarEvento3 = () => {
       fechaFinEvento,
       diferenciaDiasEvento,
       tienePreventa,
-      fechaInicioPreventa,
-      fechaFinPreventa,
-      plazoCancelacionPreventa,
+      diasAntesInicioPreventa,
+      horasAntesInicioEvento,
+      todosLosDiasPreventa,
       cantidadPuestos,
       tieneRepartidores,
       cantidadRepartidores,
@@ -192,19 +183,6 @@ const RegistrarEvento3 = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="cantidadPuestos" className="form-label">
-                  Cantidad de Puestos de Comida*
-                </label>
-                <input
-                  type="number"
-                  id="cantidadPuestos"
-                  className="form-input"
-                  value={cantidadPuestos}
-                  onChange={(e) => setCantidadPuestos(e.target.value)}
-                />
-              </div>
-
-              <div className="form-group">
                 <label htmlFor="preventa" className="form-label">
                   Preventa*
                 </label>
@@ -226,63 +204,49 @@ const RegistrarEvento3 = () => {
 
               {tienePreventa && (
                 <>
-                  <div className="form-group">
-                    <label htmlFor="fechaInicioPreventa" className="form-label">
-                      Fecha Inicio Preventa*
-                    </label>
-                    <input
-                      type="date"
-                      id="fechaInicioPreventa"
-                      className="form-input"
-                      value={fechaInicioPreventa}
-                      onChange={(e) => setFechaInicioPreventa(e.target.value)}
-                    />
-                  </div>
+                <div className="form-group">
+                  <label htmlFor="diasAntesInicioPreventa" className="form-label">
+                    ¿Cuántos días antes del inicio quieres iniciar la preventa?*
+                  </label>
+                  <input
+                    type="number"
+                    id="diasAntesInicioPreventa"
+                    className="form-input"
+                    value={diasAntesInicioPreventa}
+                    onChange={(e) => setDiasAntesInicioPreventa(e.target.value)}
+                  />
+                </div>
 
-                  <div className="form-group">
-                    <label htmlFor="fechaFinPreventa" className="form-label">
-                      Fecha Fin Preventa*
-                    </label>
-                    <input
-                      type="date"
-                      id="fechaFinPreventa"
-                      className="form-input"
-                      value={fechaFinPreventa}
-                      onChange={(e) => setFechaFinPreventa(e.target.value)}
-                    />
-                  </div>
+                <div className="form-group">
+                  <label htmlFor="horasAntesInicioEvento" className="form-label">
+                    ¿Cuántas horas antes del inicio del evento quieres que arranque la preventa?*
+                  </label>
+                  <input
+                    type="number"
+                    id="horasAntesInicioEvento"
+                    className="form-input"
+                    value={horasAntesInicioEvento}
+                    onChange={(e) => setHorasAntesInicioEvento(e.target.value)}
+                  />
+                </div>
 
-                  <div className="form-group">
-                    <label htmlFor="plazoCancelacionPreventa" className="form-label">
-                      Plazo de Cancelación (Días)*
-                    </label>
-                    <input
-                      type="number"
-                      id="plazoCancelacionPreventa"
-                      className="form-input"
-                      value={plazoCancelacionPreventa}
-                      onChange={(e) => setPlazoCancelacionPreventa(e.target.value)}
-                    />
+                <div className="form-group">
+                  <label htmlFor="todosLosDiasPreventa" className="form-label">
+                    ¿Todos los días tendrán preventa?*
+                  </label>
+                  <div className="option-container-evento" style={{ opacity: 0.5, pointerEvents: 'none' }}>
+                    <div className="opcionesEvento selected">
+                      Work in Progress
+                    </div>
                   </div>
+                </div>
                 </>
               )}
 
-              <div className="form-group">
-                <label htmlFor="capacidadMaxima" className="form-label">
-                  Capacidad Máxima del Evento (Personas)
-                </label>
-                <input
-                  type="number"
-                  id="capacidadMaxima"
-                  className="form-input"
-                  value={capacidadMaxima}
-                  onChange={(e) => setCapacidadMaxima(e.target.value)}
-                />
-              </div>
 
               <div className="form-group">
                 <label htmlFor="repartidores" className="form-label">
-                  ¿Utilizará repartidores?*
+                  Repartidores*
                 </label>
                 <div className="option-container-evento">
                   <div
@@ -317,7 +281,7 @@ const RegistrarEvento3 = () => {
 
               <div className="form-group">
                 <label htmlFor="butacas" className="form-label">
-                  ¿Evento con butacas?*
+                  ¿Hay butacas?*
                 </label>
                 <div className="option-container-evento">
                   <div
@@ -335,9 +299,24 @@ const RegistrarEvento3 = () => {
                 </div>
               </div>
 
+              {tieneButacas && (
+                <div className="form-group">
+                  <label htmlFor="capacidadMaxima" className="form-label">
+                    Capacidad Máxima de Butacas*
+                  </label>
+                  <input
+                    type="number"
+                    id="capacidadMaxima"
+                    className="form-input"
+                    value={capacidadMaxima}
+                    onChange={(e) => setCapacidadMaxima(e.target.value)}
+                  />
+                </div>
+              )}
+
               <div className="form-group">
                 <label htmlFor="linkVentaEntradas" className="form-label">
-                  Link de Venta de Entradas (Opcional)
+                  Link para Venta de Entradas
                 </label>
                 <input
                   type="url"
@@ -348,12 +327,10 @@ const RegistrarEvento3 = () => {
                 />
               </div>
 
-              <div className="col-12">
-                <button
-                  type="submit"
-                  className="btn-confirmar"
-                  onClick={handleSiguienteClick}
-                >
+
+
+              <div className="form-group">
+                <button type="submit" className="btn btn-primary" onClick={handleSiguienteClick}>
                   Siguiente
                 </button>
               </div>
