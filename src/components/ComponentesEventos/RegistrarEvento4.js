@@ -15,18 +15,18 @@ const RegistrarEvento4 = () => {
     useEffect(() => {
         const storedEvent = JSON.parse(localStorage.getItem('eventoDatos'));
         if (storedEvent) {
-          setEvento(storedEvent);
-          const horas = Array.from({ length: diferenciaDiasEvento }, (_, index) => ({
-            dia: index + 1,
-            horaInicio: "",
-            horaFin: "",
-          }));
-          setHorasPorDia(horas);
+            setEvento(storedEvent);
+            const horas = Array.from({ length: diferenciaDiasEvento }, (_, index) => ({
+                dia: index + 1,
+                horaInicio: "",
+                horaFin: "",
+            }));
+            setHorasPorDia(horas);
         } else {
-          toast.error("No se encontraron datos del evento.");
-          navigate('/registrar-evento3'); // Redirigir si no hay datos
+            toast.error("No se encontraron datos del evento.");
+            navigate('/registrar-evento3'); // Redirigir si no hay datos
         }
-      }, [diferenciaDiasEvento, navigate]);
+    }, [diferenciaDiasEvento, navigate]);
 
     const handleInputChange = (dia, campo, value) => {
         setHorasPorDia((horasAnteriores) =>
@@ -39,23 +39,23 @@ const RegistrarEvento4 = () => {
     const handleSiguienteClick = (e) => {
         e.preventDefault();
 
-        const datosHoras = horasPorDia.reduce((acc, hora) => {
-            acc[`horaInicioDia${hora.dia}`] = hora.horaInicio;
-            acc[`horaFinDia${hora.dia}`] = hora.horaFin;
-            return acc;
-        }, {});
+        const datosHoras = horasPorDia.map((hora) => ({
+            dia: hora.dia,
+            horaInicio: hora.horaInicio,
+            horaFin: hora.horaFin,
+        }));
 
         const eventoCompleto = {
             ...evento,
             diferenciaDiasEvento,
-            ...datosHoras,
+            diasEvento: datosHoras, // Cambiado a un array de objetos
         };
 
         fetch(`${process.env?.REACT_APP_BACK_URL}evento`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${session?.token}`,  // Asumiendo que la sesión tiene un token para autenticación
+                "Authorization": `Bearer ${session?.token}`,
             },
             body: JSON.stringify(eventoCompleto),
         })
@@ -127,9 +127,8 @@ const RegistrarEvento4 = () => {
                                 <button
                                     className="siguiente-button ms-auto"
                                     onClick={handleSiguienteClick}
-                                    style={{ backgroundColor: "green", color: "#1a1a1a" }}
                                 >
-                                    Finalizar Registro
+                                    Siguiente
                                 </button>
                             </div>
                         </form>
