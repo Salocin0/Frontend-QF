@@ -1112,3 +1112,11 @@ body {
   border-radius: 4px;
   cursor: pointer;
 }
+
+
+.disabled-option {
+  background-color: #948b8b; /* Gris claro */
+  color: #f0f0f0; /* Texto gris oscuro para dar la sensación de deshabilitado */
+  cursor: not-allowed; /* Cambiar el cursor para dar la sensación de no seleccionable */
+}
+
