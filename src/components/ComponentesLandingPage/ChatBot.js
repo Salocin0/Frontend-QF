@@ -37,18 +37,19 @@ const Chatbot = () => {
         addMessageToChat(message, 'user');
         chatInput.value = '';
   
-        fetch('/chat', {
+        fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
           method: 'POST',
-          body: new URLSearchParams('message=' + message),
+          body: new URLSearchParams('user_message=' + message),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
         })
         .then(response => response.json())
         .then(data => {
-          addMessageToChat(data.response, 'bot');
+          addMessageToChat(data.data.chat_response, 'bot');
         })
         .catch(error => console.error('Error:', error));
+        console.log('SI se ejecutó')
       }
     };
   
