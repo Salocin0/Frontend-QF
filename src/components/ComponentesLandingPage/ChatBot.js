@@ -39,7 +39,7 @@ const Chatbot = () => {
   
         fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
           method: 'POST',
-          body: new URLSearchParams('user_message=' + message),
+          body: new URLSearchParams('userMessage=' + message),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
