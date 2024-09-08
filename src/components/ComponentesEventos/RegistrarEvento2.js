@@ -27,6 +27,7 @@ const RegistrarEvento2 = () => {
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
@@ -65,6 +66,7 @@ const RegistrarEvento2 = () => {
   const handleSiguienteClick = async (e) => {
     e.preventDefault();
 
+    // Validaciones
     if (!nombre.trim()) {
       toast.error("El nombre no puede estar vacío");
       return;
@@ -81,6 +83,7 @@ const RegistrarEvento2 = () => {
     }
 
     try {
+      // Obtener geolocalización
       const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${ubicacion}&key=d429bb29929940e38622b06b1ad6c59b`);
       const data = await response.json();
 
@@ -94,13 +97,11 @@ const RegistrarEvento2 = () => {
         const lat = result.geometry.lat;
         const lng = result.geometry.lng;
 
-        console.log(lat);
-        console.log(lng);
-
         setProvincia(prov || '');
         setLocalidad(loc || '');
 
-        const evento = {
+        // Crear objeto evento parcial para guardar en la BD
+        const eventoParcial = {
           nombre,
           descripcion,
           imagenEvento,
@@ -109,19 +110,40 @@ const RegistrarEvento2 = () => {
           provincia: prov || selectedProvince,
           tipoEvento,
           tipoPago,
+          estado: 'EnPreparacion1',
           latitud: lat,
           longitud: lng,
         };
 
-        navigate("/registrar-evento3", { state: evento });
+        // Guardar el progreso en la base de datos
+        const saveResponse = await fetch(`${process.env?.REACT_APP_BACK_URL}evento`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`,
+          },
+          body: JSON.stringify(eventoParcial),
+        });
+
+        const saveData = await saveResponse.json();
+
+        if (saveData.code === 200) {
+          toast.success("Evento guardado correctamente");
+          const eventoId = saveData.data.eventoId; // Obtén el ID del evento de la respuesta
+          navigate("/registrar-evento3", { state: { eventoId } }); // Pasa el ID a la siguiente página
+        } else {
+          toast.error("Error al guardar el evento");
+        }
+
       } else {
         toast.error("No se pudo obtener información de la ubicación.");
       }
     } catch (error) {
-      console.error("Error fetching location data:", error);
-      toast.error("Error al obtener la información de la ubicación.");
+      console.error("Error al guardar el progreso:", error);
+      toast.error("Error al guardar el evento");
     }
   };
+
 
 
 

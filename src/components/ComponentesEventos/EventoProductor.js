@@ -17,6 +17,9 @@ const EventoProductor = ({ evento }) => {
   const [isPausado, setIsPausado] = useState(false);
   const [isCancelado, setIsCancelado] = useState(false);
   const [isFinalizado, setIsFinalizado] = useState(false);
+  const [isProcesoDeCreacion1, setIsProcesoDeCreacion1] = useState(false);
+  const [isProcesoDeCreacion2, setIsProcesoDeCreacion2] = useState(false);
+  const [isProcesoDeCreacion3, setIsProcesoDeCreacion3] = useState(false);
 
   const [recargar, setRecargar] = useState(0);
 
@@ -63,6 +66,15 @@ const EventoProductor = ({ evento }) => {
         case 'Cancelado':
           setIsCancelado(true);
           break;
+        case 'EnPreparacion1':
+          setIsProcesoDeCreacion1(true);
+        break;
+        case 'EnPreparacion2':
+          setIsProcesoDeCreacion2(true);
+        break;
+        case 'EnPreparacion3':
+          setIsProcesoDeCreacion3(true);
+        break;
         case 'Finalizado':
           setIsFinalizado(true);
           break;
@@ -160,6 +172,23 @@ const EventoProductor = ({ evento }) => {
       .catch((error) => toast.error("Error al confirmar evento"));
   };
 
+  const continuarPreparacion1 = () => {
+    const eventoId = evento.id;
+    navigate(`/registrar-evento3`, { state: { eventoId } });
+
+  };
+
+  const continuarPreparacion2 = () => {
+    const eventoId = evento.id;
+
+    navigate(`/registrar-evento4`, { state: { eventoId } });
+
+  };
+
+  const continuarPreparacion3 = () => {
+
+  };
+
   const pausarEvento = () => {
     fetch(`${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/pausarEvento`, {
       method: "POST",
@@ -229,6 +258,9 @@ const EventoProductor = ({ evento }) => {
                     {isEnCurso && <button className="btn btn-danger me-2" onClick={finalizarEvento}>Finalizar Evento</button>}
                     {isPausado && <button className="btn btn-success me-2" onClick={reprogramarEvento}>Reprogramar Evento</button>}
                     {isPausado && <button className="btn btn-danger me-2" onClick={cancelarEvento}>Cancelar Evento</button>}
+                    {isProcesoDeCreacion1 && <button className="btn btn-primary me-2" onClick={continuarPreparacion1}>Continuar Prepracion Evento</button>}
+                    {isProcesoDeCreacion2 && <button className="btn btn-primary me-2" onClick={continuarPreparacion2}>Continuar Prepracion Evento</button>}
+                    {isProcesoDeCreacion3 && <button className="btn btn-primary me-2" onClick={continuarPreparacion3}>Continuar Prepracion Evento</button>}
 
                     {!isFinalizado && !isCancelado && <button className="btn btn-secondary me-2">
                       Editar Evento

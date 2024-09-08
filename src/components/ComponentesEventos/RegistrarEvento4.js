@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.scss";
@@ -10,15 +10,19 @@ const RegistrarEvento4 = () => {
   const [horasPorDia, setHorasPorDia] = useState([]);
   const [evento, setEvento] = useState(null);
   const [session, setSession] = useState(null);
+  const [eventoId, setEventoId] = useState(null);
+  const [tienePreventa, setTienePreventa] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const storedEvent = JSON.parse(localStorage.getItem('eventoDatos'));
     if (storedEvent) {
       setEvento(storedEvent);
+      setTienePreventa(storedEvent.tienePreventa);
 
       // Inicializar horasPorDia con valores por defecto
-      const fechaInicio = new Date(storedEvent.fechaHoraInicioEvento);
-      const fechaFin = new Date(storedEvent.fechaHoraFinEvento);
+      const fechaInicio = new Date(storedEvent.fechaInicio);
+      const fechaFin = new Date(storedEvent.fechaFin);
 
       const dias = Array.from({ length: diferenciaDiasEvento }, (_, index) => {
         // Calcular la fecha actual
@@ -31,6 +35,7 @@ const RegistrarEvento4 = () => {
             `${fechaInicio.toISOString().substring(0, 16)}` : "",
           horaFin: index === (diferenciaDiasEvento - 1) ?
             `${fechaFin.toISOString().substring(0, 16)}` : "",
+          tienePreventa: storedEvent.tienePreventa, // Asegúrate de aplicar el valor aquí
         };
       });
 
@@ -49,42 +54,53 @@ const RegistrarEvento4 = () => {
     );
   };
 
-  const handleSiguienteClick = (e) => {
+  useEffect(() => {
+    if (location.state && location.state.eventoId) {
+      setEventoId(location.state.eventoId);
+    }
+  }, [location.state]);
+
+  const handleSiguienteClick = async (e) => {
     e.preventDefault();
 
+    // Crear datos del evento
     const datosHoras = horasPorDia.map((hora) => ({
       dia: hora.dia,
       horaInicio: hora.horaInicio,
       horaFin: hora.horaFin,
+      tienePreventa: tienePreventa, // Incluye tienePreventa aquí
     }));
 
-    const eventoCompleto = {
-      ...evento,
+    const eventoDatos = {
       diferenciaDiasEvento,
       diasEvento: datosHoras,
     };
 
-    fetch(`${process.env?.REACT_APP_BACK_URL}evento`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${session?.token}`,
-      },
-      body: JSON.stringify(eventoCompleto),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.code === 200) {
-          toast.success("Evento registrado correctamente");
-          navigate(`/listado-eventos-productor`);
-        } else {
-          toast.error("Error al registrar el evento");
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error("Error al registrar el evento");
+    try {
+      // Realizar la solicitud PUT
+      const updateResponse = await fetch(`${process.env.REACT_APP_BACK_URL}evento/preparacion/${eventoId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.token}`,
+        },
+        body: JSON.stringify(eventoDatos),
       });
+
+      // Verificar si la respuesta es exitosa
+      const updateData = await updateResponse.json();
+
+      if (updateResponse.ok) { // Verifica si la respuesta es OK (status code 200-299)
+        toast.success("Evento registrado correctamente");
+        navigate(`/listado-eventos-productor`);
+      } else {
+        toast.error(updateData.message || "Error al registrar el evento");
+      }
+    } catch (error) {
+      // Manejo de errores
+      console.error("Error al registrar el evento:", error);
+      toast.error("Error al registrar el evento");
+    }
   };
 
   return (

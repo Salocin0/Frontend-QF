@@ -30,6 +30,17 @@ const RegistrarEvento3 = () => {
   const [seccionPreventaBloqueada, setSeccionPreventaBloqueada] = useState(true); // Estado para bloquear la sección
   const [tienePreventaDias, setTienePreventaDias] = useState("");
   const [selectedOptionPreventaDias, setSelectedOptionPreventaDias] = useState(1);
+  const [restricciones, setRestricciones] = useState([]);
+  const [eventoId, setEventoId] = useState(null);
+
+  console.log("Evento ID recibido:", eventoId);
+
+  const [nuevaColumna, setNuevaColumna] = useState({
+    titulo: "",
+    tipo: "",
+    opciones: "",
+    usuario: "",
+  });
 
   const { id } = useParams();
   const [session, setSession] = useState(null);
@@ -55,6 +66,13 @@ const RegistrarEvento3 = () => {
     }
   }, []);
 
+
+useEffect(() => {
+  if (location.state && location.state.eventoId) {
+    setEventoId(location.state.eventoId);
+  }
+}, [location.state]);
+
   function calcularDiferenciaDias(fechaInicioEvento, fechaFinEvento) {
     const inicio = new Date(fechaInicioEvento);
     const fin = new Date(fechaFinEvento);
@@ -63,6 +81,43 @@ const RegistrarEvento3 = () => {
     console.log(diferenciaDias);
     return diferenciaDias;
   }
+
+  const agregarColumna = () => {
+    if (!nuevaColumna.titulo.trim()) {
+      toast.error("El titulo no puede estar vacio");
+      return;
+    }
+
+        if (!nuevaColumna.descripcion.trim()) {
+      toast.error("Descripcion no puede estar vacio");
+      return;
+    }
+
+    if (!nuevaColumna.tipo.trim()) {
+      toast.error("El tipo no puede estar vacio");
+      return;
+    }
+
+    if (nuevaColumna.tipo === "Select" && !nuevaColumna.opciones?.trim()) {
+      toast.error("Opciones no puede estar vacio");
+      return;
+    }
+
+    setRestricciones([...restricciones, nuevaColumna]);
+    setNuevaColumna({
+      titulo: "",
+      tipo: "",
+      descripcion: "",
+      opciones: "",
+      usuario: "",
+    });
+  };
+
+  const eliminarfila = (indice) => {
+    const nuevasRestricciones = [...restricciones];
+    nuevasRestricciones.splice(indice, 1); // Elimina la restricción en el índice especificado
+    setRestricciones(nuevasRestricciones);
+  };
 
   function calcularFechasPreventa(fechaInicioEvento, diasAntesInicioPreventa, horasAntesInicioEvento) {
     const inicioEvento = new Date(fechaInicioEvento);
@@ -78,41 +133,68 @@ const RegistrarEvento3 = () => {
   }
 
 
-  const handleSiguienteClick = (e) => {
+  const handleSiguienteClick = async (e) => {
     e.preventDefault();
 
+    // Validaciones
     if (!fechaHoraInicioEvento.trim() || !fechaHoraFinEvento.trim()) {
       toast.error("Seleccione fecha y hora de inicio y fin del evento");
       return;
     }
 
-    const fechaInicioEvento = new Date(fechaHoraInicioEvento);
-    const fechaFinEvento = new Date(fechaHoraFinEvento);
+    if (!eventoId) {
+      toast.error("ID del evento no encontrado");
+      return;
+    }
 
-    const diferenciaDiasEvento = Math.ceil((fechaFinEvento - fechaInicioEvento) / (1000 * 60 * 60 * 24));
+    // Convertir fechas a formato ISO
+    const fechaInicioEvento = new Date(fechaHoraInicioEvento).toISOString();
+    const fechaFinEvento = new Date(fechaHoraFinEvento).toISOString();
 
+    // Calcular diferencia en días
+    const diferenciaDiasEvento = Math.ceil((new Date(fechaFinEvento) - new Date(fechaInicioEvento)) / (1000 * 60 * 60 * 24));
+
+    // Crear el objeto evento con los datos necesarios
     const eventoDatos = {
-      nombre,
-      descripcion,
-      imagenEvento,
-      ubicacion,
-      localidad,
-      provincia,
-      tipoEvento,
-      tipoPago,
-      latitud,
-      longitud,
+      fechaInicio: fechaInicioEvento,
+      fechaFin: fechaFinEvento,
       tienePreventa,
       horasAntesInicioEvento,
-      fechaHoraInicioEvento,
-      fechaHoraFinEvento,
-      diferenciaDiasEvento,
-      cantidadPuestos
+      cantidadPuestos,
+      restricciones,
+      // Incluye otros campos si es necesario
     };
 
+    console.log(eventoDatos);
     localStorage.setItem('eventoDatos', JSON.stringify(eventoDatos));
-    navigate(`/registrar-evento4/${diferenciaDiasEvento}`);
+
+    try {
+      const updateResponse = await fetch(`${process.env.REACT_APP_BACK_URL}evento/preparacion/${eventoId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session?.token}`,
+        },
+        body: JSON.stringify(eventoDatos),
+      });
+
+      const updateData = await updateResponse.json();
+
+      if (updateResponse.ok) {
+        toast.success("Evento actualizado correctamente");
+        navigate(`/registrar-evento4/${diferenciaDiasEvento}`, { state: { eventoId } });
+      } else {
+        toast.error(updateData.message || "Error al actualizar el evento");
+      }
+    } catch (error) {
+      console.error("Error al actualizar el evento:", error);
+      toast.error("Error al actualizar el evento");
+    }
   };
+
+
+
+
 
   const handleOptionClickPreventa = (option) => {
     setTienePreventa(option === 1);
@@ -298,6 +380,157 @@ const RegistrarEvento3 = () => {
                 />
               </div>
 
+              <h4>Restricciones personalizadas</h4>
+                      <form>
+                        <div className="d-flex">
+                          <div className="col-3 px-1">
+                            <label style={{ color: "black" }}>Título</label>
+                            <input
+                              className="w-100 form-control"
+                              list="restricciones-titulo"
+                              value={nuevaColumna.titulo}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  titulo: e.target.value,
+                                })
+                              }
+                            />
+
+                          </div>
+                          <div className="col-3 px-1">
+                            <label style={{ color: "black" }}>Descripcion</label>
+                            <input
+                              className="w-100 form-control"
+                              list="restricciones-titulo"
+                              value={nuevaColumna.descripcion}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  descripcion: e.target.value,
+                                })
+                              }
+                            />
+                            <datalist id="restricciones-titulo">
+
+                            </datalist>
+                          </div>
+                          <br/>
+                          <div className="col-2 px-1">
+                            <label style={{ color: "black" }}>Tipo</label>
+                            <select
+                              name=""
+                              id=""
+                              className="w-100 form-control"
+                              value={nuevaColumna.tipo}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  tipo: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="" disabled selected>
+                                Selecciona un tipo
+                              </option>
+                              <option value="PDF">PDF</option>
+                              <option value="Cadena de texto">
+                                Cadena de texto
+                              </option>
+                              <option value="Numerico">Numerico</option>
+                              <option value="Imagen">Imagen</option>
+                              <option value="Opciones">Opciones</option>
+                            </select>
+                          </div>
+
+                          <div className="col-2 px-1">
+                            <label style={{ color: "black" }}>Opciones</label>
+                            <input
+                              className="w-100 form-control"
+                              list="restricciones-opciones"
+                              value={nuevaColumna.opciones}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  opciones: e.target.value,
+                                })
+                              }
+                            />
+
+                          </div>
+
+                          <div className="col-2 px-1">
+                            <label style={{ color: "black" }}>Usuario</label>
+                            <select
+                              name=""
+                              id=""
+                              className="w-100 form-control"
+                              value={nuevaColumna.usuario}
+                              onChange={(e) =>
+                                setNuevaColumna({
+                                  ...nuevaColumna,
+                                  usuario: e.target.value,
+                                })
+                              }
+                            >
+                              <option value="" disabled selected>
+                                Selecciona un Usuario
+                              </option>
+                              <option value="Ambos">Ambos</option>
+                              <option value="Repartidor">Repartidor</option>
+                              <option value="Encargado de puesto">
+                                Encargado de puesto
+                              </option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="d-flex justify-content-end p-1">
+                          <button
+                            type="button"
+                            className="btn btn-success"
+                            onClick={agregarColumna}
+                          >
+                            Agregar Restriccion
+                          </button>
+                        </div>
+                      </form>
+                      <div className="d-flex justify-content-center aling-content-center">
+                        <table className="w-100 mx-auto text-center table table-striped table-bordered">
+                          <thead>
+                            <tr>
+                              <th>Título</th>
+                              <th>Tipo</th>
+                              <th>Descripcion</th>
+
+                              <th>Opciones</th>
+                              <th>Usuario</th>
+                              <th>Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {restricciones.map((restriccion, index) => (
+                              <tr key={index}>
+                                <td>{restriccion.titulo}</td>
+                                <td>{restriccion.tipo}</td>
+                                <td>{restriccion.descripcion}</td>
+
+                                <td>{restriccion.opciones}</td>
+                                <td>{restriccion.usuario}</td>
+                                <td>
+                                  <button
+                                    type="button"
+                                    onClick={() => eliminarfila(index)}
+                                    className="btn btn-danger"
+                                  >
+                                    Eliminar
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      <hr />
 
 
               <div className="form-group">
