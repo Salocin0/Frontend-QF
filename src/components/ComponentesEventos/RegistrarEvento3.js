@@ -32,6 +32,7 @@ const RegistrarEvento3 = () => {
   const [selectedOptionPreventaDias, setSelectedOptionPreventaDias] = useState(1);
   const [restricciones, setRestricciones] = useState([]);
   const [eventoId, setEventoId] = useState(null);
+  const [eventoData, setEventoData] = useState({});
 
   console.log("Evento ID recibido:", eventoId);
 
@@ -66,6 +67,43 @@ const RegistrarEvento3 = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (id) {
+      fetch(`${process.env.REACT_APP_BACK_URL}evento/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            const evento = data.evento;
+            setEventoData(evento);
+            setFechaInicioEvento(evento.fechaInicio || "");
+            setFechaFinEvento(evento.fechaFin || "");
+            setTieneButacas(evento.tieneButacas || false);
+            setTienePreventa(evento.tienePreventa || false);
+            setDiasAntesInicioPreventa(evento.diasAntesInicioPreventa || "");
+            setHorasAntesInicioEvento(evento.horasAntesInicioEvento || "");
+            setTodosLosDiasPreventa(evento.todosLosDiasPreventa || "");
+            setCantidadPuestos(evento.cantidadPuestos || "");
+            setTieneRepartidores(evento.tieneRepartidores || false);
+            setCantidadRepartidores(evento.cantidadRepartidores || "");
+            setCapacidadMaxima(evento.capacidadMaxima || "");
+            setLinkVentaEntradas(evento.linkVentaEntradas || "");
+            setRestricciones(evento.restricciones || []);
+            setEventoId(evento._id);
+          } else {
+            toast.error("Error al cargar el evento");
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching event data:", error);
+          toast.error("Error al cargar el evento");
+        });
+    }
+  }, [id]);
 
 useEffect(() => {
   if (location.state && location.state.eventoId) {
@@ -152,8 +190,8 @@ useEffect(() => {
     const fechaFinEvento = new Date(fechaHoraFinEvento).toISOString();
 
     // Calcular diferencia en días
-    const diferenciaDiasEvento = Math.ceil((new Date(fechaFinEvento) - new Date(fechaInicioEvento)) / (1000 * 60 * 60 * 24));
-
+    const cantidadDiasEvento = Math.ceil((new Date(fechaFinEvento) - new Date(fechaInicioEvento)) / (1000 * 60 * 60 * 24));
+    console.log(cantidadDiasEvento);
     // Crear el objeto evento con los datos necesarios
     const eventoDatos = {
       fechaInicio: fechaInicioEvento,
@@ -162,6 +200,7 @@ useEffect(() => {
       horasAntesInicioEvento,
       cantidadPuestos,
       restricciones,
+      cantidadDiasEvento,
       // Incluye otros campos si es necesario
     };
 
@@ -182,7 +221,7 @@ useEffect(() => {
 
       if (updateResponse.ok) {
         toast.success("Evento actualizado correctamente");
-        navigate(`/registrar-evento4/${diferenciaDiasEvento}`, { state: { eventoId } });
+        navigate(`/registrar-evento4/${cantidadDiasEvento}`, { state: { eventoId } });
       } else {
         toast.error(updateData.message || "Error al actualizar el evento");
       }

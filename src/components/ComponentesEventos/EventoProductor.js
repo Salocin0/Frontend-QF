@@ -181,8 +181,21 @@ const EventoProductor = ({ evento }) => {
   const continuarPreparacion2 = () => {
     const eventoId = evento.id;
 
-    navigate(`/registrar-evento4`, { state: { eventoId } });
+    // Hacer la solicitud al backend para obtener la cantidad de días del evento
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/dias/${eventoId}`, {
+      method: "GET",
+    })
+      .then((response) => response.json()) // Parsear la respuesta como JSON
+      .then((data) => {
+        const cantidadDiasEvento = data.data;
 
+        navigate(`/registrar-evento4/${cantidadDiasEvento}`, { state: { eventoId } });
+      })
+      .catch((error) => {
+        // Manejo de errores
+        console.error("Error al obtener la cantidad de días del evento:", error);
+        toast.error("Error al confirmar evento");
+      });
   };
 
   const continuarPreparacion3 = () => {

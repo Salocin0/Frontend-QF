@@ -13,6 +13,31 @@ const RegistrarEvento4 = () => {
   const [eventoId, setEventoId] = useState(null);
   const [tienePreventa, setTienePreventa] = useState(false);
   const location = useLocation();
+  const [mostrarCartel, setMostrarCartel] = useState(false);
+
+  useEffect(() => {
+    const sessionId = localStorage.getItem("sessionId");
+
+    if (!sessionId) {
+      console.error("No session ID found.");
+      return;
+    }
+
+    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sessionID: sessionId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSession(data.data);
+        console.log(data.data.tipoUsuario);
+      })
+      .catch((error) => console.error("Error fetching session:", error));
+  }, []);
+
 
   useEffect(() => {
     const storedEvent = JSON.parse(localStorage.getItem('eventoDatos'));
@@ -91,8 +116,10 @@ const RegistrarEvento4 = () => {
       const updateData = await updateResponse.json();
 
       if (updateResponse.ok) { // Verifica si la respuesta es OK (status code 200-299)
-        toast.success("Evento registrado correctamente");
-        navigate(`/listado-eventos-productor`);
+        setMostrarCartel(true); // Mostrar el cartel
+        setTimeout(() => {
+          navigate(`/listado-eventos-productor`);
+        }, 3000); // Espera 3 segundos antes de redirigir
       } else {
         toast.error(updateData.message || "Error al registrar el evento");
       }
@@ -103,11 +130,18 @@ const RegistrarEvento4 = () => {
     }
   };
 
+  const handleVolver = async (e) => {
+
+    navigate(`/registrar-evento3`, { state: { eventoId } });
+
+  }
+
+
   return (
     <div className="container-fluid">
       <div className="row formEvento">
         <div className="col-md-4 p-0">
-          <Sidebar />
+          <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
         <div className="col-md-6 p-0">
           <div className="dark-form-wrapper mx-auto">
@@ -154,10 +188,16 @@ const RegistrarEvento4 = () => {
 
               <div className="col-12 d-flex justify-content-end">
                 <button
+                  className="btn btn-primary me-2" // Estilo de botón celeste (Bootstrap primary)
+                  onClick={handleVolver} // Volver a la página anterior
+                >
+                  Volver
+                </button>
+                <button
                   className="siguiente-button ms-auto"
                   onClick={handleSiguienteClick}
                 >
-                  Siguiente
+                  Finalizar Registro
                 </button>
               </div>
             </form>
