@@ -11,6 +11,7 @@ import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 const EventoUser = ({ evento, recargar }) => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
+  console.log(evento)
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -61,7 +62,7 @@ const EventoUser = ({ evento, recargar }) => {
                      {evento.estado}
                   </p>
                   <p className="card-text-fecha">
-                    {format(new Date(evento.fechaInicio), "dd/MM/yyyy")} -  {format(new Date(evento.fechaFin), "dd/MM/yyyy")}
+                    {/*format(new Date(evento?.fechaInicio), "dd/MM/yyyy")} -  {format(new Date(evento?.fechaFin), "dd/MM/yyyy")*/}
                   </p>
                 </div>
               </div>
