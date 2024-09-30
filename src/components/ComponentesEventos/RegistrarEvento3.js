@@ -9,14 +9,25 @@ const RegistrarEvento3 = () => {
   const evento = location.state || {};  // Recuperar los datos del evento
 
   // Extraer datos del evento
-  const { nombre, descripcion, imagenEvento, ubicacion, localidad, provincia, tipoEvento, tipoPago, latitud, longitud } = evento;
+  const {
+    nombre,
+    descripcion,
+    imagenEvento,
+    ubicacion,
+    localidad,
+    provincia,
+    tipoEvento,
+    tipoPago,
+    latitud,
+    longitud,
+  } = evento;
 
   const [tieneButacas, setTieneButacas] = useState(false);
   const [estado, setEstado] = useState("Standby");
   const [fechaHoraInicioEvento, setFechaInicioEvento] = useState("");
   const [fechaHoraFinEvento, setFechaFinEvento] = useState("");
   const [tienePreventa, setTienePreventa] = useState(false);
-  const [diasAntesInicioPreventa, setDiasAntesInicioPreventa] = useState(""); // Asegúrate de definir esto correctamente
+  const [diasAntesInicioPreventa, setDiasAntesInicioPreventa] = useState("");
   const [horasAntesInicioEvento, setHorasAntesInicioEvento] = useState("");
   const [todosLosDiasPreventa, setTodosLosDiasPreventa] = useState("");
   const [cantidadPuestos, setCantidadPuestos] = useState("");
@@ -27,18 +38,17 @@ const RegistrarEvento3 = () => {
   const [selectedOptionPreventa, setSelectedOptionPreventa] = useState(2);
   const [selectedOptionRepartidores, setSelectedOptionRepartidores] = useState(2);
   const [selectedOptionButacas, setSelectedOptionButacas] = useState(2);
-  const [seccionPreventaBloqueada, setSeccionPreventaBloqueada] = useState(true); // Estado para bloquear la sección
+  const [seccionPreventaBloqueada, setSeccionPreventaBloqueada] = useState(true);
   const [tienePreventaDias, setTienePreventaDias] = useState("");
   const [selectedOptionPreventaDias, setSelectedOptionPreventaDias] = useState(1);
   const [restricciones, setRestricciones] = useState([]);
   const [eventoId, setEventoId] = useState(null);
+  const [errorMensaje, setErrorMensaje] = useState('');
   const [eventoData, setEventoData] = useState({});
-
-  console.log("Evento ID recibido:", eventoId);
-
-  const [nuevaColumna, setNuevaColumna] = useState({
+  const [nuevaColumna, setNuevaColumna] = useState({  // Definir nuevaColumna
     titulo: "",
     tipo: "",
+    descripcion: "",
     opciones: "",
     usuario: "",
   });
@@ -61,7 +71,6 @@ const RegistrarEvento3 = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -105,39 +114,30 @@ const RegistrarEvento3 = () => {
     }
   }, [id]);
 
-useEffect(() => {
-  if (location.state && location.state.eventoId) {
-    setEventoId(location.state.eventoId);
-  }
-}, [location.state]);
-
-  function calcularDiferenciaDias(fechaInicioEvento, fechaFinEvento) {
-    const inicio = new Date(fechaInicioEvento);
-    const fin = new Date(fechaFinEvento);
-    const diferenciaTiempo = fin.getTime() - inicio.getTime();
-    const diferenciaDias = diferenciaTiempo / (1000 * 3600 * 24);
-    console.log(diferenciaDias);
-    return diferenciaDias;
-  }
+  useEffect(() => {
+    if (location.state && location.state.eventoId) {
+      setEventoId(location.state.eventoId);
+    }
+  }, [location.state]);
 
   const agregarColumna = () => {
     if (!nuevaColumna.titulo.trim()) {
-      toast.error("El titulo no puede estar vacio");
+      toast.error("El título no puede estar vacío");
       return;
     }
 
-        if (!nuevaColumna.descripcion.trim()) {
-      toast.error("Descripcion no puede estar vacio");
+    if (!nuevaColumna.descripcion.trim()) {
+      toast.error("Descripción no puede estar vacía");
       return;
     }
 
     if (!nuevaColumna.tipo.trim()) {
-      toast.error("El tipo no puede estar vacio");
+      toast.error("El tipo no puede estar vacío");
       return;
     }
 
     if (nuevaColumna.tipo === "Select" && !nuevaColumna.opciones?.trim()) {
-      toast.error("Opciones no puede estar vacio");
+      toast.error("Opciones no puede estar vacío");
       return;
     }
 
@@ -151,61 +151,69 @@ useEffect(() => {
     });
   };
 
-  const eliminarfila = (indice) => {
+  const eliminarFila = (indice) => {
     const nuevasRestricciones = [...restricciones];
     nuevasRestricciones.splice(indice, 1); // Elimina la restricción en el índice especificado
     setRestricciones(nuevasRestricciones);
   };
 
-  function calcularFechasPreventa(fechaInicioEvento, diasAntesInicioPreventa, horasAntesInicioEvento) {
-    const inicioEvento = new Date(fechaInicioEvento);
-    // Calcular la fecha de inicio de la preventa en base a los días antes del evento
-    const fechaInicioPreventa = new Date(inicioEvento.getTime() - diasAntesInicioPreventa * 24 * 60 * 60 * 1000);
-    // Calcular la hora de inicio de la preventa en base a las horas antes del evento
-    const horaInicioPreventa = new Date(fechaInicioPreventa.getTime() - horasAntesInicioEvento * 60 * 60 * 1000);
+  const handleHorasAntesInicioEventoChange = (e) => {
+    const nuevaFecha = e.target.value;
+    setHorasAntesInicioEvento(nuevaFecha);
 
-    // La hora de fin de la preventa puede ser igual a la hora de inicio de la preventa en este caso.
-    const horaFinPreventa = new Date(horaInicioPreventa.getTime());
+    // Convertir las fechas a objetos Date para comparar
+    const fechaEvento = new Date(fechaHoraInicioEvento);
+    const fechaPreventa = new Date(nuevaFecha);
 
-    return { horaInicioPreventa, horaFinPreventa };
-  }
-
+    if (fechaPreventa >= fechaEvento) {
+      setErrorMensaje('La fecha de inicio de la preventa debe ser anterior a la fecha de inicio del evento.');
+    } else {
+      setErrorMensaje(''); // Limpiar el mensaje de error si la validación es correcta
+    }
+  };
 
   const handleSiguienteClick = async (e) => {
     e.preventDefault();
 
+    const now = new Date();
+    const inicioEvento = new Date(fechaHoraInicioEvento);
+    const finEvento = new Date(fechaHoraFinEvento);
+
     // Validaciones
-    if (!fechaHoraInicioEvento.trim() || !fechaHoraFinEvento.trim()) {
-      toast.error("Seleccione fecha y hora de inicio y fin del evento");
+    if (inicioEvento <= now) {
+      toast.error("La fecha de inicio del evento debe ser posterior a la fecha actual.");
       return;
     }
 
-    if (!eventoId) {
-      toast.error("ID del evento no encontrado");
+    if (finEvento <= inicioEvento) {
+      toast.error("La fecha de fin del evento debe ser posterior a la fecha de inicio.");
       return;
     }
 
-    // Convertir fechas a formato ISO
-    const fechaInicioEvento = new Date(fechaHoraInicioEvento).toISOString();
-    const fechaFinEvento = new Date(fechaHoraFinEvento).toISOString();
+    if (tienePreventa) {
+      const diasAntesInicioPreventaMs = diasAntesInicioPreventa * 24 * 60 * 60 * 1000;
+      const horasAntesInicioEventoMs = horasAntesInicioEvento * 60 * 60 * 1000;
 
-    // Calcular diferencia en días
-    const cantidadDiasEvento = Math.ceil((new Date(fechaFinEvento) - new Date(fechaInicioEvento)) / (1000 * 60 * 60 * 24));
-    console.log(cantidadDiasEvento);
-    // Crear el objeto evento con los datos necesarios
+      const preventaInicio = new Date(inicioEvento.getTime() - diasAntesInicioPreventaMs - horasAntesInicioEventoMs);
+      if (preventaInicio >= inicioEvento) {
+        toast.error("La fecha de inicio de la preventa debe ser anterior a la fecha de inicio del evento.");
+        return;
+      }
+    }
+
+    // Continuar con la lógica si todas las validaciones pasan...
     const eventoDatos = {
-      fechaInicio: fechaInicioEvento,
-      fechaFin: fechaFinEvento,
+      fechaInicio: inicioEvento.toISOString(), // Esto se puede dejar así si quieres ISO
+      fechaFin: finEvento.toISOString(), // Lo mismo
       tienePreventa,
       horasAntesInicioEvento,
       cantidadPuestos,
       restricciones,
-      cantidadDiasEvento,
-      // Incluye otros campos si es necesario
+      cantidadDiasEvento: Math.ceil((finEvento - inicioEvento) / (1000 * 60 * 60 * 24)),
     };
 
-    console.log(eventoDatos);
     localStorage.setItem('eventoDatos', JSON.stringify(eventoDatos));
+
 
     try {
       const updateResponse = await fetch(`${process.env.REACT_APP_BACK_URL}evento/preparacion/${eventoId}`, {
@@ -221,7 +229,7 @@ useEffect(() => {
 
       if (updateResponse.ok) {
         toast.success("Evento actualizado correctamente");
-        navigate(`/registrar-evento4/${cantidadDiasEvento}`, { state: { eventoId } });
+        navigate(`/registrar-evento4/${eventoDatos.cantidadDiasEvento}`, { state: { eventoId } });
       } else {
         toast.error(updateData.message || "Error al actualizar el evento");
       }
@@ -230,10 +238,6 @@ useEffect(() => {
       toast.error("Error al actualizar el evento");
     }
   };
-
-
-
-
 
   const handleOptionClickPreventa = (option) => {
     setTienePreventa(option === 1);
@@ -251,8 +255,13 @@ useEffect(() => {
   };
 
   const handleOptionClickPreventaDias = (option) => {
-    setTienePreventaDias(option === 1);
     setSelectedOptionPreventaDias(option);
+    // Si es necesario, establece otras variables de estado aquí
+  };
+
+  const eliminarfila = (index) => {
+    const nuevasRestricciones = restricciones.filter((_, i) => i !== index);
+    setRestricciones(nuevasRestricciones);
   };
 
 
@@ -318,15 +327,16 @@ useEffect(() => {
                 <>
                   <div className="form-group">
                     <label htmlFor="horasAntesInicioEvento" className="form-label">
-                      ¿Cuando inciará la preventa?*
+                      ¿Cuándo iniciará la preventa?*
                     </label>
                     <input
                       type="datetime-local"
                       id="horasAntesInicioEvento"
                       className="form-input"
                       value={horasAntesInicioEvento}
-                      onChange={(e) => setHorasAntesInicioEvento(e.target.value)}
+                      onChange={handleHorasAntesInicioEventoChange} // Usar la función de manejo de cambios
                     />
+                    {errorMensaje && <div className="error-text">{errorMensaje}</div>} {/* Mostrar mensaje de error */}
                   </div>
                   <div className="form-group">
                     <label htmlFor="todosLosDiasPreventa" className="form-label">
@@ -395,7 +405,7 @@ useEffect(() => {
 
               <div className="form-group">
                 <label htmlFor="capacidadMaxima" className="form-label">
-                  Capacidad Máxima (VER SI LO DEJAMOS POR DATA)
+                  Capacidad Máxima
                 </label>
                 <input
                   type="number"
@@ -418,168 +428,189 @@ useEffect(() => {
                   onChange={(e) => setLinkVentaEntradas(e.target.value)}
                 />
               </div>
+              <div className="container-fluid">
+                <br />
+                <h4 className="tituloSeccion" style={{ color: "white" }}>
+                  Restricciones personalizadas
+                </h4>
+                <form>
+                  <div className="d-flex">
+                    <div className="col-3 px-1">
+                      <label style={{ color: "white" }}>Título</label>
+                      <input
+                        className="w-100 form-control"
+                        style={{
+                          backgroundColor: "transparent",
+                          border: "1px solid yellow",
+                        }}
+                        list="restricciones-titulo"
+                        value={nuevaColumna.titulo}
+                        onChange={(e) =>
+                          setNuevaColumna({
+                            ...nuevaColumna,
+                            titulo: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <br />
+                    <div className="col-3 px-1">
+                      <label style={{ color: "white" }}>Descripción</label>
+                      <input
+                        className="w-100 form-control"
+                        style={{
+                          backgroundColor: "transparent",
+                          color: "black",
+                          border: "1px solid yellow",
+                        }}
+                        value={nuevaColumna.descripcion}
+                        onChange={(e) =>
+                          setNuevaColumna({
+                            ...nuevaColumna,
+                            descripcion: e.target.value,
+                          })
+                        }
+                      />
+                      <datalist id="restricciones-titulo"></datalist>
+                    </div>
+                    <div className="col-2 px-1">
+                      <label style={{ color: "white" }}>Tipo</label>
+                      <select
+                        className="w-100 form-control"
+                        style={{
+                          backgroundColor: "transparent",
+                          color: "black",
+                          border: "1px solid yellow",
+                        }}
+                        value={nuevaColumna.tipo}
+                        onChange={(e) =>
+                          setNuevaColumna({
+                            ...nuevaColumna,
+                            tipo: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="">Selecciona un tipo</option>
+                        <option value="PDF">PDF</option>
+                        <option value="Cadena de texto">Cadena de texto</option>
+                        <option value="Numerico">Numerico</option>
+                        <option value="Imagen">Imagen</option>
+                        <option value="Opciones">Opciones</option>
+                      </select>
+                    </div>
 
-              <h4>Restricciones personalizadas</h4>
-                      <form>
-                        <div className="d-flex">
-                          <div className="col-3 px-1">
-                            <label style={{ color: "black" }}>Título</label>
-                            <input
-                              className="w-100 form-control"
-                              list="restricciones-titulo"
-                              value={nuevaColumna.titulo}
-                              onChange={(e) =>
-                                setNuevaColumna({
-                                  ...nuevaColumna,
-                                  titulo: e.target.value,
-                                })
-                              }
-                            />
-
-                          </div>
-                          <div className="col-3 px-1">
-                            <label style={{ color: "black" }}>Descripcion</label>
-                            <input
-                              className="w-100 form-control"
-                              list="restricciones-titulo"
-                              value={nuevaColumna.descripcion}
-                              onChange={(e) =>
-                                setNuevaColumna({
-                                  ...nuevaColumna,
-                                  descripcion: e.target.value,
-                                })
-                              }
-                            />
-                            <datalist id="restricciones-titulo">
-
-                            </datalist>
-                          </div>
-                          <br/>
-                          <div className="col-2 px-1">
-                            <label style={{ color: "black" }}>Tipo</label>
-                            <select
-                              name=""
-                              id=""
-                              className="w-100 form-control"
-                              value={nuevaColumna.tipo}
-                              onChange={(e) =>
-                                setNuevaColumna({
-                                  ...nuevaColumna,
-                                  tipo: e.target.value,
-                                })
-                              }
-                            >
-                              <option value="" disabled selected>
-                                Selecciona un tipo
-                              </option>
-                              <option value="PDF">PDF</option>
-                              <option value="Cadena de texto">
-                                Cadena de texto
-                              </option>
-                              <option value="Numerico">Numerico</option>
-                              <option value="Imagen">Imagen</option>
-                              <option value="Opciones">Opciones</option>
-                            </select>
-                          </div>
-
-                          <div className="col-2 px-1">
-                            <label style={{ color: "black" }}>Opciones</label>
-                            <input
-                              className="w-100 form-control"
-                              list="restricciones-opciones"
-                              value={nuevaColumna.opciones}
-                              onChange={(e) =>
-                                setNuevaColumna({
-                                  ...nuevaColumna,
-                                  opciones: e.target.value,
-                                })
-                              }
-                            />
-
-                          </div>
-
-                          <div className="col-2 px-1">
-                            <label style={{ color: "black" }}>Usuario</label>
-                            <select
-                              name=""
-                              id=""
-                              className="w-100 form-control"
-                              value={nuevaColumna.usuario}
-                              onChange={(e) =>
-                                setNuevaColumna({
-                                  ...nuevaColumna,
-                                  usuario: e.target.value,
-                                })
-                              }
-                            >
-                              <option value="" disabled selected>
-                                Selecciona un Usuario
-                              </option>
-                              <option value="Ambos">Ambos</option>
-                              <option value="Repartidor">Repartidor</option>
-                              <option value="Encargado de puesto">
-                                Encargado de puesto
-                              </option>
-                            </select>
-                          </div>
-                        </div>
-                        <div className="d-flex justify-content-end p-1">
-                          <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={agregarColumna}
-                          >
-                            Agregar Restriccion
-                          </button>
-                        </div>
-                      </form>
-                      <div className="d-flex justify-content-center aling-content-center">
-                        <table className="w-100 mx-auto text-center table table-striped table-bordered">
-                          <thead>
-                            <tr>
-                              <th>Título</th>
-                              <th>Tipo</th>
-                              <th>Descripcion</th>
-
-                              <th>Opciones</th>
-                              <th>Usuario</th>
-                              <th>Acciones</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {restricciones.map((restriccion, index) => (
-                              <tr key={index}>
-                                <td>{restriccion.titulo}</td>
-                                <td>{restriccion.tipo}</td>
-                                <td>{restriccion.descripcion}</td>
-
-                                <td>{restriccion.opciones}</td>
-                                <td>{restriccion.usuario}</td>
-                                <td>
-                                  <button
-                                    type="button"
-                                    onClick={() => eliminarfila(index)}
-                                    className="btn btn-danger"
-                                  >
-                                    Eliminar
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                    {/* Campo Opciones */}
+                    {nuevaColumna.tipo === "Opciones" && (
+                      <div className="col-2 px-1">
+                        <label style={{ color: "white" }}>Opciones</label>
+                        <input
+                          className="w-100 form-control"
+                          style={{
+                            backgroundColor: "transparent",
+                            color: "yellow",
+                            border: "1px solid yellow",
+                          }}
+                          value={nuevaColumna.opciones}
+                          onChange={(e) =>
+                            setNuevaColumna({
+                              ...nuevaColumna,
+                              opciones: e.target.value,
+                            })
+                          }
+                        />
                       </div>
-                      <hr />
+                    )}
 
-
-              <div className="form-group">
-                <button type="submit" className="btn btn-primary" onClick={handleSiguienteClick}>
-                  Siguiente
-                </button>
+                    <div className="col-2 px-1">
+                      <label style={{ color: "white" }}>Usuario</label>
+                      <select
+                        className="w-100 form-control"
+                        style={{
+                          backgroundColor: "transparent",
+                          color: "black",
+                          border: "1px solid yellow",
+                        }}
+                        value={nuevaColumna.usuario}
+                        onChange={(e) =>
+                          setNuevaColumna({
+                            ...nuevaColumna,
+                            usuario: e.target.value,
+                          })
+                        }
+                      >
+                        <option value="" disabled>
+                          Selecciona un Usuario
+                        </option>
+                        <option value="Ambos">Ambos</option>
+                        <option value="Repartidor">Repartidor</option>
+                        <option value="Encargado de puesto">Encargado de puesto</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-end p-1">
+                    <button
+                      type="button"
+                      className="btn btn-warning"
+                      onClick={agregarColumna}
+                    >
+                      Agregar Restricción
+                    </button>
+                  </div>
+                </form>
               </div>
+
             </form>
+
+            {/* Mostrar tabla solo si hay restricciones */}
+          {/* Mostrar tabla solo si hay restricciones */}
+{restricciones.length > 0 && (
+  <div className="d-flex justify-content-center align-content-center">
+    <table className="w-100 mx-auto text-center table table-striped table-bordered" style={{ backgroundColor: 'grey', color: 'white', borderColor: 'black' }}>
+      <thead>
+        <tr style={{ backgroundColor: 'black' }}>
+          <th style={{ color: 'black' }}>Título</th>
+          <th style={{ color: 'black' }}>Tipo</th>
+          <th style={{ color: 'black' }}>Descripción</th>
+          <th style={{ color: 'black' }}>Opciones</th>
+          <th style={{ color: 'black' }}>Usuario</th>
+          <th style={{ color: 'black' }}>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {restricciones.map((restriccion, index) => (
+          <tr key={index} style={{ backgroundColor: 'grey' }}>
+            <td>{restriccion.titulo}</td>
+            <td>{restriccion.tipo}</td>
+            <td>{restriccion.descripcion}</td>
+            <td>{restriccion.opciones}</td>
+            <td>{restriccion.usuario}</td>
+            <td>
+              <button
+                type="button"
+                onClick={() => eliminarFila(index)}
+                className="btn btn-danger"
+                style={{ borderColor: 'black' }}
+              >
+                Eliminar
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
+
+            <hr />
+
+          <div className="form-group">
+            <button type="submit" className="btn btn-primary" onClick={handleSiguienteClick}>
+              Siguiente
+            </button>
           </div>
-        </div >
+          </div>
+
+        </div>
       </div >
     </div >
   );

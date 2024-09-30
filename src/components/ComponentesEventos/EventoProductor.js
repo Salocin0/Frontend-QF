@@ -228,7 +228,7 @@ const EventoProductor = ({ evento }) => {
   };
 
   const agregarNuevo = () => {
-    navigate(`/registrar-evento`);
+    navigate(`/registrar-evento2`);
   };
 
   const verSolicitudes = () => {

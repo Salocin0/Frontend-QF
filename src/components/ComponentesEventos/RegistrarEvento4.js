@@ -1,3 +1,4 @@
+import "bootstrap/dist/css/bootstrap.min.css"; // Importar Bootstrap si no lo tienes
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -13,7 +14,7 @@ const RegistrarEvento4 = () => {
   const [eventoId, setEventoId] = useState(null);
   const [tienePreventa, setTienePreventa] = useState(false);
   const location = useLocation();
-  const [mostrarCartel, setMostrarCartel] = useState(false);
+  const [mostrarCartel, setMostrarCartel] = useState(false); // Estado para mostrar el cartel
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -38,38 +39,39 @@ const RegistrarEvento4 = () => {
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
 
-
   useEffect(() => {
     const storedEvent = JSON.parse(localStorage.getItem('eventoDatos'));
     if (storedEvent) {
-      setEvento(storedEvent);
-      setTienePreventa(storedEvent.tienePreventa);
+        setEvento(storedEvent);
+        setTienePreventa(storedEvent.tienePreventa);
 
-      // Inicializar horasPorDia con valores por defecto
-      const fechaInicio = new Date(storedEvent.fechaInicio);
-      const fechaFin = new Date(storedEvent.fechaFin);
+        const fechaInicio = new Date(storedEvent.fechaInicio);
+        const fechaFin = new Date(storedEvent.fechaFin);
 
-      const dias = Array.from({ length: diferenciaDiasEvento }, (_, index) => {
-        // Calcular la fecha actual
-        const currentDay = new Date(fechaInicio);
-        currentDay.setDate(fechaInicio.getDate() + index);
+        const dias = Array.from({ length: diferenciaDiasEvento }, (_, index) => {
+            const currentDay = new Date(fechaInicio);
+            currentDay.setDate(fechaInicio.getDate() + index);
 
-        return {
-          dia: index + 1,
-          horaInicio: index === 0 ?
-            `${fechaInicio.toISOString().substring(0, 16)}` : "",
-          horaFin: index === (diferenciaDiasEvento - 1) ?
-            `${fechaFin.toISOString().substring(0, 16)}` : "",
-          tienePreventa: storedEvent.tienePreventa, // Asegúrate de aplicar el valor aquí
-        };
-      });
+            // Formatear las fechas en el formato correcto
+            const formattedDate = `${currentDay.getFullYear()}-${String(currentDay.getMonth() + 1).padStart(2, '0')}-${String(currentDay.getDate()).padStart(2, '0')}`;
+            const horaInicio = index === 0 ? `${formattedDate}T${String(fechaInicio.getHours()).padStart(2, '0')}:${String(fechaInicio.getMinutes()).padStart(2, '0')}` : `${formattedDate}T00:00`;
+            const horaFin = index === (diferenciaDiasEvento - 1) ? `${formattedDate}T${String(fechaFin.getHours()).padStart(2, '0')}:${String(fechaFin.getMinutes()).padStart(2, '0')}` : `${formattedDate}T23:59`;
 
-      setHorasPorDia(dias);
+            return {
+                dia: index + 1,
+                horaInicio,
+                horaFin,
+                tienePreventa: storedEvent.tienePreventa,
+            };
+        });
+
+        setHorasPorDia(dias);
     } else {
-      toast.error("No se encontraron datos del evento.");
-      navigate('/registrar-evento3'); // Redirigir si no hay datos
+        toast.error("No se encontraron datos del evento.");
+        navigate('/registrar-evento3');
     }
-  }, [diferenciaDiasEvento, navigate]);
+}, [diferenciaDiasEvento, navigate]);
+
 
   const handleInputChange = (dia, campo, value) => {
     setHorasPorDia((horasAnteriores) =>
@@ -88,12 +90,11 @@ const RegistrarEvento4 = () => {
   const handleSiguienteClick = async (e) => {
     e.preventDefault();
 
-    // Crear datos del evento
     const datosHoras = horasPorDia.map((hora) => ({
       dia: hora.dia,
       horaInicio: hora.horaInicio,
       horaFin: hora.horaFin,
-      tienePreventa: tienePreventa, // Incluye tienePreventa aquí
+      tienePreventa: tienePreventa,
     }));
 
     const eventoDatos = {
@@ -102,7 +103,6 @@ const RegistrarEvento4 = () => {
     };
 
     try {
-      // Realizar la solicitud PUT
       const updateResponse = await fetch(`${process.env.REACT_APP_BACK_URL}evento/preparacion/${eventoId}`, {
         method: "PUT",
         headers: {
@@ -112,30 +112,25 @@ const RegistrarEvento4 = () => {
         body: JSON.stringify(eventoDatos),
       });
 
-      // Verificar si la respuesta es exitosa
       const updateData = await updateResponse.json();
 
-      if (updateResponse.ok) { // Verifica si la respuesta es OK (status code 200-299)
+      if (updateResponse.ok) {
         setMostrarCartel(true); // Mostrar el cartel
         setTimeout(() => {
           navigate(`/listado-eventos-productor`);
-        }, 3000); // Espera 3 segundos antes de redirigir
+        }, 3000); // Espera 5 segundos antes de redirigir
       } else {
         toast.error(updateData.message || "Error al registrar el evento");
       }
     } catch (error) {
-      // Manejo de errores
       console.error("Error al registrar el evento:", error);
       toast.error("Error al registrar el evento");
     }
   };
 
-  const handleVolver = async (e) => {
-
+  const handleVolver = (e) => {
     navigate(`/registrar-evento3`, { state: { eventoId } });
-
-  }
-
+  };
 
   return (
     <div className="container-fluid">
@@ -188,8 +183,8 @@ const RegistrarEvento4 = () => {
 
               <div className="col-12 d-flex justify-content-end">
                 <button
-                  className="btn btn-primary me-2" // Estilo de botón celeste (Bootstrap primary)
-                  onClick={handleVolver} // Volver a la página anterior
+                  className="btn btn-primary me-2"
+                  onClick={handleVolver}
                 >
                   Volver
                 </button>
@@ -204,6 +199,21 @@ const RegistrarEvento4 = () => {
           </div>
         </div>
       </div>
+      {mostrarCartel && (
+  <div
+    className="position-fixed top-50 start-50 translate-middle bg-success text-white p-4 rounded shadow-lg"
+    style={{
+      zIndex: 1050,
+      maxWidth: "400px",  // Ancho más reducido
+      width: "100%", // Asegura que sea responsivo
+      textAlign: "center", // Centra el contenido del texto
+    }}
+  >
+    <h5 className="mb-2">¡Registro Exitoso!</h5>
+    <p>El registro fue exitoso. Ahora dirígete a la app móvil para finalizar el registro de tu evento.</p>
+  </div>
+)}
+
     </div>
   );
 };
