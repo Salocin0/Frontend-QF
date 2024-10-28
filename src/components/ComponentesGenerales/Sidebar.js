@@ -33,9 +33,19 @@ const Sidebar = ({ tipoUsuario }) => {
   const toggleNotificacion = () => {
     setMostrarNotificacion((prev) => !prev);
   };
+
+  const sidebarStyles = {
+    width: "100%", // Asegura que ocupe el 100% del ancho disponible
+    height: "100vh", // Extiende la altura al 100% de la ventana para una barra lateral completa
+    display: "flex",
+    flexDirection: "column",
+    padding: "20px",
+    boxSizing: "border-box",
+  };
+
   return (
     <>
-      <div className={"sidebar"}>
+      <div className={"sidebar"} style={sidebarStyles}>
         <div className={"logocontainer"}>
           <a href="/inicio">
             <img src={Logo} alt="Logo" className={"logo"} />

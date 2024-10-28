@@ -26,6 +26,7 @@ const Footer = () => {
       bottom: "0",
       width: "100%",
       left: "0",
+      borderTop: `1px solid ${Colors.BlancoEnBlanco}`,
     },
     containerStyle: {
       maxWidth: "960px",

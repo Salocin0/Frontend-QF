@@ -75,8 +75,8 @@ export const Main = () => {
         <Route path="/cambiar-contrasenia/:codigo" element={<CambiarContraseña />}/>
         <Route path="/habilitar-Usuario-deshabilitado/:id" element={<HabilitarUsuario />} />
         <Route path="/" element={<LandingPage />} />
+        <Route path="/inicio" element={<Inicio />} />
         
-        <Route path="/home" element={<Home />} />
         {/*nuevos estilos por aplicar*/}
         
         
@@ -84,7 +84,6 @@ export const Main = () => {
         <Route path="/adquirir-nuevo-rolPE" element={<AdquirirNuevoRolPE />} />
         <Route path="/sidebar" element={<Sidebar />} />
         <Route path="/filtersEventosConsumidor" element={<FiltersEventosConsumidor/>} />
-        <Route path="/inicio" element={<Inicio />} />
         <Route path="/adquirir-nuevo-rolEPC" element={<AdquirirNuevoRolEPC />} />
         <Route path="/consultar-usuarioPE" element={<ConsultarUsuarioPE />} />
         <Route path="/consultar-usuarioEPC" element={<ConsultarUsuarioEPC />} />
