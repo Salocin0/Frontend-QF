@@ -20,8 +20,7 @@ const Footer = () => {
   const styles = {
     footerStyle: {
       padding: "1rem",
-      backgroundColor: Colors.Blanco,
-      borderTop: `1px solid ${Colors.GrisClaro}`,
+      backgroundColor: Colors.GrisAzuladoOscuro,
       textAlign: "center",
       position: "fixed",
       bottom: "0",
@@ -63,7 +62,7 @@ const Footer = () => {
     },
     textStyle: {
       fontSize: "0.875rem",
-      color: Colors.Negro,
+      color: Colors.BlancoEnBlanco,
       margin: 0,
     },
   };
