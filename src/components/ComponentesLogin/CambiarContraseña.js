@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import PasswordToggle from "../ComponenteRegister/PasswordToggle";
+import useDynamicColors from "../../UseDinamicColors";
+import { Link } from "react-router-dom";
 
 const CambiarContraseña = () => {
+  const Colors = useDynamicColors();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { codigo } = useParams();
@@ -24,7 +26,7 @@ const CambiarContraseña = () => {
       const json_contrasenia = {
         contraseña: newPassword,
       };
-      fetch("http://127.0.0.1:8000/user/recuperarcontrasenia/" + codigo + "/", {
+      fetch(`http://127.0.0.1:8000/user/recuperarcontrasenia/${codigo}/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(json_contrasenia),
@@ -48,66 +50,123 @@ const CambiarContraseña = () => {
     }
   };
 
+  const styles = {
+    container: {
+      height: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      margin: 0,
+      padding: 0,
+      backgroundRepeat: "no-repeat",
+      backgroundAttachment: "fixed",
+      backgroundPosition: "center",
+      backgroundImage: `url(./../QuickFoodFondo.png)`,
+      backgroundSize: "cover",
+    },
+    card: {
+      borderRadius: "10px",
+      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+      maxWidth: "600px",
+      width: "100%",
+      backgroundColor: Colors.Blanco,
+    },
+    cardBody: {
+      textAlign: "center",
+    },
+    title: {
+      backgroundColor: Colors.Naranja,
+      padding: "1rem",
+      borderTopLeftRadius: "8px",
+      borderTopRightRadius: "8px",
+      color: Colors.Negro,
+    },
+    label: {
+      display: "block",
+      marginBottom: "0.5rem",
+      color: Colors.Negro,
+      fontSize: "0.9rem",
+      textAlign: "left",
+      margin: "0px",
+      fontWeight: "bold",
+    },
+    inputContainer: {
+      marginBottom: "1rem",
+    },
+    input: {
+      width: "100%",
+      padding: "0.5rem",
+      borderRadius: "5px",
+      border: `1px solid ${Colors.Gris}`,
+    },
+    buttonContainer: {
+      display: "flex",
+      justifyContent: "space-between",
+      gap: "10px",
+      marginTop: "1rem",
+    },
+    buttonBack: {
+      backgroundColor: Colors.Gris,
+      color: Colors.BlancoEnBlanco,
+      padding: "0.5rem 1rem",
+      cursor: "pointer",
+      borderRadius: "5px",
+    },
+    buttonSubmit: {
+      backgroundColor: Colors.Verde,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      padding: "0.5rem 1rem",
+      cursor: "pointer",
+      borderRadius: "5px",
+    },
+    buttonSubmitHover: {
+      backgroundColor: "#333",
+    },
+    form: {
+      padding: "20px",
+    },
+  };
+
   return (
-    <section
-      className="vh-100 d-flex align-items-center justify-content-center"
-      style={{
-        margin: 0,
-        padding: 0,
-        backgroundRepeat: "no-repeat",
-        backgroundAttachment: "fixed",
-        backgroundPosition: "center",
-        background: `url(./../QuickFoodFondo.png)`,
-        backgroundSize: "cover",
-      }}
-    >
-      <div className="container">
-        <div className="row justify-content-sm-center">
-          <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-            <div className="card shadow-lg">
-              <div className="card-body p-4">
-                <h1 className="fs-4 card-title fw-bold mb-4 text-black">
-                  Cambiar Contraseña
-                </h1>
-                <form onSubmit={handleSubmit} className="needs-validation">
-                  <div className="mb-3">
-                    <label className="mb-2 text-muted" htmlFor="newPassword">
-                      Nueva Contraseña:
-                    </label>
-                    <input
-                      type="password"
-                      id="newPassword"
-                      className="form-control"
-                      value={newPassword}
-                      onChange={handleNewPasswordChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label
-                      className="mb-2 text-muted"
-                      htmlFor="confirmPassword"
-                    >
-                      Repetir Contraseña:
-                    </label>
-                    <input
-                      type="password"
-                      id="confirmPassword"
-                      className="form-control"
-                      value={confirmPassword}
-                      onChange={handleConfirmPasswordChange}
-                      required
-                    />
-                  </div>
-                  <div className="d-grid">
-                    <button type="submit" className="btn btn-primary">
-                      Cambiar Contraseña
-                    </button>
-                  </div>
-                </form>
-              </div>
+    <section style={styles.container}>
+      <div style={styles.card}>
+        <div style={styles.cardBody}>
+          <h1 style={styles.title}>Cambiar Contraseña</h1>
+          <form onSubmit={handleSubmit} style={styles.form}>
+            <div style={styles.inputContainer}>
+              <label htmlFor="newPassword" style={styles.label}>
+                Nueva Contraseña
+              </label>
+              <PasswordToggle
+                inputId="newPassword"
+                value={newPassword}
+                onChange={handleNewPasswordChange}
+                placeholder="Ingrese su nueva contraseña"
+                style={styles.input}
+              />
             </div>
-          </div>
+            <div style={styles.inputContainer}>
+              <label htmlFor="confirmPassword" style={styles.label}>
+                Confirmar Nueva Contraseña
+              </label>
+              <PasswordToggle
+                inputId="confirmPassword"
+                value={confirmPassword}
+                onChange={handleConfirmPasswordChange}
+                placeholder="Confirme su nueva contraseña"
+                style={styles.input}
+              />
+            </div>
+            <div style={styles.buttonContainer}>
+              <Link style={styles.buttonBack} to={"/login"}>
+                Volver
+              </Link>
+              <button type="submit" style={styles.buttonSubmit}>
+                Cambiar Contraseña
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </section>

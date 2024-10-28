@@ -6,6 +6,7 @@ import FormEncargado from "./FormEncargado";
 import FormProductor from "./FormProductor";
 import FormRepartidor from "./FormRepartidor";
 import FormUsuario from "./FormUsuario";
+import "../placeholder.css"
 
 const ProcesoRegistro = () => {
   const { tipoUsuario } = useParams();

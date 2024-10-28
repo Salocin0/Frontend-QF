@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
 import "./.././sass/main.css";
+import useDynamicColors from '../../UseDinamicColors';
 
 const initialData = {
   tasks: {},
@@ -41,20 +42,17 @@ const initialData = {
   columnOrder: ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'],
 };
 
-
 const KanbanBoard = () => {
   const [data, setData] = useState(initialData);
   const [session, setSession] = useState(null);
   const [recargar, setRecargar] = useState(0);
   const [confirmPopup, setConfirmPopup] = useState(null);
-  const [showCancelledColumn, setShowCancelledColumn] = useState(false);
-
+  const [showCancelledColumn, setShowCancelledColumn] = useState(true);
+  const Colors = useDynamicColors();
 
   const recargarComponente = () => {
     setRecargar(prevRecargar => prevRecargar + 1);
   };
-
-
 
   useEffect(() => {
     const sessionId = localStorage.getItem('sessionId');
@@ -150,7 +148,6 @@ const KanbanBoard = () => {
       'column-4': 'En Camino',
       'column-5': 'Entregado',
       'column-6': 'Cancelado',
-
     };
 
     const newEstado = newState[newColumnId];
@@ -307,18 +304,12 @@ const KanbanBoard = () => {
       .catch((error) => console.error("Error canceling pedido:", error));
   };
 
-
-
-
   return (
     <div style={{ display: 'flex', height: '100vh', margin: 0, padding: 0 }}>
       <DragDropContext onDragEnd={onDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];
           const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
-
-
-
           const headerColors = {
             'column-1': '#FFC107', // Amarillo
             'column-2': 'lightgreen',
@@ -326,8 +317,6 @@ const KanbanBoard = () => {
             'column-4': 'pink', // Verde
             'column-5': 'green',
             'column-6': 'red',
-
-
           };
 
           if (columnId === 'column-6' && !showCancelledColumn) {
@@ -398,11 +387,11 @@ const KanbanBoard = () => {
                               </button>
                             </div>
                             <div style={{ marginTop: '4px', marginBottom: '8px' }}>
-                              <div>{new Date(task.fecha).toLocaleDateString()} {new Date(task.fecha).toLocaleTimeString()}</div>
+                              <div>{new Date(task.fecha).toLocaleDateString()} {new Date(task.fecha).toLocaleTimeString("es")}</div>
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
                               <div style={{ fontWeight: 'bold', fontSize: '1.5em' }}>${Number(task.total).toFixed(2)}</div>
-                              <div style={{ backgroundColor: getStatusColor(task.estado), color: 'black', padding: '8px 2px', fontSize: '10px', fontWeight: 'bold', borderRadius: '4px' }}>
+                              <div style={{ backgroundColor: getStatusColor(task.estado), color: 'black', padding: '10px 4px', fontSize: '10px', fontWeight: 'bold', borderRadius: '10px', margin:0 }}>
                                 {task.estado}
                               </div>
                             </div>
@@ -447,22 +436,6 @@ const KanbanBoard = () => {
           </button>
         </div>
       )}
-<button
-onClick={() => setShowCancelledColumn(!showCancelledColumn)}        style={{
-          position: 'fixed',
-          bottom: 20,
-          right: 20,
-          backgroundColor: 'black',
-          color: '#FFC107',
-          border: '2px solid #FFC107',
-          borderRadius: 50,
-          padding: '10px 20px',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-          cursor: 'pointer',
-        }}
-      >
-          {showCancelledColumn ? 'Ocultar Cancelados' : 'Pedidos Cancelados'}
-          </button>
     </div>
   );
 };

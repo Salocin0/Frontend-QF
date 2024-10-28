@@ -1,22 +1,18 @@
+import React, { useState } from "react";
 import { getToken } from '@firebase/messaging';
-import "bootstrap/dist/css/bootstrap.min.css";
-import React from "react";
 import { messaging } from '../../firebase.js';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import PasswordToggle from "../ComponenteRegister/PasswordToggle.jsx";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useLogin from "../Hooks/UseLogin";
-import "./../sass/main.scss";
+import useDynamicColors from "../../UseDinamicColors.js";
 
 const Login = () => {
   const { updateUser } = React.useContext(UserContext);
-  const {
-    email,
-    password,
-    handleEmailChange,
-    handlePasswordChange,
-    handleLogin,
-  } = useLogin();
+  const { email, password, handleEmailChange, handlePasswordChange, handleLogin } = useLogin();
+  const Colors = useDynamicColors();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,94 +20,145 @@ const Login = () => {
 
     if (loginResult.success) {
       updateUser(loginResult.data);
-
       const activarMensajes = async () => {
         const token = await getToken(messaging, {
-            vapidKey: "BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o"
+          vapidKey: "BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o"
         }).catch(error => console.log("Error"));
-
         if (token) console.log("Tu token:", token);
         if (!token) console.log("No tienes token");
+      }
+      activarMensajes();
     }
+  };
+
+  const styles = {
+    sectionStyle: {
+      height: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundImage: "url(/../QuickFoodFondo.png)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    },    
+    containerStyle: {
+      maxWidth: "400px",
+      width: "100%",
+      padding: "2rem",
+      borderRadius: "8px",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
+      backgroundColor: Colors.Blanco,
+      textAlign: "center",
+      border: `1px solid ${Colors.Gris}`,
+    },
+    titleStyle: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      marginBottom: "1rem",
+      color: Colors.GrisOscuro,
+    },
+    subtitleStyle: {
+      fontSize: "0.875rem",
+      color: Colors.Gris,
+      marginBottom: "1.5rem",
+    },
+    formStyle: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    inputWrapper: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      marginBottom: "1rem",
+      position: "relative",
+    },
+    inputStyle: {
+      width: "100%",
+      padding: "0.75rem",
+      fontSize: "1rem",
+      borderRadius: "4px",
+      border: `1px solid ${Colors.Gris}`,
+    },
+    buttonStyle: {
+      width: "100%",
+      padding: "0.75rem",
+      fontSize: "1rem",
+      fontWeight: "bold",
+      backgroundColor: Colors.Naranja,
+      color: Colors.Blanco,
+      borderRadius: "4px",
+      border: "none",
+      cursor: "pointer",
+    },
+    linkStyle: {
+      color: Colors.Azul,
+      textDecoration: "none",
+      fontSize: "0.875rem",
+      cursor: "pointer",
+    },
+    footerLinks: {
+      display: "flex",
+      justifyContent: "space-between",
+      marginTop: "1rem",
+    },
+    label: {
+      fontSize: "1rem",
+      color: Colors.Negro,
+      fontWeight: "bold",
+      margin: 0,
+      cursor: "default",
+    },
+    iconStyle: {
+      position: "absolute",
+      right: "15px",
+      top: "68%",
+      transform: "translateY(-50%)",
+      cursor: "pointer",
+      color: Colors.Gris,
     }
   };
 
   return (
-    <section
-      className="vh-100 d-flex align-items-center justify-content-center"
-      style={{
-        background: "url(QuickFoodFondo.png)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="contenedor">
-        <div className="tarjeta">
-          <h1 className="fs-4 card-title fw-bold mb-4 text-black">QuickFood</h1>
-          <div className="">
-            <form onSubmit={handleSubmit} className="needs-validation">
-              <div className="mb-3">
-                <label className="mb-2 text-muted" htmlFor="usuario">
-                  Usuario
-                </label>
-                <input
-                  id="usuario"
-                  type="text"
-                  className="form-control"
-                  name="usuario"
-                  value={email}
-                  onChange={handleEmailChange}
-                  required
-                  autoFocus
-                />
-              </div>
-
-              <div className="mb-3">
-                <div className="mb-2 w-100">
-                  <label className="text-muted" htmlFor="contraseña">
-                    Contraseña
-                  </label>
-                </div>
-                <input
-                  id="contraseña"
-                  type="password"
-                  className="form-control"
-                  name="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  required
-                />
-                <div className="invalid-feedback">Contraseña Requerida</div>
-              </div>
-
-              <div className="d-flex align-items-center">
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-strong ms-auto"
-                >
-                  Ingresar
-                </button>
-              </div>
-
-              <div className="mt-2 text-center">
-                <a href="/recuperar" className="text-primary">
-                  Recuperar Contraseña
-                </a>
-              </div>
-
-              <div className="mt-2 text-center">
-                ¿No tienes cuenta?{" "}
-                <a href="/seleccion-perfil" className="text-primary">
-                  Registrarme
-                </a>
-              </div>
-            </form>
+    <section style={styles.sectionStyle}>
+      <div style={styles.containerStyle}>
+        <h1 style={styles.titleStyle}>QuickFood</h1>
+        <p style={styles.subtitleStyle}>Ingresa tus credenciales para acceder</p>
+        <form onSubmit={handleSubmit} style={styles.formStyle}>
+          <div style={styles.inputWrapper}>
+            <label htmlFor="usuario" style={styles.label}>Usuario</label>
+            <input
+              id="usuario"
+              type="text"
+              placeholder="Ingresa tu usuario"
+              style={styles.inputStyle}
+              value={email}
+              onChange={handleEmailChange}
+              required
+            />
           </div>
-        </div>
+
+          <div style={styles.inputWrapper}>
+            <label htmlFor="contraseña" style={styles.label}>Contraseña</label>
+            <PasswordToggle
+              inputId="contraseña"
+              value={password}
+              onChange={handlePasswordChange}
+              placeholder="Ingresa tu contraseña"
+              style={styles.inputStyle}
+            />
+          </div>
+
+          <button type="submit" style={styles.buttonStyle}>Iniciar sesión</button>
+
+          <div style={styles.footerLinks}>
+            <a href="/seleccion-perfil" style={styles.linkStyle}>Registrarse</a>
+            <a href="/recuperar" style={styles.linkStyle}>¿Olvidaste tu contraseña?</a>
+          </div>
+        </form>
       </div>
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </section>
   );
 };

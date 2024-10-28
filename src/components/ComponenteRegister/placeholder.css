@@ -1,0 +1,7 @@
+input::placeholder {
+    color: gray !important;
+}
+
+::-ms-input-placeholder {
+    color: gray !important;
+}

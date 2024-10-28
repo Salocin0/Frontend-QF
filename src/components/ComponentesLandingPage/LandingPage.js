@@ -18,10 +18,7 @@ const LandingPage = () => {
       <section className="ComoFunciona pb-3">
         <ComoFunciona />
       </section>
-
-      <footer className="footer">
         <Footer />
-      </footer>
     </div>
   );
 };
