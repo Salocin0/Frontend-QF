@@ -1,95 +1,250 @@
-import React, { useState, useRef, useEffect } from 'react';
-import styles from './style.module.css';
-import userImageURL from '../user-img.png'; // Actualiza esta ruta
-import botImageURL from '../bot-img.png'; // Actualiza esta ruta
-import logoURL from '../quickfood-logo.png'; // Actualiza esta ruta
+import React, { useState, useRef, useEffect } from "react";
+import userImageURL from "../user-img.png";
+import botImageURL from "../bot-img.png";
+import logoURL from "../quickfood-logo.png";
+import useDynamicColors from "../../UseDinamicColors";
+import "./../ComponenteRegister/placeholder.css";
 
 const Chatbot = () => {
-    const [messages, setMessages] = useState([
-        {
-          message: 'Hola Agostina! 👋 👋 \nEspero estés bien!\nAcá Foody 🤖  !\n\nDecime, en que puedo ayudarte?',
-          sender: 'bot'
-        }
-      ]);
-      const chatInputRef = useRef(null);
-      const chatBoxRef = useRef(null);
-    
-  
-    useEffect(() => {
-      const chatInput = chatInputRef.current;
-      const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          sendMessage();
-        }
-      };
-  
-      chatInput.addEventListener('keypress', handleKeyPress);
-      return () => {
-        chatInput.removeEventListener('keypress', handleKeyPress);
-      };
-    }, []);
-  
-    const sendMessage = () => {
-      const chatInput = chatInputRef.current;
-      const message = chatInput.value.trim();
-      if (message) {
-        addMessageToChat(message, 'user');
-        chatInput.value = '';
-  
-        fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
-          method: 'POST',
-          body: new URLSearchParams('userMessage=' + message),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          addMessageToChat(data.data.chat_response, 'bot');
-        })
-        .catch(error => console.error('Error:', error));
-        console.log('SI se ejecutó')
+  const Colors = useDynamicColors();
+  const styles = {
+    global: {
+      fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      color: Colors.Blanco,
+      borderRadius: "20px",
+      margin: 0,
+      padding: 0,
+    },
+    header: {
+      backgroundColor: Colors.GrisAzulado,
+      textAlign: "center",
+      padding: "20px 0",
+      borderBottom: `5px solid ${Colors.Rosa}`,
+      borderRadius: "20px",
+      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+    },
+    headerTitle: {
+      margin: 0,
+      color: Colors.Rosa,
+      fontSize: "1.5em",
+    },
+    chatContainer: {
+      width: "100%",
+      margin: "20px auto",
+      padding: "10px",
+      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+      backgroundColor: Colors.GrisAzulado,
+      borderRadius: "20px",
+    },
+    chatBox: {
+      height: "250px",
+      overflowY: "auto",
+      border: `2px solid ${Colors.Rosa}`,
+      padding: "10px",
+      marginBottom: "20px",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      borderRadius: "15px",
+    },
+    chatMessage: {
+      display: "flex",
+      alignItems: "flex-start",
+      marginBottom: "15px",
+      flexDirection: "row",
+    },
+    messageText: {
+      borderRadius: "20px",
+      padding: "15px",
+      maxWidth: "70%",
+      fontSize: "1em",
+      backgroundColor: Colors.GrisAzulado,
+    },
+    userImage: {
+      width: "50px",
+      height: "50px",
+      borderRadius: "50%",
+      objectFit: "cover",
+      marginLeft: "10px",
+    },
+    botImage: {
+      width: "50px",
+      height: "50px",
+      borderRadius: "50%",
+      objectFit: "cover",
+      marginRight: "10px",
+    },
+    userMessageText: {
+      color: Colors.BlancoEnBlanco,
+      marginLeft: "15px",
+    },
+    botMessageText: {
+      color: Colors.BlancoEnBlanco,
+      marginRight: "15px",
+    },
+    chatInputContainer: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+    },
+    chatInput: {
+      flex: 1,
+      padding: "10px",
+      border: `2px solid ${Colors.Rosa}`,
+      borderRadius: "20px",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      color: Colors.BlancoEnBlanco,
+      transition: "border 0.3s ease, box-shadow 0.3s ease",
+    },
+    sendBtn: {
+      padding: "10px 20px",
+      backgroundColor: Colors.Rosa,
+      color: "white",
+      border: "none",
+      borderRadius: "20px",
+      cursor: "pointer",
+      transition: "background-color 0.3s ease",
+    },
+    footer: {
+      textAlign: "center",
+      padding: "15px 0",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      fontSize: "1em",
+      borderTop: `5px solid ${Colors.Rosa}`,
+      borderRadius: "20px",
+      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+      colors: Colors.BlancoEnBlanco,
+    },
+    footerLink: {
+      color: Colors.Rosa,
+      textDecoration: "none",
+    },
+    text: {
+      color: Colors.BlancoEnBlanco,
+    },
+  };
+
+  const [messages, setMessages] = useState([
+    {
+      message:
+        "Hola Agostina! 👋 👋 \nEspero estés bien!\nAcá Foody 🤖  !\n\nDecime, en que puedo ayudarte?",
+      sender: "bot",
+    },
+  ]);
+  const chatInputRef = useRef(null);
+  const chatBoxRef = useRef(null);
+
+  useEffect(() => {
+    const chatInput = chatInputRef.current;
+    const handleKeyPress = (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendMessage();
       }
     };
-  
-    const addMessageToChat = (message, sender) => {
-      setMessages(prevMessages => [
-        ...prevMessages,
-        { message, sender }
-      ]);
-  
-      setTimeout(() => {
-        if (chatBoxRef.current) {
-          chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-        }
-      }, 100);
+
+    chatInput.addEventListener("keypress", handleKeyPress);
+    return () => {
+      chatInput.removeEventListener("keypress", handleKeyPress);
     };
-  
-    return (
-      <div>
-        <header className={styles.header}>
-          <img src={logoURL} alt="QuickFood Logo" className={styles.logo} />
-          <h1>Bienvenido al ChatFood!</h1>
-        </header>
-        <div className={styles.chatContainer}>
-          <div className={styles.chatBox} ref={chatBoxRef}>
-            {messages.map((msg, index) => (
-              <div key={index} className={`${styles.chatMessage} ${msg.sender === 'user' ? styles.userMessage : styles.botMessage}`}>
-                <img src={msg.sender === 'user' ? userImageURL : botImageURL} alt={msg.sender} className={msg.sender === 'user' ? styles.userImage : styles.botImage} />
-                <div className={styles.messageText}>{msg.message}</div>
-              </div>
-            ))}
-          </div>
-          <input type="text" ref={chatInputRef} className={styles.chatInput} placeholder="Escribí tu consulta aquí..." />
-          <button onClick={sendMessage} className={styles.sendBtn}>Enviar</button>
-        </div>
-        <footer className={styles.footer}>
-          <p>&copy; 2024 QuickFood. All rights reserved.</p>
-          <p><a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
-        </footer>
-      </div>
-    );
+  }, []);
+
+  const sendMessage = () => {
+    const chatInput = chatInputRef.current;
+    const message = chatInput.value.trim();
+    if (message) {
+      addMessageToChat(message, "user");
+      chatInput.value = "";
+
+      fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
+        method: "POST",
+        body: new URLSearchParams("userMessage=" + message),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          addMessageToChat(data.data.chat_response, "bot");
+        })
+        .catch((error) => console.error("Error:", error));
+    }
   };
-  
-  export default Chatbot;
+
+  const addMessageToChat = (message, sender) => {
+    setMessages((prevMessages) => [...prevMessages, { message, sender }]);
+
+    setTimeout(() => {
+      if (chatBoxRef.current) {
+        chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+      }
+    }, 100);
+  };
+
+  return (
+    <div style={styles.global}>
+      <header style={styles.header}>
+        <h1 style={styles.headerTitle}>Bienvenido al ChatFood!</h1>
+      </header>
+      <div style={styles.chatContainer}>
+        <div style={styles.chatBox} ref={chatBoxRef}>
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              style={{
+                ...styles.chatMessage,
+                justifyContent:
+                  msg.sender === "user" ? "flex-end" : "flex-start",
+                textAlign: msg.sender === "user" ? "right" : "left",
+              }}
+            >
+              {msg.sender === "user" ? (
+                <>
+                  <div
+                    style={{ ...styles.messageText, ...styles.userMessageText }}
+                  >
+                    {msg.message}
+                  </div>
+                  <img src={userImageURL} alt="user" style={styles.userImage} />
+                </>
+              ) : (
+                <>
+                  <img src={botImageURL} alt="bot" style={styles.botImage} />
+                  <div
+                    style={{ ...styles.messageText, ...styles.botMessageText }}
+                  >
+                    {msg.message}
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+        <div style={styles.chatInputContainer}>
+          <input
+            type="text"
+            ref={chatInputRef}
+            style={styles.chatInput}
+            placeholder="Escribí tu consulta aquí..."
+          />
+          <button onClick={sendMessage} style={styles.sendBtn}>
+            Enviar
+          </button>
+        </div>
+      </div>
+      <footer style={styles.footer}>
+        <p style={styles.text}>&copy; 2024 QuickFood. All rights reserved.</p>
+        <p>
+          <a href="#" style={styles.footerLink}>
+            Privacy Policy
+          </a>{" "}
+          |{" "}
+          <a href="#" style={styles.footerLink}>
+            Terms of Service
+          </a>
+        </p>
+      </footer>
+    </div>
+  );
+};
+
+export default Chatbot;

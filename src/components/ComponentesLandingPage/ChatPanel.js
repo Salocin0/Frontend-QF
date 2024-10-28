@@ -1,18 +1,40 @@
-import React from 'react';
-//import ChildComponent from './ChildComponent';
-import styles from './styles.module.css'; 
-import Chatbot from './ChatBot';
+import React from "react";
+import Chatbot from "./ChatBot";
+import useDynamicColors from "../../UseDinamicColors";
 
 const Panel = ({ onClose }) => {
+  const Colors = useDynamicColors();
+  const styles = {
+    panel: {
+      position: "fixed",
+      bottom: 55,
+      right: 0,
+      width: "400px",
+      height: "auto",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      border: `2px solid ${Colors.Rosa}`,
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+      zIndex: 1000,
+      boxSizing: "border-box",
+      borderRadius: "20px",
+    },
+    closeButton: {
+      position: "absolute",
+      top: "5px",
+      right: "20px",
+      background: "none",
+      border: "none",
+      fontSize: "30px",
+      color: Colors.Gris,
+      cursor: "pointer",
+    },
+  };
   return (
-    <div className={styles.panel}>
-      <button
-        className={styles.closeButton}
-        onClick={onClose}
-      >
+    <div style={styles.panel}>
+      <button style={styles.closeButton} onClick={onClose}>
         &times;
       </button>
-        <Chatbot/>
+      <Chatbot />
     </div>
   );
 };

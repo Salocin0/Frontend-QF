@@ -74,11 +74,12 @@ export const Main = () => {
         <Route path="/recuperar" element={<RecuperarContraseña />} />
         <Route path="/cambiar-contrasenia/:codigo" element={<CambiarContraseña />}/>
         <Route path="/habilitar-Usuario-deshabilitado/:id" element={<HabilitarUsuario />} />
-        
-        
-        {/*nuevos estilos por aplicar*/}
         <Route path="/" element={<LandingPage />} />
+        
         <Route path="/home" element={<Home />} />
+        {/*nuevos estilos por aplicar*/}
+        
+        
         <Route path="/consultar-usuario" element={<ConsultarUsuario />} />
         <Route path="/adquirir-nuevo-rolPE" element={<AdquirirNuevoRolPE />} />
         <Route path="/sidebar" element={<Sidebar />} />
@@ -116,7 +117,6 @@ export const Main = () => {
         <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<RegistrarEvento4 />} />
         <Route path="/eventoPrueba" element={<EventoPrueba />} />
         <Route path="/evento/:id" element={<ConsultarEvento />} />
-
         <Route path="/asociarRepartidorAEvento" element={<AsociarRepartidorAEvento />} />
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
         <Route path="/misAsociacionesR" element={<AsociacionesR/>} />

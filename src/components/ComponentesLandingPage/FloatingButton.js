@@ -1,10 +1,40 @@
 import React, { useState } from 'react';
 import Panel from './ChatPanel';
 import logoBot from '../bot-img.png';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Importa Bootstrap CSS
-
+import useDynamicColors from '../../UseDinamicColors';
 
 const FloatingButton = () => {
+  const Colors = useDynamicColors();
+  const styles = {
+    button: {
+      width: '200px',
+      height: '50px',
+      fontSize: '16px',
+      overflow: 'hidden',
+      position: 'fixed',
+      bottom: '70px',
+      right: '20px',
+      borderRadius: '50px',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+      backgroundColor: Colors.Rosa,
+      border: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      color: Colors.BlancoEnBlanco,
+    },
+    buttonText: {
+      flex: 1,
+      textAlign: 'center',
+      fontWeight: 'bold',
+    },
+    botImage: {
+      height: '100%',
+      borderRadius: '50%',
+      border: `2px solid ${Colors.Negro}`,
+    },
+  };
+  
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const togglePanel = () => {
@@ -14,19 +44,16 @@ const FloatingButton = () => {
   return (
     <div>
       <button
-        className="btn btn-primary position-fixed d-flex align-items-center justify-content-between"
-        style={{ width: '300px', height: '80px', fontSize: '24px', padding: '0 20px', overflow: 'hidden', bottom: '70px', right: '20px', borderRadius: '50px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', backgroundColor: '#D204D6', borderColor: '#D204D9'}}
+        style={styles.button}
         onClick={togglePanel}
-      > 
-        <span style={{ flex: 1, textAlign: 'center', fontWeight: 'bold' }}>Consultas Foody</span>
-        <img src={logoBot} alt="Bot" className="bot-image" style={{ width: '60px', height: '60px', borderRadius: '50%' }} />
+      >
+        <span style={styles.buttonText}>Consultas Foody</span>
+        <img src={logoBot} alt="Bot" style={styles.botImage} />
       </button>
 
       {isPanelOpen && <Panel onClose={togglePanel} />}
-    
     </div>
   );
-  
 };
 
 export default FloatingButton;
