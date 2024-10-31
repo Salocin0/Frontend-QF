@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext,useEffect } from "react";
 import { getToken } from '@firebase/messaging';
 import { messaging } from '../../firebase.js';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import PasswordToggle from "../ComponenteRegister/PasswordToggle.jsx";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -10,9 +8,33 @@ import useLogin from "../Hooks/UseLogin";
 import useDynamicColors from "../../UseDinamicColors.js";
 
 const Login = () => {
-  const { updateUser } = React.useContext(UserContext);
-  const { email, password, handleEmailChange, handlePasswordChange, handleLogin } = useLogin();
+  const { updateUser } = useContext(UserContext);
+  const { email, password, setTokenWeb, handleEmailChange, handlePasswordChange, handleLogin } = useLogin();
   const Colors = useDynamicColors();
+
+  const activarMensajes = async () => {
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        const token = await getToken(messaging, {
+          vapidKey: "BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o"
+        });
+        if (token) {
+          setTokenWeb(token)
+        } else {
+          console.log("No se pudo obtener el token.");
+        }
+      } else {
+        console.log("Permiso de notificación denegado.");
+      }
+    } catch (error) {
+      console.log("Error al activar mensajes:", error);
+    }
+  };
+
+  useEffect(() => {
+    activarMensajes();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,15 +42,8 @@ const Login = () => {
 
     if (loginResult.success) {
       updateUser(loginResult.data);
-      const activarMensajes = async () => {
-        const token = await getToken(messaging, {
-          vapidKey: "BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o"
-        }).catch(error => console.log("Error"));
-        if (token) console.log("Tu token:", token);
-        if (!token) console.log("No tienes token");
-      }
-      activarMensajes();
     }
+
   };
 
   const styles = {
@@ -41,7 +56,7 @@ const Login = () => {
       backgroundSize: "cover",
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
-    },    
+    },
     containerStyle: {
       maxWidth: "400px",
       width: "100%",

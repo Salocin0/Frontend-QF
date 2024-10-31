@@ -15,8 +15,12 @@
 .especial {
   order: 999;
   position: absolute;
-  bottom: 0;
+  bottom: 50px;
   width: 100%;
+}
+
+.especial:hover {
+  color: black;
 }
 
 .logo {
@@ -159,7 +163,6 @@
 #dropdown {
   display: flex;
   align-items: center;
-  padding-right: 5px;
   margin-left: 0;
 }
 

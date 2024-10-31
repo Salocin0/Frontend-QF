@@ -1,10 +1,11 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faArrowRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faArrowRightToBracket, faShoppingCart } from '@fortawesome/free-solid-svg-icons'; // Asegúrate de importar faShoppingCart
 import useDynamicColors from "../../UseDinamicColors";
 
 const ActionButton = ({ title, icon, onClick, style }) => {
-    const Colors = useDynamicColors();
+  const Colors = useDynamicColors();
+  
   const styles = {
     container: {
       ...style,
@@ -24,21 +25,24 @@ const ActionButton = ({ title, icon, onClick, style }) => {
       width: "25px",
       height: "25px",
       marginRight: "20px",
+      color: Colors.Negro
     },
     title: {
       fontWeight: "bold",
       fontSize: "1.2rem",
-      color: "black",
+      color: Colors.Negro,
     },
   };
 
-  // Comprobar si el ícono no se proporciona y el título es "Mi Perfil"
+  // Nueva lógica para seleccionar el ícono basado en el título
   const renderIcon = () => {
-    if (!icon && title === "Mi Perfil") {
+    if (title === "Carrito") {
+      return <FontAwesomeIcon icon={faShoppingCart} style={styles.iconFont} />;
+    } else if (title === "Mi Perfil") {
       return <FontAwesomeIcon icon={faUser} style={styles.iconFont} />;
+    } else {
+      return <FontAwesomeIcon icon={faArrowRightToBracket} style={styles.iconFont} />;
     }
-    // Si hay un ícono, se utiliza el proporcionado; de lo contrario, se muestra otro ícono
-    return icon ? <img src={icon} alt={title} style={styles.icon} /> : <FontAwesomeIcon icon={faArrowRightToBracket} style={styles.iconFont} />;
   };
 
   return (

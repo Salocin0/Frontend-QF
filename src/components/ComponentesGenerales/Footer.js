@@ -7,6 +7,7 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons"; // Importación de iconos de sol y luna
 import useDynamicColors from "../../UseDinamicColors";
+import zIndex from "@mui/material/styles/zIndex";
 
 const Footer = () => {
   const Colors = useDynamicColors();
@@ -27,6 +28,7 @@ const Footer = () => {
       width: "100%",
       left: "0",
       borderTop: `1px solid ${Colors.BlancoEnBlanco}`,
+      zIndex: 900
     },
     containerStyle: {
       maxWidth: "960px",

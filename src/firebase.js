@@ -16,9 +16,23 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/firebase-messaging-sw.js')
+    .then((registration) => {
+      console.log('Service Worker registrado:', registration);
+    })
+    .catch((error) => {
+      console.error('Error al registrar el Service Worker:', error);
+    });
+}
+
 const fetchToken = async () => {
   try {
-    const currentToken = await getToken(messaging, { vapidKey: 'BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o' });
+    const currentToken = await getToken(messaging, {
+      vapidKey: 'BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o',
+      serviceWorkerRegistration: await navigator.serviceWorker.ready
+    });
     if (currentToken) {
       console.log('Token de registro:', currentToken);
       return currentToken;

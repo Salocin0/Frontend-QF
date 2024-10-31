@@ -35,7 +35,7 @@ const CardInicio = ({ data }) => {
       borderRadius: "10px 10px 0 0",
     },
     title: {
-      fontSize: "2rem",
+      fontSize: "1.5rem",
       margin: "10px 0",
       textAlign: "center",
       color: Colors.Negro,

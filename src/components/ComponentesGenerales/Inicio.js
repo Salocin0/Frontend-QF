@@ -13,9 +13,11 @@ import Panel from "../ComponentesLandingPage/ChatPanel";
 import Footer from "./Footer";
 import asociarEvento from "../img/asociarevento.png";
 import estadisticas from "../img/Estadísticas.jpg";
+import { useNavigate } from "react-router-dom";
 const Inicio = () => {
   const [session, setSession] = useState(null);
   const Colors = useDynamicColors();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -38,18 +40,16 @@ const Inicio = () => {
   }, []);
 
   const handleLogout = () => {
-    // Aquí va la lógica para cerrar sesión
-    console.log("Cerrar sesión");
+    //TODO: Implementar funcionalidad de logout
+    navigate("/login");
   };
 
   const handleProfile = () => {
-    // Aquí va la lógica para ir al perfil
-    console.log("Ir a perfil");
+    navigate("/perfil-nuevo");
   };
 
-  const handleChatbot = () => {
-    // Aquí va la lógica para abrir el chatbot
-    togglePanel();
+  const handleCart = () => {
+    navigate("/carrito");
   };
 
   const getContentStyles = (tipoUsuario) => {
@@ -72,8 +72,8 @@ const Inicio = () => {
             "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
             "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
             "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos chatbot chatbot chatbot perfil perfil perfil perfil perfil"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos chatbot chatbot chatbot cerrarSesion cerrarSesion cerrarSesion cerrarSesion cerrarSesion"
+            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos carrito carrito carrito perfil perfil perfil perfil perfil"
+            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos carrito carrito carrito cerrarSesion cerrarSesion cerrarSesion cerrarSesion cerrarSesion"
           `,
         };
       case "productor":
@@ -94,8 +94,8 @@ const Inicio = () => {
             "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
             "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
             "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos chatbot chatbot chatbot perfil perfil perfil perfil perfil"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos chatbot chatbot chatbot cerrarSesion cerrarSesion cerrarSesion cerrarSesion cerrarSesion"
+            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos carrito carrito carrito perfil perfil perfil perfil perfil"
+            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos carrito carrito carrito cerrarSesion cerrarSesion cerrarSesion cerrarSesion cerrarSesion"
           `,
         };
       case "encargado":
@@ -116,8 +116,8 @@ const Inicio = () => {
             "eventos pedidos misasociaciones mispuestos estadisticas"
             "eventos pedidos misasociaciones mispuestos estadisticas"
             "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos chatbot perfil perfil"
-            "eventos pedidos chatbot cerrarSesion cerrarSesion"
+            "eventos pedidos carrito perfil perfil"
+            "eventos pedidos carrito cerrarSesion cerrarSesion"
           `,
         };
       default:
@@ -138,8 +138,8 @@ const Inicio = () => {
             "eventos pedidos productores puestos repartidores"
             "eventos pedidos productores puestos repartidores"
             "eventos pedidos productores puestos repartidores"
-            "eventos pedidos chatbot perfil perfil"
-            "eventos pedidos chatbot cerrarSesion cerrarSesion"
+            "eventos pedidos carrito perfil perfil"
+            "eventos pedidos carrito cerrarSesion cerrarSesion"
           `,
         };
     }
@@ -248,7 +248,7 @@ const Inicio = () => {
         to: "/misAsociacionesEPC",
         imgSrc: asociarEvento,
         title: "Mis asociaciones",
-        subtitle: "Ver tus asociacioens",
+        subtitle: "Ver tus asociaciones",
         gridArea: "misasociaciones",
       },
       {
@@ -285,12 +285,11 @@ const Inicio = () => {
       },
     },
     {
-      title: "Chatbot",
-      icon: chatboticon,
-      onClick: handleChatbot,
+      title: "Carrito",
+      onClick: handleCart,
       style: {
-        gridArea: "chatbot",
-        backgroundColor: Colors.Rosa,
+        gridArea: "carrito",
+        backgroundColor: Colors.Naranja,
         padding: "10px",
         borderRadius: "10px",
         cursor: "pointer",

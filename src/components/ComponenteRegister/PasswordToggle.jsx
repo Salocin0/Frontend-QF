@@ -15,7 +15,7 @@ const PasswordToggle = ({ inputId, value, onChange, placeholder, style, name }) 
       <input
         id={inputId}
         type={showPassword ? "text" : "password"}
-        value={value}
+        value={value || ""}
         onChange={onChange}
         placeholder={placeholder}
         style={style}
