@@ -1,11 +1,36 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import useDynamicColors from "../../UseDinamicColors";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
+import { toast } from "react-toastify";
 
 const UserProfile = ({ haveRol }) => {
   const Colors = useDynamicColors();
+  const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
+  const { user,setUser } = useContext(UserContext);
+
+  const handleLogout = () => {
+    if (user.id) {
+      fetch(`${process.env?.REACT_APP_BACK_URL}user/cerrarWeb`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: user.id }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setUser({});
+          navigate("/login");
+          toast.success("Sesión cerrada");
+        })
+        .catch((error) => toast.error("Error al cerrar sesion"));
+    }
+  };
 
   const styles = {
     icon: {
@@ -130,9 +155,9 @@ const UserProfile = ({ haveRol }) => {
         </li>
         <li style={styles.divider}></li>
         <li>
-          <a style={styles.dropdownItem} href="/">
+          <span style={styles.dropdownItem} onClick={handleLogout}>
             Cerrar Sesión
-          </a>
+          </span>
         </li>
       </ul>
     </li>
