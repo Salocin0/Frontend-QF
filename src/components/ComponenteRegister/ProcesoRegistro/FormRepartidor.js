@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./../../sass/main.scss";
-
+import useDynamicColors from "../../../UseDinamicColors";
 const FormRepartidor = ({ nextStep, backStep, handleRegistro }) => {
+  const Colors = useDynamicColors();
   const [repartidorData, setRepartidorData] = useState({
     confirmacionMayorDeEdad: false,
   });
@@ -25,61 +25,100 @@ const FormRepartidor = ({ nextStep, backStep, handleRegistro }) => {
     }
   };
 
+  const styles = {
+    container: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      backgroundImage: "url(/../QuickFoodFondo.png)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    },
+    card: {
+      width: "100%",
+      maxWidth: "600px",
+      borderRadius: "8px",
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+      backgroundColor: Colors.Blanco,
+    },
+    title: {
+      backgroundColor: Colors.Naranja,
+      padding: "1.5rem",
+      borderTopLeftRadius: "8px",
+      borderTopRightRadius: "8px",
+    },
+    checkboxContainer: {
+      display: "flex",
+      alignItems: "center",
+      marginBottom: "1.5rem",
+    },
+    label: {
+      marginLeft: "0.5rem",
+      fontSize: "0.9rem",
+      color: Colors.Negro,
+    },
+    buttonContainer: {
+      display: "flex",
+      justifyContent: "space-between",
+      marginTop: "1rem",
+    },
+    backButton: {
+      padding: "0.5rem 1rem",
+      backgroundColor:Colors.Azul,
+      border: `1px solid ${Colors.Gris}`,
+      borderRadius: "4px",
+      cursor: "pointer",
+      color: Colors.BlancoEnBlanco
+    },
+    nextButton: {
+      padding: "0.5rem 1rem",
+      backgroundColor:Colors.Verde,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+    form: {
+      padding: "20px",
+    }
+  };
+
   return (
-    <div className={`background container vh-100`}>
-      <div className="row h-100 justify-content-center align-items-center">
-        <div className="col-md-4">
-          <div className={`card`}>
-            <div className={`cardheader card-header`}>
-              <h2
-                className={`h2 text-center`}
-                style={{ color: "white" }}
-              >
-                Datos Repartidor
-              </h2>
-            </div>
-            <div
-              className={`card-body d-flex flex-column align-items-center`}
-            >
-              <form onSubmit={handleSubmit}>
-                <div className={`form-check mb-4`}>
-                  <input
-                    type="checkbox"
-                    className={`form-check-input`}
-                    id="confirmacionMayorDeEdad"
-                    name="confirmacionMayorDeEdad"
-                    checked={repartidorData.confirmacionMayorDeEdad}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label
-                    className={`form-check-label`}
-                    htmlFor="confirmacionMayorDeEdad"
-                  >
-                    Confirmo que tengo más de 18 años
-                  </label>
-                </div>
-                <hr style={{ color: "white" }} />
-                <div
-                  className={`d-flex justify-content-between mt-2`}
-                >
-                  <button
-                    className={`btn btn-secondary`}
-                    onClick={() => backStep()}
-                  >
-                    Atrás
-                  </button>
-                  <button
-                    type="submit"
-                    className={`btn btn-success`}
-                    disabled={!repartidorData.confirmacionMayorDeEdad}
-                  >
-                    Finalizado
-                  </button>
-                </div>
-              </form>
-            </div>
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h2 style={styles.title}>Datos Repartidor</h2>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.checkboxContainer}>
+            <input
+              type="checkbox"
+              id="confirmacionMayorDeEdad"
+              name="confirmacionMayorDeEdad"
+              checked={repartidorData.confirmacionMayorDeEdad}
+              onChange={handleCheckboxChange}
+            />
+            <label htmlFor="confirmacionMayorDeEdad" style={styles.label}>
+              Tengo 18 años o más
+            </label>
           </div>
-        </div>
+          <div style={styles.buttonContainer}>
+            <button
+              type="button"
+              style={styles.backButton}
+              onClick={backStep}
+            >
+              Volver
+            </button>
+            <button
+              type="submit"
+              style={styles.nextButton}
+              disabled={!repartidorData.confirmacionMayorDeEdad}
+            >
+              Finalizar
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

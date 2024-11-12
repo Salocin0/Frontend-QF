@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./../../sass/main.scss";
 import Footer from "../../ComponentesGenerales/Footer";
+import useDynamicColors from "../../../UseDinamicColors.js";
+import PasswordToggle from "../PasswordToggle.jsx";
+import "../placeholder.css"
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
-  const [showPassword1, setShowPassword1] = useState(false);
-  const [showPassword2, setShowPassword2] = useState(false);
+  const Colors = useDynamicColors();
 
   const [userData, setUserData] = useState({
     username: "",
@@ -23,24 +24,15 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     });
   };
 
-  const toggleShowPassword1 = () => {
-    setShowPassword1(!showPassword1);
-  };
-
-  const toggleShowPassword2 = () => {
-    setShowPassword2(!showPassword2);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!userData.username.trim()) {
-      toast.error("el nombre de usuario no puede estar vacío.");
+      toast.error("El nombre de usuario no puede estar vacío.");
       return;
     }
 
     if (userData.email.length === 0) {
-      toast.error("el email no puede estar vacío.");
+      toast.error("El email no puede estar vacío.");
       return;
     }
 
@@ -59,129 +51,157 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
       return;
     }
 
-    handleRegistro(userData);
+    const userDataWithToken = {
+      ...userData,
+    };
+
+    handleRegistro(userDataWithToken);
     nextStep();
   };
 
-  return (
-    <div className="background-prelogin">
-      <div className="container vh-100">
-        <div className="row h-100 justify-content-center align-items-center">
-          <div className="col-10 col-sm-9 col-md-8 col-lg-6">
-            <div className={`card`}>
-              <div className={`cardheader`}>
-                <h2 className={`h2 text-center`} style={{ color: "white" }}>
-                  Datos Usuario 1/{tipoUsuario === "consumidor" ? "2" : "3"}
-                </h2>
-              </div>
-              <div className="card-body">
-                <form onSubmit={handleSubmit}>
-                  <div className={`form-group`}>
-                    <label htmlFor="username" className="label">
-                      Nombre de usuario
-                    </label>
-                    <input
-                      type="text"
-                      name="username"
-                      id="username"
-                      data-testid="username"
-                      value={userData.username}
-                      onChange={handleChange}
-                      className={`blackwhite form-control`}
-                      placeholder="Nombre de usuario"
-                      autoComplete=" "
-                    />
-                  </div>
-                  <div className={` form-group`}>
-                    <label htmlFor="email" className="label">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      data-testid="email"
-                      value={userData.email}
-                      onChange={handleChange}
-                      className={`blackwhite form-control`}
-                      placeholder="Email"
-                      autoComplete=" "
-                    />
-                  </div>
-                  <div className={` form-group`}>
-                    <label htmlFor="password" className="label">
-                      Contraseña
-                    </label>
-                    <div className="input-group">
-                      <input
-                        type={showPassword1 ? "text" : "password"}
-                        name="password"
-                        id="password"
-                        data-testid="password"
-                        value={userData.password}
-                        onChange={handleChange}
-                        className={`blackwhite form-control`}
-                        placeholder="Contraseña"
-                      />
-                      <div className="input-group-append">
-                        <button
-                          type="button"
-                          className={`btn btn-outline-secondary`}
-                          onClick={toggleShowPassword1}
-                        >
-                          {showPassword1 ? "Ocultar" : "Mostrar"}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={`form-group`}>
-                    <label htmlFor="confirmPassword" className="label">
-                      Repetir Contraseña
-                    </label>
-                    <div className="input-group">
-                      <input
-                        type={showPassword2 ? "text" : "password"}
-                        name="confirmPassword"
-                        id="confirmPassword"
-                        data-testid="confirmPassword"
-                        value={userData.confirmPassword}
-                        onChange={handleChange}
-                        className={` form-control blackwhite`}
-                        placeholder="Repetir Contraseña"
-                      />
-                      <div className="input-group-append">
-                        <button
-                          type="button"
-                          className={`btn btn-outline-secondary`}
-                          onClick={toggleShowPassword2}
-                        >
-                          {showPassword2 ? "Ocultar" : "Mostrar"}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <hr style={{ color: "white" }} />
-                  <div className={`d-flex justify-content-between mt-2`}>
-                    <Link
-                      to={"/seleccion-perfil"}
-                      className={`btn btn-secondary`}
-                    >
-                      Atrás
-                    </Link>
-                    <button type="submit" className={`btn btn-primary`}>
-                      Siguiente
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  const styles = {
+    container: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      backgroundImage: "url(/../QuickFoodFondo.png)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+    },
+    card: {
+      width: "100%",
+      maxWidth: "600px",
+      borderRadius: "8px",
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+      backgroundColor: Colors.Blanco,
+    },
+    cardHeader: {
+      backgroundColor: Colors.Naranja,
+      padding: "1.5rem",
+      borderTopLeftRadius: "8px",
+      borderTopRightRadius: "8px",
+    },
+    title: {
+      color: Colors.Negro,
+      margin: 0,
+    },
+    formGroup: {
+      marginBottom: "1rem",
+    },
+    label: {
+      display: "block",
+      fontWeight: "500",
+      margin:"0",
+      marginBottom: "0.5rem",
+      color: Colors.Negro,
+    },
+    input: {
+      width: "100%",
+      padding: "0.5rem",
+      border: `1px solid ${Colors.Gris}`,
+      borderRadius: "4px",
+      backgroundColor: Colors.Blanco,
+    },
+    inputGroup: {
+      display: "flex",
+      alignItems: "center",
+    },
+    toggleButton: {
+      marginLeft: "0.5rem",
+      padding: "0.5rem 1rem",
+      border: `1px solid ${Colors.Gris}`,
+      backgroundColor: Colors.Blanco,
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+    buttonGroup: {
+      display: "flex",
+      justifyContent: "space-between",
+      marginTop: "1.5rem",
+    },
+    backButton: {
+      padding: "0.5rem 1.5rem",
+      backgroundColor: Colors.Azul,
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      color: Colors.BlancoEnBlanco,
+    },
+    nextButton: {
+      padding: "0.5rem 1.5rem",
+      backgroundColor: Colors.Azul,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+    form:{
+      padding: "1.5rem",
+    }
+  };
 
-      <div>
-        <Footer />
+  return (
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <div style={styles.cardHeader}>
+          <h2 style={styles.title}>Crear Cuenta - Paso 1</h2>
+        </div>
+        <form onSubmit={handleSubmit} style={styles.form}>
+          <div style={styles.formGroup}>
+            <label htmlFor="username" style={styles.label}>Nombre de usuario</label>
+            <input
+              type="text"
+              name="username"
+              id="username"
+              value={userData.username}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="Ingresa tu nombre de usuario"
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="email" style={styles.label}>Correo electrónico</label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              value={userData.email}
+              onChange={handleChange}
+              style={styles.input}
+              placeholder="tu@email.com"
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="password" style={styles.label}>Contraseña</label>
+            <PasswordToggle
+              inputId="password"
+              name="password"
+              value={userData.password}
+              onChange={handleChange}
+              placeholder="Contraseña"
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.formGroup}>
+            <label htmlFor="confirmPassword" style={styles.label}>Confirmar Contraseña</label>
+            <PasswordToggle
+              inputId="confirmPassword"
+              name="confirmPassword"
+              value={userData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirmar Contraseña"
+              style={styles.input}
+            />
+          </div>
+          <div style={styles.buttonGroup}>
+            <Link to={"/seleccion-perfil"} style={styles.backButton}>Volver</Link>
+            <button type="submit" style={styles.nextButton}>Siguiente</button>
+          </div>
+        </form>
       </div>
+      <Footer />
     </div>
   );
 };

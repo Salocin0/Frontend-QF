@@ -38,6 +38,7 @@ const ListadoEventosProductor = () => {
     setRecargar(+1);
   };
 
+
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
@@ -61,6 +62,12 @@ const ListadoEventosProductor = () => {
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
 
+  const parseDate = (dateStr) => {
+    if (!dateStr) return null;
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+  };
+
   useEffect(() => {
     if (session) {
       const headers = new Headers();
@@ -72,11 +79,18 @@ const ListadoEventosProductor = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setEventos(data.data);
-          const totalEventos = Math.ceil(data.data.length / 4) * 4;
+          const eventosProcesados = data.data.map(evento => ({
+            ...evento,
+            fechaInicio: parseDate(evento.fechaHoraInicio),
+            horaInicio: parseDate(evento.fechaHoraInicio),
+            fechaFin: parseDate(evento.fechaHoraFin),
+          }));
+
+          setEventos(eventosProcesados);
+          const totalEventos = Math.ceil(eventosProcesados.length / 4) * 4;
           const eventosConNulos = [
-            ...data.data,
-            ...Array(totalEventos - data.data.length).fill(null),
+            ...eventosProcesados,
+            ...Array(totalEventos - eventosProcesados.length).fill(null),
           ];
 
           const generatedRows = [];
@@ -86,10 +100,9 @@ const ListadoEventosProductor = () => {
           }
           setRows(generatedRows);
         })
-        .catch((error) => console.log("No existen carritos.", error));
+        .catch((error) => console.log("No existen eventos.", error));
     }
   }, [session, recargar]);
-
 
   return (
     <div>

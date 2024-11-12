@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import "./../../sass/main.css";
 import Footer from "../../ComponentesGenerales/Footer";
+import "../placeholder.css"
+import useDynamicColors from "../../../UseDinamicColors";
 
-const FormConsumidor = ({
-  nextStep,
-  backStep,
-  handleRegistro,
-  tipoUsuario,
-}) => {
+const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario }) => {
+  const Colors = useDynamicColors();
   const [provincias, setProvincias] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [localidades, setLocalidades] = useState([]);
@@ -149,23 +146,108 @@ const FormConsumidor = ({
     }
   };
 
+  const styles = {
+    background: {
+      padding: "20px",
+      height: "100vh",
+      backgroundImage: "url(/../QuickFoodFondo.png)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      paddingBottom: "70px",
+    },
+    container: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100%",
+    },
+    row: {
+      width: "100%",
+      maxWidth: "600px",
+    },
+    col: {
+      width: "100%",
+    },
+    card: {
+      borderRadius: "8px",
+      backgroundColor: Colors.Blanco,
+    },
+    cardHeader: {
+      backgroundColor: Colors.Naranja,
+      padding: "1rem",
+      borderTopLeftRadius: "8px",
+      borderTopRightRadius: "8px",
+    },
+    headerText: {
+      fontSize: "1.5rem",
+      textAlign: "center",
+      color: Colors.Negro,
+    },
+    cardBody: {
+      padding: "20px",
+    },
+    formGroup: {
+      marginBottom: "0.8rem",
+    },
+    label: {
+      display: "block",
+      fontWeight: "bold",
+      color:  Colors.Negro,
+      margin:"0",
+      fontSize: "1rem",
+    },
+    input: {
+      width: "100%",
+      padding: "4px",
+      borderRadius: "4px",
+      border: `1px solid ${Colors.Gris}`,
+    },
+    buttonContainer: {
+      display: "flex",
+      justifyContent: "space-between",
+    },
+    backButton: {
+      padding: "8px 12px",
+      backgroundColor: Colors.Azul,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+    nextButton: {
+      padding: "8px 12px",
+      backgroundColor: Colors.Azul,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+    finishButton: {
+      padding: "8px 12px",
+      backgroundColor: Colors.Verde,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+  };
+
   return (
-    <div className={`background-prelogin`}>
-      <div className="container vh-100">
-        <div className="row h-100 justify-content-center align-items-center">
-          <div className="col-10 col-lg-6">
-            <div className={`card`}>
-              <div className={`cardheader card-header`}>
-                <h2 className={`h2 text-center`} style={{ color: "white" }}>
-                  Datos Consumidor 2/{tipoUsuario === "consumidor" ? "2" : "3"}
+    <div style={styles.background}>
+      <div style={styles.container}>
+        <div style={styles.row}>
+          <div style={styles.col}>
+            <div style={styles.card}>
+              <div style={styles.cardHeader}>
+                <h2 style={styles.headerText}>
+                  Datos Consumidor - Paso 2
                 </h2>
               </div>
-              <div className="card-body">
+              <div style={styles.cardBody}>
                 <form onSubmit={handleSubmit}>
-                  <div className={`form-group`}>
-                    <label htmlFor="nombre" className="label">
-                      Nombre
-                    </label>
+                  <div style={styles.formGroup}>
+                    <label htmlFor="nombre" style={styles.label}>Nombre</label>
                     <input
                       type="text"
                       name="nombre"
@@ -173,14 +255,12 @@ const FormConsumidor = ({
                       data-testid="nombre"
                       value={consumidorData.nombre}
                       onChange={handleChange}
-                      className={`blackwhite form-control`}
-                      placeholder="Nombre"
+                      style={styles.input}
+                      placeholder="Ingresa tu nombre"
                     />
                   </div>
-                  <div className={` form-group`}>
-                    <label htmlFor="apellido" className="label">
-                      Apellido
-                    </label>
+                  <div style={styles.formGroup}>
+                    <label htmlFor="apellido" style={styles.label}>Apellido</label>
                     <input
                       type="text"
                       name="apellido"
@@ -188,14 +268,12 @@ const FormConsumidor = ({
                       data-testid="apellido"
                       value={consumidorData.apellido}
                       onChange={handleChange}
-                      className={`blackwhite  form-control`}
-                      placeholder="Apellido"
+                      style={styles.input}
+                      placeholder="Ingresa tu apellido"
                     />
                   </div>
-                  <div className={`form-group`}>
-                    <label htmlFor="dni" className="label">
-                      DNI
-                    </label>
+                  <div style={styles.formGroup}>
+                    <label htmlFor="dni" style={styles.label}>DNI</label>
                     <input
                       type="number"
                       name="dni"
@@ -203,14 +281,12 @@ const FormConsumidor = ({
                       data-testid="dni"
                       value={consumidorData.dni}
                       onChange={handleChange}
-                      className={`blackwhite form-control`}
-                      placeholder="DNI"
+                      style={styles.input}
+                      placeholder="Ingresa tu DNI"
                     />
                   </div>
-                  <div className={`form-group`}>
-                    <label htmlFor="fechaNacimiento" className="label">
-                      Fecha de Nacimiento
-                    </label>
+                  <div style={styles.formGroup}>
+                    <label htmlFor="fechaNacimiento" style={styles.label}>Fecha de Nacimiento</label>
                     <input
                       type="date"
                       name="fechaNacimiento"
@@ -218,42 +294,32 @@ const FormConsumidor = ({
                       data-testid="fechaNacimiento"
                       value={consumidorData.fechaNacimiento}
                       onChange={handleChange}
-                      className={`blackwhite form-control`}
+                      style={styles.input}
                     />
                   </div>
-                  <div className={`form-group`}>
-                    <label htmlFor="provincia" className="label">
-                      Provincia
-                    </label>
+                  <div style={styles.formGroup}>
+                    <label htmlFor="provincia" style={styles.label}>Provincia</label>
                     <select
                       id="provincia"
                       name="provincia"
                       data-testid="provincia"
-                      className={`blackwhite form-control`}
+                      style={styles.input}
                       value={selectedProvince}
                       onChange={handleProvinceChange}
                       required
                     >
-                      <option value="" disabled>
-                        Seleccione una provincia
-                      </option>
+                      <option value="" disabled>Selecciona tu provincia</option>
                       {provincias.map((prov) => (
-                        <option
-                          key={prov.nombre}
-                          value={prov.nombre}
-                          className="option"
-                        >
+                        <option key={prov.nombre} value={prov.nombre}>
                           {prov.nombre}
                         </option>
                       ))}
                     </select>
                   </div>
-                  <div className={`form-group`}>
-                    <label htmlFor="localidad" className="label">
-                      Localidad
-                    </label>
+                  <div style={styles.formGroup}>
+                    <label htmlFor="localidad" style={styles.label}>Localidad</label>
                     <select
-                      className={`blackwhite form-control mt-2`}
+                      style={styles.input}
                       value={selectedLocalidad}
                       onChange={handleLocalidadChange}
                       data-testid="localidad"
@@ -261,24 +327,16 @@ const FormConsumidor = ({
                       name="localidad"
                       required
                     >
-                      <option value="" disabled>
-                        Seleccione una localidad
-                      </option>
+                      <option value="" disabled>Selecciona tu localidad</option>
                       {localidades.map((loc) => (
-                        <option
-                          key={loc.nombre}
-                          value={loc.nombre}
-                          className={"option"}
-                        >
+                        <option key={loc.nombre} value={loc.nombre}>
                           {loc.nombre}
                         </option>
                       ))}
                     </select>
                   </div>
-                  <div className={`form-group`}>
-                    <label htmlFor="telefono" className="label">
-                      Teléfono
-                    </label>
+                  <div style={styles.formGroup}>
+                    <label htmlFor="telefono" style={styles.label}>Teléfono</label>
                     <input
                       type="number"
                       name="telefono"
@@ -286,27 +344,24 @@ const FormConsumidor = ({
                       data-testid="telefono"
                       value={consumidorData.telefono}
                       onChange={handleChange}
-                      className={`blackwhite form-control`}
-                      placeholder="Teléfono"
+                      style={styles.input}
+                      placeholder="Ingresa tu teléfono"
                     />
                   </div>
-                  <hr style={{ color: "white" }} />
-                  <div className={`d-flex justify-content-between mt-2 d-flex`}>
+                  <div style={styles.buttonContainer}>
                     <button
-                      className={`btn btn-secondary`}
+                      type="button"
+                      style={styles.backButton}
                       onClick={() => backStep()}
                     >
-                      Atrás
+                      Volver
                     </button>
-                    {tipoUsuario === "consumidor" ? (
-                      <button type="submit" className={`btn btn-success`}>
-                        Finalizar
-                      </button>
-                    ) : (
-                      <button type="submit" className={` btn btn-primary`}>
-                        Siguiente
-                      </button>
-                    )}
+                    <button
+                      type="submit"
+                      style={tipoUsuario === "consumidor" ? styles.finishButton : styles.nextButton}
+                    >
+                      {tipoUsuario === "consumidor" ? "Finalizar" : "Siguiente"}
+                    </button>
                   </div>
                 </form>
               </div>
@@ -314,12 +369,11 @@ const FormConsumidor = ({
           </div>
         </div>
       </div>
-
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };
+
+
 
 export default FormConsumidor;

@@ -4,20 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import "./../sass/main.scss";
 import { useParams } from "react-router-dom";
-import { handleRequest } from "msw";
-
+import useDynamicColors from "../../UseDinamicColors";
+import { Link } from "react-router-dom";
 const HabilitarUsuario = () => {
   const { id } = useParams();
   const [emailback, setEmailBack] = useState("");
   const [emailcompleto, setEmailCompleto] = useState("");
+  const Colors = useDynamicColors();
+  const navigate = useNavigate();
 
   const handleEmailcompletoChange = (e) => {
     setEmailCompleto(e.target.value);
   };
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`http://127.0.0.1:8000/user/habilitar`, {
@@ -36,14 +35,13 @@ const HabilitarUsuario = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [id]);
 
   const handleEnviarCodigo = () => {
-    //enviar al back el email ingresado
     fetch(`http://127.0.0.1:8000/user/habilitar/`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id ,email:emailcompleto}),
+      body: JSON.stringify({ id, email: emailcompleto }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -51,7 +49,7 @@ const HabilitarUsuario = () => {
           toast.success("Usuario habilitado correctamente");
           navigate(`/login`);
         } else {
-          toast.error("error");
+          toast.error("Error");
           navigate(`/login`);
         }
       })
@@ -60,42 +58,95 @@ const HabilitarUsuario = () => {
       });
   };
 
+  const styles = {
+    container: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "100vh",
+      backgroundImage: "url(/../QuickFoodFondo.png)",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "cover",
+    },
+    card: {
+      borderRadius: "10px",
+      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+      backgroundColor: Colors.Blanco,
+    },
+    cardBody: {
+      textAlign: "center",
+    },
+    title: {
+      backgroundColor: Colors.Naranja,
+      padding: "1rem",
+      borderTopLeftRadius: "8px",
+      borderTopRightRadius: "8px",
+      color: Colors.Negro,
+    },
+    input: {
+      width: "100%",
+      padding: "0.5rem",
+    },
+    button: {
+      backgroundColor: Colors.Verde,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      padding: "0.5rem",
+      cursor: "pointer",
+      borderRadius: "5px",
+    },
+    buttonBack: {
+      backgroundColor: Colors.Gris,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      padding: "0.5rem",
+      cursor: "pointer",
+      borderRadius: "5px",
+    },
+    form: {
+      padding: "20px",
+    },
+    inputGroupText: {
+      color: Colors.Negro,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "start",
+      margin: "0px",
+      fontWeight: "bold",
+    },
+  };
+
   return (
-    <section
-      className="vh-100 d-flex align-items-center justify-content-center"
-      style={{
-        background: "url(/../QuickFoodFondo.png)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        width: "100%",
-        height: "100vh",
-      }}
-    >
-      <div className="d-flex align-items-center justify-content-center">
-        <div className="card p-3">
-          <div className="card-body">
-            <h2 className="card-title">Habilitar Usuario</h2>
-            <label style={{ color: "black" }} className="py-3">
-              {`Complete el email: ${emailback}***@*****`}
-            </label>
-            <input
-              type="text"
-              className="form-control mb-3"
-              placeholder="Ingrese su email"
-              value={emailcompleto}
-              onChange={handleEmailcompletoChange}
-            />
-            <div className="d-flex justify-content-end">
-              <button className="btn btn-primary" onClick={handleEnviarCodigo}> 
-                Enviar email
-              </button>
+    <section style={styles.container}>
+      <div style={{ maxWidth: "400px", width: "100%" }}>
+        <div style={styles.card}>
+          <div style={styles.cardBody}>
+            <h1 style={styles.title}>Habilitar Usuario</h1>
+            <div style={styles.form}>
+              <label htmlFor="email" style={styles.inputGroupText}>
+                {`Complete el email: ${emailback}***@*****`}
+              </label>
+              <input
+                type="text"
+                style={styles.input}
+                placeholder="Ingrese su email"
+                value={emailcompleto}
+                onChange={handleEmailcompletoChange}
+              />
+              <div className="d-flex justify-content-between mt-3">
+              <Link style={styles.buttonBack} to={"/login"}>
+                  Volver
+                </Link>
+                <button style={styles.button} onClick={handleEnviarCodigo}>
+                  Enviar email
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div>
-        <Footer />
-      </div>
+      <Footer />
     </section>
   );
 };

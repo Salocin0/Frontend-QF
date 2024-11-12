@@ -29,6 +29,8 @@ const ListadoPuestosEncargado = () => {
       .then((response) => response.json())
       .then((data) => {
         setSession(data.data);
+        console.log("front");
+        console.log(data.data.id);
         console.log(data.data.tipoUsuario);
       })
       .catch((error) => console.error("Error fetching session:", error));
@@ -39,7 +41,7 @@ const ListadoPuestosEncargado = () => {
   useEffect(() => {
     if (session) {
       const headers = new Headers();
-      headers.append("ConsumidorId", session?.consumidorId);
+      headers.append("ConsumidorId", session?.id);
       headers.append("Content-Type", "application/json");
 
       fetch(`${process.env?.REACT_APP_BACK_URL}puesto/creados`, {

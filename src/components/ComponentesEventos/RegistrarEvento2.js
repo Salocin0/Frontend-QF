@@ -21,9 +21,12 @@ const RegistrarEvento2 = () => {
   const [selectedLocalidad, setSelectedLocalidad] = useState("");
   const [selectedOptionEvento, setSelectedOptionEvento] = useState(null);
   const [selectedOptionPago, setSelectedOptionPago] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const { id } = useParams();
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -39,20 +42,10 @@ const RegistrarEvento2 = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
   }, []);
-
-  function tieneNumeros(cadena) {
-    return /\d/.test(cadena);
-  }
-
-  function tieneLetras(cadena) {
-    const regex = /[a-zA-Z]/;
-    return regex.test(cadena);
-  }
 
   const handleImagenEventoChange = (e) => {
     const file = e.target.files[0];
@@ -70,81 +63,89 @@ const RegistrarEvento2 = () => {
     });
   };
 
-  function tieneNumeros(cadena) {
-    const pattern = /\d/;
-    return pattern.test(cadena);
-  }
-
-  function tieneLetras(cadena) {
-    const regex = /[a-zA-Z]/;
-    return regex.test(cadena);
-  }
-
-  const handleSiguienteClick = (e) => {
+  const handleSiguienteClick = async (e) => {
     e.preventDefault();
-    const evento = {
-      nombre,
-      descripcion,
-      imagenEvento,
-      croquis,
-      ubicacion,
-      localidad,
-      provincia,
-      tipoEvento,
-      tipoPago,
-    };
 
-    console.log(evento.tipoEvento)
-    console.log(evento.tipoPago)
-
+    // Validaciones
     if (!nombre.trim()) {
-      toast.error("El nombre no puede estar vacio");
+      toast.error("El nombre no puede estar vacío");
       return;
     }
 
     if (!descripcion.trim()) {
-      toast.error("La descripcion no puede estar vacio");
+      toast.error("La descripción no puede estar vacía");
       return;
     }
-
-    /*if (!imagenEvento?.trim()) {
-      toast.error("Suba un logo del evento");
-      return;
-    }
-
-    if (!croquis?.trim()) {
-      toast.error("Suba un croquis del evento");
-      return;
-    }*/
 
     if (!ubicacion.trim()) {
-      toast.error("la ubicacion no puede estar vacia");
+      toast.error("La ubicación no puede estar vacía");
       return;
     }
 
-    if (!localidad.trim()) {
-      toast.error("Selecione una localidad");
-      return;
+    try {
+      // Obtener geolocalización
+      const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${ubicacion}&key=d429bb29929940e38622b06b1ad6c59b`);
+      const data = await response.json();
+
+      if (data.results.length > 0) {
+        const result = data.results[0];
+        const addressComponents = result.components;
+
+        const prov = addressComponents.state;
+        const loc = addressComponents.city || addressComponents.town || addressComponents.village;
+
+        const lat = result.geometry.lat;
+        const lng = result.geometry.lng;
+
+        setProvincia(prov || '');
+        setLocalidad(loc || '');
+
+        // Crear objeto evento parcial para guardar en la BD
+        const eventoParcial = {
+          nombre,
+          descripcion,
+          imagenEvento,
+          ubicacion,
+          localidad: loc || selectedLocalidad,
+          provincia: prov || selectedProvince,
+          tipoEvento,
+          tipoPago,
+          estado: 'EnPreparacion1',
+          latitud: lat,
+          longitud: lng,
+        };
+
+        // Guardar el progreso en la base de datos
+        const saveResponse = await fetch(`${process.env?.REACT_APP_BACK_URL}evento`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session?.token}`,
+          },
+          body: JSON.stringify(eventoParcial),
+        });
+
+        const saveData = await saveResponse.json();
+
+        if (saveData.code === 200) {
+          toast.success("Evento guardado correctamente");
+          const eventoId = saveData.data.eventoId; // Obtén el ID del evento de la respuesta
+          navigate("/registrar-evento3", { state: { eventoId } }); // Pasa el ID a la siguiente página
+        } else {
+          toast.error("Error al guardar el evento");
+        }
+
+      } else {
+        toast.error("No se pudo obtener información de la ubicación.");
+      }
+    } catch (error) {
+      console.error("Error al guardar el progreso:", error);
+      toast.error("Error al guardar el evento");
     }
-
-    if (!provincia.trim()) {
-      toast.error("Selecione una provincia");
-      return;
-    }
-
-    /*if (!tipoEvento.trim()) {
-      toast.error("Selecione el tipo de evento");
-      return;
-    }*/
-
-    /*if (!tipoPago.trim()) {
-      toast.error("Selecione tipo de pago");
-      return;
-    }*/
-
-    navigate('/registrar-evento3');
-
   };
+
+
+
 
   useEffect(() => {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
@@ -157,24 +158,20 @@ const RegistrarEvento2 = () => {
       });
   }, []);
 
-
-
-
   const handleLocalidadChange = (e) => {
     setSelectedLocalidad(e.target.value);
     setLocalidad(e.target.value);
   };
 
-  const handleOptionClickEvento = (e) => {
-    setSelectedOptionEvento(e.target.value);
-    setTipoEvento(e.target.value);
+  const handleOptionClickEvento = (value) => {
+    setSelectedOptionEvento(value);
+    setTipoEvento(value);
   };
 
-  const handleOptionClickPago = (e) => {
-    setSelectedOptionPago(e.target.value);
-    setTipoPago(e.target.value);
+  const handleOptionClickPago = (value) => {
+    setSelectedOptionPago(value);
+    setTipoPago(value);
   };
-
 
   const handleProvinceChange = (e) => {
     setSelectedProvince(e.target.value);
@@ -198,225 +195,181 @@ const RegistrarEvento2 = () => {
     }
   };
 
+  const handleUbicacionChange = (e) => {
+    const value = e.target.value;
+    setUbicacion(value);
+
+    if (value.length > 2) {
+      fetch(`https://api.opencagedata.com/geocode/v1/json?q=${value}&key=d429bb29929940e38622b06b1ad6c59b`)
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.results) {
+            setSuggestions(data.results.map(result => result.formatted));
+            setShowSuggestions(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setUbicacion(suggestion);
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
   return (
     <div className="container-fluid">
       <div className="row formEvento">
-        <div className="col-md-4 p-0 ">
+        <div className="col-md-4 p-0">
           <Sidebar tipoUsuario={session?.tipoUsuario} />
         </div>
-        <div className="col-md-6 p-0 ">
-        <div className="dark-form-wrapper mx-auto">
-          <form action="#" method="POST" className="row g-3">
-            <h3 className="tituloSeccion">Datos del Evento</h3>
-            <div className="col-md-12">
-              <div className="form-group">
-                <label htmlFor="text-input" className="form-label">
-                  Nombre Del Evento*
-                </label>
-                <input
-                  type="text"
-                  id="nombre"
-                  className="form-input"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                />
+        <div className="col-md-6 p-0">
+          <div className="dark-form-wrapper mx-auto">
+            <form action="#" method="POST" className="row g-3">
+              <h3 className="tituloSeccion">Datos del Evento</h3>
+              <div className="col-md-12">
+                <div className="form-group">
+                  <label htmlFor="text-input" className="form-label">
+                    Nombre Del Evento*
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    className="form-input"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="col-md-12">
-              <div className="form-group">
-                <label htmlFor="text-area" className="form-label">
-                  Descripcion Del Evento*
-                </label>
-                <textarea
-                  id="text-area"
-                  className="form-input"
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
-                  rows={1}
-                  style={{ resize: 'none' }}
-                />
+              <div className="col-md-12">
+                <div className="form-group">
+                  <label htmlFor="text-area" className="form-label">
+                    Descripción Del Evento*
+                  </label>
+                  <textarea
+                    id="text-area"
+                    className="form-input"
+                    value={descripcion}
+                    onChange={(e) => setDescripcion(e.target.value)}
+                    rows={1}
+                    style={{ resize: "none" }}
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="options" className="form-label">
-                  Tipo de Evento*
-                </label>
-                <div className="option-container-evento">
-                  <div
-                    className={`opcionesEvento ${selectedOptionEvento === 1 ? 'selected' : ''}`}
-                    onClick={() => handleOptionClickEvento(1)}
-                  >
-                    Cine
-                  </div>
-                  <div
-                    className={`opcionesEvento ${selectedOptionEvento === 2 ? 'selected' : ''}`}
-                    onClick={() => handleOptionClickEvento(2)}
-                  >
-                    Festival
-                  </div>
-                  <div
-                    className={`opcionesEvento ${selectedOptionEvento === 3 ? 'selected' : ''}`}
-                    onClick={() => handleOptionClickEvento(3)}
-                  >
-                    Deporte
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="options" className="form-label">
+                    Tipo de Evento*
+                  </label>
+                  <div className="option-container-evento">
+                    <div
+                      className={`opcionesEvento ${selectedOptionEvento === 1 ? "selected" : ""}`}
+                      onClick={() => handleOptionClickEvento(1)}
+                    >
+                      Cines
+                    </div>
+                    <div
+                      className={`opcionesEvento ${selectedOptionEvento === 2 ? "selected" : ""}`}
+                      onClick={() => handleOptionClickEvento(2)}
+                    >
+                      Festival
+                    </div>
+                    <div
+                      className={`opcionesEvento ${selectedOptionEvento === 3 ? "selected" : ""}`}
+                      onClick={() => handleOptionClickEvento(3)}
+                    >
+                      Deporte
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="options" className="form-label">
-                  Tipo de Pago*
-                </label>
-                <div className="option-container-pago">
-                  <div
-                    className={`opcionesPago ${selectedOptionPago === 1 ? 'selected' : ''}`}
-                    onClick={() => handleOptionClickPago(1)}
-                  >
-                    Pago
-                  </div>
-                  <div
-                    className={`opcionesPago ${selectedOptionPago === 2 ? 'selected' : ''}`}
-                    onClick={() => handleOptionClickPago(2)}
-                  >
-                    Gratuito
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="options" className="form-label">
+                    Tipo de Pago*
+                  </label>
+                  <div className="option-container-pago">
+                    <div
+                      className={`opcionesPago ${selectedOptionPago === 1 ? "selected" : ""}`}
+                      onClick={() => handleOptionClickPago(1)}
+                    >
+                      Pago
+                    </div>
+                    <div
+                      className={`opcionesPago ${selectedOptionPago === 2 ? "selected" : ""}`}
+                      onClick={() => handleOptionClickPago(2)}
+                    >
+                      Gratuito
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-
-            <div className="col-md-12">
-              <div className="form-group">
-                <label htmlFor="text-area" className="form-label">
-                  Ubicacion Del Evento*
-                </label>
-                <input
-                  id="nombre"
-                  className="form-input"
-                  value={ubicacion}
-                  onChange={(e) => setUbicacion(e.target.value)}
-                />
+              <div className="col-md-12">
+                <div className="form-group">
+                  <label htmlFor="text-area" className="form-label">
+                    Ubicación Del Evento*
+                  </label>
+                  <input
+                    id="ubicacion"
+                    className="form-input"
+                    value={ubicacion}
+                    onChange={handleUbicacionChange}
+                  />
+                  {showSuggestions && (
+                    <ul className="suggestions-list">
+                      {suggestions.map((suggestion, index) => (
+                        <li
+                          key={index}
+                          className="suggestion-item"
+                          onClick={() => handleSuggestionClick(suggestion)}
+                        >
+                          {suggestion}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
-            </div>
 
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="logo-input" className="form-label">
-                  Logo del Evento*
-                </label>
-                <input
-                  type="file"
-                  id="imagenEvento"
-                  accept="image/*"
-                  className="form-input logoSubida"
-                  onChange={(e) => handleImagenEventoChange(e)}
-                  required
-                />
+
+              <div className="col-md-12">
+                <div className="form-group">
+                  <label htmlFor="file-input" className="form-label">
+                    Imagen del Evento
+                  </label>
+                  <input
+                    type="file"
+                    id="file-input"
+                    accept="image/*"
+                    onChange={handleImagenEventoChange}
+                    className="form-input"
+                  />
+                </div>
               </div>
-            </div>
 
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="croquis-input" className="form-label">
-                  Croquis del Evento*
-                </label>
-                <input
-                  type="file"
-                  id="croquis"
-                  accept="image/*"
-                  className="form-input croquis"
-                  onChange={(e) => handleCroquisChange(e)}
-                  required
-                />
+
+
+              <div className="col-md-12">
+                <button type="button" className="btn btn-primary" onClick={handleSiguienteClick}>
+                  Siguiente
+                </button>
               </div>
-            </div>
-
-
-
-
-
-
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="provincia-input" className="form-label">
-                  Provincia*
-                </label>
-                <select
-                  id="provincia"
-                  data-testid="provincia"
-                  className="form-input"
-                  value={selectedProvince}
-                  onChange={handleProvinceChange}
-                  required
-                >
-                  <option value="" disabled>
-                    Seleccione una provincia
-                  </option>
-                  {provincias.map((prov) => (
-                    <option key={prov.nombre} value={prov.nombre}>
-                      {prov.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="localidad-input" className="form-label">
-                  Localidad*
-                </label>
-                <select
-                  className="form-input"
-                  value={selectedLocalidad}
-                  onChange={handleLocalidadChange}
-                  data-testid="localidad"
-                  id="localidad"
-                  name="localidad"
-                >
-                  <option value="" disabled>
-                    Seleccione una localidad
-                  </option>
-                  {localidades.map((loc) => (
-                    <option key={loc.nombre} value={loc.nombre}>
-                      {loc.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-
-
-
-
-
-
-
-            <div className="col-12 d-flex justify-content-end">
-              <button
-                className="siguiente-button ms-auto"
-                onClick={handleSiguienteClick}
-                style={{ backgroundColor: '#tu-color-amarillo-QF', color: '#1a1a1a' }}
-              >
-                Siguiente
-              </button>
-            </div>
-
-          </form>
+            </form>
+          </div>
         </div>
-        </div>
-
       </div>
     </div>
   );
-
-
 };
 
 export default RegistrarEvento2;

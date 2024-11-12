@@ -1,0 +1,43 @@
+.kanban-container {
+    display: flex;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .kanban-column {
+    flex: 1;
+    margin: 8px;
+  }
+  
+  .kanban-column-title {
+    text-align: center;
+  }
+  
+  .kanban-droppable {
+    background: lightgrey;
+    padding: 8px;
+    height: 90%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .kanban-task {
+    user-select: none;
+    padding: 16px;
+    margin: 0 0 8px 0;
+    min-height: 50px;
+    background-color: #456C86;
+    color: white;
+  }
+
+
+  .task-card {
+    transition: transform 0.2s;
+  }
+
+  .task-card:hover {
+    transform: scale(1.01);
+  }
+  

@@ -3,9 +3,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import "./../sass/main.scss";
+import { Link } from "react-router-dom";
+import useDynamicColors from "../../UseDinamicColors";
+import "../ComponenteRegister/placeholder.css";
 
 const RecuperarContraseña = () => {
+  const Colors = useDynamicColors();
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
@@ -38,49 +41,97 @@ const RecuperarContraseña = () => {
       });
   };
 
+  const styles = {
+    container: {
+      height: "100vh",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "url(QuickFoodFondo.png)",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+    },
+    card: {
+      borderRadius: "10px",
+      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+      backgroundColor: Colors.Blanco,
+    },
+    cardBody: {
+      textAlign: "center",
+    },
+    title: {
+      backgroundColor: Colors.Naranja,
+      padding: "1rem",
+      borderTopLeftRadius: "8px",
+      borderTopRightRadius: "8px",
+      color: Colors.Negro,
+    },
+    input: {
+      width: "100%",
+      padding: "0.5rem",
+    },
+    button: {
+      backgroundColor: Colors.Verde,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      padding: "0.5rem",
+      cursor: "pointer",
+      borderRadius: "5px",
+    },
+    buttonBack: {
+      backgroundColor: Colors.Gris,
+      color: Colors.BlancoEnBlanco,
+      border: "none",
+      padding: "0.5rem",
+      cursor: "pointer",
+      borderRadius: "5px",
+    },
+    form: {
+      padding: "20px",
+    },
+    inputGroupText: {
+      color: Colors.Negro,
+      display:"flex",
+      alignItems:"center",
+      justifyContent:"start",
+      margin:"0px",
+      fontWeight:"bold",
+    }
+  };
+
   return (
     <>
-      <section
-        className="vh-100 d-flex align-items-center justify-content-center"
-        style={{
-          background: "url(QuickFoodFondo.png)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="container">
-          <div className="row justify-content-sm-center">
-            <div className="col-xxl-4 col-xl-5 col-lg-5 col-md-7 col-sm-9">
-              <div className="card shadow-lg">
-                <div className="card-body p-3 text-center">
-                  <h1 className="fs-4 card-title fw-bold mb-4 text-black">
-                    Recuperar Contraseña
-                  </h1>
-                  <form onSubmit={handleSubmit} className="needs-validation">
-                    <div className="mb-3">
-                      <div className="input-group">
-                        <span className="input-group-text bg-white text-dark">
-                          <i className="bi bi-envelope"></i>
-                        </span>
-                        <input
-                          type="email"
-                          id="email"
-                          className="form-control"
-                          value={email}
-                          onChange={handleEmailChange}
-                          placeholder="Ingrese su Correo"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="d-grid">
-                      <button type="submit" className="btn btn-primary">
-                        Enviar Mail de Recuperación
-                      </button>
-                    </div>
-                  </form>
+      <section style={styles.container}>
+        <div style={{ maxWidth: "400px", width: "100%" }}>
+          <div style={styles.card}>
+            <div style={styles.cardBody}>
+              <h1 style={styles.title}>Recuperar Contraseña</h1>
+              <form onSubmit={handleSubmit} style={styles.form}>
+                <div style={{ marginBottom: "1rem" }}>
+                  <div>
+                    <label htmlFor="email" style={styles.inputGroupText}>Email</label>
+                    <input
+                      type="email"
+                      style={styles.input}
+                      value={email}
+                      onChange={handleEmailChange}
+                      placeholder="Ingrese su Correo"
+                      id="email"
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Link to="/login" style={styles.buttonBack}>
+                    Volver
+                  </Link>
+                  <button type="submit" style={styles.button}>
+                    Enviar Mail de Recuperación
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

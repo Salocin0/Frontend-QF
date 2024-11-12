@@ -1,0 +1,142 @@
+:global(body) {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212; /* Muy oscuro */
+    color: #E0E0E0; /* Gris claro */
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #1F1B24; /* Gris oscuro */
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 5px solid #BB86FC; /* Púrpura claro */
+    border-radius: 0 0 20px 20px;
+}
+
+.header img {
+    width: 120px;
+    height: auto;
+}
+
+.header h1 {
+    margin: 0;
+    color: #BB86FC; /* Púrpura claro */
+    font-size: 2em;
+}
+
+.chatContainer {
+    width: 100%;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    background-color: #1E1E1E; /* Gris muy oscuro */
+    border-radius: 20px;
+}
+
+.chatBox {
+    height: 400px;
+    overflow-y: auto;
+    border: 2px solid #BB86FC;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #252525; /* Gris oscuro */
+    border-radius: 15px;
+}
+
+/* Estilos para los mensajes de chat */
+.chatMessage {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    flex-direction: row; /* Asegura que los elementos estén en fila */
+}
+
+.userMessage .messageText, .botMessage .messageText {
+    border-radius: 20px;
+    padding: 15px;
+    max-width: 70%;
+    font-size: 1.1em;
+    margin-left: 10px; /* Espacio entre imagen y texto */
+}
+
+.userImage, .botImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Alineación a la izquierda para ambos, usuario y chatbot */
+.userMessage, .botMessage {
+    justify-content: flex-start;
+}
+
+.botMessage .messageText {
+    background-color: #BB86FC; /* Púrpura claro */
+    color: white;
+    margin-right: 15px; /* Separación adicional del avatar */
+}
+.userMessage .messageText {
+    background-color: #03DAC5; /* Turquesa */
+    color: white;
+    margin-left: 15px; /* Separación adicional del avatar */
+}
+
+.chatInput {
+    width: calc(100% - 100px);
+    padding: 10px;
+    border: 2px solid #BB86FC;
+    border-radius: 20px;
+    background-color: #3C3C3C; /* Gris medio oscuro */
+    color: #E0E0E0; /* Gris claro */
+}
+
+.sendBtn {
+    width: 90px;
+    padding: 10px;
+    background-color: #03DAC5; /* Turquesa */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 10px;
+}
+
+.sendBtn:hover {
+    background-color: #018786; /* Turquesa oscuro */
+}
+
+.footer {
+    text-align: center;
+    padding: 15px 0;
+    background-color: #1F1B24; /* Gris oscuro */
+    font-size: 0.9em;
+    border-top: 5px solid #BB86FC; /* Púrpura claro */
+    border-radius: 20px 20px 0 0;
+}
+
+.footer a {
+    color: #BB86FC; /* Púrpura claro */
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* Transiciones suaves y efectos de sombra para elementos interactivos */
+.chatInput, .sendBtn {
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chatInput:focus {
+    box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.5); /* Foco con sombra suave */
+    outline: none;
+}
+
+.header, .chatContainer, .footer {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}

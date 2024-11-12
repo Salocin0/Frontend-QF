@@ -13,7 +13,6 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
   const [isEnPreparacion, setIsEnPreparacion] = useState(false);
   const [tieneAsociacionPendiente, setTieneAsociacionPendiente] = useState(false);
 
-
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
@@ -37,9 +36,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
 
-
   useEffect(() => {
-
     if (evento) {
       switch (evento.estado) {
         case 'EnPreparacion':
@@ -49,8 +46,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
           break;
       }
     }
-  });
-
+  }, [evento]);
 
   const asociarmeAEvento = () => {
     const headers = new Headers();
@@ -81,7 +77,6 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
   };
 
   const handleTieneRestriciones = async () => {
-
     try {
       const headers = new Headers();
       headers.append("ConsumidorId", session?.consumidorId);
@@ -110,7 +105,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
   };
 
   const handleCrearForm = () => {
-    console.log("Entre a CrearForm")
+    console.log("Entre a CrearForm");
     console.log(evento.id);
     const url = `/restriccionesEvento/${evento.id}`;
     navigate(url);
@@ -129,7 +124,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
             headers: headers,
           }
         );
-        console.log(response.status)
+        console.log(response.status);
         if (response.status === 400) {
           setTieneAsociacionPendiente(true);
         } else if (response.status === 200) {
@@ -146,12 +141,15 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
     }
   }, [evento, puestoId, session, isEnPreparacion]);
 
-
+  // Validación para manejar el formato de la fecha
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? '' : format(date, "dd/MM/yyyy");
+  };
 
   return (
     <div>
       <div className="container-fluid">
-
         <div className="card">
           <div className="card-body">
             <div className="row">
@@ -170,7 +168,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
                   {evento.estado}
                 </p>
                 <p className="card-text-fecha">
-                  {format(new Date(evento.fechaInicio), "dd/MM/yyyy")} -  {format(new Date(evento.fechaFin), "dd/MM/yyyy")}
+                  {formatDate(evento.fechaInicio)} - {formatDate(evento.fechaFin)}
                 </p>
               </div>
             </div>
@@ -185,7 +183,6 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
                 {tieneAsociacionPendiente && (
                   <p className="card-text-yellow">Tiene una asociación pendiente</p>
                 )}
-
               </div>
               <p className={`card-estado-productor}`}>
                 {evento.estado}
@@ -193,7 +190,6 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
             </div>
           </div>
         </div>
-
       </div>
 
       <div className="filtrosBuscador">
@@ -203,16 +199,12 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
           className="buscador"
         />
         <button className="btn btn-primary mx-2 buscarButton">Buscar</button>
-
       </div>
 
       <div className="filtrosEventoEncargado">
-
         <FiltrosEventosEncargado />
-
       </div>
     </div>
-
   );
 };
 

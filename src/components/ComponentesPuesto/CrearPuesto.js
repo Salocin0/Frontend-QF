@@ -39,6 +39,7 @@ const CrearNuevoCarro = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
+          console.log("acaaaaaaaaaaaaaaaa")
           console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
@@ -72,9 +73,8 @@ const CrearNuevoCarro = () => {
       logo: logoBase64,
       banner: bannerBase64,
       telefonoCarro,
-      consumidorId: session.consumidorId,
+      consumidorId: session.id,
     };
-
     console.log(formData)
 
     if (!numeroCarro || !nombreCarro || !tipoNegocio || !telefonoCarro) {

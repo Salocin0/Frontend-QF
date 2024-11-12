@@ -617,14 +617,7 @@ const RegistrarEvento = () => {
                                 })
                               }
                             />
-                            <datalist id="restricciones-titulo">
-                              {restriccionesdb.map((restriccion, index) => (
-                                <option
-                                  key={index}
-                                  value={restriccion.titulo}
-                                />
-                              ))}
-                            </datalist>
+
                           </div>
                           <div className="col-3 px-1">
                             <label style={{ color: "black" }}>Descripcion</label>
@@ -640,12 +633,7 @@ const RegistrarEvento = () => {
                               }
                             />
                             <datalist id="restricciones-titulo">
-                              {restriccionesdb.map((restriccion, index) => (
-                                <option
-                                  key={index}
-                                  value={restriccion.descripcion}
-                                />
-                              ))}
+
                             </datalist>
                           </div>
                           <br/>
@@ -689,14 +677,7 @@ const RegistrarEvento = () => {
                                 })
                               }
                             />
-                            <datalist id="restricciones-opciones">
-                              {restriccionesdb.map((restriccion, index) => (
-                                <option
-                                  key={index}
-                                  value={restriccion.opciones}
-                                />
-                              ))}
-                            </datalist>
+
                           </div>
 
                           <div className="col-2 px-1">

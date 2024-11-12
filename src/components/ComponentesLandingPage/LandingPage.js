@@ -3,24 +3,19 @@ import Footer from "../ComponentesGenerales/Footer";
 import ComoFunciona from "./ComoFunciona";
 import Imagenes from "./Imagenes";
 import Navbar from "./Navbar";
-import "./../sass/main.scss";
+import FloatingButton from "./FloatingButton";
 
 const LandingPage = () => {
   return (
     <div>
       <Navbar />
-
-      <section className="imagenes">
-        <Imagenes />
-      </section>
+      <FloatingButton />
+      <Imagenes />
 
       <section className="ComoFunciona pb-3">
         <ComoFunciona />
       </section>
-
-      <footer className="footer">
-        <Footer />
-      </footer>
+      <Footer />
     </div>
   );
 };

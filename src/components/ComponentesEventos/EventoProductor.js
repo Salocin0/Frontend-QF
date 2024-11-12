@@ -16,6 +16,9 @@ const EventoProductor = ({ evento }) => {
   const [isPausado, setIsPausado] = useState(false);
   const [isCancelado, setIsCancelado] = useState(false);
   const [isFinalizado, setIsFinalizado] = useState(false);
+  const [isProcesoDeCreacion1, setIsProcesoDeCreacion1] = useState(false);
+  const [isProcesoDeCreacion2, setIsProcesoDeCreacion2] = useState(false);
+  const [isProcesoDeCreacion3, setIsProcesoDeCreacion3] = useState(false);
 
   const [recargar, setRecargar] = useState(0);
 
@@ -60,7 +63,16 @@ const EventoProductor = ({ evento }) => {
         case "Cancelado":
           setIsCancelado(true);
           break;
-        case "Finalizado":
+        case 'EnPreparacion1':
+          setIsProcesoDeCreacion1(true);
+        break;
+        case 'EnPreparacion2':
+          setIsProcesoDeCreacion2(true);
+        break;
+        case 'EnPreparacion3':
+          setIsProcesoDeCreacion3(true);
+        break;
+        case 'Finalizado':
           setIsFinalizado(true);
           break;
         default:
@@ -163,6 +175,36 @@ const EventoProductor = ({ evento }) => {
       .catch((error) => toast.error("Error al confirmar evento"));
   };
 
+  const continuarPreparacion1 = () => {
+    const eventoId = evento.id;
+    navigate(`/registrar-evento3`, { state: { eventoId } });
+
+  };
+
+  const continuarPreparacion2 = () => {
+    const eventoId = evento.id;
+
+    // Hacer la solicitud al backend para obtener la cantidad de días del evento
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/dias/${eventoId}`, {
+      method: "GET",
+    })
+      .then((response) => response.json()) // Parsear la respuesta como JSON
+      .then((data) => {
+        const cantidadDiasEvento = data.data;
+
+        navigate(`/registrar-evento4/${cantidadDiasEvento}`, { state: { eventoId } });
+      })
+      .catch((error) => {
+        // Manejo de errores
+        console.error("Error al obtener la cantidad de días del evento:", error);
+        toast.error("Error al confirmar evento");
+      });
+  };
+
+  const continuarPreparacion3 = () => {
+
+  };
+
   const pausarEvento = () => {
     fetch(
       `${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/pausarEvento`,
@@ -194,7 +236,7 @@ const EventoProductor = ({ evento }) => {
   };
 
   const agregarNuevo = () => {
-    navigate(`/registrar-evento`);
+    navigate(`/registrar-evento2`);
   };
 
   const verSolicitudes = () => {
@@ -204,115 +246,59 @@ const EventoProductor = ({ evento }) => {
   return (
     <div>
       <div className="container-fluid">
-        <div className={`card ${getCardColor(evento.estado)}`}>
-          <div className="card-body ">
-            <div className="row">
-              <div className="col-md-3">
-                <img
-                  src={evento.img}
-                  alt="Logo del Evento"
-                  className="img-fluid"
-                />
-              </div>
-              <div className="col-md-8 position-relative">
-                <h5 className="card-title">{evento.nombre}</h5>
-                <p className="card-descripcion">{evento.descripcion}</p>
-                <p className="card-text">
-                  {evento.ubicacion} - {evento.localidad}, {evento.provincia}
-                </p>
-                <p className="card-distance distancia-finalizado">
-                  A 1km de distancia{" "}
-                </p>
-                <p className="card-text-fecha">
-                  {format(new Date(evento.fechaInicio), "dd/MM/yyyy")} -{" "}
-                  {format(new Date(evento.fechaFin), "dd/MM/yyyy")}
-                </p>
-              </div>
-
-              <div className="mt-2 d-flex">
-                <div className="col-md-12 d-flex justify-content-center">
-                  {isEnPreparacion && (
-                    <button
-                      className="btn btn-success me-2"
-                      onClick={confirmarEvento}
-                    >
-                      Confirmar Evento
-                    </button>
-                  )}
-                  {isPausado && (
-                    <button
-                      className="btn btn-danger me-2"
-                      onClick={cancelarEvento}
-                    >
-                      Cancelar Evento
-                    </button>
-                  )}
-                  {isEnPreparacion && (
-                    <button
-                      className="btn btn-primary me-2"
-                      onClick={verSolicitudes}
-                    >
-                      Ver Solucitudes
-                    </button>
-                  )}
-
-                  {isConfirmado && (
-                    <button
-                      className="btn btn-success me-2"
-                      onClick={iniciarEvento}
-                    >
-                      Iniciar Evento
-                    </button>
-                  )}
-                  {isConfirmado && (
-                    <button
-                      className="btn btn-secondary me-2"
-                      onClick={pausarEvento}
-                    >
-                      Pausar Evento
-                    </button>
-                  )}
-                  {isEnCurso && (
-                    <button
-                      className="btn btn-danger me-2"
-                      onClick={finalizarEvento}
-                    >
-                      Finalizar Evento
-                    </button>
-                  )}
-                  {isPausado && (
-                    <button
-                      className="btn btn-success me-2"
-                      onClick={reprogramarEvento}
-                    >
-                      Reprogramar Evento
-                    </button>
-                  )}
-                  {isPausado && (
-                    <button
-                      className="btn btn-danger me-2"
-                      onClick={cancelarEvento}
-                    >
-                      Cancelar Evento
-                    </button>
-                  )}
-
-                  {!isFinalizado && !isCancelado && (
-                    <button className="btn btn-secondary me-2">
-                      Editar Evento
-                    </button>
-                  )}
+      <div className={`card ${getCardColor(evento.estado)}`}>
+            <div className="card-body ">
+              <div className="row">
+                <div className="col-md-3">
+                  <img
+                    src={evento.img}
+                    alt="Logo del Evento"
+                    className="img-fluid"
+                  />
                 </div>
-                <p
-                  className={`card-estado-productor ${getColorClass(
-                    evento.estado
-                  )}`}
-                >
-                  {evento.estado}
-                </p>
-              </div>
+                <div className="col-md-8 position-relative">
+                  <h5 className="card-title">{evento.nombre}</h5>
+                  <p className="card-descripcion">{evento.descripcion}</p>
+                  <p className="card-text">{evento.ubicacion} - {evento.localidad}, {evento.provincia}</p>
+                  <p className="card-distance distancia-finalizado">
+                    A 1km de distancia{" "}
+                  </p>
+                  <p className="card-text-fecha">
+                    {format(new Date(evento.fechaInicio), "dd/MM/yyyy")} -  {format(new Date(evento.fechaFin), "dd/MM/yyyy")}
+                  </p>
+                </div>
 
-              <div></div>
+                <div className="mt-2 d-flex">
+                  <div className="col-md-12 d-flex justify-content-center">
+                    {isEnPreparacion && <button className="btn btn-success me-2" onClick={confirmarEvento}>Confirmar Evento</button>}
+                    {isPausado && <button className="btn btn-danger me-2" onClick={cancelarEvento}>Cancelar Evento</button>}
+                    {isEnPreparacion && <button className="btn btn-primary me-2" onClick={verSolicitudes}>Ver Solucitudes</button>}
+
+                    {isConfirmado && <button className="btn btn-success me-2"  onClick={iniciarEvento}>Iniciar Evento</button>}
+                    {isConfirmado && <button className="btn btn-secondary me-2" onClick={pausarEvento}>Pausar Evento</button>}
+                    {isEnCurso && <button className="btn btn-danger me-2" onClick={finalizarEvento}>Finalizar Evento</button>}
+                    {isPausado && <button className="btn btn-success me-2" onClick={reprogramarEvento}>Reprogramar Evento</button>}
+                    {isPausado && <button className="btn btn-danger me-2" onClick={cancelarEvento}>Cancelar Evento</button>}
+                    {isProcesoDeCreacion1 && <button className="btn btn-primary me-2" onClick={continuarPreparacion1}>Continuar Prepracion Evento</button>}
+                    {isProcesoDeCreacion2 && <button className="btn btn-primary me-2" onClick={continuarPreparacion2}>Continuar Prepracion Evento</button>}
+                    {isProcesoDeCreacion3 && <button className="btn btn-primary me-2" onClick={continuarPreparacion3}>Continuar Prepracion Evento</button>}
+
+                    {!isFinalizado && !isCancelado && <button className="btn btn-secondary me-2">
+                      Editar Evento
+                    </button>}
+
+                  </div>
+                  <p className={`card-estado-productor ${getColorClass(evento.estado)}`}>
+                    {evento.estado}
+                  </p>
+                </div>
+
+
+                <div>
+
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
