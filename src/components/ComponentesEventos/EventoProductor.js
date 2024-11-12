@@ -245,6 +245,7 @@ const EventoProductor = ({ evento }) => {
 
   return (
     <div>
+      <div>
       <div className="container-fluid">
       <div className={`card ${getCardColor(evento.estado)}`}>
             <div className="card-body ">
