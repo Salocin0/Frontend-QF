@@ -1,62 +1,35 @@
 import banner from "../ComponentesProducto/banner.jpg";
-import imagenProducto from "../ComponentesProducto/f1.png";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import Producto from "./Producto";
-import "./../sass/main.scss";
 import Footer from "../ComponentesGenerales/Footer";
 import ProductoUser from "./ProductoUser";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import { useContext } from "react";
+import useDynamicColors from "../../UseDinamicColors";
+import BuscadorProductoConsumidor from "../Filtros y Buscadores/BuscadorProductoConsumidor";
+import { useNavigate } from "react-router-dom";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ListadoProductoUser = () => {
-  const [session, setSession] = useState(null);
   const { id } = useParams();
   const [productos, setProductos] = useState([]);
-  const [recargar, setRecargar] = useState(0);
-  const [editProductId, setEditProductId] = useState(null);
-  const [rows, setRows] = useState([]);
-  const [editedValues, setEditedValues] = useState({
-    nombre: "",
-    descripcion: "",
-    precio: 0,
-    aderezos: "",
-    img: 0,
-    estado: 1,
-  });
+  const [filteredProductos, setFilteredProductos] = useState([]);
   const [puesto, setPuesto] = useState();
-
-  const recargarComponente = () => {
-    setRecargar(+1);
-  };
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-        console.log(data.data.tipoUsuario);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
+  const navigate = useNavigate();
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Eventos", url: "/Listado-eventos" },
+    { title: "Puestos", url: `/listado-puestos/${id}` },
+    { title: "Productos", url: `/productos/${puesto?.id}` },
+  ];
 
   useEffect(() => {
-    if (session) {
+    if (user) {
       const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
+      headers.append("ConsumidorId", user.consumidorId);
       headers.append("puestoId", id);
 
       fetch(`${process.env?.REACT_APP_BACK_URL}producto`, {
@@ -66,29 +39,14 @@ const ListadoProductoUser = () => {
         .then((response) => response.json())
         .then((data) => {
           setProductos(data.data);
-          const totalProductos = Math.ceil(data.data.length / 4) * 4;
-          const productosConNulos = [
-            ...data.data,
-            ...Array(totalProductos - data.data.length).fill(null),
-          ];
-
-          const generatedRows = [];
-          for (let i = 0; i < productosConNulos.length; i += 4) {
-            const row = productosConNulos.slice(i, i + 4);
-            generatedRows.push(row);
-          }
-          setRows(generatedRows);
+          setFilteredProductos(data.data); // Inicializa los productos filtrados
         })
-        .catch((error) => console.log("No existen carritos.", error));
+        .catch((error) => console.log("No existen productos.", error));
     }
-  }, [session, recargar]);
+  }, [user]);
 
   useEffect(() => {
-    if (session) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
-      headers.append("puestoId", id);
-
+    if (user) {
       fetch(`${process.env?.REACT_APP_BACK_URL}puesto/consultar/${id}`, {
         method: "GET",
       })
@@ -98,162 +56,140 @@ const ListadoProductoUser = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
-  }, [session, recargar]);
+  }, [user]);
 
-  const onDelete = (productId) => {
-    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${productId}`, {
-      method: "DELETE",
-    })
-      .then((response) => response.json())
-      .then(() => {
-        toast.success("Producto eliminado con éxito");
-
-        setRecargar(+1);
-      })
-      .catch((error) => toast.error("Error al eliminar el producto"));
-  };
-
-  const onEdit = (productId) => {
-    setEditProductId(productId);
-
-    const productToEdit = productos.find(
-      (producto) => producto.id === productId
+  // Maneja el filtro de productos
+  const handleSearch = (searchTerm) => {
+    const filtered = productos.filter(
+      (producto) =>
+        producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        producto.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    if (productToEdit) {
-      setEditedValues({
-        nombre: productToEdit.nombre,
-        descripcion: productToEdit.descripcion,
-        precio: productToEdit.precio,
-        aderezos: productToEdit.aderezos,
-        img: productToEdit.img,
-        estado: productToEdit.estado,
-      });
-    }
+    setFilteredProductos(filtered);
   };
 
-  function tieneNumeros(cadena) {
-    return /\d/.test(cadena);
-  }
-
-  function tieneLetras(cadena) {
-    const regex = /[a-zA-Z]/;
-    return regex.test(cadena);
-  }
-
-  const onSave = (productId) => {
-    const producto = {
-      producto: {
-        nombre: editedValues.nombre,
-        descripcion: editedValues.descripcion,
-        aderezos: editedValues.aderezos,
-        img: editedValues.img,
-        precio: editedValues.precio,
-      },
-    };
-    console.log(tieneNumeros(producto.producto.nombre));
-    if (!producto.producto.nombre.trim()) {
-      toast.error("Nombre no puede estar vacio");
-      return;
-    }
-
-    if (tieneNumeros(producto.producto.nombre)) {
-      toast.error("El nombre no puede contener números");
-      return;
-    }
-
-    if (!producto.producto.descripcion.trim()) {
-      toast.error("La descripcion no puede estar vacio");
-      return;
-    }
-
-    if (tieneNumeros(producto.producto.descripcion)) {
-      toast.error("La descripcion no puede contener números");
-      return;
-    }
-
-    if (!producto.producto.aderezos.trim()) {
-      toast.error("Los aderezos no puede estar vacio");
-      return;
-    }
-
-    if (tieneNumeros(producto.producto.aderezos)) {
-      toast.error("Los aderezos no puede contener números");
-      return;
-    }
-
-    if (!producto.producto.precio.toString().trim()) {
-      toast.error("El precio no puede estar vacio");
-      return;
-    }
-
-    console.log(JSON.stringify(producto));
-    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${productId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(producto),
-    })
-      .then((response) => response.json())
-      .then(() => {
-        toast.success("Producto actualizado con éxito");
-        setEditProductId(null);
-        setRecargar((prev) => prev + 1);
-      })
-      .catch((error) => toast.error("Error al actualizar el producto"));
+  const styles = {
+    container: {
+      display: "flex",
+      flexDirection: "row",
+      margin: "0",
+      padding: "0",
+      minHeight: "100vh",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    sidebar: {
+      width: "20%",
+      padding: "0",
+      boxSizing: "border-box",
+    },
+    mainContent: {
+      width: "80%",
+      padding: "0",
+    },
+    banner: {
+      backgroundImage: `url(${banner})`,
+      height: "150px",
+      backgroundSize: "100%",
+      backgroundRepeat: "no-repeat",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      borderBottom: `2px solid ${Colors.BlancoEnBlanco}`,
+      marginBottom: "20px",
+    },
+    bannerText: {
+      fontSize: "32px",
+      fontWeight: "bold",
+      color: Colors.Naranja,
+      backgroundColor: Colors.GrisAzuladoClaro,
+      padding: "20px",
+      borderRadius: "10px",
+      border: `2px solid ${Colors.BlancoEnBlanco}`,
+    },
+    productsContainer: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      padding: "0",
+      overflowY: "scroll", // Mantiene el desplazamiento
+      height: "calc(100vh - 200px)", // Altura ajustada para limitar el scroll
+      scrollbarWidth: "none", // Oculta barra en Firefox
+      msOverflowStyle: "none", // Oculta barra en IE y Edge
+      paddingBottom: "20px",
+    },
+    productCard: {
+      height: "100%",
+      width: "100%",
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      gap: "10px",
+      boxSizing: "border-box",
+    },
+    noProductsMessage: {
+      textAlign: "center",
+      fontSize: "24px",
+      color: Colors.Naranja,
+      height: "50vh",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buscador: {
+      width: "15%",
+      position: "absolute",
+      top: "170px",
+      right: "2%",
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "10px",
+      height: "fit-content",
+      boxSizing: "border-box",
+      zIndex: 2, // Asegura que se mantenga visible
+    },
+    boton: {
+      width: "100%",
+      position: "absolute",
+      bottom: "-65px",
+      right: "0%",
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "10px",
+      backgroundColor: Colors.Naranja,
+      padding: "10px",
+    },
   };
 
   return (
-    <div>
-      <div className={`row m-0 mainFormEventos`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+    <div style={styles.container}>
+      <div style={styles.sidebar}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
+      </div>
+      <div style={styles.buscador}>
+        <BuscadorProductoConsumidor onSearch={handleSearch} />
+        <button style={styles.boton} onClick={() => navigate("/carrito")}>
+          Ir a mi Carrito
+        </button>
+      </div>
+
+      <div style={styles.mainContent}>
+        <div style={styles.banner}>
+          <h1 style={styles.bannerText}>{puesto?.nombreCarro}</h1>
         </div>
-        <div className={`col-10`}>
-          <div
-            className="d-flex justify-content-center"
-            style={{
-              backgroundImage: `url(${banner})`,
-              height: "150px",
-              backgroundSize: "100%",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
-            <h1 className="d-flex align-items-center justify-content-center">
-              {puesto?.nombreCarro}
-            </h1>
-          </div>
-          <hr style={{ color: "white" }} className="" />
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-3 pb-4 h-100 w-100">
-              {Array.isArray(productos) && productos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row`}>
-                    {row.map((producto, index) => (
-                      <div
-                        key={index}
-                        className={`colmd3 pb-4`}
-                      >
-                        {producto !== null ? (
-                          <ProductoUser
-                            producto={producto}
-                            session={session}
-                            idpuesto={id}
-                            recargar={recargarComponente}
-                          />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 className={"centeredtext"}>
-                  No existen productos en este carrito.
-                </h2>
-              )}
-            </div>
-          </div>
+        <div>
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
+
+        <div style={styles.productsContainer}>
+          {Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
+            filteredProductos.map((producto, index) => (
+              <div key={index} style={styles.productCard}>
+                <ProductoUser producto={producto} user={user} idpuesto={id} />
+              </div>
+            ))
+          ) : (
+            <h2 style={styles.noProductsMessage}>
+              No existen productos en este carrito.
+            </h2>
+          )}
         </div>
       </div>
       <Footer />

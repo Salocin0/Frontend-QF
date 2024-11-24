@@ -1,89 +1,124 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import "./../sass/main.scss";
+import { useContext } from "react";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
+
 
 const AdquirirNuevoRolR = () => {
   const navigate = useNavigate();
   const [confirmacionMayorDeEdad, setConfirmacionMayorDeEdad] = useState(false);
-  const [session, setSession] = useState(null);
   const [nuevoRol, setNuevorol] = useState(false);
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
 
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSession(data.data);
-          console.log(data.data);
-        })
-        .catch((error) => console.error("Error fetching session:", error));
-    }
-  }, [nuevoRol]);
-
+  const styles = {
+    container: {
+      display: "flex",
+      background: Colors.GrisAzuladoOscuro,
+      height: "100vh",
+    },
+    sidebarContainer: {
+      width: "20%",
+    },
+    mainContent: {
+      flexGrow: 1,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    form: {
+      background: Colors.GrisAzuladoClaro,
+      borderRadius: "8px",
+      padding: "20px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    },
+    title: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      marginBottom: "1rem",
+      color: Colors.Naranja,
+    },
+    divider: {
+      marginBottom: "1rem",
+      color: Colors.Naranja,
+    },
+    formCheck: {
+      marginBottom: "1rem",
+      marginLeft: "1rem",
+    },
+    formCheckLabel: {
+      color: Colors.Negro,
+    },
+    buttonContainer: {
+      display: "grid",
+    },
+    submitButton: {
+      backgroundColor: "green",
+      color: "white",
+      border: "none",
+      padding: "0.5rem 1rem",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+    submitButtonDisabled: {
+      opacity: 0.6,
+      cursor: "not-allowed",
+    },
+  };
+  console.log(user)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (session) {
+      if (user) {
         const response = await fetch(
-          `${process.env?.REACT_APP_BACK_URL}user/update/${session?.id}/to/repartidor`,
+          `${process.env?.REACT_APP_BACK_URL}user/update/${user?.id}/to/repartidor`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
           }
         );
-  
+
         if (response.ok) {
-          toast.success("actualizado a repartidor");
+          toast.success("Actualizado a repartidor");
           const data = await response.json();
           setNuevorol(true);
           console.log(data);
           navigate(`/login`);
         } else {
-          toast.error("error al actualizar a repartidor");
-          console.log(response.json());
+          toast.error("Error al actualizar a repartidor");
+          console.log(await response.json());
         }
       }
     } catch (error) {
       console.error(error);
-      toast.error("error");
+      toast.error("Error");
     }
   };
 
   return (
-    <div className={`background d-flex`}>
-      <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
+    <div style={styles.container}>
+      <div style={styles.sidebarContainer}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
       </div>
-      <div className="flex-grow-1 d-flex align-items-center justify-content-center">
-        <div className={`form`}>
-          <div
-            className={`formularioAdquirirNuevoRolEPC card-body px-3`}
-          >
-            <h1 className="fs-4 card-title fw-bold mb-2 text-dark">
+      <div style={styles.mainContent}>
+        <div style={styles.form}>
+          <div>
+            <h1 style={styles.title}>
               Adquirir Nuevo Rol - Repartidor
             </h1>
-            <hr />
+            <hr style={styles.divider} />
             <form
               onSubmit={handleSubmit}
               className="needs-validation"
               encType="multipart/form-data"
             >
-              <div className={`form-check mb-4 ms-4`}>
+              <div style={styles.formCheck}>
                 <input
                   type="checkbox"
-                  className={`form-check-input`}
                   id="confirmacionMayorDeEdad"
                   name="confirmacionMayorDeEdad"
                   checked={confirmacionMayorDeEdad}
@@ -92,22 +127,33 @@ const AdquirirNuevoRolR = () => {
                   }
                 />
                 <label
-                  className={`form-check-label`}
                   htmlFor="confirmacionMayorDeEdad"
-                  style={{ color: "black" }}
+                  style={styles.formCheckLabel}
                 >
                   Confirmo que tengo más de 18 años
                 </label>
               </div>
 
-              <div className="d-grid">
+              <div style={styles.buttonContainer}>
                 <button
                   type="submit"
-                  className="btn btn-success"
+                  style={{
+                    ...styles.submitButton,
+                    ...(confirmacionMayorDeEdad ? {} : styles.submitButtonDisabled),
+                  }}
                   disabled={!confirmacionMayorDeEdad}
                   data-testid="submit-button"
                 >
                   Solicitar Nuevo Rol - Repartidor
+                </button>
+
+                <button
+                  onClick={() => navigate("/inicio")}
+                  style={{
+                    ...styles.submitButton, backgroundColor: Colors.Azul, marginTop: "10px"
+                  }}
+                >
+                  Volver
                 </button>
               </div>
             </form>

@@ -1,154 +1,185 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import "./../sass/main.scss";
 import { useNavigate } from "react-router-dom";
+import useDynamicColors from "../../UseDinamicColors";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const AdquirirNuevoRolEPC = () => {
   const [cuit, setCuit] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
   const [condicionIva, setCondicionIva] = useState("");
-  const [nuevoRol, setNuevorol] = useState(false);
   const navigate = useNavigate();
-  const [session, setSession] = useState(null);
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
 
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSession(data.data);
-          console.log(data.data);
-        })
-        .catch((error) => console.error("Error fetching session:", error));
-    }
-  }, [nuevoRol]);
-
-  const handleCuitChange = (e) => {
-    setCuit(e.target.value);
-  };
-
-  const handleRazonSocialChange = (e) => {
-    setRazonSocial(e.target.value);
-  };
-
-  const handleCondicionIvaChange = (e) => {
-    setCondicionIva(e.target.value);
-  };
+  const handleCuitChange = (e) => setCuit(e.target.value);
+  const handleRazonSocialChange = (e) => setRazonSocial(e.target.value);
+  const handleCondicionIvaChange = (e) => setCondicionIva(e.target.value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const encargado = {
-          cuit: cuit,
-          razonSocial: razonSocial,
-          condicionIva: condicionIva
+        cuit,
+        razonSocial,
+        condicionIva,
       };
-      const response = await fetch(`${process.env?.REACT_APP_BACK_URL}user/update/${session.id}/to/encargado`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(encargado),
-      });
+      const response = await fetch(
+        `${process.env?.REACT_APP_BACK_URL}user/update/${user.id}/to/encargado`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(encargado),
+        }
+      );
 
       if (response.ok) {
-        toast.success("actualizado a Encargado de puesto")
-        const data = await response.json();
-        console.log(data);
-        setNuevorol(true)
+        toast.success("Actualizado a Encargado de Puesto");
         navigate(`/login`);
       } else {
-        toast.error("error al actualizar a Encargado de puesto")
-        console.log(response.json());
+        toast.error("Error al actualizar a Encargado de Puesto");
       }
-
     } catch (error) {
       console.error(error);
     }
   };
 
+  const styles = {
+    container: {
+      display: "flex",
+      background: Colors.GrisAzuladoOscuro,
+      minHeight: "100vh",
+    },
+    sidebar: {
+      flex: "0 0 20%",
+    },
+    main: {
+      flex: "1",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    formCard: {
+      width: "100%",
+      maxWidth: "400px",
+      padding: "20px",
+      borderRadius: "10px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      backgroundColor: Colors.GrisAzuladoClaro,
+    },
+    title: {
+      fontSize: "1.25rem",
+      fontWeight: "bold",
+      marginBottom: "20px",
+      color: Colors.Naranja,
+    },
+    formGroup: {
+      marginBottom: "15px",
+    },
+    label: {
+      margin: "0px",
+
+      display: "block",
+      fontSize: "0.875rem",
+      color: Colors.Negro,
+    },
+    input: {
+      width: "100%",
+      padding: "10px",
+      fontSize: "1rem",
+      borderRadius: "5px",
+    },
+    select: {
+      width: "100%",
+      padding: "10px",
+      fontSize: "1rem",
+      borderRadius: "5px",
+    },
+    button: {
+      display: "block",
+      width: "100%",
+      padding: "10px",
+      fontSize: "1rem",
+      color: Colors.Negro,
+      backgroundColor: Colors.Verde,
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+    },
+  };
+
   return (
-    <>
-      <div className={`background d-flex`}>
-        <div className="col-2">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className="flex-grow-1 d-flex align-items-center justify-content-center">
-          <div className={`form card shadow-lg`}>
-            <div
-              className={`formularioAdquirirNuevoRolEPC card-body px-3`}
-            >
-              <h1 className="fs-4 card-title fw-bold mb-2 text-dark">
-                Adquirir Nuevo Rol - Encargado de Puesto de Comida
-              </h1>
-              <hr />
-              <form
-                onSubmit={handleSubmit}
-                className="needs-validation"
-                encType="multipart/form-data"
-              >
-                
-                <div className="mb-2">
-                  <label className="mb-2 text-dark" htmlFor="cuit">
-                    CUIT
-                  </label>
-                  <input
-                    type="text"
-                    id="cuit"
-                    className="form-control"
-                    value={cuit}
-                    onChange={handleCuitChange}
-                    required
-                  />
-                </div>
-
-                <div className="mb-2">
-                  <label className="mb-2 text-dark" htmlFor="razonSocial">
-                    Razón Social
-                  </label>
-                  <input
-                    type="text"
-                    id="razonSocial"
-                    className="form-control"
-                    value={razonSocial}
-                    onChange={handleRazonSocialChange}
-                    required
-                  />
-                </div>
-
-                <div className={`form-group`}>
-                  <label htmlFor="ivaCondicion" style={{ color: "black" }}>
-                    Condición frente al IVA
-                  </label>
-                  <select className={`form-control`} name="ivaCondicion" onChange={handleCondicionIvaChange} value={condicionIva}>
-                    <option value="">Seleccionar</option> 
-                    <option value="responsable_inscripto">Responsable Inscripto</option>
-                    <option value="monotributista">Monotributista</option>
-                  </select>
-                </div>
-                <div className="pb-3" />
-                <div className="d-grid">
-                  <button type="submit" className="btn btn-success">
-                    Solicitar Nuevo Rol - Encargado Puesto de Comida
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-          <Footer />
-        </div>
+    <div style={styles.container}>
+      <div style={styles.sidebar}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
       </div>
-    </>
+      <div style={styles.main}>
+        <div style={styles.formCard}>
+          <h1 style={styles.title}>
+            Adquirir Nuevo Rol - Encargado de Puesto de Comida
+          </h1>
+          <form onSubmit={handleSubmit}>
+            <div style={styles.formGroup}>
+              <label htmlFor="cuit" style={styles.label}>
+                CUIT
+              </label>
+              <input
+                type="text"
+                id="cuit"
+                value={cuit}
+                onChange={handleCuitChange}
+                required
+                style={styles.input}
+              />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label htmlFor="razonSocial" style={styles.label}>
+                Razón Social
+              </label>
+              <input
+                type="text"
+                id="razonSocial"
+                value={razonSocial}
+                onChange={handleRazonSocialChange}
+                required
+                style={styles.input}
+              />
+            </div>
+
+            <div style={styles.formGroup}>
+              <label htmlFor="ivaCondicion" style={styles.label}>
+                Condición frente al IVA
+              </label>
+              <select
+                id="ivaCondicion"
+                value={condicionIva}
+                onChange={handleCondicionIvaChange}
+                style={styles.select}
+              >
+                <option value="">Seleccionar</option>
+                <option value="responsable_inscripto">
+                  Responsable Inscripto
+                </option>
+                <option value="monotributista">Monotributista</option>
+              </select>
+            </div>
+
+            <button type="submit" style={styles.button}>
+              Solicitar Nuevo Rol - Encargado Puesto de Comida
+            </button>
+            <button type="submit" onClick={() => navigate("/inicio")} style={{...styles.button, backgroundColor: Colors.Azul,marginTop:"10px"}}>
+              Volver
+            </button>
+          </form>
+        </div>
+        <Footer />
+      </div>
+    </div>
   );
 };
 

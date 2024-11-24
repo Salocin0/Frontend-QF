@@ -1,47 +1,25 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import Sidebar from "../../ComponentesGenerales/Sidebar";
-import "./../../sass/main.css";
-import Pedido from "../Pedido";
-import PedidoEncargado from "./PedidoRepartidor";
 import PedidoRepartidor from "./PedidoRepartidor";
+import { useContext } from "react";
+import { UserContext } from "../../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../../UseDinamicColors";
 
 const ListadoPedidosRepartidor = () => {
   const [rows, setRows] = useState([]);
-  const [session, setSession] = useState(null);
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
 
   const recargarComponente = () => {
-    setRecargar(prevRecargar => prevRecargar + 1);
+    setRecargar((prevRecargar) => prevRecargar + 1);
   };
 
   useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
-
-  useEffect(() => {
-    if (session) {
+    if (user) {
       const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
+      headers.append("ConsumidorId", user.consumidorId);
 
       fetch(`${process.env?.REACT_APP_BACK_URL}pedido/repartidor`, {
         method: "GET",
@@ -50,7 +28,6 @@ const ListadoPedidosRepartidor = () => {
         .then((response) => response.json())
         .then((data) => {
           setPedidos(data.data);
-          console.log(data);
           const totalEventos = Math.ceil(data.data.length / 4) * 4;
           const eventosConNulos = [
             ...data.data,
@@ -63,39 +40,75 @@ const ListadoPedidosRepartidor = () => {
             generatedRows.push(row);
           }
           setRows(generatedRows);
-          
         })
         .catch((error) => console.log("No existen pedidos.", error));
     }
-  }, [session, recargar]);
+  }, [user, recargar]);
+
+  const styles = {
+    container: {
+      display: "flex",
+      flexDirection: "row",
+      margin: 0,
+      height: "100vh",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    content: {
+      display: "flex",
+      flexDirection: "column",
+      width: "100%",
+      height: "100%",
+      marginLeft: "20%",
+    },
+    titleSection: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "1rem",
+    },
+    titleText: {
+      paddingTop: "0.5rem",
+      color: Colors.Naranja,
+    },
+    separator: {
+      color: Colors.Naranja,
+    },
+    centerContent: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    listContainer: {
+      paddingTop: "0.5rem",
+      paddingBottom: "1rem",
+      height: "100%",
+      width: "100%",
+    },
+    noPedidosText: {
+      color: Colors.Naranja,
+      textAlign: "center",
+    },
+  };
 
   return (
     <div>
-      <div className={`row m-0 mainFormEventos`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className={`col-10`}>
-          <div className="d-flex justify-content-center mb-3 tituloSeccion">
-            <h1 className="pt-2">
-              Pedidos asignados
-            </h1>
+      <div style={styles.container}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
+        <div style={styles.content}>
+          <div style={styles.titleSection}>
+            <h1 style={styles.titleText}>Pedidos asignados</h1>
           </div>
-          <hr style={{ color: "#F7B813" }} />
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-2 pb-4 h-100 w-100">
+          <hr style={styles.separator} />
+          <div style={styles.centerContent}>
+            <div style={styles.listContainer}>
               {Array.isArray(pedidos) && pedidos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} >
+                  <div key={rowIndex}>
                     {row.map((pedido, index) => (
-                      <div
-                        key={index}
-                      >
+                      <div key={index}>
                         {pedido !== null ? (
                           <PedidoRepartidor
                             pedido={pedido}
-                            session={session}
                             recargar={recargarComponente}
                           />
                         ) : null}
@@ -104,9 +117,7 @@ const ListadoPedidosRepartidor = () => {
                   </div>
                 ))
               ) : (
-                <h2 className={"tituloSeccionNegativo"}>
-                  No hay Pedidos asignados
-                </h2>
+                <h2 style={styles.noPedidosText}>No hay Pedidos asignados</h2>
               )}
             </div>
           </div>

@@ -55,6 +55,13 @@ const MenuItems = ({
           <span className="ms-1 d-none d-sm-inline w-100">Carrito</span>
         </a>
       </li>
+      {/* Enlace al carrito */}
+      <li className="navitem">
+        <a href="/notificaciones" className="navlink text-truncate">
+          <i className="icono bi bi-bell"></i>
+          <span className="ms-1 d-none d-sm-inline w-100">Notificaciones</span>
+        </a>
+      </li>
       <hr className="divicionnav" style={{ color: "white", width: "100%" }} />
       {/* Enlaces específicos para el responsable */}
       {isResponsable && (
@@ -122,12 +129,6 @@ const MenuItems = ({
       {/* Enlaces específicos para el repartidor */}
       {isRepartidor && (
         <>
-          <li className="navitem">
-            <a href="/repartidor/pedidos" className="navlink text-truncate">
-              <FontAwesomeIcon icon={faDolly} className="icono" />
-              <span className="ms-1 d-none d-sm-inline w-100">Mis Pedidos</span>
-            </a>
-          </li>
           <li className="navitem">
             <a href="/pedidos-asignados" className="navlink text-truncate">
               <FontAwesomeIcon icon={faDolly} className="icono" />

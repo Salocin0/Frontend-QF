@@ -4,9 +4,14 @@ import botImageURL from "../bot-img.png";
 import logoURL from "../quickfood-logo.png";
 import useDynamicColors from "../../UseDinamicColors";
 import "./../ComponenteRegister/placeholder.css";
+import { useContext } from "react";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const Chatbot = () => {
   const Colors = useDynamicColors();
+  const { user, updateUser } = useContext(UserContext);
+  const [messages, setMessages] = useState([]);
+  console.log(user);
   const styles = {
     global: {
       fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
@@ -117,19 +122,52 @@ const Chatbot = () => {
     footerLink: {
       color: Colors.Rosa,
       textDecoration: "none",
+      cursor: "pointer",
+    },
+    footerLink2: {
+      color: Colors.Blanco,
+      textDecoration: "none",
+      cursor: "pointer",
     },
     text: {
       color: Colors.BlancoEnBlanco,
     },
   };
+  const MenssageLogin = `Puedes loguearte haciendo click aquí.`;
 
-  const [messages, setMessages] = useState([
-    {
-      message:
-        "Hola Agostina! 👋 👋 \nEspero estés bien!\nAcá Foody 🤖  !\n\nDecime, en que puedo ayudarte?",
-      sender: "bot",
-    },
-  ]);
+  const MenssageRegister = `Tambien podes crearte una cuenta haciendo click aquí.`;
+
+  useEffect(() => {
+    const greetingMessage = user.nombre
+      ? `Hola ${user.nombre} 👋 👋, \nespero que estés bien! Acá Foody 🤖.  \nDecime, ¿en qué puedo ayudarte?`
+      : `Hola Usuario 👋 👋,  \nespero que estés bien! Acá Foody 🤖.  \nDecime, ¿en qué puedo ayudarte?`;
+
+    
+
+    if (user.nombre) {
+      setMessages([
+        {
+          message: greetingMessage,
+          sender: "bot",
+        },
+      ]);
+    } else {
+      setMessages([
+        {
+          message: greetingMessage,
+          sender: "bot",
+        },
+        {
+          message: MenssageLogin,
+          sender: "bot",
+        },
+        {
+          message: MenssageRegister,
+          sender: "bot",
+        },
+      ]);
+    }
+  }, [user, user.nombre]); // Run when `isLoggedIn` or `user.nombre` changes
   const chatInputRef = useRef(null);
   const chatBoxRef = useRef(null);
 
@@ -180,6 +218,26 @@ const Chatbot = () => {
     }, 100);
   };
 
+  const renderMessageContent = (msg) => {
+    if (msg === MenssageLogin) {
+      return (
+        <a href="/login" style={styles.footerLink2}>
+          Puedes loguearte haciendo click aquí.
+        </a>
+      );
+    }
+
+    if (msg === MenssageRegister) {
+      return (
+        <a href="/seleccion-perfil" style={styles.footerLink2}>
+          También podes crearte una cuenta haciendo click aquí.
+        </a>
+      );
+    }
+
+    return msg;
+  };
+
   return (
     <div style={styles.global}>
       <header style={styles.header}>
@@ -212,7 +270,7 @@ const Chatbot = () => {
                   <div
                     style={{ ...styles.messageText, ...styles.botMessageText }}
                   >
-                    {msg.message}
+                    {renderMessageContent(msg.message)}
                   </div>
                 </>
               )}
@@ -248,3 +306,4 @@ const Chatbot = () => {
 };
 
 export default Chatbot;
+

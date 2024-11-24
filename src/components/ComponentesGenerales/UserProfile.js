@@ -1,6 +1,6 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
@@ -11,7 +11,8 @@ const UserProfile = ({ haveRol }) => {
   const Colors = useDynamicColors();
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
-  const { user,setUser } = useContext(UserContext);
+  const { user, updateUser } = useContext(UserContext);
+  const [isHoveredIndex, setIsHoveredIndex] = useState(null);
 
   const handleLogout = () => {
     if (user.id) {
@@ -24,11 +25,14 @@ const UserProfile = ({ haveRol }) => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setUser({});
+          updateUser({});
           navigate("/login");
           toast.success("Sesión cerrada");
         })
-        .catch((error) => toast.error("Error al cerrar sesion"));
+        .catch((error) => {
+          console.log(error);
+          toast.error("Error al cerrar sesion");
+        });
     }
   };
 
@@ -36,18 +40,21 @@ const UserProfile = ({ haveRol }) => {
     icon: {
       fontSize: "1.5rem",
       cursor: "pointer",
-      color: isHovered ? "black" : "",
+      color: isHovered ? "black" : Colors.Naranja,
     },
     dropdownMenu: {
       position: "absolute",
-      bottom: "100%",
+      bottom: "15px",
       left: "50%",
       zIndex: "1000",
       display: "none",
       padding: "0.5rem 0",
       marginTop: "0.125rem",
       backgroundColor: Colors.Blanco,
-      border: Colors.Blanco==="#fff" ? "1px solid rgba(0,0,0,0.60)" : "1px solid rgba(255,255,255,0.60)",
+      border:
+        Colors.Blanco === "#fff"
+          ? "1px solid rgba(0,0,0,0.60)"
+          : "1px solid rgba(255,255,255,0.60)",
       borderRadius: "0.25rem",
       boxShadow: "0 0.5rem 1rem rgba(0, 0, 0, 0.175)",
       listStyleType: "none",
@@ -64,6 +71,10 @@ const UserProfile = ({ haveRol }) => {
       whiteSpace: "nowrap",
       cursor: "pointer",
     },
+    dropdownItemHovered: {
+      backgroundColor: Colors.Naranja,
+      color: Colors.Blanco,
+    },
     divider: {
       height: "1px",
       margin: "0.5rem 0",
@@ -76,7 +87,7 @@ const UserProfile = ({ haveRol }) => {
       width: "100%",
       clear: "both",
       fontWeight: "400",
-      color: Colors.Negro, 
+      color: Colors.Negro,
       textAlign: "inherit",
       textDecoration: "none",
       whiteSpace: "nowrap",
@@ -91,7 +102,7 @@ const UserProfile = ({ haveRol }) => {
       alignItems: "center",
       borderRadius: "5px 5px 5px 5px",
       paddingRight: "5px",
-      marginBottom: "10px",
+      marginBottom: "20px",
       color: Colors.Gris,
       listStyleType: "none",
       cursor: "pointer",
@@ -104,58 +115,90 @@ const UserProfile = ({ haveRol }) => {
     },
   };
 
+  const menuItems = [
+    {
+      label: "¡Quiero ser Productor!",
+      href: "/adquirir-nuevo-rolPE",
+      showWhenNoRol: false,
+    },
+    {
+      label: "¡Quiero ser Encargado de Puestos!",
+      href: "/adquirir-nuevo-rolEPC",
+      showWhenNoRol: false,
+    },
+    {
+      label: "¡Quiero ser Repartidor!",
+      href: "/adquirir-nuevo-rolR",
+      showWhenNoRol: false,
+    },
+    { label: "Perfil", href: "/perfil-nuevo", showWhenNoRol: true },
+    { label: "Configuración", href: "/configuracion", showWhenNoRol: true },
+  ];
+
   return (
     <li
-      style={styles.navItem}
+      style={{
+        ...styles.navItem,
+        backgroundColor: isHovered ? Colors.Naranja : "transparent",
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
         className="navlink"
         id="dropdown"
+        style={styles.navItemmasicon}
         onClick={(e) => {
           const dropdown = e.currentTarget.nextSibling;
           dropdown.style.display =
             dropdown.style.display === "block" ? "none" : "block";
         }}
-        style={styles.navItemmasicon}
       >
         <FontAwesomeIcon icon={faUser} style={styles.icon} className="icono" />
-        <span className="ms-1 d-none d-sm-inline text-center">Mi Perfil</span>
+        <span
+          className="ms-1 d-none d-sm-inline text-center"
+          style={{ color: isHovered ? Colors.Negro : Colors.Naranja }}
+        >
+          Mi Perfil
+        </span>
       </div>
-      <ul style={styles.dropdownMenu} aria-labelledby="dropdown">
-        {!haveRol && (
-          <>
-            <li>
-              <a style={styles.dropdownItem} href="/adquirir-nuevo-rolPE">
-                ¡Quiero ser Productor!
+      <ul
+        style={{
+          ...styles.dropdownMenu,
+          display: isHovered ? "block" : "none", // Mostrar el menú solo cuando `isHovered` es verdadero
+        }}
+        aria-labelledby="dropdown"
+      >
+        {menuItems
+          .filter((item) => !haveRol || item.showWhenNoRol) // Condicional para mostrar elementos
+          .map((item, index) => (
+            <li
+              key={index}
+              onMouseEnter={() => setIsHoveredIndex(index)}
+              onMouseLeave={() => setIsHoveredIndex(null)}
+            >
+              <a
+                href={item.href}
+                style={{
+                  ...styles.dropdownItem,
+                  ...(isHoveredIndex === index && styles.dropdownItemHovered),
+                }}
+              >
+                {item.label}
               </a>
             </li>
-            <li>
-              <a style={styles.dropdownItem} href="/adquirir-nuevo-rolEPC">
-                ¡Quiero ser Encargado de Puestos!
-              </a>
-            </li>
-            <li>
-              <a style={styles.dropdownItem} href="/adquirir-nuevo-rolR">
-                ¡Quiero ser Repartidor!
-              </a>
-            </li>
-          </>
-        )}
-        <li>
-          <a style={styles.dropdownItem} href="/perfil-nuevo">
-            Perfil
-          </a>
-        </li>
-        <li>
-          <a style={styles.dropdownItem} href="/configuracion">
-            Configuración
-          </a>
-        </li>
+          ))}
         <li style={styles.divider}></li>
         <li>
-          <span style={styles.dropdownItem} onClick={handleLogout}>
+          <span
+            style={{
+              ...styles.dropdownItem,
+              ...(isHoveredIndex === "logout" && styles.dropdownItemHovered),
+            }}
+            onMouseEnter={() => setIsHoveredIndex("logout")}
+            onMouseLeave={() => setIsHoveredIndex(null)}
+            onClick={handleLogout}
+          >
             Cerrar Sesión
           </span>
         </li>

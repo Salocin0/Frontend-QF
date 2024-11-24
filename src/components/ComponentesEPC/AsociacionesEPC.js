@@ -1,51 +1,23 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import FiltersPuestosEncargado from "../filters/filtersPuestosEncargado";
-import "./../sass/main.css";
-
-
+import FiltersPuestosEncargado from "../Filtros y Buscadores/filtersPuestosEncargado";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import { useContext } from "react";
 const AsociacionesEPC = () => {
-    const { id } = useParams();
     const navigate = useNavigate();
-    const [session, setSession] = useState(null);
+    const { user } = useContext(UserContext)
     const [eventos, setEventos] = useState([]);
     const [isPendienteDeAceptacion, setIsPendienteDeAceptacion] = useState(false);
     const [asociaciones, setAsociaciones] = useState([]);
-    const [estadosAsociaciones, setEstadosAsociaciones] = useState([]);
 
     useEffect(() => {
-        const sessionId = localStorage.getItem("sessionId");
-
-        if (!sessionId) {
-            console.error("No session ID found.");
-            return;
-        }
-
-        fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ sessionID: sessionId }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setSession(data.data);
-                console.log(data.data.tipoUsuario);
-            })
-            .catch((error) => console.error("Error fetching session:", error));
-    }, []);
-
-
-
-    useEffect(() => {
-        if (session) {
+        if (user) {
             const headers = new Headers();
-            headers.append("ConsumidorId", session.consumidorId);
+            headers.append("ConsumidorId", user.consumidorId);
 
-            fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/buscar/${session.consumidorId}`,
+            fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/buscar/${user.consumidorId}`,
             {
                 method: "GET",
                 headers: headers,
@@ -58,7 +30,7 @@ const AsociacionesEPC = () => {
         })
         .catch((error) => console.log("No existen eventos.", error));
 }
-    }, [session]);
+    }, [user]);
 
     useEffect(() => {
         if (asociaciones.length > 0) {
@@ -77,7 +49,6 @@ const AsociacionesEPC = () => {
 const agregarNuevo = () => {
     navigate(`/crear-puesto`);
 };
-
 
 const cancelarAsociacion = (asociacionID) => {
     fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionID}/cancelar`, {
@@ -100,16 +71,11 @@ function generarNumeroRandom() {
   return Math.floor(Math.random() * 15) + 1;
 }
 
-
-
-
-
-
 return (
     <div>
       <div className={`row m-0 mainFormEventos`}>
         <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+          <Sidebar tipoUsuario={user?.tipoUsuario} />
         </div>
         <div className={`col-10`}>
           <div className="d-flex align-items-center justify-content-center">

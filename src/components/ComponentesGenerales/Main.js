@@ -53,7 +53,7 @@ import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
 import ListadoPuestosDeshabilitados from "../ComponentesPuesto/PuestoDeshabilitados.js";
 import PanelEncargado from "../PanelesDatos/PanelEncargado/PanelEncargado";
 import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
-import FiltersEventosConsumidor from "../filters/filtersEventosConsumidor";
+import FiltersEventosConsumidor from "../Filtros y Buscadores/filtersEventosConsumidor";
 import DocumentUpload from "./DocumentUpload";
 import Home from "./Home";
 import Inicio from "./Inicio";
@@ -66,6 +66,7 @@ export const Main = () => {
     <main>
       <Routes>
         {/*nuevos estilos aplicados*/}
+        
         <Route path="/registrarse/:tipoUsuario" element={<ProcesoRegistro />} />
         <Route path="/login" element={<Login />} />
         <Route path="/seleccion-perfil" element={<SeleccionRegister />} />
@@ -77,36 +78,43 @@ export const Main = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/sidebar" element={<Sidebar />} />
-        {/*nuevos estilos por aplicar*/}
-        
-        
-        <Route path="/consultar-usuario" element={<ConsultarUsuario />} />
+        <Route path="/listado-eventos" element={<ListadoEventosUsers />} />
+        <Route path="/listado-puestos/:idEvento" element={<ListadoPuestosUser />} />
+        <Route path="/productos-puesto/:id" element={<ListadoProductoUser />} />
+        <Route path="/carrito/" element={<Carrito/>} />
+        <Route path="/pedidos" element={<ListadoPedidos/>} />
+        <Route path="/adquirir-nuevo-rolR" element={<AdquirirNuevoRolR />} />
         <Route path="/adquirir-nuevo-rolPE" element={<AdquirirNuevoRolPE />} />
-        <Route path="/filtersEventosConsumidor" element={<FiltersEventosConsumidor/>} />
         <Route path="/adquirir-nuevo-rolEPC" element={<AdquirirNuevoRolEPC />} />
+        <Route path="/pedidos-asignados" element={<ListadoPedidosRepartidor/>} />
+        <Route path="/asociarRepartidorAEvento" element={<AsociarRepartidorAEvento />} />
+        <Route path="/misAsociacionesR" element={<AsociacionesR/>} />
+        <Route path="/listado-puestos-encargado" element={<ListadoPuestosEncargado />} />
+        <Route path="/asociarPuestoAEvento/:puestoId" element={<AsociarPuestoAEvento/>} />
+        <Route path="/listado-productos/:id" element={<ListadoProducto />} />
+        <Route path="/crear-puesto" element={<CrearNuevoPuesto />} />
+        <Route path="/listado-productos-deshabilitados/:id" element={<ListadoProductoDeshabilitado/>} />
+        <Route path="/registrar-productos/:id" element={<RegistrarProductos />}/>
+        {/*nuevos estilos por aplicar*/}
+        <Route path="/misAsociacionesEPC" element={<AsociacionesEPC/>} />
+        
+        <Route path="/notificaciones" element={<Notificaciones/>}/>
+        <Route path="/perfil-nuevo" element={<ConsultarUsuarioPrueba />} />
+        <Route path="/consultar-usuario" element={<ConsultarUsuario />} />
+        <Route path="/filtersEventosConsumidor" element={<FiltersEventosConsumidor/>} />
         <Route path="/consultar-usuarioPE" element={<ConsultarUsuarioPE />} />
         <Route path="/consultar-usuarioEPC" element={<ConsultarUsuarioEPC />} />
         <Route path="/adquierir-nuevo-rolPE/:id" element={<AdquirirNuevoRolPE />} />
-        <Route path="/crear-puesto" element={<CrearNuevoPuesto />} />
         <Route path="/listado-puestos" element={<ListadoPuestos />} />
         <Route path="/puestos-deshabilitados" element={<ListadoPuestosDeshabilitados />} />
         <Route path="/info-puesto/:id" element={<ConsultarPuestoSolicitud />} />
         <Route path="/puesto/:id" element={<ConsultarPuesto />} />
-        <Route path="/adquirir-nuevo-rolR" element={<AdquirirNuevoRolR />} />
         <Route path="/consultar-usuarioR" element={<ConsultarUsuarioR />} />
         <Route path="/ser-repartidor" element={<RegistroRepartidor />} />
         <Route path="/ser-productor" element={<RegistroProductor />} />
         <Route path="/ser-encargado" element={<RegistroEncargado />} />
-        <Route path="/perfil-nuevo" element={<ConsultarUsuarioPrueba />} />
         <Route path="/subir-archivo" element={<DocumentUpload />} />
-        <Route path="/listado-productos/:id" element={<ListadoProducto />} />
-        <Route path="/listado-productos-deshabilitados/:id" element={<ListadoProductoDeshabilitado/>} />
-        <Route path="/registrar-productos/:id" element={<RegistrarProductos />}/>
         <Route path="/producto/:id" element={<ConsultarProducto />} />
-        <Route path="/listado-puestos/:idEvento" element={<ListadoPuestosUser />} />
-        <Route path="/listado-puestos-encargado" element={<ListadoPuestosEncargado />} />
-        <Route path="/productos-puesto/:id" element={<ListadoProductoUser />} />
-        <Route path="/listado-eventos" element={<ListadoEventosUsers />} />
         <Route path="/listado-eventos-productor" element={<ListadoEventosProductor />} />
         <Route path="/registrar-evento" element={<RegistrarEvento />} />
         <Route path="/registrar-evento2" element={<RegistrarEvento2 />} />
@@ -114,20 +122,13 @@ export const Main = () => {
         <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<RegistrarEvento4 />} />
         <Route path="/eventoPrueba" element={<EventoPrueba />} />
         <Route path="/evento/:id" element={<ConsultarEvento />} />
-        <Route path="/asociarRepartidorAEvento" element={<AsociarRepartidorAEvento />} />
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
-        <Route path="/misAsociacionesR" element={<AsociacionesR/>} />
-        <Route path="/misAsociacionesEPC" element={<AsociacionesEPC/>} />
+        
         <Route path="/ver-solicitudes-evento/:evento" element={<VerSolicitudesEvento/>} />
-        <Route path="/asociarPuestoAEvento/:puestoId" element={<AsociarPuestoAEvento/>} />
-        <Route path="/carrito/" element={<Carrito/>} />
-        <Route path="/pedidos" element={<ListadoPedidos/>} />
         <Route path="/grafica-productor" element={<PanelProductor/>} />
         <Route path="/grafica-encargado" element={<PanelEncargado/>} />
         <Route path="/pedidos-Encargado" element={<ListadoPedidosEncargado/>} />
-        <Route path="/pedidos-asignados" element={<ListadoPedidosRepartidor/>} />
         <Route path="/pruebasToast" element={<PruebasToast/>} />
-        <Route path="/notificaciones" element={<Notificaciones/>}/>
       </Routes>
     </main>
   );

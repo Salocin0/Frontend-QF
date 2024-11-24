@@ -1,67 +1,120 @@
-import { format } from "date-fns";
-import { default as React, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { default as React, useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./../sass/main.css";
-
-import FiltrosEventosEncargado from "../filters/filtersEventosEncargado";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
+import imgDefault from "../img/logoevento.webp";
 
 const EventoRepartidor = ({ evento, recargar }) => {
-  const { id } = useParams();
-  const [session, setSession] = useState(null);
   const navigate = useNavigate();
-  const [isEnPreparacion, setIsEnPreparacion] = useState(false);
-  const [tieneAsociacionPendiente, setTieneAsociacionPendiente] = useState(false);
+  const Colors = useDynamicColors();
+  const [isEnPreparacion, setIsEnPreparacion] = useState(
+    evento.estado === "EnPreparacion"
+  );
+  const [tieneAsociacionPendiente, setTieneAsociacionPendiente] =
+    useState(false);
+  const { user } = useContext(UserContext);
 
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-        console.log(data.data.tipoUsuario);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
-
-
-  useEffect(() => {
-
-    if (evento) {
-      switch (evento.estado) {
-        case 'EnPreparacion':
-          setIsEnPreparacion(true);
-          break;
-        default:
-          break;
-      }
-    }
-  });
-
+  const styles = {
+    containerFluid: {
+      width: "90%",
+      margin: "0 auto",
+    },
+    hr:{
+      color : Colors.Naranja
+    },
+    datos:{
+      width: "90%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      textAlign: "center",
+    },
+    card: {
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "10px",
+      padding: "15px",
+      marginBottom: "15px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      position: "relative",
+    },
+    cardBody: {
+      padding: "15px",
+    },
+    row: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginRight: "15%",
+    },
+    img: {
+      maxWidth: "100%",
+      height: "200px",
+      borderRadius: "5px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      overflow: "hidden",
+      objectFit: "cover",
+      marginLeft: "3%",
+    },
+    cardTitle: {
+      fontSize: "24px",
+      fontWeight: "bold",
+      color: Colors.Naranja
+    },
+    cardDescripcion: {
+      fontSize: "1rem",
+      color: Colors.Negro,
+      marginBottom: "10px",
+    },
+    cardText: {
+      fontSize: "0.9rem",
+      color: Colors.Negro,
+    },
+    cardEstado: {
+      fontSize: "1rem",
+      fontWeight: "bold",
+      color:  Colors.Negro,
+      position: "absolute",
+      top: "30px",
+      right: "30px",
+      backgroundColor: Colors.Verde,
+      padding: "5px 10px",
+      borderRadius: "10px",
+    },
+    cardTextFecha: {
+      fontSize: "0.8rem",
+      color: Colors.Negro,
+    },
+    mt2: {
+      marginTop: "10px",
+    },
+    btnSuccess: {
+      backgroundColor: Colors.Verde,
+      color: Colors.Blanco,
+      border: "none",
+      padding: "10px 20px",
+      borderRadius: "5px",
+      cursor: "pointer",
+    },
+    cardTextYellow: {
+      fontSize: "0.9rem",
+      color: Colors.Naranja,
+      fontWeight: "bold",
+    },
+  };
 
   const asociarmeAEvento = () => {
     const headers = new Headers();
-    headers.append("ConsumidorId", session?.consumidorId);
+    headers.append("ConsumidorId", user?.consumidorId);
     headers.append("Content-Type", "application/json");
 
-    console.log(evento.id);
-    console.log(session.consumidorId);
-
     fetch(
-      `${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento.id}/asociarSimple/0/${session.consumidorId}`,
+      `${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento.id}/asociarSimple/0/${user.consumidorId}`,
       {
         method: "POST",
         headers: headers,
@@ -81,10 +134,9 @@ const EventoRepartidor = ({ evento, recargar }) => {
   };
 
   const handleTieneRestriciones = async () => {
-
     try {
       const headers = new Headers();
-      headers.append("ConsumidorId", session?.consumidorId);
+      headers.append("ConsumidorId", user?.consumidorId);
       headers.append("Content-Type", "application/json");
 
       const response = await fetch(
@@ -110,8 +162,6 @@ const EventoRepartidor = ({ evento, recargar }) => {
   };
 
   const handleCrearForm = () => {
-    console.log("Entre a CrearForm")
-    console.log(evento.id);
     const url = `/restriccionesEvento/${evento.id}`;
     navigate(url);
   };
@@ -120,22 +170,19 @@ const EventoRepartidor = ({ evento, recargar }) => {
     const handleTieneAsociacionPendiente = async () => {
       try {
         const headers = new Headers();
-        headers.append("ConsumidorId", session?.consumidorId);
+        headers.append("ConsumidorId", user?.consumidorId);
         headers.append("Content-Type", "application/json");
         const response = await fetch(
-          `${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento.id}/asociarRepartidor/${session.consumidorId}`,
+          `${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento.id}/asociarRepartidor/${user.consumidorId}`,
           {
             method: "GET",
             headers: headers,
           }
         );
-        console.log(response.status)
         if (response.status === 400) {
           setTieneAsociacionPendiente(true);
         } else if (response.status === 200) {
-          console.log("Sin asociaciones");
           setTieneAsociacionPendiente(false);
-
         }
       } catch (error) {
         console.error(error);
@@ -145,75 +192,48 @@ const EventoRepartidor = ({ evento, recargar }) => {
     if (isEnPreparacion) {
       handleTieneAsociacionPendiente();
     }
-  }, [evento, session, isEnPreparacion]);
-
-
+  }, [evento, user, isEnPreparacion]);
 
   return (
-    <div>
-      <div className="container-fluid">
-
-        <div className="card">
-          <div className="card-body">
-            <div className="row">
-              <div className="col-md-3">
-                <img
-                  src={evento.img}
-                  alt="Logo del Evento"
-                  className="img-fluid"
-                />
-              </div>
-              <div className="col-md-8 position-relative">
-                <h5 className="card-title">{evento.nombre}</h5>
-                <p className="card-descripcion">{evento.descripcion}</p>
-                <p className="card-text">{evento.ubicacion} - {evento.localidad}, {evento.provincia}</p>
-                <p className="card-estado">
-                  {evento.estado}
-                </p>
-                <p className="card-text-fecha">
-                  {format(new Date(evento.fechaInicio), "dd/MM/yyyy")} -  {format(new Date(evento.fechaFin), "dd/MM/yyyy")}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-2 d-flex">
-              <div className="col-md-12 d-flex justify-content-center">
-                {!tieneAsociacionPendiente && isEnPreparacion && (
-                  <button className="btn btn-success me-2" onClick={handleTieneRestriciones}>
-                    Asociarme a Evento
-                  </button>
-                )}
-                {tieneAsociacionPendiente && (
-                  <p className="card-text-yellow">Tiene una asociación pendiente</p>
-                )}
-
-              </div>
-              <p className={`card-estado-productor}`}>
-                {evento.estado}
+    <div style={styles.containerFluid}>
+      <div style={styles.card}>
+        <div style={styles.cardBody}>
+          <div style={styles.row}>
+            <img
+              src={evento.img || imgDefault}
+              alt="Logo del Evento"
+              style={styles.img}
+            />
+            <div style={styles.datos}>
+              <h5 style={styles.cardTitle}>{evento.nombre}</h5>
+              <p style={styles.cardDescripcion}>{evento.descripcion}</p>
+              <p style={styles.cardText}>
+                {evento.ubicacion} - {evento.localidad}, {evento.provincia}
               </p>
+              <p style={styles.cardEstado}>{evento.estado==="EnPreparacion"? "En Preparación" : evento.estado}</p>
+            </div>
+          </div>
+          <hr style={styles.hr}/>
+          <div style={styles.mt2}>
+            <div>
+              {!tieneAsociacionPendiente && isEnPreparacion && (
+                <button
+                  style={styles.btnSuccess}
+                  onClick={handleTieneRestriciones}
+                >
+                  Asociarme a Evento
+                </button>
+              )}
+              {tieneAsociacionPendiente && (
+                <p style={styles.cardTextYellow}>
+                  Tiene una asociación pendiente
+                </p>
+              )}
             </div>
           </div>
         </div>
-
-      </div>
-
-      <div className="filtrosBuscador">
-        <input
-          type="text"
-          placeholder="Buscar"
-          className="buscador"
-        />
-        <button className="btn btn-primary mx-2 buscarButton">Buscar</button>
-
-      </div>
-
-      <div className="filtrosEventoEncargado">
-
-        <FiltrosEventosEncargado />
-
       </div>
     </div>
-
   );
 };
 

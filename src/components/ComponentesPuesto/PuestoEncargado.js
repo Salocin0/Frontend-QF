@@ -1,167 +1,203 @@
-import { default as React, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { default as React, useState,useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import FiltersPuestosEncargado from "../filters/filtersPuestosEncargado";
-import "./../sass/main.css";
+import useDynamicColors from "../../UseDinamicColors";
+import imgDefault from "../img/puestoLogoDefault.jpg";
 
+const PuestoEncargado = ({ carrito, actualizarListado }) => {
+  const navigate = useNavigate();
+  const Colors = useDynamicColors();
+  const [isCreado, setIsCreado] = useState(carrito.estado === "Creado");
+  const [isDeshabilitado, setIsDeshabilitado] = useState(carrito.estado === "Deshabilitado");
+  const [actualizar, setActualizar] = useState(0);
 
-const PuestoEncargado = ({ carrito, recargar }) => {
-    const { id } = useParams();
-    const [session, setSession] = useState(null);
-    const navigate = useNavigate();
+  useEffect(() => {
+    setIsCreado(carrito.estado === "Creado");
+    setIsDeshabilitado(carrito.estado === "Deshabilitado");
+  }, [carrito,actualizar]);
 
-    const [isCreado, setIsCreado] = useState(false);
-    const [isDeshabilitado, setIsDeshabilitado] = useState(false);
-    const [isEnCurso, setIsEnCurso] = useState(false);
-    const [isPausado, setIsPausado] = useState(false);
-    const [isCancelado, setIsCancelado] = useState(false);
-    const [isFinalizado, setIsFinalizado] = useState(false);
+  const handleactualizar = () => {
+    setActualizar(actualizar+1)
+    actualizarListado();
+  };
 
-    useEffect(() => {
-        const sessionId = localStorage.getItem("sessionId");
+  const suscribirPuesto = () => {
+    navigate(`/asociarPuestoAEvento/${carrito.id}`);
+  };
 
-        if (!sessionId) {
-            console.error("No session ID found.");
-            return;
+  const habilitarPuesto = async () => {
+    try {
+      const response = await fetch(
+        `${process.env?.REACT_APP_BACK_URL}puesto/cambiarEstado/${carrito.id}/habilitar`,
+        {
+          method: "POST",
         }
+      );
+      if (!response.ok) {
+        throw new Error("Error al habilitar puesto");
+      }
+      toast.success("Puesto habilitado con éxito");
+      handleactualizar();
+    } catch (error) {
+      toast.error(error.message || "Error al habilitar puesto");
+    }
+  };
 
-        fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ sessionID: sessionId }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setSession(data.data);
-            })
-            .catch((error) => console.error("Error fetching session:", error));
-    }, []);
-
-    useEffect(() => {
-        if (carrito) {
-            switch (carrito.estado) {
-                case 'Creado':
-                    setIsCreado(true);
-                    break;
-                case 'Deshabilitado':
-                    setIsDeshabilitado(true);
-                    break;
-                default:
-                    break;
-            }
+  const deshabilitarPuesto = async () => {
+    try {
+      const response = await fetch(
+        `${process.env?.REACT_APP_BACK_URL}puesto/cambiarEstado/${carrito.id}/deshabilitar`,
+        {
+          method: "POST",
         }
+      );
+      if (!response.ok) {
+        throw new Error("Error al deshabilitar puesto");
+      }
+      toast.success("Puesto deshabilitado con éxito");
+      handleactualizar();
+    } catch (error) {
+      toast.error(error.message || "Error al deshabilitar puesto");
+    }
+  };
 
+  const agregarProducto = () => {
+    navigate(`/listado-productos/${carrito.id}`, { state: carrito });
+  };
 
-    });
+  const styles = {
+    container: {
+      width: "90%",
+      margin: "1rem auto",
+      padding: "1rem",
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "8px",
+      backgroundColor: Colors.GrisAzuladoClaro,
+    },
+    cardBody: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      position: "relative",
+    },
+    imgContainer: {
+      display: "flex",
+      width: "20%",
+    },
+    img: {
+      width: "100%",
+      height: "auto",
+      borderRadius: "10px",
+    },
+    detailsContainer: {
+      display: "flex",
+      width: "80%",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      padding: "0 1rem",
+    },
+    title: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      marginBottom: "0.5rem",
+      color: Colors.Naranja,
+    },
+    description: {
+      margin: "0.25rem 0",
+      color: Colors.Negro,
+    },
+    buttonsContainer: {
+      marginTop: "1rem",
+      display: "flex",
+      justifyContent: "center",
+      gap: "0.5rem",
+    },
+    button: {
+      padding: "0.5rem 1rem",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      fontWeight: "bold",
+    },
+    successButton: {
+      backgroundColor: "green",
+      color: "white",
+    },
+    secondaryButton: {
+      backgroundColor: "gray",
+      color: "white",
+    },
+    dangerButton: {
+      backgroundColor: "red",
+      color: "white",
+    },
+    estado: {
+      fontSize: "20px",
+      color: Colors.BlancoEnBlanco,
+      backgroundColor: Colors.Verde,
+      padding: "5px 10px",
+      borderRadius: "5px",
+      position: "absolute",
+      top: "5px",
+      right: "5px",
+    },
+  };
 
-    const suscribirPuesto = () => {
-        navigate(`/asociarPuestoAEvento/${carrito.id}`);
-    };
-
-    const habilitarPuesto = () => {
-        fetch(`${process.env?.REACT_APP_BACK_URL}puesto/cambiarEstado/${carrito.id}/habilitar`, {
-            method: "POST",
-        })
-            .then((response) => response.json())
-            .then(() => {
-                toast.success("Puesto habilitado con éxito");
-                window.location.reload();
-            })
-            .catch((error) => toast.error("Error al habilitar puesto"));
-    };
-
-    const deshabilitarPuesto = () => {
-        fetch(`${process.env?.REACT_APP_BACK_URL}puesto/cambiarEstado/${carrito.id}/deshabilitar`, {
-            method: "POST",
-        })
-            .then((response) => response.json())
-            .then(() => {
-                toast.success("Puesto deshabilitado con éxito");
-                window.location.reload();
-            })
-            .catch((error) => toast.error("Error al deshabilitar puesto"));
-    };
-
-    const agregarProducto = () => {
-        navigate(`/listado-productos/${carrito.id}`);
-    };
-
-    const agregarNuevo = () => {
-        navigate(`/crear-puesto`);
-
-    };
-
-    return (
-        <div>
-            <div className="container-fluid">
-                <div className={`card`}>
-                    <div className="card-body ">
-                        <div className="row">
-                            <div className="col-md-3">
-                                <img
-                                    src={carrito.img}
-                                    alt="Logo del Evento"
-                                    className="img-fluid"
-                                />
-                            </div>
-                            <div className="col-md-8 position-relative">
-                                <h5 className="card-title">{carrito.nombreCarro}</h5>
-                                <p className="card-descripcion">Id de Puesto: {carrito.numeroCarro}</p>
-                                <p className="card-descripcion"> Telefono:  {carrito.telefonoCarro}</p>
-                            </div>
-
-                            <div className="mt-2 d-flex">
-                                <div className="col-md-12 d-flex justify-content-center">
-                                    {isCreado && <button className="btn btn-success me-2" onClick={suscribirPuesto}>Suscribir Puesto a Evento</button>}
-                                    {isDeshabilitado && <button className="btn btn-success me-2" onClick={habilitarPuesto}>Habilitar Puesto</button>}
-                                    <button className="btn btn-success me-2" onClick={agregarProducto}>Agregar Productos</button>
-
-                                    <button className="btn btn-secondary me-2">
-                                        Editar Puesto
-                                    </button>
-
-                                    {isCreado && <button className="btn btn-danger me-2" onClick={deshabilitarPuesto}>Deshabilitar Puesto</button>}
-
-                                </div>
-                                <p className={`card-estado-productor`}>
-                                    {carrito.estado}
-                                </p>
-                            </div>
-
-
-                            <div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-
-
-            </div>
-            <button onClick={agregarNuevo} className="agregarPuestoButton">
-                Agregar Puesto
-            </button>
-            <div className="filtrosCarritoEncargado">
-                <FiltersPuestosEncargado />
-            </div>
-
-
-
-
+  return (
+    <div style={styles.container}>
+      <div style={styles.cardBody}>
+        <div style={styles.imgContainer}>
+          <img
+            src={carrito.img || imgDefault}
+            alt="Logo del Evento"
+            style={styles.img}
+          />
         </div>
-
-
-    );
+        <div style={styles.detailsContainer}>
+          <h5 style={styles.title}>{carrito.nombreCarro}</h5>
+          <p style={styles.description}>Id de Puesto: {carrito.numeroCarro}</p>
+          <p style={styles.description}>Teléfono: {carrito.telefonoCarro}</p>
+          <p style={styles.estado}>{carrito.estado}</p>
+          <div style={styles.buttonsContainer}>
+            {isCreado && (
+              <button
+                style={{ ...styles.button, ...styles.successButton }}
+                onClick={suscribirPuesto}
+              >
+                Suscribir Puesto a Evento
+              </button>
+            )}
+            {isDeshabilitado && (
+              <button
+                style={{ ...styles.button, ...styles.successButton }}
+                onClick={habilitarPuesto}
+              >
+                Habilitar Puesto
+              </button>
+            )}
+            <button
+              style={{ ...styles.button, ...styles.successButton }}
+              onClick={agregarProducto}
+            >
+              Agregar Productos
+            </button>
+            <button style={{ ...styles.button, ...styles.secondaryButton }}>
+              Editar Puesto
+            </button>
+            {isCreado && (
+              <button
+                style={{ ...styles.button, ...styles.dangerButton }}
+                onClick={deshabilitarPuesto}
+              >
+                Deshabilitar Puesto
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default PuestoEncargado;
-
-//                  <p className={`card-estado-productor ${getColorClass(evento.estado)}`}>
-
-
-
-

@@ -1,58 +1,27 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import ProductoDeshabilitado from "./ProductoDeshabilitado";
-import "./../sass/main.scss";
+import { useContext } from "react";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
 
-const ListadoProductoDeshabilitado = ({carrito}) => {
-  const [session, setSession] = useState(null);
+const ListadoProductoDeshabilitado = ({ carrito }) => {
+  const { user } = useContext(UserContext);
   const { id } = useParams();
   const [productos, setProductos] = useState([]);
   const [recargar, setRecargar] = useState(0);
-  const [editProductId, setEditProductId] = useState(null);
-  const [rows, setRows] = useState([]);
-  const [editedValues, setEditedValues] = useState({
-    nombre: "",
-    descripcion: "",
-    precio: 0,
-    aderezos: "",
-    img: 0,
-    estado: 1,
-  });
+  const Colors = useDynamicColors();
 
   const recargarComponente = () => {
-    setRecargar(+1);
+    setRecargar((prev) => prev + 1);
   };
 
   useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-        console.log(data.data.tipoUsuario);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
-
-  useEffect(() => {
-    if (session) {
+    if (user) {
       const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
+      headers.append("ConsumidorId", user.consumidorId);
       headers.append("puestoId", id);
 
       fetch(`${process.env?.REACT_APP_BACK_URL}producto/${id}/deshabilitados`, {
@@ -60,75 +29,90 @@ const ListadoProductoDeshabilitado = ({carrito}) => {
         headers: headers,
       })
         .then((response) => response.json())
-        .then((data) => {
-          setProductos(data.data);
-          const totalProductos = Math.ceil(data.data.length / 4) * 4;
-          const productosConNulos = [
-            ...data.data,
-            ...Array(totalProductos - data.data.length).fill(null),
-          ];
-
-          const generatedRows = [];
-          for (let i = 0; i < productosConNulos.length; i += 4) {
-            const row = productosConNulos.slice(i, i + 4);
-            generatedRows.push(row);
-          }
-          setRows(generatedRows);
-        })
+        .then((data) => setProductos(data.data))
         .catch((error) => console.log("No existen carritos.", error));
     }
-  }, [session, recargar]);
+  }, [user, recargar]);
+
+  const styles = {
+    container: {
+      height: "100vh",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      width: "100%",
+    },
+    contentColumn: {
+      marginLeft: "20%",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      width: "100%",
+      padding: "20px",
+    },
+    title: {
+      color: Colors.Naranja,
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    divider: {
+      borderColor: Colors.Naranja,
+      width: "100%",
+      margin: "10px 0",
+    },
+    gridContainer: {
+      display: "grid",
+      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+      gap: "1rem",
+      width: "80%",
+      margin: "0 auto",
+    },
+    noProductsMessage: {
+      fontSize: "1.5rem",
+      color: Colors.Naranja,
+      textAlign: "center",
+    },
+    backLink: {
+      color: Colors.BlancoEnBlanco,
+      position: "absolute",
+      right: "20px",
+      backgroundColor: Colors.Naranja,
+      padding: "10px",
+      borderRadius: "10px",
+      fontWeight: "bold",
+      cursor: "pointer",
+    },
+  };
 
   return (
-    <div>
-      <div className={`row m-0 background`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+    <div style={styles.container}>
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
+      <div style={styles.contentColumn}>
+        <div style={styles.header}>
+          <h1 style={styles.title}>Productos Deshabilitados</h1>
+          <Link to={`/listado-productos/${id}`} style={styles.backLink}>
+            Productos Habilitados
+          </Link>
         </div>
-        <div className={`col-10`}>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h1 className="pt-3" style={{ color: "white" }}>
-              Productos Deshabilitados
-            </h1>
-            <Link
-              to={`/listado-productos/${id}`}
-              className="btn btn-secondary"
-            >
-              Productos Habilitados
-            </Link>
-          </div>
-          <hr style={{ color: "white" }} className="me-4" />
-
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-3 pb-4 h-100 w-100">
-              {Array.isArray(productos) && productos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex} className={`row `}>
-                    {row.map((producto, index) => (
-                      <div
-                        key={index}
-                        className={`colmd3 pb-4`}
-                      >
-                        {producto !== null ? (
-                          <ProductoDeshabilitado
-                            producto={producto}
-                            session={session}
-                            idpuesto={id}
-                            recargar={recargarComponente}
-                          />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 className="centeredtext">
-                  No tenes ningun producto deshabilitado en este carrito.
-                </h2>
-              )}
-            </div>
-          </div>
+        <hr style={styles.divider} />
+        <div style={styles.gridContainer}>
+          {Array.isArray(productos) && productos.length > 0 ? (
+            productos.map((producto, index) => (
+              <ProductoDeshabilitado
+                key={index}
+                producto={producto}
+                idpuesto={id}
+                recargar={recargarComponente}
+              />
+            ))
+          ) : (
+            <h2 style={styles.noProductsMessage}>
+              No tienes ningún producto deshabilitado en este carrito.
+            </h2>
+          )}
         </div>
       </div>
       <Footer />

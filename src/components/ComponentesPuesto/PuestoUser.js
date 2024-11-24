@@ -1,61 +1,102 @@
 import { default as React, useState } from "react";
-import { Dropdown } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import imgDefault from "../QuickFoodLogo.png";
-import "./../sass/main.scss";
+import { Link } from "react-router-dom";
+import imgDefault from "./../img/puestoLogoDefault.jpg";
+import useDynamicColors from "../../UseDinamicColors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClock, faStar } from "@fortawesome/free-solid-svg-icons";
 
 const PuestoUser = ({ carrito }) => {
-  const handleDropdownClick = (e) => {
-    e.preventDefault();
-  };
-
-  const { id } = useParams();
-  const [session, setSession] = useState(null);
-  const navigate = useNavigate();
-
-  const handleDelete = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/${id}`, {
-      method: "DELETE",
-      headers: headers,
-    })
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Puesto deshabilitado correctamente");
-          navigate(`/listado-puestos`);
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
+  const Color = useDynamicColors();
+  console.log(carrito);
+  const styles = {
+    cardLink: {
+      textDecoration: "none",
+    },
+    card: {
+      border: `1px solid ${Color.Naranja}`,
+      borderRadius: "10px",
+      width: "85%",
+      backgroundColor: Color.GrisAzuladoClaro,
+      marginBottom: "20px",
+      color: Color.Negro,
+      transition: "transform 0.2s ease-in-out",
+      cursor: "pointer",
+      display: "flex",
+      flexDirection: "row",
+      paddingTop: "20px",
+      paddingBottom: "20px",
+    },
+    cardBody: {
+      display: "flex",
+      flexDirection: "row",
+      gap: "20px",
+      alignItems: "center",
+      cursor: "pointer",
+    },
+    img: {
+      width: "100%",
+      maxWidth: "150px",
+      borderRadius: "8px",
+      marginLeft: "40px",
+      objectFit: "cover",
+    },
+    content: {
+      flexGrow: 1,
+      position: "relative",
+      justifyContent: "start",
+      alignItems: "start",
+      display: "flex",
+      flexDirection: "column",
+      marginLeft: "40px",
+    },
+    title: {
+      fontSize: "24px",
+      fontWeight: "bold",
+      color: Color.Naranja,
+      marginBottom: "10px",
+    },
+    descripcion: {
+      fontSize: "18px",
+      color: Color.Negro,
+      marginBottom: "10px",
+    },
+    text: {
+      fontSize: "16px",
+      color: Color.Gris,
+      marginBottom: "5px",
+    },
+    estadoContainer: {
+      display: "flex",
+      position: "absolute",
+      top: "10px",
+      right: "10px",
+      width: "100px",
+    },
+    iconText: {
+      fontSize: "16px",
+      color: Color.Negro,
+    },
   };
 
   return (
-    <Link
-      to={`/productos-puesto/${carrito?.id}`}
-      style={{ textDecoration: "none" }}
-    >
-      <div className="cardlink">
-        <div className="card shadow-sm">
-          <img
-            src={`${carrito?.img}`}
-            className="cardimgtop img-flex w-100"
-            style={{ height: "200px", border: "none" }}
-            alt="Thumbnail"
-          />
-          <div className="card-body">
-            <div className="d-flex justify-content-between align-items-center">
-              <h5 className={`card-text`} title={carrito.nombreCarro}>
-                {carrito.nombreCarro}
-              </h5>
+    <Link to={`/productos-puesto/${carrito?.id}`} style={styles.cardLink}>
+      <div style={styles.card}>
+        <img
+          src={carrito?.img || imgDefault}
+          style={styles.img}
+          alt="Thumbnail"
+        />
+        <div style={styles.content}>
+          <p style={styles.title}>{carrito.nombreCarro}</p>
+          <p style={styles.descripcion}>{carrito.tipoNegocio}</p>
+          <div style={styles.iconWrapper}>
+              <FontAwesomeIcon icon={faClock} />
+              <span style={styles.iconText}>{carrito?.tiempoEntrega || " 30 min"}</span>
             </div>
-          </div>
+            <div style={styles.iconWrapper}>
+              <FontAwesomeIcon icon={faStar} />
+              <span style={styles.iconText}>{carrito?.estrellas || " 4.5"}</span>
+            </div>
         </div>
       </div>
     </Link>

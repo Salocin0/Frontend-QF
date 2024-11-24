@@ -1,38 +1,80 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import "./../sass/main.scss";
 import { useNavigate } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-
+import { useContext } from "react";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
 const AdquirirNuevoRolPE = () => {
-  const [session, setSession] = useState(null);
   const [cuit, setCuit] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
   const [condicionIva, setCondicionIva] = useState("");
-  const [nuevoRol, setNuevorol] = useState(false);
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
 
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSession(data.data);
-          console.log(data.data);
-        })
-        .catch((error) => console.error("Error fetching session:", error));
-    }
-  }, [nuevoRol]);
+  const styles = {
+    formContainer: {
+      flex: 1,
+      padding: "2rem",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      display: "flex",
+      width: "80%",
+      height: "100vh",
+      justifyContent: "center",
+      alingItems: "center",
+      boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+      marginLeft: "20%",
+      flexDirection: "column",
+    },
+    container:{
+      width: "50%",
+      margin: "0 auto",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      borderRadius: "10px",
+      padding: "20px",
+      boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+    },
+    title: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      marginBottom: "1rem",
+      color: Colors.Naranja,
+      textAlign: "center",
+    },
+    label: {
+      display: "block",
+      color: Colors.Negro,
+      padding: "0px",
+      margin: "0px",
+    },
+    input: {
+      width: "100%",
+      padding: "0.5rem",
+      marginBottom: "1rem",
+      borderRadius: "4px",
+    },
+    select: {
+      width: "100%",
+      padding: "0.5rem",
+      marginBottom: "1rem",
+      borderRadius: "4px",
+    },
+    button: {
+      width: "100%",
+      padding: "0.75rem",
+      backgroundColor: Colors.Verde,
+      color: Colors.Negro,
+      fontWeight: "bold",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+    },
+    buttonHover: {
+      backgroundColor: Colors.Verde,
+    },
+  };
 
   const handleCondicionIvaChange = (e) => {
     setCondicionIva(e.target.value);
@@ -56,7 +98,7 @@ const AdquirirNuevoRolPE = () => {
       };
 
       const response = await fetch(
-        `${process.env?.REACT_APP_BACK_URL}user/update/${session.id}/to/productor`,
+        `${process.env?.REACT_APP_BACK_URL}user/update/${user.id}/to/productor`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -65,13 +107,12 @@ const AdquirirNuevoRolPE = () => {
       );
 
       if (response.ok) {
-        toast.success("actualizado a productor de eventos");
+        toast.success("Actualizado a productor de eventos");
         const data = await response.json();
-        setNuevorol(true)
         console.log(data);
         navigate(`/login`);
       } else {
-        toast.error("error al actualizar a productor de eventos");
+        toast.error("Error al actualizar a productor de eventos");
         console.log(response.json());
       }
     } catch (error) {
@@ -80,77 +121,89 @@ const AdquirirNuevoRolPE = () => {
   };
 
   return (
-    <div className={`background d-flex`}>
-      <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
-      </div>
-      <div className="flex-grow-1 d-flex align-items-center justify-content-center">
-        <div className={`form card shadow-lg`}>
-          <div
-            className={`formularioAdquirirNuevoRolEPC card-body px-3`}
-          >
-            <h1 className="fs-4 card-title fw-bold mb-2">
-              Adquirir Nuevo Rol - Productor de Eventos
-            </h1>
-            <hr />
-            <form onSubmit={handleSubmit} className="needs-validation">
-              <div className="mb-2">
-                <label className="form-label text-dark" htmlFor="cuit">
-                  CUIT
-                </label>
-                <input
-                  type="number"
-                  id="cuit"
-                  className="form-control"
-                  value={cuit}
-                  onChange={handleCuitChange}
-                  required
-                />
-              </div>
+    <>
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
 
-              <div className="mb-2">
-                <label className="form-label text-dark" htmlFor="razonSocial">
-                  Razon Social
-                </label>
-                <input
-                  type="text"
-                  id="razonSocial"
-                  className="form-control"
-                  value={razonSocial}
-                  onChange={handleRazonSocialChange}
-                  required
-                />
-              </div>
+      <div style={styles.formContainer}>
+        <div style={styles.container}>
+          <h1 style={styles.title}>
+            Adquirir Nuevo Rol - Productor de Eventos
+          </h1>
+          <hr />
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label style={styles.label} htmlFor="cuit">
+                CUIT
+              </label>
+              <input
+                type="number"
+                id="cuit"
+                style={styles.input}
+                value={cuit}
+                onChange={handleCuitChange}
+                required
+              />
+            </div>
 
-              <div className={`form-group`}>
-                <label htmlFor="ivaCondicion" style={{ color: "black" }}>
-                  Condición frente al IVA
-                </label>
-                <select
-                  className={`form-control`}
-                  name="ivaCondicion"
-                  onChange={handleCondicionIvaChange}
-                  value={condicionIva}
-                >
-                  <option value="">Seleccionar</option>
-                  <option value="responsable_inscripto">
-                    Responsable Inscripto
-                  </option>
-                  <option value="monotributista">Monotributista</option>
-                </select>
-              </div>
-              <div className="pb-3" />
-              <div className="d-grid">
-                <button type="submit" className="btn btn-success">
-                  Solicitar Nuevo Rol - Productor de Eventos
-                </button>
-              </div>
-            </form>
-          </div>
+            <div>
+              <label style={styles.label} htmlFor="razonSocial">
+                Razon Social
+              </label>
+              <input
+                type="text"
+                id="razonSocial"
+                style={styles.input}
+                value={razonSocial}
+                onChange={handleRazonSocialChange}
+                required
+              />
+            </div>
+
+            <div>
+              <label style={styles.label} htmlFor="ivaCondicion">
+                Condición frente al IVA
+              </label>
+              <select
+                style={styles.select}
+                name="ivaCondicion"
+                onChange={handleCondicionIvaChange}
+                value={condicionIva}
+                required
+              >
+                <option value="">Seleccionar</option>
+                <option value="responsable_inscripto">
+                  Responsable Inscripto
+                </option>
+                <option value="monotributista">Monotributista</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              style={styles.button}
+              onMouseOver={(e) =>
+                (e.target.style.backgroundColor =
+                  styles.buttonHover.backgroundColor)
+              }
+              onMouseOut={(e) =>
+                (e.target.style.backgroundColor = styles.button.backgroundColor)
+              }
+            >
+              Solicitar Nuevo Rol - Productor de Eventos
+            </button>
+
+            <button
+              type="submit"
+              style={{...styles.button,backgroundColor:Colors.Azul,marginTop:"10px"}}
+              onClick={() => navigate("/inicio")}
+            >
+              Volver
+            </button>
+          </form>
         </div>
-        <Footer />
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

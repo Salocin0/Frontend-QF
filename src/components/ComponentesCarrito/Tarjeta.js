@@ -1,45 +1,29 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 
 const RenderizarTarjeta = ({ productos, recargarComponente }) => {
-  console.log(productos[0])
+  console.log(productos[0]);
   const navigate = useNavigate();
-  const [session, setSession] = useState(null);
-
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-        console.log(data.data);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
-
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
+  const [isOpen, setIsOpen] = useState(false);
   const quitarDelCarrito = (producto) => {
     const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
+    headers.append("ConsumidorId", user.consumidorId);
 
-    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/removeToCart/${producto.id}`, {
-      method: "PUT",
-      headers: headers,
-    })
+    fetch(
+      `${process.env?.REACT_APP_BACK_URL}carrito/removeToCart/${producto.id}`,
+      {
+        method: "PUT",
+        headers: headers,
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         toast.success(`-1 ${producto.nombre}`);
@@ -50,12 +34,15 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
 
   const eliminarDelCarrito = (producto) => {
     const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
+    headers.append("ConsumidorId", user.consumidorId);
 
-    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/deleteProductToCart/${producto.id}`, {
-      method: "PUT",
-      headers: headers,
-    })
+    fetch(
+      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductToCart/${producto.id}`,
+      {
+        method: "PUT",
+        headers: headers,
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         toast.success(`${producto.nombre} eliminado`);
@@ -66,13 +53,15 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
 
   const agregarAlCarrito = (producto) => {
     const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-    
+    headers.append("ConsumidorId", user.consumidorId);
 
-    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${producto.id}`, {
-      method: "PUT",
-      headers: headers,
-    })
+    fetch(
+      `${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${producto.id}`,
+      {
+        method: "PUT",
+        headers: headers,
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         toast.success(`+1 ${producto.nombre}`);
@@ -81,17 +70,17 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       .catch((error) => console.log("error.", error));
   };
 
-  const registrarPedido = () => {
-    
+  const handleCloseCompra = () =>{
+    setIsOpen(false)
     const headers = new Headers();
-    headers.append("consumidorid", session.consumidorId);
+    headers.append("consumidorid", user.consumidorId);
     const detalles = {
-      detalles: productos.map(producto => ({
-        cantidad: producto.cantidad, 
+      detalles: productos.map((producto) => ({
+        cantidad: producto.cantidad,
         productoId: producto.id,
         precio: producto.precio,
       })),
-      consumidorId: session.consumidorId,
+      consumidorId: user.consumidorId,
       total: calcularTotal(productos),
       puestoId: productos[0].puestoId,
     };
@@ -107,20 +96,27 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       .then((response) => response.json())
       .then((data) => {
         toast.success("pedido registrado");
-        eliminarPedido()
+        eliminarPedido();
         recargarComponente();
       })
       .catch((error) => console.log("error.", error));
+  }
+
+  const registrarPedido = () => {
+    setIsOpen(true)
   };
 
   const eliminarPedido = () => {
     const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
+    headers.append("ConsumidorId", user.consumidorId);
 
-    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/deleteProductsToCart/${productos[0].puestoId}`, {
-      method: "PUT",
-      headers: headers,
-    })
+    fetch(
+      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductsToCart/${productos[0].puestoId}`,
+      {
+        method: "PUT",
+        headers: headers,
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
         recargarComponente();
@@ -132,51 +128,176 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
     navigate(`/productos-puesto/${productos[0].puestoId}`);
   };
 
-const calcularTotal = (productos) => {
-  const total = productos?.reduce((acc, item) => {
-    return acc + item.precio * item.cantidad;
-  }, 0);
-  return total;
-};
+  const calcularTotal = (productos) => {
+    const total = productos?.reduce((acc, item) => {
+      return acc + item.precio * item.cantidad;
+    }, 0);
+    return total;
+  };
+
+  const styles = {
+    card: {
+      padding: "16px",
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "8px",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      margin: "20px",
+    },
+    cardTitle: {
+      fontSize: "18px",
+      fontWeight: "bold",
+      color: Colors.Naranja,
+    },
+    table: {
+      width: "100%",
+      marginBottom: "16px",
+      borderCollapse: "collapse",
+    },
+    tableHeader: {
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      textAlign: "center",
+      color: Colors.Naranja,
+    },
+    tableData: {
+      textAlign: "center",
+      color: Colors.Negro,
+    },
+    tableActions: {
+      textAlign: "center",
+    },
+    button: {
+      padding: "6px 12px",
+      fontSize: "14px",
+      borderRadius: "10px",
+      margin: "2px",
+      cursor: "pointer",
+      border: "none",
+    },
+    successButton: {
+      backgroundColor: Colors.Verde,
+      color: Colors.Negro,
+      fontWeight: "bold",
+      padding: "10px 15px",
+    },
+    dangerButton: {
+      backgroundColor: Colors.Rojo,
+      color: Colors.Negro,
+      fontWeight: "bold",
+      padding: "10px 15px",
+    },
+    infoButton: {
+      backgroundColor: Colors.Info,
+      color: Colors.Negro,
+      fontWeight: "bold",
+      padding: "10px 15px",
+      alignItems: "center",
+      justifyContent: "left",
+      flexDirection: "row",
+    },
+    cancelButton: {
+      marginLeft: "20px",
+      alignItems: "center",
+      justifyContent: "left",
+      flexDirection: "row",
+    },
+    purchaseButton: {
+      marginLeft: "20px",
+      alignItems: "center",
+      justifyContent: "left",
+      flexDirection: "row",
+    },
+    total: {
+      textAlign: "right",
+      fontWeight: "bold",
+      color: Colors.Naranja,
+      fontSize: "28px",
+    },
+    divider: {
+      color: Colors.Naranja,
+      margin: "16px 0",
+    },
+    actionButtons: {
+      textAlign: "right",
+    },
+  };
+
+  const handleCloseDialog = () => {
+    setIsOpen(false);
+  };
 
   return (
-    <div key={productos?.puestoId} className="card p-3">
-      <h3 className="card-title">Puesto {productos?.puestoId}</h3>
-      <table className="card-text">
-        <thead className="w-100">
-          <tr>
-            <th className="col text-center">Nombre</th>
-            <th className="col text-center">Precio</th>
-            <th className="col text-center">Cantidad</th>
-            <th className="col-5 text-center">Acciones</th>
+    <div key={productos?.puestoId} style={styles.card}>
+      <h3 style={styles.cardTitle}>Puesto {productos[0]?.puestoId}</h3>
+      <table style={styles.table}>
+        <thead>
+          <tr style={styles.tableHeader}>
+            <th style={styles.tableData}>Nombre</th>
+            <th style={styles.tableData}>Precio</th>
+            <th style={styles.tableData}>Cantidad</th>
+            <th style={styles.tableActions}>Acciones</th>
           </tr>
         </thead>
-        <tbody  className="w-100">
+        <tbody>
           {productos?.map((item, index) => (
             <tr key={index}>
-              <td className="col text-center">{item.nombre}</td>
-              <td className="col text-center">${item.precio}</td>
-              <td className="col text-center">{item.cantidad}</td>
-              <td className="col text-center">
-                <button className="btn btn-sm btn-success m-1" onClick={() => quitarDelCarrito(item)}>Quitar 1</button>
-                <button className="btn btn-sm btn-success m-1" onClick={() => agregarAlCarrito(item)}>
-                  Agregar 1
+              <td style={styles.tableData}>{item.nombre}</td>
+              <td style={styles.tableData}>${item.precio}</td>
+              <td style={styles.tableData}>{item.cantidad}</td>
+              <td style={styles.tableActions}>
+                <button
+                  style={{ ...styles.button, ...styles.successButton }}
+                  onClick={() => quitarDelCarrito(item)}
+                >
+                  - 1
                 </button>
-                <button className="btn btn-sm btn-danger m-1" onClick={() => eliminarDelCarrito(item)}>
-                  Eliminar
+                <button
+                  style={{ ...styles.button, ...styles.successButton }}
+                  onClick={() => agregarAlCarrito(item)}
+                >
+                  + 1
+                </button>
+                <button
+                  style={{ ...styles.button, ...styles.dangerButton }}
+                  onClick={() => eliminarDelCarrito(item)}
+                >
+                  <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <h4 className="text-end card-title">Total: {calcularTotal(productos)}</h4>
-      <hr style={{color:"white"}}/>
-      <div className="text-end">
-        <button className="btn btn-info me-2" onClick={() => llevarPuesto()}>Seguir agregando</button>
-        <button className="btn btn-success me-2" onClick={() => registrarPedido()}>Comprar</button>
-        <button className="btn btn-danger me-2" onClick={() => eliminarPedido()}>Eliminar</button>
+      <h4 style={styles.total}>Total: ${calcularTotal(productos)}</h4>
+      <hr style={styles.divider} />
+      <div style={styles.actionButtons}>
+        <button
+          style={{ ...styles.button, ...styles.infoButton }}
+          onClick={() => llevarPuesto()}
+        >
+          Seguir agregando
+        </button>
+        <button
+          style={{
+            ...styles.button,
+            ...styles.dangerButton,
+            ...styles.cancelButton,
+          }}
+          onClick={() => eliminarPedido()}
+        >
+          Eliminar
+        </button>
+        <button
+          style={{
+            ...styles.button,
+            ...styles.successButton,
+            ...styles.purchaseButton,
+          }}
+          onClick={() => registrarPedido()}
+        >
+          Comprar
+        </button>
       </div>
+      <DialogWithPaymentSheet isOpen={isOpen} onClose={handleCloseDialog} amount={calcularTotal(productos)} handleCloseCompra={handleCloseCompra} />
     </div>
   );
 };

@@ -1,46 +1,30 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import "./../sass/main.css";
 import Pedido from "./Pedido";
+import { useContext } from "react";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import usedynamicColors from "../../UseDinamicColors";
+import Tabs from "./PedidosRepartidor/Tabs";
 
 const ListadoPedidos = () => {
   const [rows, setRows] = useState([]);
-  const [session, setSession] = useState(null);
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const { user } = useContext(UserContext);
+  const Colors = usedynamicColors();
+  const [activeTab, setActiveTab] = useState("Todos");
+  const [pedidosFiltrados, setPedidosFiltrados] = useState([]);
 
+  // Función para recargar el componente
   const recargarComponente = () => {
-    setRecargar(+1);
+    setRecargar(prev => prev + 1);
   };
 
+  // useEffect para cargar los pedidos
   useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-        console.log(data.data.tipoUsuario);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
-
-  useEffect(() => {
-    if (session) {
+    if (user) {
       const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
+      headers.append("ConsumidorId", user.consumidorId);
 
       fetch(`${process.env?.REACT_APP_BACK_URL}pedido/`, {
         method: "GET",
@@ -49,62 +33,117 @@ const ListadoPedidos = () => {
         .then((response) => response.json())
         .then((data) => {
           setPedidos(data.data);
-          const totalEventos = Math.ceil(data.data.length / 4) * 4;
-          const eventosConNulos = [
-            ...data.data,
-            ...Array(totalEventos - data.data.length).fill(null),
-          ];
-
-          const generatedRows = [];
-          for (let i = 0; i < eventosConNulos.length; i += 4) {
-            const row = eventosConNulos.slice(i, i + 4);
-            generatedRows.push(row);
-          }
-          setRows(generatedRows);
         })
         .catch((error) => console.log("No existen pedidos.", error));
     }
-  }, [session, recargar]);
+  }, [user,recargar]);
 
+  // useEffect para filtrar los pedidos
+  useEffect(() => {
+    const pedidosFiltrados = pedidos.filter((pedido) => {
+      if (activeTab === "Todos") return true;
+      if (activeTab === "Pendientes") return pedido.estado === "Pendiente";
+      if (activeTab === "Aceptados") return pedido.estado === "Aceptado" || pedido.estado === "Precomprado";
+      if (activeTab === "En Preparacion") return pedido.estado === "EnPreparacion";
+      if (activeTab === "En Camino") return pedido.estado === "EnCamino";
+      if (activeTab === "Entregados") return pedido.estado === "Entregado";
+      if (activeTab === "Cancelados") return pedido.estado === "Cancelado";
+      return pedido.estado.toLowerCase() === activeTab.toLowerCase();
+    });
+
+    // Actualizar el estado de pedidosFiltrados
+    setPedidosFiltrados(pedidosFiltrados);
+  }, [pedidos, activeTab]);
+
+  // useEffect para organizar los pedidos en filas de 4 elementos
+  useEffect(() => {
+    const totalEventos = Math.ceil(pedidosFiltrados.length / 4) * 4;
+    const eventosConNulos = [
+      ...pedidosFiltrados,
+      ...Array(totalEventos - pedidosFiltrados.length).fill(null),
+    ];
+
+    const generatedRows = [];
+    for (let i = 0; i < eventosConNulos.length; i += 4) {
+      const row = eventosConNulos.slice(i, i + 4);
+      generatedRows.push(row);
+    }
+    setRows(generatedRows);
+  }, [pedidosFiltrados]);
+
+  const styles = {
+    mainFormEventos: {
+      margin: 0,
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      minHeight: "100vh",
+    },
+    sidebarCol: {
+      padding: 0,
+    },
+    contentCol: {
+      padding: 0,
+    },
+    tituloSeccion: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "1rem",
+    },
+    tituloTexto: {
+      paddingTop: "0.5rem",
+      color: Colors.Naranja,
+    },
+    seccionNegativo: {
+      color: Colors.Naranja,
+    },
+    divider: {
+      color: Colors.Naranja,
+    },
+    contentWrapper: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    pedidosWrapper: {
+      paddingTop: "0.5rem",
+      paddingBottom: "1rem",
+      width: "100%",
+      margin: "0 2% 0 6%",
+      overflowY: "scroll",
+      height: "calc(100vh - 200px)", 
+      scrollbarWidth: "none", 
+      msOverflowStyle: "none", 
+    },
+  };
 
   return (
     <div>
-      <div className={`row m-0 mainFormEventos`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+      <div style={styles.mainFormEventos} className="row">
+        <div style={styles.sidebarCol} className="col-2">
+          <Sidebar tipoUsuario={user?.tipoUsuario} />
         </div>
-        <div className={`col-10`}>
-          <div className="d-flex justify-content-center mb-3 tituloSeccion">
-            <h1 className="pt-2">
-              Pedidos
-            </h1>
+        <div style={styles.contentCol} className="col-10">
+          <div style={styles.tituloSeccion}>
+            <h1 style={styles.tituloTexto}>Pedidos</h1>
           </div>
-          <hr style={{ color: "#F7B813" }} />
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-2 pb-4 h-100 w-100">
-              {Array.isArray(pedidos) && pedidos.length > 0 ? (
+          <hr style={styles.divider} />
+          <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          <div style={styles.contentWrapper}>
+            <div style={styles.pedidosWrapper}>
+              {Array.isArray(pedidosFiltrados) && pedidosFiltrados.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} >
+                  <div key={rowIndex}>
                     {row.map((pedido, index) => (
-                      <div
-                        key={index}
-                      >
+                      <div key={index}>
                         {pedido !== null ? (
-                          <Pedido
-                            pedido={pedido}
-                            session={session}
-                            recargar={recargarComponente}
-                          />
+                          <Pedido pedido={pedido} recargar={recargarComponente} />
                         ) : null}
                       </div>
                     ))}
                   </div>
                 ))
               ) : (
-                <h2 className={"tituloSeccionNegativo"}>
-                  No hay Pedidos hechos.
-                </h2>
+                <h2 style={styles.seccionNegativo}>No hay Pedidos hechos.</h2>
               )}
             </div>
           </div>

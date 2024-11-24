@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import { default as React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import FiltersEventosConsumidor from "../../filters/filtersEventosConsumidor";
+import FiltersEventosConsumidor from "../../Filtros y Buscadores/filtersEventosConsumidor";
 import "./../../sass/main.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {

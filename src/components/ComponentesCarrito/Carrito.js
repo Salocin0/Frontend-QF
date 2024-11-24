@@ -1,46 +1,30 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
+import React, { useState, useEffect, useContext } from "react";
 import RenderizarTarjeta from "./Tarjeta";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Footer from "../ComponentesGenerales/Footer";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentSheet from "./PaymentSheet";
+import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 
 const Carrito = () => {
   const [carrito, setCarrito] = useState([]);
-  const [session, setSession] = useState(null);
-  const [recargar, setRecargar] = useState(0);
   const [productos, setProductos] = useState([]);
-
+  const { user } = useContext(UserContext);
+  const [recargar, setRecargar] = useState(0);
+  const Colors = useDynamicColors();
+  
+  
   const recargarComponente = () => {
     setRecargar((prevRecargar) => prevRecargar + 1);
   };
 
   useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
-
-  useEffect(() => {
-    if (session) {
+    if (user) {
       const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
+      headers.append("ConsumidorId", user.consumidorId);
 
       fetch(`${process.env?.REACT_APP_BACK_URL}carrito/estructura`, {
         method: "GET",
@@ -58,7 +42,7 @@ const Carrito = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
-  }, [session, recargar]);
+  }, [user, recargar]);
 
   const agruparProductosPorPuesto = (productos) => {
     const productosAgrupados = {};
@@ -74,38 +58,81 @@ const Carrito = () => {
 
   const productosAgrupados = agruparProductosPorPuesto(productos);
 
+  const styles = {
+    container: {
+      display: "flex",
+      flexDirection: "row",
+      margin: 0,
+      padding: 0,
+      height: "100vh",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    sidebar: {
+      width: "20%",
+      padding: 0,
+    },
+    mainContent: {
+      width: "80%",
+      padding: 0,
+    },
+    titleSection: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "1rem",
+      color: Colors.Naranja,
+    },
+    sectionTitleText: {
+      paddingTop: "0.5rem",
+    },
+    sectionTitleNegative: {
+      color: Colors.Naranja, 
+      textAlign: "center",
+    },
+    separator: {
+      border: "none",
+      borderTop: `1px solid ${Colors.Naranja}`,
+    },
+    productContainer: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    productList: {
+      paddingTop: "0.5rem",
+      paddingBottom: "1rem",
+      height: "100%",
+      width: "100%",
+    },
+  };
+
   return (
-    <div>
-      <div className={`row m-0 mainFormEventos`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+    <div style={styles.container}>
+      <div style={styles.sidebar}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
+      </div>
+      <div style={styles.mainContent}>
+        <div style={styles.titleSection}>
+          <h1 style={styles.sectionTitleText}>Carrito</h1>
         </div>
-        <div className={`col-10`}>
-          <div className="d-flex justify-content-center mb-3 tituloSeccion">
-            <h1 className="pt-2">Carrito</h1>
-          </div>
-          <hr style={{ color: "#F7B813" }} />
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-2 pb-4 h-100 w-100">
-              {Object.values(productosAgrupados).length > 0 ? (
-                Object.values(productosAgrupados).map((productos, index) => (
-                  <RenderizarTarjeta
-                    key={index}
-                    productos={productos}
-                    recargarComponente={recargarComponente}
-                  />
-                ))
-              ) : (
-                <h2 className={"tituloSeccionNegativo"}>
-                  No hay productos en el carrito
-                </h2>
-              )}
-            </div>
-            <div>
-              <Footer />
-            </div>
+        <hr style={styles.separator} />
+        <div style={styles.productContainer}>
+          <div style={styles.productList}>
+            {Object.values(productosAgrupados).length > 0 ? (
+              Object.values(productosAgrupados).map((productos, index) => (
+                <RenderizarTarjeta
+                  key={index}
+                  productos={productos}
+                  recargarComponente={recargarComponente}
+                />
+              ))
+            ) : (
+              <h2 style={styles.sectionTitleNegative}>
+                No hay productos en el carrito
+              </h2>
+            )}
           </div>
         </div>
+        <Footer />
       </div>
     </div>
   );

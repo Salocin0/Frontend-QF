@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import "./../sass/main.scss";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
 
 const RegistrarProductos = () => {
   const [nombre, setNombre] = useState("");
@@ -15,28 +16,9 @@ const RegistrarProductos = () => {
   const [precio, setPrecio] = useState(10);
   const [estado, setEstado] = useState("Standby");
   const { id } = useParams();
-  const [session, setSession] = useState(null);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSession(data.data);
-          console.log(data.data);
-        })
-        .catch((error) => console.error("Error fetching session:", error));
-    }
-  }, []);
+  const Colors = useDynamicColors();
 
   function tieneNumeros(cadena) {
     return /\d/.test(cadena);
@@ -82,7 +64,6 @@ const RegistrarProductos = () => {
       return;
     }
 
-
     if (!producto.precio.toString().trim()) {
       toast.error("El precio no puede estar vacio");
       return;
@@ -115,125 +96,174 @@ const RegistrarProductos = () => {
       });
   };
 
+  const styles = {
+    mainFormEventos: {
+      padding: "0",
+      height: "100vh",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    cardBody: {
+      padding: "20px",
+      borderRadius: "10px",
+      flexDirection: "column",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      marginLeft: "20%",
+      width: "400px",
+      height: "630px",
+      border: `1px solid ${Colors.Naranja}`,
+    },
+    formTitle: {
+      fontSize: "1.25rem",
+      fontWeight: "bold",
+      marginBottom: "1rem",
+      color: Colors.Naranja,
+      textAlign: "center",
+    },
+    formLabel: {
+      margin: "0rem",
+      color: Colors.BlancoEnBlanco,
+    },
+    formControl: {
+      width: "100%",
+      padding: "0.375rem 0.75rem",
+      fontSize: "1rem",
+      lineHeight: "1",
+      borderRadius: "0.375rem",
+      border: "1px solid #ccc",
+      marginBottom: "0.25rem",
+    },
+    formSelect: {
+      width: "100%",
+      padding: "0.375rem 0.75rem",
+      fontSize: "1rem",
+      lineHeight: "1",
+      borderRadius: "0.375rem",
+      border: "1px solid #ccc",
+      marginBottom: "0.25rem",
+    },
+    formTextArea: {
+      width: "100%",
+      padding: "0.375rem 0.75rem",
+      fontSize: "1rem",
+      lineHeight: "1",
+      borderRadius: "0.375rem",
+      border: "1px solid #ccc",
+      marginBottom: "0.25rem",
+    },
+    submitButton: {
+      backgroundColor: Colors.Verde,
+      color: Colors.BlancoEnBlanco,
+      padding: "0.5rem 1rem",
+      fontSize: "1rem",
+      fontWeight: "bold",
+      borderRadius: "0.375rem",
+      border: "none",
+      cursor: "pointer",
+    },
+  };
+
   return (
-    <div className="container-fluid mainFormEventos">
-      <div className="row">
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className={`col`}>
-          <div>
-            <div className="containerRegistrar d-flex justify-content-center align-items-center pt-5">
-              <section
-                className={`align-items-center col-6 form mt-3 mb-5 rad`}
-              >
-                <div className="cardRegistrar-body p-2 formularioRegistrar">
-                  <div className={`card-body p-3 formulario`}>
-                    <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">
-                      Registrar Producto
-                    </h1>
-                    <form onSubmit={handleSubmit} className="needs-validation">
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="nombre">
-                          Nombre del Producto
-                        </label>
-                        <input
-                          type="text"
-                          id="nombre"
-                          className="form-control"
-                          value={nombre}
-                          onChange={(e) => setNombre(e.target.value)}
-                          required
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="imagen">
-                          Imagen
-                        </label>
-                        <input
-                          type="file"
-                          id="imagen"
-                          className="form-control"
-                          accept="image/*"
-                          onChange={handleImgChange}
-                          //onChange={(e) => setImagen(e.target.files[0])}
-                          required
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="precio">
-                          Precio
-                        </label>
-                        <input
-                          id="precio"
-                          className="form-control"
-                          value={precio}
-                          onChange={(e) => setPrecio(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="mb-3">
-                        <label
-                          className="mb-2 text-black"
-                          htmlFor="descripcion"
-                        >
-                          Descripción
-                        </label>
-                        <textarea
-                          id="descripcion"
-                          className="form-control"
-                          value={descripcion}
-                          onChange={(e) => setDescripcion(e.target.value)}
-                          required
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="aderezos">
-                          Aderezos
-                        </label>
-                        <textarea
-                          id="aderezos"
-                          className="form-control"
-                          value={aderezos}
-                          onChange={(e) => setAderezos(e.target.value)}
-                          required
-                        />
-                      </div>
-
-                      <div className="mb-3">
-                        <label className="mb-2 text-black" htmlFor="estado">
-                          Estado
-                        </label>
-                        <select
-                          id="estado"
-                          className="form-select"
-                          value={estado}
-                          onChange={(e) => setEstado(e.target.value)}
-                          required
-                        >
-                          <option value={false}>Standby</option>
-                          <option value={true}>Listo para la venta</option>
-                        </select>
-                      </div>
-
-                      <div className="d-grid">
-                        <button type="submit" className="btn btn-success">
-                          Registrar
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </section>
+    <>
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
+      <div style={styles.mainFormEventos}>
+        <div style={styles.cardBody}>
+          <h1 style={styles.formTitle}>Registrar Producto</h1>
+          <form onSubmit={handleSubmit} className="needs-validation">
+            <div className="mb-3">
+              <label style={styles.formLabel} htmlFor="nombre">
+                Nombre del Producto
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                style={styles.formControl}
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+              />
             </div>
-          </div>
+
+            <div className="mb-3">
+              <label style={styles.formLabel} htmlFor="imagen">
+                Imagen
+              </label>
+              <input
+                type="file"
+                id="imagen"
+                style={styles.formControl}
+                accept="image/*"
+                onChange={handleImgChange}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label style={styles.formLabel} htmlFor="precio">
+                Precio
+              </label>
+              <input
+                id="precio"
+                style={styles.formControl}
+                value={precio}
+                onChange={(e) => setPrecio(e.target.value)}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label style={styles.formLabel} htmlFor="descripcion">
+                Descripción
+              </label>
+              <textarea
+                id="descripcion"
+                style={styles.formTextArea}
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label style={styles.formLabel} htmlFor="aderezos">
+                Aderezos
+              </label>
+              <textarea
+                id="aderezos"
+                style={styles.formTextArea}
+                value={aderezos}
+                onChange={(e) => setAderezos(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label style={styles.formLabel} htmlFor="estado">
+                Estado
+              </label>
+              <select
+                id="estado"
+                style={styles.formSelect}
+                value={estado}
+                onChange={(e) => setEstado(e.target.value)}
+                required
+              >
+                <option value={false}>Standby</option>
+                <option value={true}>Listo para la venta</option>
+              </select>
+            </div>
+
+            <div className="d-grid">
+              <button type="submit" style={styles.submitButton}>
+                Registrar
+              </button>
+            </div>
+          </form>
         </div>
+        <Footer />
       </div>
-      <Footer className="footer" />
-    </div>
+    </>
   );
 };
 

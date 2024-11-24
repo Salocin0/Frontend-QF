@@ -10,7 +10,7 @@ const Panel = ({ onClose, position, bottom,right,top,left }) => {
       bottom: bottom||55,
       right: right||0,
       top: top,
-      left: left,
+      left: "20%",
       width: "400px",
       height: "auto",
       backgroundColor: Colors.GrisAzuladoOscuro,

@@ -2,16 +2,16 @@ import { default as React, useEffect } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-
-import "./../sass/main.scss";
-
-const Producto = ({ producto, session, idpuesto, recargar }) => {
-
-
-
+import { useContext } from "react";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import imgDefault from "../img/productoDefecto.png";
+import useDynamicColors from "../../UseDinamicColors";
+const Producto = ({ producto, idpuesto, recargar }) => {
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
   const handleDelete = () => {
     const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
+    headers.append("ConsumidorId", user.consumidorId);
 
     fetch(`${process.env?.REACT_APP_BACK_URL}producto/${producto.id}`, {
       method: "DELETE",
@@ -31,49 +31,95 @@ const Producto = ({ producto, session, idpuesto, recargar }) => {
       .catch((error) => console.error("Error:", error));
   };
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
+
+  const styles = {
+    cardLink: {
+      display: "flex",
+      flexDirection: "column",
+      width: "100%",
+
+      margin: "0 auto",
+      marginBottom: "20px",
+    },
+    card: {
+      boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+      borderRadius: "8px",
+      overflow: "hidden",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      maxWidth: "300px",
+      width: "100%",
+    },
+    cardImgTop: {
+      height: "auto",
+      objectFit: "cover",
+      width: "100%",
+      backgroundColor: Colors.BlancoEnBlanco,
+    },
+    cardBody: {
+      padding: "16px",
+      display: "flex",
+      flexDirection: "column",
+    },
+    cardTitle: {
+      fontSize: "1.25rem",
+      fontWeight: "bold",
+      textAlign: "center",
+      marginBottom: "8px",
+      color: Colors.Naranja,
+    },
+    cardText: {
+      fontSize: "1rem",
+      textAlign: "center",
+      marginBottom: "8px",
+      height: "100px",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      color: Colors.BlancoEnBlanco,
+    },
+    priceRow: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+    priceText: {
+      fontSize: "1.5rem",
+      fontWeight: "bold",
+      color: Colors.Naranja,
+    },
+    dropdownContainer: {
+      display: "flex",
+      justifyContent: "flex-end",
+    },
+  };
 
   return (
-    <div className="cardlink">
-      <div className="card shadow-sm">
+    <div style={styles.cardLink}>
+      <div style={styles.card}>
         <img
-          src={`${producto?.img}`}
-          className={`cardimgtop img-fluid`}
+          src={producto?.img || imgDefault}
           alt="Thumbnail"
-          style={{ height: "150px" }}
+          style={styles.cardImgTop}
         />
-        <div className="card-body">
-          <div >
-            <h6 className="card-title text-center">
-              {producto?.nombre}
-            </h6>
-          </div>
-          <div style={{ height: "100px" }}>
-            <p className="card-text text-center">
-              {producto?.descripcion}
-            </p>
-          </div>
+        <div style={styles.cardBody}>
+          <h6 style={styles.cardTitle}>{producto?.nombre}</h6>
+          <p style={styles.cardText}>{producto?.descripcion}</p>
 
-          <div className="row">
-            <div className="col-10">
-              <h4 className="card-text">$ {producto?.precio}</h4>
-            </div>
-            <div className="col-2">
-              <div className="d-flex justify-content-end">
-                <Dropdown>
-                  <Dropdown.Toggle variant="danger"></Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item as={Link} to={`/producto/${producto?.id}`}>
-                      Actualizar Producto
-                    </Dropdown.Item>
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={handleDelete}>
-                      Deshabilitar Producto
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
+          <div style={styles.priceRow}>
+            <h4 style={styles.priceText}>$ {producto?.precio}</h4>
+            <div style={styles.dropdownContainer}>
+              <Dropdown>
+                <Dropdown.Toggle variant="danger" />
+                <Dropdown.Menu>
+                  <Dropdown.Item as={Link} to={`/producto/${producto?.id}`}>
+                    Actualizar Producto
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={handleDelete}>
+                    Deshabilitar Producto
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           </div>
         </div>
