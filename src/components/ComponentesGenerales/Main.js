@@ -55,7 +55,6 @@ import PanelEncargado from "../PanelesDatos/PanelEncargado/PanelEncargado";
 import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
 import FiltersEventosConsumidor from "../Filtros y Buscadores/filtersEventosConsumidor";
 import DocumentUpload from "./DocumentUpload";
-import Home from "./Home";
 import Inicio from "./Inicio";
 import PruebasToast from "./PruebaToast";
 import Sidebar from "./Sidebar";
@@ -66,7 +65,6 @@ export const Main = () => {
     <main>
       <Routes>
         {/*nuevos estilos aplicados*/}
-        
         <Route path="/registrarse/:tipoUsuario" element={<ProcesoRegistro />} />
         <Route path="/login" element={<Login />} />
         <Route path="/seleccion-perfil" element={<SeleccionRegister />} />
@@ -95,9 +93,17 @@ export const Main = () => {
         <Route path="/crear-puesto" element={<CrearNuevoPuesto />} />
         <Route path="/listado-productos-deshabilitados/:id" element={<ListadoProductoDeshabilitado/>} />
         <Route path="/registrar-productos/:id" element={<RegistrarProductos />}/>
-        {/*nuevos estilos por aplicar*/}
         <Route path="/misAsociacionesEPC" element={<AsociacionesEPC/>} />
+        <Route path="/pedidos-Encargado" element={<ListadoPedidosEncargado/>} />
+        <Route path="/listado-eventos-productor" element={<ListadoEventosProductor />} />
+        <Route path="/ver-solicitudes-evento/:evento" element={<VerSolicitudesEvento/>} />
+        <Route path="/registrar-evento2" element={<RegistrarEvento2 />} />
+        {/*nuevos estilos por aplicar*/}
+        <Route path="/grafica-encargado" element={<PanelEncargado/>} />
+        <Route path="/registrar-evento3" element={<RegistrarEvento3 />} />
         
+
+
         <Route path="/notificaciones" element={<Notificaciones/>}/>
         <Route path="/perfil-nuevo" element={<ConsultarUsuarioPrueba />} />
         <Route path="/consultar-usuario" element={<ConsultarUsuario />} />
@@ -115,19 +121,17 @@ export const Main = () => {
         <Route path="/ser-encargado" element={<RegistroEncargado />} />
         <Route path="/subir-archivo" element={<DocumentUpload />} />
         <Route path="/producto/:id" element={<ConsultarProducto />} />
-        <Route path="/listado-eventos-productor" element={<ListadoEventosProductor />} />
+        
         <Route path="/registrar-evento" element={<RegistrarEvento />} />
-        <Route path="/registrar-evento2" element={<RegistrarEvento2 />} />
-        <Route path="/registrar-evento3" element={<RegistrarEvento3 />} />
+        
+        
         <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<RegistrarEvento4 />} />
         <Route path="/eventoPrueba" element={<EventoPrueba />} />
         <Route path="/evento/:id" element={<ConsultarEvento />} />
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
         
-        <Route path="/ver-solicitudes-evento/:evento" element={<VerSolicitudesEvento/>} />
         <Route path="/grafica-productor" element={<PanelProductor/>} />
-        <Route path="/grafica-encargado" element={<PanelEncargado/>} />
-        <Route path="/pedidos-Encargado" element={<ListadoPedidosEncargado/>} />
+        
         <Route path="/pruebasToast" element={<PruebasToast/>} />
       </Routes>
     </main>

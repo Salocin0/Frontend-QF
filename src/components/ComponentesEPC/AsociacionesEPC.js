@@ -1,150 +1,291 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import FiltersPuestosEncargado from "../Filtros y Buscadores/filtersPuestosEncargado";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
+import useDynamicColors from "../../UseDinamicColors";
+import imgDefault from "../img/logoevento.webp";
+import Footer from "../ComponentesGenerales/Footer";
+
 const AsociacionesEPC = () => {
-    const navigate = useNavigate();
-    const { user } = useContext(UserContext)
-    const [eventos, setEventos] = useState([]);
-    const [isPendienteDeAceptacion, setIsPendienteDeAceptacion] = useState(false);
-    const [asociaciones, setAsociaciones] = useState([]);
+  const { user } = useContext(UserContext);
+  const [eventos, setEventos] = useState([]);
+  const [isPendienteDeAceptacion, setIsPendienteDeAceptacion] = useState(false);
+  const [asociaciones, setAsociaciones] = useState([]);
+  const Colors = useDynamicColors();
 
-    useEffect(() => {
-        if (user) {
-            const headers = new Headers();
-            headers.append("ConsumidorId", user.consumidorId);
+  useEffect(() => {
+    if (user) {
+      const headers = new Headers();
+      headers.append("ConsumidorId", user.consumidorId);
 
-            fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/buscar/${user.consumidorId}`,
-            {
-                method: "GET",
-                headers: headers,
-            })
+      fetch(
+        `${process.env?.REACT_APP_BACK_URL}asociacion/buscar/${user.consumidorId}`,
+        {
+          method: "GET",
+          headers: headers,
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
-            setEventos(data.data.eventos);
-            setAsociaciones(data.data.asociaciones);
-            console.log(data.data.asociaciones);
+          setEventos(data.data.eventos);
+          setAsociaciones(data.data.asociaciones);
+          console.log(data.data.asociaciones);
         })
         .catch((error) => console.log("No existen eventos.", error));
-}
-    }, [user]);
+    }
+  }, [user]);
 
-    useEffect(() => {
-        if (asociaciones.length > 0) {
-          let pendienteDeAceptacion = false;
-          asociaciones.forEach((asociacion) => {
-            if (asociacion.estado === 'PendienteDeAceptacion') {
-              pendienteDeAceptacion = true;
-            }
-          });
-          setIsPendienteDeAceptacion(pendienteDeAceptacion);
+  useEffect(() => {
+    if (asociaciones.length > 0) {
+      let pendienteDeAceptacion = false;
+      asociaciones.forEach((asociacion) => {
+        pendienteDeAceptacion = false;
+        if (asociacion.estado === "PendienteDeAceptacion") {
+          pendienteDeAceptacion = true;
         }
-      }, [asociaciones]);
+      });
+      setIsPendienteDeAceptacion(pendienteDeAceptacion);
+    }
+  }, [asociaciones]);
 
+  const cancelarAsociacion = (asociacionID) => {
+    fetch(
+      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionID}/cancelar`,
+      {
+        method: "POST",
+      }
+    ).then((response) => {
+      if (response.ok) {
+        toast.success("Asociacion Cancelada correctamente");
+        window.location.reload();
+      } else {
+        response.json().then((errorData) => {
+          const errorMessage = errorData.message || "Ha ocurrido un error";
+          toast.error(errorMessage);
+        });
+      }
+    });
+  };
 
+  const styles = {
+    row: {
+      margin: 0,
+      display: "flex",
+      flexDirection: "row",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      height: "100vh", // Asegura que el contenedor ocupe el 100% de la altura de la pantalla
+      overflow: "hidden", // Oculta la barra de desplazamiento en el contenedor principal
+      width: "100%",
+    },
+    colContent: {
+      marginLeft: "20%",
+      width: "100%",
+      height: "100%", // Asegura que el contenedor de contenido ocupe toda la altura disponible
+      overflowY: "auto", // Permite el desplazamiento solo si es necesario
+      msOverflowStyle: "none", // IE and Edge
+      scrollbarWidth: "none", // Firefox
+      WebkitScrollbar: { display: "none" }, // Hide scrollbar for Chrome, Safari, and Opera
+    },
+    container: {
+      paddingBottom: "60px",
+      width: "100%",
+      flexDirection: "column", // Asegura que el contenido esté alineado de arriba hacia abajo
+    },
+    sectionTitle: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "1rem",
+      paddingTop: "2rem",
+      width: "100%",
+      color: Colors.Naranja,
+    },
+    card: {
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "10px",
+      marginBottom: "1rem",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      marginLeft: "20px",
+      marginRight: "20px",
+      display: "flex",
+      flexDirection: "Column",
+      position: "relative",
+    },
+    cardBody: {
+      padding: "10px",
+      width: "100%",
+      display: "flex",
+      flexDirection: "row",
+    },
+    rowInner: {
+      display: "flex",
+      flexDirection: "Column",
+      width: "100%",
+    },
+    imgContainer: {
+      width: "20%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    img: {
+      width: "80%",
+      height: "200px",
+      objectFit: "cover",
+      borderRadius: "10px",
+    },
+    textContainer: {
+      width: "60%",
+      display: "flex",
+      flexDirection: "Column",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    title: {
+      fontSize: "2rem",
+      fontWeight: "bold",
+      marginBottom: "0.5rem",
+      color: Colors.Naranja,
+      textAlign: "center",
+      width: "100%",
+    },
+    description: {
+      color: Colors.BlancoEnBlanco,
+      width: "100%",
+    },
+    locationText: {
+      color: Colors.BlancoEnBlanco,
+      width: "100%",
+    },
+    actionContainer: {
+      display: "flex",
+      width: "100%",
+    },
+    buttonContainer: {
+      width: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "Column",
+      padding: "10px",
+    },
+    button: {
+      backgroundColor: Colors.Rojo,
+      color: Colors.BlancoEnBlanco,
+      padding: "0.5rem 1rem",
+      border: "none",
+      cursor: "pointer",
+      borderRadius: "10px",
+      width: "200px",
+    },
+    estadoText: {
+      fontWeight: "bold",
+      backgroundColor: Colors.Verde,
+      color: Colors.BlancoEnBlanco,
+      borderRadius: "10px",
+      padding: "5px 10px",
+      marginLeft: "1rem",
+      position: "absolute",
+      top: "20px",
+      right: "20px",
+    },
+    noAsociacionesContainer: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      width: "100%",
+    },
+    noAsociacionesTitle: {
+      fontSize: "1.5rem",
+      color: Colors.Naranja,
+    },
+    noAsociacionesDescription: {
+      textAlign: "center",
+    },
+    linkAgregarEvento: {
+      color: Colors.Azul,
+      textDecoration: "none",
+      fontWeight: "bold",
+    },
+  };
 
-const agregarNuevo = () => {
-    navigate(`/crear-puesto`);
-};
-
-const cancelarAsociacion = (asociacionID) => {
-    fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionID}/cancelar`, {
-      method: "POST",
-    })
-    .then((response) => {
-        if (response.ok) {
-          toast.success("Asociacion Cancelada orrectamente");
-          window.location.reload();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
-      })
-}
-
-function generarNumeroRandom() {
-  return Math.floor(Math.random() * 15) + 1;
-}
-
-return (
+  return (
     <div>
-      <div className={`row m-0 mainFormEventos`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={user?.tipoUsuario} />
-        </div>
-        <div className={`col-10`}>
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-2 pb-4 h-100 w-100">
+      <div style={styles.row}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
+        <div style={styles.colContent}>
+          <div style={styles.sectionTitle}>
+            <h1>Mis Asociaciones</h1>
+          </div>
+          <hr style={{ color: Colors.Naranja }} />
+          <div style={styles.container}>
+            <div>
               {eventos.length > 0 ? (
-                <>
-                  <div className="d-flex justify-content-center mb-3 tituloSeccion">
-                    <h1 className="pt-2">Mis Asociaciones</h1>
-                  </div>
-                  <hr style={{ color: "#F7B813" }} />
+                <div style={styles.rowInner}>
                   {eventos.map((evento, index) => {
                     const asociacion = asociaciones.find(
                       (asoc) => asoc.eventoId === evento.id
                     );
                     return (
-                      <div className={`card`} key={index}>
-                        <div className="card-body ">
-                          <div className="row">
-                            <div className="col-md-3">
-                              <img
-                                src={evento.img}
-                                alt="Logo del Evento"
-                                className="img-fluid"
-                              />
-                            </div>
-                            <div className="col-md-8 position-relative">
-                              <h5 className="card-title">{evento.nombre}</h5>
-                              <p className="card-descripcion">
-                                {evento.descripcion}
-                              </p>
-                              <p className="card-text">
-                                {evento.ubicacion} - {evento.localidad},{" "}
-                                {evento.provincia}
-                              </p>
-                              <p className="card-text-yellow"> {`El evento empieza en ${generarNumeroRandom()} días`}</p>
-
-                            </div>
-                            <div className="mt-2 d-flex">
-                              <div className="col-md-12 d-flex justify-content-center">
-                               {isPendienteDeAceptacion &&  <button
-                                  className="btn btn-danger me-2"
-                                  onClick={() => cancelarAsociacion(asociacion.id)}
+                      <div style={styles.card} key={index}>
+                        <div style={styles.cardBody}>
+                          <div style={styles.imgContainer}>
+                            <img
+                              src={evento.img || imgDefault}
+                              alt="Logo del Evento"
+                              style={styles.img}
+                            />
+                          </div>
+                          <div style={styles.textContainer}>
+                            <h5 style={styles.title}>{evento.nombre}</h5>
+                            <p style={styles.description}>
+                              {evento.descripcion}
+                            </p>
+                            <p style={styles.locationText}>
+                              {evento.ubicacion} - {evento.localidad},{" "}
+                              {evento.provincia}
+                            </p>
+                          </div>
+                        </div>
+                        <div style={styles.actionContainer}>
+                          {asociacion.estado === "PendienteDeAceptacion" && (
+                            <div style={{ width: "100%" }}>
+                              <hr style={{ color: Colors.Naranja }} />
+                              <div style={styles.buttonContainer}>
+                                <button
+                                  style={styles.button}
+                                  onClick={() =>
+                                    cancelarAsociacion(asociacion.id)
+                                  }
                                 >
                                   Cancelar Asociacion
-                                </button>}
+                                </button>
                               </div>
-                              <p className={`card-estado-productor`}>
-                                {asociacion.estado}
-                              </p>
                             </div>
-                          </div>
+                          )}
+                          <p style={styles.estadoText}>{asociacion.estado==="PendienteDeAceptacion"?"Pendiente de Aceptacion":asociacion.estado}</p>
                         </div>
                       </div>
                     );
                   })}
-                </>
+                </div>
               ) : (
-                <div className="contenedor-grid">
-                  <div className="tituloSeccion">
+                <div style={styles.noAsociacionesContainer}>
+                  <div style={styles.noAsociacionesTitle}>
                     <h2>Mis Asociaciones</h2>
                   </div>
-                  <div className="descripcion">
+                  <div style={styles.noAsociacionesDescription}>
                     <p>
                       Con Quickfood, asocia tu evento para hacerlo mejor.
                       Descubre nuestras increíbles características y ofrece una
                       experiencia única a tus consumidores.
                     </p>
                   </div>
-                  <Link to={`/asociarPuestoAEvento`} className="LinkAgregarEvento">
+                  <Link
+                    to={`/asociarPuestoAEvento`}
+                    style={styles.linkAgregarEvento}
+                  >
                     Asociarme a Evento
                   </Link>
                 </div>
@@ -153,12 +294,9 @@ return (
           </div>
         </div>
       </div>
-      <div className="filtrosCarritoEncargado">
-        <FiltersPuestosEncargado />
-      </div>
+      <Footer />
     </div>
   );
-
 };
 
 export default AsociacionesEPC;

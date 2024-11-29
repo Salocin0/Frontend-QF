@@ -24,9 +24,10 @@
 }
 
 .logo {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   transition: transform 0.3s ease;
+  margin-bottom:20px ;
 }
 
 .logocontainer {
@@ -96,6 +97,7 @@
   border-radius: 5px 5px 5px 5px;
   padding-right: 5px;
   margin-bottom: 10px;
+  font-weight: bold;
   width: 100%;
   color: $gris-letra-sidebar;
 }

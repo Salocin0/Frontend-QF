@@ -1,66 +1,26 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import "./../sass/main.css";
 import EventoProductor from "./EventoProductor";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import { useContext } from "react";
+import Footer from "../ComponentesGenerales/Footer";
+import useDinamicColors from "../../UseDinamicColors";
+import { useNavigate } from "react-router-dom";
 
 const ListadoEventosProductor = () => {
-  const [rows, setRows] = useState([]);
-  const [session, setSession] = useState(null);
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
-  const [editProductId, setEditProductId] = useState(null);
-  const [editedValues, setEditedValues] = useState({
-    nombre: "",
-    descripcion: "",
-    tipoEvento: "",
-    tipoPago: "",
-    fechaInicio: Date.now(),
-    horaInicio: Date.now(),
-    fechaFin: Date.now(),
-    cantidadPuestos: 0,
-    cantidadRepartidores: 0,
-    capacidadMaxima: 0,
-    conButaca: false,
-    conRepartidor: false,
-    conPreventa: false,
-    tipoPreventa: 0,
-    fechaInicioPreventa: Date.now(),
-    fechaFinPreventa: Date.now(),
-    plazoCancelacionPreventa: 0,
-    linkVentaEntradas: "",
-    ubicacion: "",
-    consumidorId: 0,
-  });
+  const { user } = useContext(UserContext);
+  const Colors = useDinamicColors();
+  const navigate = useNavigate();
 
   const recargarComponente = () => {
-    setRecargar(+1);
+    console.log("Recargando componente");
+    setTimeout(() => {
+      setRecargar(recargar + 1);
+    }, 100);
   };
-
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-        console.log(data.data.tipoUsuario);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
 
   const parseDate = (dateStr) => {
     if (!dateStr) return null;
@@ -69,9 +29,10 @@ const ListadoEventosProductor = () => {
   };
 
   useEffect(() => {
-    if (session) {
+    if (user) {
+      console.log("llega a pedir");
       const headers = new Headers();
-      headers.append("ConsumidorId", session.consumidorId);
+      headers.append("ConsumidorId", user.consumidorId);
 
       fetch(`${process.env?.REACT_APP_BACK_URL}evento/all`, {
         method: "GET",
@@ -79,7 +40,7 @@ const ListadoEventosProductor = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          const eventosProcesados = data.data.map(evento => ({
+          const eventosProcesados = data.data.map((evento) => ({
             ...evento,
             fechaInicio: parseDate(evento.fechaHoraInicio),
             horaInicio: parseDate(evento.fechaHoraInicio),
@@ -87,79 +48,133 @@ const ListadoEventosProductor = () => {
           }));
 
           setEventos(eventosProcesados);
-          const totalEventos = Math.ceil(eventosProcesados.length / 4) * 4;
-          const eventosConNulos = [
-            ...eventosProcesados,
-            ...Array(totalEventos - eventosProcesados.length).fill(null),
-          ];
-
-          const generatedRows = [];
-          for (let i = 0; i < eventosConNulos.length; i += 4) {
-            const row = eventosConNulos.slice(i, i + 4);
-            generatedRows.push(row);
-          }
-          setRows(generatedRows);
         })
         .catch((error) => console.log("No existen eventos.", error));
     }
-  }, [session, recargar]);
+  }, [user, recargar]);
+
+  const agregarNuevo = () => {
+    navigate(`/registrar-evento2`);
+  };
+
+  const styles = {
+    mainFormEventos: {
+      display: "flex",
+      margin: "0",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      flexDirection: "column",
+      overflow: "hidden",
+      height: "100vh",
+      overflowY: "scroll",
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
+    },
+    content: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "80%",
+      marginLeft: "20%",
+      paddingBottom: "20px",
+    },
+    container: {
+      paddingTop: "20px",
+      paddingBottom: "40px",
+      width: "100%",
+      marginLeft: "20px",
+      marginRight: "20px",
+    },
+    tituloSeccion: {
+      display: "flex",
+      justifyContent: "center",
+      marginTop: "20px",
+      fontSize: "24px",
+      marginLeft: "20%",
+      color: Colors.Blanco,
+    },
+    hr: {
+      color: Colors.Naranja,
+    },
+    contenedorGrid: {
+      textAlign: "center",
+      padding: "40px 20px",
+      margin: "40px",
+    },
+    descripcion: {
+      marginBottom: "20px",
+      fontSize: "18px",
+      color: Colors.Blanco,
+    },
+    linkAgregarEvento: {
+      textDecoration: "none",
+      backgroundColor: Colors.Naranja,
+      padding: "10px 20px",
+      color: Colors.Blanco,
+      borderRadius: "5px",
+      fontWeight: "bold",
+      fontSize: "18px",
+      transition: "background-color 0.3s",
+      display: "inline-block",
+    },
+    agregarEventoButton: {
+      backgroundColor: Colors.Verde,
+      color: "white",
+      padding: "10px 20px",
+      borderRadius: "5px",
+      border: "none",
+      cursor: "pointer",
+      position: "fixed",
+      bottom: "70px",
+      right: "20px",
+      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+      zIndex: 1000,
+    },
+  };
 
   return (
-    <div>
-      <div className={`row m-0 mainFormEventos`}>
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className={`col-10`}>
-          <div className="d-flex align-items-center justify-content-center">
-            <div className="pt-2 pb-4 h-100 w-100">
-              {Array.isArray(eventos) && eventos.length > 0 ? (
-                <React.Fragment>
-                  <div className="d-flex justify-content-center mb-3 tituloSeccion">
-                    <h1 className="pt-2">Eventos</h1>
-                  </div>
-                  <hr style={{ color: "#F7B813" }} />
-                  {rows.length > 0 &&
-                    rows.map((row, rowIndex) => (
-                      <div key={rowIndex}>
-                        {row.map((evento, index) => (
-                          <div key={index}>
-                            {evento !== null ? (
-                              <EventoProductor
-                                evento={evento}
-                                session={session}
-                                recargar={recargarComponente}
-                              />
-                            ) : null}
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                </React.Fragment>
-              ) : (
-                <div className="contenedor-grid">
-                  <div className="tituloSeccion">
-                    <h2>Eventos</h2>
-                  </div>
-                  <div className="descripcion">
-                    <p>
-                      Con Quickfood, crea tu evento para hacerlo mejor. Descubre nuestras
-                      increíbles características y ofrece una experiencia única a tus
-                      consumidores.
-                    </p>
-                  </div>
-                  <Link to={`/registrar-evento`} className="LinkAgregarEvento">
-                    Crear Evento
-                  </Link>
-                </div>
-              )}
+    <div style={styles.mainFormEventos}>
+      <div style={styles.sidebar}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
+      </div>
+      <div style={styles.tituloSeccion}>
+        <h1>Eventos</h1>
+      </div>
+      <hr style={styles.hr} />
+      <div style={styles.content}>
+        <div style={styles.container}>
+          {Array.isArray(eventos) && eventos.length > 0 ? (
+            eventos.map((evento, index) => (
+              <EventoProductor
+                key={index}
+                evento={evento}
+                recargarComponente={recargarComponente}
+              />
+            ))
+          ) : (
+            <div style={styles.contenedorGrid}>
+              <div style={styles.tituloSeccion}>
+                <h2>Eventos</h2>
+              </div>
+              <div style={styles.descripcion}>
+                <p>
+                  Con Quickfood, crea tu evento para hacerlo mejor. Descubre
+                  nuestras increíbles características y ofrece una experiencia
+                  única a tus consumidores.
+                </p>
+              </div>
+              <Link to={`/registrar-evento`} style={styles.linkAgregarEvento}>
+                Crear Evento
+              </Link>
             </div>
-          </div>
+          )}
         </div>
       </div>
+      <button onClick={agregarNuevo} style={styles.agregarEventoButton}>
+        Agregar Evento
+      </button>
+      <Footer />
     </div>
   );
-
 };
 
 export default ListadoEventosProductor;

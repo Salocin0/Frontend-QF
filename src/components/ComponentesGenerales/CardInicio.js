@@ -10,7 +10,7 @@ const CardInicio = ({ data }) => {
       alignItems: "center",
       justifyContent: "center",
       textDecoration: "none",
-      color: Colors.Negro,
+      color: "black",
       backgroundColor: Colors.Naranja,
       border: "1px solid white",
       borderRadius: "10px",
@@ -38,12 +38,12 @@ const CardInicio = ({ data }) => {
       fontSize: "1.5rem",
       margin: "10px 0",
       textAlign: "center",
-      color: Colors.Negro,
+      color: "black",
     },
     subtitle: {
       textAlign: "center",
       fontStyle: "italic",
-      color: Colors.Negro,
+      color:"black",
       fontSize: "1rem",
     },
   };

@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import "./../sass/main.scss";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
+import Footer from "../ComponentesGenerales/Footer";
 
 const RegistrarEvento2 = () => {
   const [nombre, setNombre] = useState("");
@@ -23,29 +26,9 @@ const RegistrarEvento2 = () => {
   const [selectedOptionPago, setSelectedOptionPago] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const { id } = useParams();
-  const [session, setSession] = useState(null);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
-
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSession(data.data);
-        })
-        .catch((error) => console.error("Error fetching session:", error));
-    }
-  }, []);
+  const Colors = useDynamicColors();
 
   const handleImagenEventoChange = (e) => {
     const file = e.target.files[0];
@@ -84,7 +67,9 @@ const RegistrarEvento2 = () => {
 
     try {
       // Obtener geolocalización
-      const response = await fetch(`https://api.opencagedata.com/geocode/v1/json?q=${ubicacion}&key=d429bb29929940e38622b06b1ad6c59b`);
+      const response = await fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${ubicacion}&key=d429bb29929940e38622b06b1ad6c59b`
+      );
       const data = await response.json();
 
       if (data.results.length > 0) {
@@ -92,13 +77,16 @@ const RegistrarEvento2 = () => {
         const addressComponents = result.components;
 
         const prov = addressComponents.state;
-        const loc = addressComponents.city || addressComponents.town || addressComponents.village;
+        const loc =
+          addressComponents.city ||
+          addressComponents.town ||
+          addressComponents.village;
 
         const lat = result.geometry.lat;
         const lng = result.geometry.lng;
 
-        setProvincia(prov || '');
-        setLocalidad(loc || '');
+        setProvincia(prov || "");
+        setLocalidad(loc || "");
 
         // Crear objeto evento parcial para guardar en la BD
         const eventoParcial = {
@@ -110,20 +98,23 @@ const RegistrarEvento2 = () => {
           provincia: prov || selectedProvince,
           tipoEvento,
           tipoPago,
-          estado: 'EnPreparacion1',
+          estado: "EnPreparacion1",
           latitud: lat,
           longitud: lng,
         };
 
         // Guardar el progreso en la base de datos
-        const saveResponse = await fetch(`${process.env?.REACT_APP_BACK_URL}evento`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session?.token}`,
-          },
-          body: JSON.stringify(eventoParcial),
-        });
+        const saveResponse = await fetch(
+          `${process.env?.REACT_APP_BACK_URL}evento`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user?.token}`,
+            },
+            body: JSON.stringify(eventoParcial),
+          }
+        );
 
         const saveData = await saveResponse.json();
 
@@ -134,7 +125,6 @@ const RegistrarEvento2 = () => {
         } else {
           toast.error("Error al guardar el evento");
         }
-
       } else {
         toast.error("No se pudo obtener información de la ubicación.");
       }
@@ -143,9 +133,6 @@ const RegistrarEvento2 = () => {
       toast.error("Error al guardar el evento");
     }
   };
-
-
-
 
   useEffect(() => {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
@@ -200,11 +187,13 @@ const RegistrarEvento2 = () => {
     setUbicacion(value);
 
     if (value.length > 2) {
-      fetch(`https://api.opencagedata.com/geocode/v1/json?q=${value}&key=d429bb29929940e38622b06b1ad6c59b`)
+      fetch(
+        `https://api.opencagedata.com/geocode/v1/json?q=${value}&key=d429bb29929940e38622b06b1ad6c59b`
+      )
         .then((response) => response.json())
         .then((data) => {
           if (data.results) {
-            setSuggestions(data.results.map(result => result.formatted));
+            setSuggestions(data.results.map((result) => result.formatted));
             setShowSuggestions(true);
           }
         })
@@ -223,151 +212,283 @@ const RegistrarEvento2 = () => {
     setShowSuggestions(false);
   };
 
+  const styles = {
+    containerFluid: {
+      width: "100%",
+      padding: 0,
+      margin: 0,
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      height: "100vh",
+      overflow: "hidden",
+    },
+    rowFormEvento: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    colForm: {
+      marginLeft: "20%",
+      height: "calc(100vh - 50px)",
+      padding: 0,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+
+    },
+    darkFormWrapper: {
+      backgroundColor: Colors.GrisAzuladoClaro,
+      border: `1px solid ${Colors.Naranja}`,
+      padding: "2rem",
+      borderRadius: "10px",
+    },
+    tituloSeccion: {
+      fontSize: "1.8rem",
+      fontWeight: "bold",
+      textAlign: "center",
+      color: Colors.Blanco,
+      marginBottom: "1rem",
+    },
+    formGroup: {
+      marginBottom: "0.5rem",
+      position: "relative"
+    },
+    formLabel: {
+      display: "block",
+      fontSize: "1rem",
+      color: Colors.Blanco,
+      margin: "0",
+    },
+    formInput: {
+      width: "100%",
+      padding: "0.5rem",
+      fontSize: "1rem",
+      borderRadius: "10px",
+    },
+    optionContainerEvento: {
+      display: "flex",
+      justifyContent: "space-between",
+    },
+    opcionesEvento: {
+      padding: "0.5rem 1rem",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      color: Colors.Blanco,
+      cursor: "pointer",
+      borderRadius: "5px",
+      textAlign: "center",
+      flex: 1,
+      marginRight: "0.5rem",
+    },
+    opcionesEventoSelected: {
+      backgroundColor: Colors.Naranja,
+    },
+    optionContainerPago: {
+      display: "flex",
+      justifyContent: "space-between",
+    },
+    opcionesPago: {
+      padding: "0.5rem 1rem",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      color: Colors.Blanco,
+      cursor: "pointer",
+      borderRadius: "5px",
+      textAlign: "center",
+      flex: 1,
+      marginRight: "0.5rem",
+    },
+    opcionesPagoSelected: {
+      backgroundColor: Colors.Naranja,
+    },
+    suggestionsList: {
+      listStyleType: "none",
+      padding: 0,
+      margin: 0,
+      backgroundColor: Colors.Blanco,
+      borderRadius: "5px",
+      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+      position: "absolute", // Para que las sugerencias estén sobre el formulario
+      top: "100%", // Justo debajo del input
+      left: 0,
+      right: 0,
+      zIndex: 10, // Asegura que esté por encima de otros elementos
+    },
+    suggestionItem: {
+      padding: "0.5rem",
+      cursor: "pointer",
+    },
+    suggestionItemHover: {
+      backgroundColor: Colors.Blanco,
+    },
+    btnPrimary: {
+      width: "100%",
+      padding: "0.8rem",
+      fontSize: "1rem",
+      color: Colors.Blanco,
+      backgroundColor: Colors.Verde,
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+    },
+  };
+
   return (
-    <div className="container-fluid">
-      <div className="row formEvento">
-        <div className="col-md-4 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className="col-md-6 p-0">
-          <div className="dark-form-wrapper mx-auto">
-            <form action="#" method="POST" className="row g-3">
-              <h3 className="tituloSeccion">Datos del Evento</h3>
-              <div className="col-md-12">
-                <div className="form-group">
-                  <label htmlFor="text-input" className="form-label">
-                    Nombre Del Evento*
-                  </label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    className="form-input"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                  />
-                </div>
+    <div style={styles.containerFluid}>
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
+      <div style={styles.rowFormEvento}>
+        <div style={styles.colForm}>
+          <div style={styles.darkFormWrapper}>
+            <form action="#" method="POST">
+              <h3 style={styles.tituloSeccion}>Datos del Evento</h3>
+
+              <div style={styles.formGroup}>
+                <label htmlFor="nombre" style={styles.formLabel}>
+                  Nombre Del Evento*
+                </label>
+                <input
+                  type="text"
+                  id="nombre"
+                  style={styles.formInput}
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                />
               </div>
 
-              <div className="col-md-12">
-                <div className="form-group">
-                  <label htmlFor="text-area" className="form-label">
-                    Descripción Del Evento*
-                  </label>
-                  <textarea
-                    id="text-area"
-                    className="form-input"
-                    value={descripcion}
-                    onChange={(e) => setDescripcion(e.target.value)}
-                    rows={1}
-                    style={{ resize: "none" }}
-                  />
-                </div>
+              <div style={styles.formGroup}>
+                <label htmlFor="descripcion" style={styles.formLabel}>
+                  Descripción Del Evento*
+                </label>
+                <textarea
+                  id="descripcion"
+                  style={styles.formInput}
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
+                  rows={2}
+                />
               </div>
 
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="options" className="form-label">
-                    Tipo de Evento*
-                  </label>
-                  <div className="option-container-evento">
-                    <div
-                      className={`opcionesEvento ${selectedOptionEvento === 1 ? "selected" : ""}`}
-                      onClick={() => handleOptionClickEvento(1)}
-                    >
-                      Cines
-                    </div>
-                    <div
-                      className={`opcionesEvento ${selectedOptionEvento === 2 ? "selected" : ""}`}
-                      onClick={() => handleOptionClickEvento(2)}
-                    >
-                      Festival
-                    </div>
-                    <div
-                      className={`opcionesEvento ${selectedOptionEvento === 3 ? "selected" : ""}`}
-                      onClick={() => handleOptionClickEvento(3)}
-                    >
-                      Deporte
-                    </div>
+              <div style={styles.formGroup}>
+                <label htmlFor="tipoEvento" style={styles.formLabel}>
+                  Tipo de Evento*
+                </label>
+                <div style={styles.optionContainerEvento}>
+                  <div
+                    style={{
+                      ...styles.opcionesEvento,
+                      ...(selectedOptionEvento === 1
+                        ? styles.opcionesEventoSelected
+                        : {}),
+                    }}
+                    onClick={() => handleOptionClickEvento(1)}
+                  >
+                    Cines
+                  </div>
+                  <div
+                    style={{
+                      ...styles.opcionesEvento,
+                      ...(selectedOptionEvento === 2
+                        ? styles.opcionesEventoSelected
+                        : {}),
+                    }}
+                    onClick={() => handleOptionClickEvento(2)}
+                  >
+                    Festival
+                  </div>
+                  <div
+                    style={{
+                      ...styles.opcionesEvento,
+                      ...(selectedOptionEvento === 3
+                        ? styles.opcionesEventoSelected
+                        : {}),
+                    }}
+                    onClick={() => handleOptionClickEvento(3)}
+                  >
+                    Deporte
                   </div>
                 </div>
               </div>
 
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="options" className="form-label">
-                    Tipo de Pago*
-                  </label>
-                  <div className="option-container-pago">
-                    <div
-                      className={`opcionesPago ${selectedOptionPago === 1 ? "selected" : ""}`}
-                      onClick={() => handleOptionClickPago(1)}
-                    >
-                      Pago
-                    </div>
-                    <div
-                      className={`opcionesPago ${selectedOptionPago === 2 ? "selected" : ""}`}
-                      onClick={() => handleOptionClickPago(2)}
-                    >
-                      Gratuito
-                    </div>
+              <div style={styles.formGroup}>
+                <label htmlFor="tipoPago" style={styles.formLabel}>
+                  Tipo de Pago*
+                </label>
+                <div style={styles.optionContainerPago}>
+                  <div
+                    style={{
+                      ...styles.opcionesPago,
+                      ...(selectedOptionPago === 1
+                        ? styles.opcionesPagoSelected
+                        : {}),
+                    }}
+                    onClick={() => handleOptionClickPago(1)}
+                  >
+                    Pago
+                  </div>
+                  <div
+                    style={{
+                      ...styles.opcionesPago,
+                      ...(selectedOptionPago === 2
+                        ? styles.opcionesPagoSelected
+                        : {}),
+                    }}
+                    onClick={() => handleOptionClickPago(2)}
+                  >
+                    Gratuito
                   </div>
                 </div>
               </div>
 
-              <div className="col-md-12">
-                <div className="form-group">
-                  <label htmlFor="text-area" className="form-label">
-                    Ubicación Del Evento*
-                  </label>
-                  <input
-                    id="ubicacion"
-                    className="form-input"
-                    value={ubicacion}
-                    onChange={handleUbicacionChange}
-                  />
-                  {showSuggestions && (
-                    <ul className="suggestions-list">
-                      {suggestions.map((suggestion, index) => (
-                        <li
-                          key={index}
-                          className="suggestion-item"
-                          onClick={() => handleSuggestionClick(suggestion)}
-                        >
-                          {suggestion}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
+              <div style={styles.formGroup}>
+                <label htmlFor="ubicacion" style={styles.formLabel}>
+                  Ubicación Del Evento*
+                </label>
+                <input
+                  type="text"
+                  id="ubicacion"
+                  style={styles.formInput}
+                  value={ubicacion}
+                  onChange={handleUbicacionChange}
+                />
+                {showSuggestions && (
+                  <ul style={styles.suggestionsList}>
+                    {suggestions.map((suggestion, index) => (
+                      <li
+                        key={index}
+                        style={styles.suggestionItem}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        {suggestion}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
-
-              <div className="col-md-12">
-                <div className="form-group">
-                  <label htmlFor="file-input" className="form-label">
-                    Imagen del Evento
-                  </label>
-                  <input
-                    type="file"
-                    id="file-input"
-                    accept="image/*"
-                    onChange={handleImagenEventoChange}
-                    className="form-input"
-                  />
-                </div>
+              <div style={styles.formGroup}>
+                <label htmlFor="imagen" style={styles.formLabel}>
+                  Imagen del Evento
+                </label>
+                <input
+                  type="file"
+                  id="imagen"
+                  accept="image/*"
+                  onChange={handleImagenEventoChange}
+                  style={{...styles.formInput, backgroundColor: Colors.Blanco}}
+                />
               </div>
 
-
-
-              <div className="col-md-12">
-                <button type="button" className="btn btn-primary" onClick={handleSiguienteClick}>
-                  Siguiente
-                </button>
-              </div>
+              <button
+                type="button"
+                style={styles.btnPrimary}
+                onClick={handleSiguienteClick}
+              >
+                Siguiente
+              </button>
             </form>
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

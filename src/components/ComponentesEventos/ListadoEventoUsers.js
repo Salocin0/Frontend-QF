@@ -138,7 +138,7 @@ const ListadoEventosUsers = () => {
     header: {
       display: "flex",
       justifyContent: "center",
-      color: Colors.Naranja,
+      color: "#fff",
     },
     title: {
       paddingTop: "10px",

@@ -1,9 +1,9 @@
 import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useEffect, useState } from 'react';
 import { toast } from "react-toastify";
-import "./.././sass/main.css";
 import useDynamicColors from '../../UseDinamicColors';
+import { UserContext } from '../ComponentesGenerales/UserContext';
+import { useContext } from 'react';
 
 const initialData = {
   tasks: {},
@@ -44,7 +44,7 @@ const initialData = {
 
 const KanbanBoard = () => {
   const [data, setData] = useState(initialData);
-  const [session, setSession] = useState(null);
+  const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
   const [confirmPopup, setConfirmPopup] = useState(null);
   const [showCancelledColumn, setShowCancelledColumn] = useState(true);
@@ -55,31 +55,9 @@ const KanbanBoard = () => {
   };
 
   useEffect(() => {
-    const sessionId = localStorage.getItem('sessionId');
-
-    if (!sessionId) {
-      console.error('No session ID found.');
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-      })
-      .catch((error) => console.error('Error fetching session:', error));
-  }, []);
-
-  useEffect(() => {
-    if (session) {
+    if (user) {
       const headers = new Headers();
-      headers.append('ConsumidorId', session.consumidorId);
+      headers.append('ConsumidorId', user.consumidorId);
 
       fetch(`${process.env?.REACT_APP_BACK_URL}pedido/puesto/`, {
         method: 'GET',
@@ -135,7 +113,7 @@ const KanbanBoard = () => {
         })
         .catch((error) => console.log('No existen pedidos.', error));
     }
-  }, [session, recargar]);
+  }, [user, recargar]);
 
   const updatePedidoState = (taskId, newColumnId) => {
 
@@ -305,7 +283,7 @@ const KanbanBoard = () => {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', margin: 0, padding: 0 }}>
+    <div style={{ display: 'flex', height: '70vh', margin: 0, padding: 0 }}>
       <DragDropContext onDragEnd={onDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];
@@ -359,7 +337,7 @@ const KanbanBoard = () => {
                               padding: '8px',
                               margin: '0 0 8px 0',
                               minHeight: '100px',
-                              backgroundColor: '#000',
+                              backgroundColor: Colors.GrisAzuladoClaro,
                               color: '#F7B813',
                               border: '1px solid #F7B813',
                               borderRadius: '4px',
@@ -371,14 +349,14 @@ const KanbanBoard = () => {
                             }}
                           >
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <div style={{ fontSize: '2em', fontWeight: 'bold' }}>#{task.id.replace('task-', '')}</div>
+                              <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>#{task.id.replace('task-', '')}</div>
                               <button
                                 onClick={() => handleDelete(task.id)}
                                 style={{
                                   background: 'transparent',
                                   border: 'none',
                                   color: '#F7B813',
-                                  fontSize: '24px',
+                                  fontSize: '20px',
                                   cursor: 'pointer',
                                   marginTop: '-30px',
                                 }}

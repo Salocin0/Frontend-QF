@@ -25,12 +25,12 @@ const ActionButton = ({ title, icon, onClick, style }) => {
       width: "25px",
       height: "25px",
       marginRight: "20px",
-      color: Colors.Negro
+      color: "black"
     },
     title: {
       fontWeight: "bold",
       fontSize: "1.2rem",
-      color: Colors.Negro,
+      color: "black",
     },
   };
 

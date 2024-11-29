@@ -53,13 +53,13 @@ const Footer = () => {
       textAlign: "right",
     },
     linkStyle: {
-      color: Colors.Azul,
+      color: Colors.Naranja,
       textDecoration: "none",
       fontSize: "0.875rem",
       cursor: "pointer",
     },
     iconStyle: {
-      color: Colors.Azul,
+      color: Colors.Naranja,
       textDecoration: "none",
       cursor: "pointer",
     },
@@ -114,7 +114,7 @@ const Footer = () => {
           <div style={styles.rightSection}>
             
             <p style={styles.textStyle}>
-              QuickFood. Todos los derechos reservados.
+              &copy; QuickFood - Todos los derechos reservados.
             </p>
           </div>
         </div>

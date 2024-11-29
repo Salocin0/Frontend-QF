@@ -1,47 +1,22 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import ReactECharts from "echarts-for-react";
 import Sidebar from "../../ComponentesGenerales/Sidebar";
 import Footer from "../../ComponentesGenerales/Footer";
 import { faUpLong, faDownLong } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import GraficaBarras from "../GraficaBarras";
-import GraficaTorta from "../GraficaTorta";
 import GraficaLineas from "../GraficaLineas";
 import GraficaTortaProductos from "../GraficaTortaProductos";
+import { UserContext } from "../../ComponentesGenerales/UserContext";
+import { useContext } from "react";
 
 const PanelEncargado = () => {
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-        console.log(data.data.tipoUsuario);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
+  const {user} = useContext(UserContext);
 
   return (
     <div>
       <div className="d-flex mainFormEventos">
         <div className="">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+          <Sidebar tipoUsuario={user?.tipoUsuario} />
         </div>
         <div className="container containerGraficaEncargado">
           <div
