@@ -80,11 +80,17 @@ const CrearNuevoCarro = () => {
       display: "flex",
       backgroundColor: Colors.GrisAzuladoOscuro,
       height: "100vh",
+      margin: "0",
+      padding: "0",
     },
     mainContent: {
       flexGrow: 1,
-      padding: "2rem",
       marginLeft: "20%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: "20px",
     },
     formContainer: {
       maxWidth: "600px",

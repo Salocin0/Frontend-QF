@@ -49,7 +49,7 @@ const GraficaTortaProductos = () => {
   };
 
   return (
-    <div className="h-100 w-100">
+    <div className="h-75 w-100">
       <ReactECharts option={option} theme="dark" className="h-100 w-100" />
     </div>
   );

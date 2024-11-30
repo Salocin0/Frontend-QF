@@ -333,7 +333,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
             ...styles.cardEstadoProductor,
           }}
         >
-          {evento.estado === "EnPreparacion"
+          {evento.estado === "EnPreparacion" || evento.estado === "EnPreparacion1" || evento.estado === "EnPreparacion2" || evento.estado === "EnPreparacion3"
             ? "En Preparación"
             : evento.estado === "EnCurso"
             ? "En Curso"

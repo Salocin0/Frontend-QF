@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ReactECharts from "echarts-for-react";
@@ -8,40 +8,19 @@ import { faUpLong, faDownLong } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import GraficaBarras from "../GraficaBarras";
 import GraficaTorta from "../GraficaTorta";
+import { UserContext } from "../../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../../UseDinamicColors";
 
 const PanelProductor = () => {
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (!sessionId) {
-      console.error("No session ID found.");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-        console.log(data.data.tipoUsuario);
-      })
-      .catch((error) => console.error("Error fetching session:", error));
-  }, []);
-
+  const { user } = useContext(UserContext)
+  const Colors = useDynamicColors()
   return (
-    <div>
-      <div className="d-flex mainFormEventos">
-        <div className="">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
+    <div style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro }}>
+      <div className="d-flex mainFormEventos h-100" style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro,marginBottom: "50px" }}>
+        <div className="col-2">
+          <Sidebar tipoUsuario={user?.tipoUsuario} />
         </div>
-        <div className="container containerGraficaProductor">
+        <div className="container containerGraficaProductor ms-5">
           <div className="div1productor d-flex" style={{ position: "relative" }}>
             <div
               className="ps-3 pb-3"
@@ -182,7 +161,7 @@ const PanelProductor = () => {
                 </tbody>
               </table>
             </div>
-            <div className="graficaTortaproductor" style={{ marginTop: "125px" }}>
+            <div className="graficaTortaproductor" style={{ marginTop: "0px" }}>
               <GraficaTorta />
             </div>
           </div>

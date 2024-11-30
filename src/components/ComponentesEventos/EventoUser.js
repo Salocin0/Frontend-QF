@@ -135,6 +135,16 @@ const EventoUser = ({ evento }) => {
       right: "10px",
       width: "100px",
     },
+    preventa : {
+      fontSize: "16px",
+      color: Color.Blanco,
+      fontWeight: "bold",
+      padding: "5px 10px",
+      borderRadius: "5px",
+      backgroundColor: Color.Naranja,
+      display: "flex",
+      justifyContent: "center",
+    }
   };
 
   return (
@@ -162,6 +172,10 @@ const EventoUser = ({ evento }) => {
               <p style={styles.distance}>A 1km de distancia</p>
 
               <p style={styles.fecha}>{textoTiempo}</p>
+
+              {evento?.tienePreventa && (
+                <p style={styles.preventa}>Tiene preventa</p>
+              )}
             </div>
           </div>
         </Link>

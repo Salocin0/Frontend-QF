@@ -1,45 +1,95 @@
-import { getToken } from '@firebase/messaging';
-import { getAuth, signInAnonymously } from 'firebase/auth';
-import { onMessage } from 'firebase/messaging';
-import React, { useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
-import { messaging } from '../../firebase';
-
+import React, { useEffect, useState } from "react";
+import Sidebar from "../ComponentesGenerales/Sidebar";
+import Footer from "../ComponentesGenerales/Footer";
+import { useContext } from "react";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import useDynamicColors from "../../UseDinamicColors";
+import CardNotificaciones from "./CardNotificaicones";
 
 const Notificaciones = () => {
+  const Colors = useDynamicColors();
+  const { user } = useContext(UserContext);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const [recargar, setRecargar] = useState(0);
 
-    const loguearse = () => {
-        signInAnonymously(getAuth()).then(usuario => console.log(usuario));
-    }
+  const recargarComponente = () => {
+    setRecargar((prevRecargar) => prevRecargar + 1);
+  };
 
-    const activarMensajes = async () => {
-        const token = await getToken(messaging, {
-            vapidKey: "BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o"
-        }).catch(error => console.log("Error"));
+  useEffect(() => {
+    const fetchNotificaciones = async () => {
+      try {
+        const response = await fetch(
+          `${process.env?.REACT_APP_BACK_URL}notificaciones/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              ConsumidorId: user.consumidorId,
+            },
+          }
+        );
+        const responseJson = await response.json();
+        setNotificaciones(responseJson.notificaciones);
+        console.log(responseJson);
+      } catch (error) {
+        console.error("Error fetching notificaciones:", error);
+      }
+    };
+    fetchNotificaciones();
+  }, [user.consumidorId, recargar]);
 
-        if (token) console.log("Tu token:", token);
-        if (!token) console.log("No tienes token");
-    }
-    useEffect(() => {
-      const unsubscribe = onMessage(messaging, (message) => {
-        console.log("Tu mensaje", message);
-        toast(message.notification.title);
-      });
+  const styles = {
+    container: {
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      width: "100%",
+      height: "100vh",
+      margin: "0",
+      overflow: "hidden", // Ocultar cualquier scroll en el contenedor principal
+    },
+    content: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      marginLeft: "calc(20%)",
+      marginBottom: "60px",
+      overflowY: "scroll", // Habilitar scroll interno
+      overflowX: "hidden",
+      height: "calc(100vh - 60px)", // Altura dinámica para permitir el scroll sin afectar el footer
+      scrollbarWidth: "none", // Ocultar barra de scroll en Firefox
+      msOverflowStyle: "none", // Ocultar barra de scroll en IE y Edge
+    },
+    hr: {
+      color: Colors.Naranja,
+      border: "1px solid",
+      width: "100%",
+    },
+  };
 
-      return () => {
-        unsubscribe();
-      };
-    }, []);
-
-    return (
-        <div>
-            <h1>Bienvenido</h1>
-            <ToastContainer />
-            <button onClick={loguearse}>Loguearse</button>
-            <button onClick={activarMensajes}>Generar Token</button>
-        </div>
-    );
-}
+  return (
+    <div style={styles.container}>
+      <Sidebar tipoUsuario={user.tipoUsuario} />
+      <div
+        style={styles.content}
+        className="custom-scroll" // Clase CSS opcional
+      >
+        <h2 style={{ color: Colors.TextoClaro, marginTop: "20px" }}>Notificaciones</h2>
+        <hr style={styles.hr} />
+        {notificaciones.length > 0 ? (
+          notificaciones.map((notificacion) => (
+            <CardNotificaciones
+              key={notificacion.id}
+              notificacion={notificacion}
+              recargarComponente={recargarComponente}
+            />
+          ))
+        ) : (
+          <p style={{ color: Colors.Blanco }}>No hay notificaciones.</p>
+        )}
+      </div>
+      <Footer />
+    </div>
+  );
+};
 
 export default Notificaciones;

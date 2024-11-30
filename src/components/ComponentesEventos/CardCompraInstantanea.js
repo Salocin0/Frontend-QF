@@ -1,0 +1,56 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import useDynamicColors from "../../UseDinamicColors";
+
+const CardCompraInstantanea = () => {
+    const Colors = useDynamicColors();
+    const styles = {
+        card: {
+            width: "calc(80% - 40px)", // 70%",
+            height: "30vh", // 30% del alto de la pantalla
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: Colors.GrisAzuladoClaro, // Fondo gris claro
+            borderRadius: "8px",
+            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
+            margin: "20px",
+            marginLeft:"calc(20% + 20px)",
+            border: `1px solid ${Colors.Naranja}`,
+        },
+        content: {
+            textAlign: "center"
+        },
+        icon: {
+            color: Colors.Naranja, // Color del ícono (puedes cambiarlo)
+            marginBottom: "10px",
+        },
+        title: {
+            fontSize: "24px",
+            fontWeight: "bold",
+            marginBottom: "10px"
+        },
+        text: {
+            fontSize: "16px",
+            color: "#666"
+        }
+    };
+
+    return (
+        <div style={styles.card}>
+            <div style={styles.content}>
+                <FontAwesomeIcon 
+                    icon={faShoppingCart} 
+                    size="3x"
+                    style={styles.icon}
+                />
+                <h3 style={styles.title}>Compra Instantánea</h3>
+                <p style={styles.text}>
+                    Comprar en un evento de manera instantánea.
+                </p>
+            </div>
+        </div>
+    );
+}
+
+export default CardCompraInstantanea;

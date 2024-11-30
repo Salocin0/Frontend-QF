@@ -8,17 +8,19 @@ import GraficaLineas from "../GraficaLineas";
 import GraficaTortaProductos from "../GraficaTortaProductos";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import { useContext } from "react";
+import useDynamicColors from "../../../UseDinamicColors";
 
 const PanelEncargado = () => {
-  const {user} = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
 
   return (
-    <div>
-      <div className="d-flex mainFormEventos">
-        <div className="">
+    <div style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro }}>
+      <div className="d-flex mainFormEventos" style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro,marginBottom: "50px" }}>
+        <div className="col-2">
           <Sidebar tipoUsuario={user?.tipoUsuario} />
         </div>
-        <div className="container containerGraficaEncargado">
+        <div className="container containerGraficaEncargado ms-5">
           <div
             className="div1Encargado d-flex"
             style={{ position: "relative" }}
@@ -211,8 +213,8 @@ const PanelEncargado = () => {
               </table>
             </div>
             <div
-              className="graficaTortaEncargado"
-              style={{ marginTop: "125px" }}
+              className="graficaTortaEncargado "
+              style={{ marginTop: "0px" }}
             >
               <GraficaTortaProductos />
             </div>
@@ -222,7 +224,7 @@ const PanelEncargado = () => {
           </div>
         </div>
         <div>
-          <Footer/>
+          <Footer />
         </div>
       </div>
     </div>

@@ -7,16 +7,13 @@ import RegistroRepartidor from "../ComponenteRegister/RegistrarRepartidor";
 import SeleccionRegister from "../ComponenteRegister/SeleccionRegister";
 import AdquirirNuevoRolR from "../ComponenteRepartidor/AdquirirNuevoRolR";
 import AsociarRepartidorAEvento from "../ComponenteRepartidor/AsociarRepartidorAEvento";
-import ConsultarUsuarioR from "../ComponenteRepartidor/ConsultarUsuarioR";
 import FormDinamicoRestricciones from "../ComponenteRepartidor/FormDinamicoRestricciones";
 import AsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
 import Carrito from "../ComponentesCarrito/Carrito";
-import ConsultarUsuario from "../ComponentesConsumidor/ConsultarUsuario";
 import ConsultarUsuarioPrueba from "../ComponentesConsumidor/ConsultarUsuarioPrueba";
 import Notificaciones from "../ComponentesConsumidor/Notificaciones";
 import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
 import AsociacionesEPC from "../ComponentesEPC/AsociacionesEPC";
-import ConsultarUsuarioEPC from "../ComponentesEPC/ConsultarUsuarioEPC";
 import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
 import EventoPrueba from "../ComponentesEventos/EventoPrueba";
 import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
@@ -42,22 +39,19 @@ import ListadoProductoDeshabilitado from "../ComponentesProducto/ListadoProducto
 import ListadoProductoUser from "../ComponentesProducto/ListadoProductoUser";
 import RegistrarProductos from "../ComponentesProducto/RegistrarProductos";
 import AdquirirNuevoRolPE from "../ComponentesProductorDeEventos/AdquirirNuevoRolPE";
-import ConsultarUsuarioPE from "../ComponentesProductorDeEventos/ConsultarUsuarioPE";
 import AsociarPuestoAEvento from "../ComponentesPuesto/AsociarPuestoAEvento";
 import ConsultarPuesto from "../ComponentesPuesto/ConsultarPuesto";
 import ConsultarPuestoSolicitud from "../ComponentesPuesto/ConsultarPuestoSolicitud";
 import CrearNuevoPuesto from "../ComponentesPuesto/CrearPuesto";
-import ListadoPuestos from "../ComponentesPuesto/ListadoPuestos";
 import ListadoPuestosEncargado from "../ComponentesPuesto/ListadoPuestosEncargado";
 import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
 import ListadoPuestosDeshabilitados from "../ComponentesPuesto/PuestoDeshabilitados.js";
 import PanelEncargado from "../PanelesDatos/PanelEncargado/PanelEncargado";
 import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
-import FiltersEventosConsumidor from "../Filtros y Buscadores/filtersEventosConsumidor";
 import DocumentUpload from "./DocumentUpload";
 import Inicio from "./Inicio";
-import PruebasToast from "./PruebaToast";
 import Sidebar from "./Sidebar";
+import Preventa from "../ComponentesEventos/Preventa";
 
 
 export const Main = () => {
@@ -98,41 +92,27 @@ export const Main = () => {
         <Route path="/listado-eventos-productor" element={<ListadoEventosProductor />} />
         <Route path="/ver-solicitudes-evento/:evento" element={<VerSolicitudesEvento/>} />
         <Route path="/registrar-evento2" element={<RegistrarEvento2 />} />
-        {/*nuevos estilos por aplicar*/}
-        <Route path="/grafica-encargado" element={<PanelEncargado/>} />
         <Route path="/registrar-evento3" element={<RegistrarEvento3 />} />
-        
-
-
+        <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<RegistrarEvento4 />} />
+        <Route path="/grafica-productor" element={<PanelProductor/>} />
+        <Route path="/grafica-encargado" element={<PanelEncargado/>} />
+        <Route path="/tipo-compra/:id" element={<Preventa/>} />
+        {/*nuevos estilos por aplicar*/}
+        <Route path="/puestos-deshabilitados" element={<ListadoPuestosDeshabilitados />} />
         <Route path="/notificaciones" element={<Notificaciones/>}/>
         <Route path="/perfil-nuevo" element={<ConsultarUsuarioPrueba />} />
-        <Route path="/consultar-usuario" element={<ConsultarUsuario />} />
-        <Route path="/filtersEventosConsumidor" element={<FiltersEventosConsumidor/>} />
-        <Route path="/consultar-usuarioPE" element={<ConsultarUsuarioPE />} />
-        <Route path="/consultar-usuarioEPC" element={<ConsultarUsuarioEPC />} />
-        <Route path="/adquierir-nuevo-rolPE/:id" element={<AdquirirNuevoRolPE />} />
-        <Route path="/listado-puestos" element={<ListadoPuestos />} />
-        <Route path="/puestos-deshabilitados" element={<ListadoPuestosDeshabilitados />} />
+        
         <Route path="/info-puesto/:id" element={<ConsultarPuestoSolicitud />} />
         <Route path="/puesto/:id" element={<ConsultarPuesto />} />
-        <Route path="/consultar-usuarioR" element={<ConsultarUsuarioR />} />
         <Route path="/ser-repartidor" element={<RegistroRepartidor />} />
         <Route path="/ser-productor" element={<RegistroProductor />} />
         <Route path="/ser-encargado" element={<RegistroEncargado />} />
         <Route path="/subir-archivo" element={<DocumentUpload />} />
         <Route path="/producto/:id" element={<ConsultarProducto />} />
-        
         <Route path="/registrar-evento" element={<RegistrarEvento />} />
-        
-        
-        <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<RegistrarEvento4 />} />
         <Route path="/eventoPrueba" element={<EventoPrueba />} />
         <Route path="/evento/:id" element={<ConsultarEvento />} />
         <Route path="/restriccionesEvento/:id" element={<FormDinamicoRestricciones/>} />
-        
-        <Route path="/grafica-productor" element={<PanelProductor/>} />
-        
-        <Route path="/pruebasToast" element={<PruebasToast/>} />
       </Routes>
     </main>
   );
