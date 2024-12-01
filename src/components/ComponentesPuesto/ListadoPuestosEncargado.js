@@ -89,6 +89,7 @@ const ListadoPuestosEncargado = () => {
     divider: {
       color: Colors.Naranja,
       margin: "1rem 0",
+      width: "100%",
     },
     rowContainer: {
       marginBottom: "1rem",

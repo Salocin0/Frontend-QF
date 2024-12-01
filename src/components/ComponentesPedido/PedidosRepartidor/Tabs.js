@@ -21,7 +21,7 @@ const Tabs = ({ activeTab, setActiveTab }) => {
       cursor: "pointer",
       borderRadius: "0.25rem",
       border: `1px solid ${Colors.GrisClaro}`,
-      backgroundColor: Colors.Negro,
+      backgroundColor: Colors.GrisOscuro,
       color: Colors.Blanco,
       fontWeight: "bold",
     },

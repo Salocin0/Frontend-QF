@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
+import React from "react";
 import Sidebar from "../../ComponentesGenerales/Sidebar";
 import Footer from "../../ComponentesGenerales/Footer";
 import { faUpLong, faDownLong } from "@fortawesome/free-solid-svg-icons";
@@ -16,7 +15,9 @@ const PanelEncargado = () => {
 
   return (
     <div style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro }}>
-      <div className="d-flex mainFormEventos" style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro,marginBottom: "50px" }}>
+      <h1 style={{ color: Colors.Naranja, textAlign: "center", marginLeft: "20%", paddingTop: "10px" }}>Estadisticas Productor</h1>
+      <hr style={{ color: Colors.Naranja, width: "100%", paddingBottom: "10px"}}/>
+      <div className="d-flex mainFormEventos" style={{ height: "75vh", backgroundColor:Colors.GrisAzuladoOscuro,marginBottom: "50px" }}>
         <div className="col-2">
           <Sidebar tipoUsuario={user?.tipoUsuario} />
         </div>
@@ -29,10 +30,25 @@ const PanelEncargado = () => {
               className="ps-3 pb-3"
               style={{ position: "absolute", bottom: 0, left: 0 }}
             >
+
+<select
+                name=""
+                id=""
+                style={{
+                  borderRadius: "5px",
+                  backgroundColor: "#5E35B1",
+                  border: "none",
+                  color: "white",
+                  width: "70%",
+                }}
+              >
+                <option value="">Cosquin Rock</option>
+                <option value="">Festival de Villa Maria</option>
+              </select>
               <h1 style={{ color: "white" }}>$725.300</h1>
               <p>
                 <strong style={{ color: "white" }}>
-                  Total Generado con QuickFood
+                  Total Recaudado en Evento
                 </strong>
               </p>
             </div>
@@ -51,38 +67,26 @@ const PanelEncargado = () => {
                   backgroundColor: "#1E88E5",
                   border: "none",
                   color: "white",
-                  width: "70%",
+                  width: "100%",
                 }}
               >
-                <option value="">Conquin Rock</option>
-                <option value="">Festival de Villa Maria</option>
+                <option value="">Taco Fiesta</option>
+                <option value="">Taco Fiesta</option>
               </select>
-            </div>
-            <div
-              className="pt-3 pe-3"
-              style={{ position: "absolute", top: 0, right: 0 }}
-            >
-              <button className="btn btn-sm" style={{ color: "white" }}>
-                Dinero
-              </button>
-              <button
-                className="btn btn-sm"
-                style={{ backgroundColor: "#1a73c1", color: "white" }}
-              >
-                Pedidos
-              </button>
             </div>
 
             <div
               className="ps-3 pb-3"
               style={{ position: "absolute", bottom: 0, left: 0 }}
             >
-              <h1 style={{ color: "white" }}>133</h1>
+              <h1 style={{ color: "white" }}>4.2/5</h1>
               <p>
                 <strong style={{ color: "white" }}>
-                  Ventas totales en el evento
+                  Valoracion Promedio
                 </strong>
               </p>
+
+              <button style={{ backgroundColor: "#1E88E5", color: "white", border:"none", padding:"2px", borderRadius:"5px"}}>Ver Valoraciones</button>
             </div>
           </div>
 
@@ -101,8 +105,8 @@ const PanelEncargado = () => {
                   color: "white",
                 }}
               >
-                <option value="">Puesto 1</option>
-                <option value="">Puesto 2</option>
+                <option value="">Taco Fiesta</option>
+                <option value="">Taco Fiesta</option>
               </select>
             </div>
             <div

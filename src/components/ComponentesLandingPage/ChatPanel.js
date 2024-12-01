@@ -14,7 +14,7 @@ const Panel = ({ onClose, position, bottom,right,top,left }) => {
       width: "400px",
       height: "auto",
       backgroundColor: Colors.GrisAzuladoOscuro,
-      border: `2px solid ${Colors.Rosa}`,
+      border: `2px solid ${Colors.Naranja}`,
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
       zIndex: 1000,
       boxSizing: "border-box",

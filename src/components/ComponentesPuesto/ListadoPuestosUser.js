@@ -1,8 +1,6 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState, useContext } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
-import "./../sass/main.scss";
 import PuestoUser from "./PuestoUser";
 import { useParams } from "react-router-dom";
 import useDynamicColors from "../../UseDinamicColors";
@@ -42,7 +40,7 @@ const ListadoPuestosUser = () => {
         setFilteredCarritos(data.data); // Inicialmente todos los carritos están filtrados
       })
       .catch((error) => console.log("No existen carritos."));
-  }, [user]);
+  }, [user,idEvento]);
 
   useEffect(() => {
     fetch(`${process.env?.REACT_APP_BACK_URL}evento/${idEvento}`, {
@@ -54,7 +52,7 @@ const ListadoPuestosUser = () => {
         console.log("evento",data.data);
       })
       .catch((error) => console.log("No existen eventos."));
-  }, []);
+  });
 
   // Filtrar carritos cuando cambien los filtros
   useEffect(() => {

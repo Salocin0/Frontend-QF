@@ -1,5 +1,4 @@
-import { default as React, useContext, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleInfo,
@@ -11,12 +10,10 @@ import {
   faStar,
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
-import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 
 const Pedido = ({ pedido,recargar }) => {
-  const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const [opinion, setOpinion] = useState("");
   const [repartidorRating, setRepartidorRating] = useState(1);
@@ -67,8 +64,6 @@ const Pedido = ({ pedido,recargar }) => {
       console.error("Error al cancelar el pedido:", error);
     }
   };
-
-  const handleSolicitarPedido = async () => {};
 
   const handleValorarPedido = async () => {
     const valoracion = {

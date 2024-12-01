@@ -7,11 +7,9 @@ import Footer from "../ComponentesGenerales/Footer";
 import useDynamicColors from "../../UseDinamicColors";
 import FiltersEventosConsumidor from "../Filtros y Buscadores/filtersEventosConsumidor";
 import Buscador from "../Filtros y Buscadores/BuscadorEventosConsumidor";
-import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ListadoEventosUsers = () => {
-  const navigate = useNavigate();
   const Colors = useDynamicColors();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
@@ -135,7 +133,7 @@ const ListadoEventosUsers = () => {
     header: {
       display: "flex",
       justifyContent: "center",
-      color: "#fff",
+      color: Colors.Naranja,
     },
     title: {
       paddingTop: "10px",

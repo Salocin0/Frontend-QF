@@ -34,7 +34,7 @@ const Login = () => {
 
   useEffect(() => {
     activarMensajes();
-  }, []);
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();

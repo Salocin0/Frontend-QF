@@ -1,9 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useParams } from "react-router-dom";
 import useDynamicColors from "../../UseDinamicColors";
 import { Link } from "react-router-dom";
@@ -135,7 +134,7 @@ const HabilitarUsuario = () => {
                 onChange={handleEmailcompletoChange}
               />
               <div className="d-flex justify-content-between mt-3">
-              <Link style={styles.buttonBack} to={"/login"}>
+                <Link style={styles.buttonBack} to={"/login"}>
                   Volver
                 </Link>
                 <button style={styles.button} onClick={handleEnviarCodigo}>

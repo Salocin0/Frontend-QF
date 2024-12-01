@@ -31,7 +31,7 @@ const Preventa = () => {
         })
         .catch((error) => console.log("No existen eventos.", error));
     }
-  }, [user]);
+  }, [user,id]);
 
   const irACompraInstantanea = () => {
     if (evento.estado !== "EnCurso") {

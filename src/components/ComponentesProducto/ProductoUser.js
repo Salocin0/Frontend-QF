@@ -74,13 +74,19 @@ const ProductoUser = ({ producto, user, selectedDay }) => {
       justifyContent: "center",
       alingItems: "center",
     },
+    containerbtn:{
+      display: "flex",
+      justifyContent: "center",
+      alingItems: "center",
+      flexDirection: "column",
+    },
     price: {
       fontSize: "24px",
       fontWeight: "bold",
       color: Colors.Negro,
       display: "flex",
       marginTop: "auto",
-      marginBottom: "auto",
+      marginBottom: "20px",
     },
     button: {
       backgroundColor: Colors.Verde,
@@ -89,7 +95,6 @@ const ProductoUser = ({ producto, user, selectedDay }) => {
       padding: "10px 20px",
       borderRadius: "10px",
       cursor: "pointer",
-      marginLeft: "50px",
     },
     buttonIcon: {
       fontSize: "20px",
@@ -115,11 +120,15 @@ const ProductoUser = ({ producto, user, selectedDay }) => {
           <div>
             <p style={styles.description}>{producto?.descripcion}</p>
           </div>
-          <div style={styles.priceAndButtonContainer}>
-            <h4 style={styles.price}>$ {producto?.precio}</h4>
-            <button style={styles.button} onClick={handleAddtocart}>
-              <i className="bi bi-cart-plus" style={styles.buttonIcon}></i>
-            </button>
+          <div style={styles.containerbtn}>
+            <div style={styles.priceAndButtonContainer}>
+              <h4 style={styles.price}>$ {producto?.precio}</h4>
+            </div>
+            <div style={styles.priceAndButtonContainer}>
+              <button style={styles.button} onClick={handleAddtocart}>
+                Agregar a carrito
+              </button>
+            </div>
           </div>
         </div>
       </div>

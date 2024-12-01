@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -255,7 +255,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
             <th style={styles.tableData}>Nombre</th>
             <th style={styles.tableData}>Precio</th>
             <th style={styles.tableData}>Cantidad</th>
-            <th style={styles.tableActions}>Acciones</th>
+            <th style={styles.tableData}>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -269,13 +269,13 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
                   style={{ ...styles.button, ...styles.successButton }}
                   onClick={() => quitarDelCarrito(item)}
                 >
-                  - 1
+                  Quitar
                 </button>
                 <button
                   style={{ ...styles.button, ...styles.successButton }}
                   onClick={() => agregarAlCarrito(item)}
                 >
-                  + 1
+                  Agregar
                 </button>
                 <button
                   style={{ ...styles.button, ...styles.dangerButton }}

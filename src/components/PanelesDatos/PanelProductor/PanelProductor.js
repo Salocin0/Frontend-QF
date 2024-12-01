@@ -1,7 +1,4 @@
-import React, { useContext, useState } from "react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import ReactECharts from "echarts-for-react";
+import React, { useContext } from "react";
 import Sidebar from "../../ComponentesGenerales/Sidebar";
 import Footer from "../../ComponentesGenerales/Footer";
 import { faUpLong, faDownLong } from "@fortawesome/free-solid-svg-icons";
@@ -16,16 +13,23 @@ const PanelProductor = () => {
   const Colors = useDynamicColors()
   return (
     <div style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro }}>
-      <div className="d-flex mainFormEventos h-100" style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro,marginBottom: "50px" }}>
+      <h1 style={{ color: Colors.Naranja, textAlign: "center", marginLeft: "20%", paddingTop: "10px" }}>Estadisticas Productor</h1>
+      <hr style={{ color: Colors.Naranja, width: "100%", paddingBottom: "10px"}}/>
+      <div className="d-flex mainFormEventos" style={{ height: "75vh", backgroundColor:Colors.GrisAzuladoOscuro,marginBottom: "50px" }}>
+      
         <div className="col-2">
           <Sidebar tipoUsuario={user?.tipoUsuario} />
         </div>
+        
         <div className="container containerGraficaProductor ms-5">
+        
           <div className="div1productor d-flex" style={{ position: "relative" }}>
+          
             <div
               className="ps-3 pb-3"
               style={{ position: "absolute", bottom: 0, left: 0 }}
             >
+              <button style={{backgroundColor: "#7F53D8", color: "white",border:"none",padding:"5px",borderRadius:"5px"}}>Ver por puesto</button>
               <h1 style={{ color: "white" }}>$3.000.000</h1>
               <p>
                 <strong style={{ color: "white" }}>
@@ -50,7 +54,8 @@ const PanelProductor = () => {
                   color: "white",
                 }}
               >
-                <option value="">Conquin Rock</option>
+                <option value="">Todos</option>
+                <option value="">Cosquin Rock</option>
                 <option value="">Festival de Villa Maria</option>
               </select>
             </div>
@@ -59,25 +64,16 @@ const PanelProductor = () => {
               className="pt-3 pe-3"
               style={{ position: "absolute", top: 0, right: 0 }}
             >
-              <button className="btn btn-sm" style={{ color: "white" }}>
-                Dinero
-              </button>
-              <button
-                className="btn btn-sm"
-                style={{ backgroundColor: "#1a73c1", color: "white" }}
-              >
-                Pedidos
-              </button>
             </div>
 
             <div
               className="ps-3 pb-3"
               style={{ position: "absolute", bottom: 0, left: 0 }}
             >
-              <h1 style={{ color: "white" }}>684</h1>
+              <h1 style={{ color: "white" }}>3.5/5</h1>
               <p>
                 <strong style={{ color: "white" }}>
-                  Ventas totales en el evento
+                  Valoracion promedio en mis eventos
                 </strong>
               </p>
             </div>

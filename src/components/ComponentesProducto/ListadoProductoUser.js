@@ -1,6 +1,6 @@
 import banner from "../ComponentesProducto/banner.jpg";
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Footer from "../ComponentesGenerales/Footer";
 import ProductoUser from "./ProductoUser";
@@ -8,7 +8,9 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import BuscadorProductoConsumidor from "../Filtros y Buscadores/BuscadorProductoConsumidor";
+import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import { useLocation } from "react-router-dom";
 
 const ListadoProductoUser = () => {
   const { id } = useParams();
@@ -26,6 +28,7 @@ const ListadoProductoUser = () => {
   ];
   const location = useLocation();
   const selectedDay = location.state?.selectedDay || null;
+  console.log(selectedDay);
 
   useEffect(() => {
     if (user) {
@@ -44,7 +47,7 @@ const ListadoProductoUser = () => {
         })
         .catch((error) => console.log("No existen productos.", error));
     }
-  }, [user]);
+  }, [user,id]);
 
   useEffect(() => {
     if (user) {
@@ -57,8 +60,9 @@ const ListadoProductoUser = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
     }
-  }, [user]);
+  }, [user,id]);
 
+  // Maneja el filtro de productos
   const handleSearch = (searchTerm) => {
     const filtered = productos.filter(
       (producto) =>
@@ -74,19 +78,28 @@ const ListadoProductoUser = () => {
       flexDirection: "row",
       margin: "0",
       padding: "0",
-      height: "100vh",
+      Height: "100vh",
       backgroundColor: Colors.GrisAzuladoOscuro,
-      overflow: "hidden",
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
+      "::-webkit-scrollbar": {
+        display: "none",
+      },
+      overflowY: "scroll", 
     },
     sidebar: {
       width: "20%",
+      padding: "0",
+      boxSizing: "border-box",
     },
     mainContent: {
       width: "80%",
+      padding: "0",
+
     },
     banner: {
       backgroundImage: `url(${banner})`,
-      height: "150px",
+      height: "120px",
       backgroundSize: "100%",
       backgroundRepeat: "no-repeat",
       display: "flex",
@@ -108,21 +121,25 @@ const ListadoProductoUser = () => {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      overflowY: "scroll",
-      height: "calc(100vh - 200px)",
-      paddingBottom: "40px",
+      padding: "0",
+      paddingBottom: "60px",
+      // Mantiene el desplazamiento
+      height: "calc(100vh - 200px)", // Altura ajustada para limitar el scroll
       scrollbarWidth: "none",
       msOverflowStyle: "none",
       "::-webkit-scrollbar": {
         display: "none",
       },
+      overflowY: "scroll", 
     },
     productCard: {
+      height: "100%",
       width: "100%",
       display: "flex",
       flexWrap: "wrap",
       justifyContent: "space-between",
       gap: "10px",
+      boxSizing: "border-box",
     },
     noProductsMessage: {
       textAlign: "center",
@@ -136,18 +153,24 @@ const ListadoProductoUser = () => {
     buscador: {
       width: "15%",
       position: "absolute",
-      top: "170px",
+      top: "140px",
       right: "2%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
-      zIndex: 2,
+      height: "fit-content",
+      boxSizing: "border-box",
+      zIndex: 2, // Asegura que se mantenga visible
     },
     boton: {
       width: "100%",
+      position: "absolute",
+      bottom: "-65px",
+      right: "0%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
       backgroundColor: Colors.Naranja,
       padding: "10px",
+      color: Colors.Blanco,
     },
   };
 
@@ -167,12 +190,15 @@ const ListadoProductoUser = () => {
         <div style={styles.banner}>
           <h1 style={styles.bannerText}>{puesto?.nombreCarro}</h1>
         </div>
-        <Breadcrumb items={breadcrumbItems} />
+        <div>
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
+
         <div style={styles.productsContainer}>
           {Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
             filteredProductos.map((producto, index) => (
               <div key={index} style={styles.productCard}>
-                <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} />
+                <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay}/>
               </div>
             ))
           ) : (

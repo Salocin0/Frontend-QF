@@ -13,7 +13,7 @@ const ProcesoRegistro = () => {
   const [step, setStep] = useState(1);
   const [userData, setUserData] = useState({});
   const [consumidorData, setConsumidorData] = useState({});
-  const [repartidorData, setRepartidorData] = useState({});
+  const [, setRepartidorData] = useState({});
   const [encargadoData, setEncargadoData] = useState({});
   const [productorData, setProductorData] = useState({});
   const [registrar, setRegistrar] = useState(false);
@@ -119,6 +119,7 @@ const ProcesoRegistro = () => {
           navigate(`/`);
         });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [registrar]);
 
   // eslint-disable-next-line default-case

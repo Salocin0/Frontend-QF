@@ -1,4 +1,3 @@
-import { format } from "date-fns";
 import { default as React, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -12,11 +11,11 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   const [isConfirmado, setIsConfirmado] = useState(false);
   const [isEnCurso, setIsEnCurso] = useState(false);
   const [isPausado, setIsPausado] = useState(false);
-  const [isCancelado, setIsCancelado] = useState(false);
-  const [isFinalizado, setIsFinalizado] = useState(false);
-  const [isProcesoDeCreacion1, setIsProcesoDeCreacion1] = useState(false);
-  const [isProcesoDeCreacion2, setIsProcesoDeCreacion2] = useState(false);
-  const [isProcesoDeCreacion3, setIsProcesoDeCreacion3] = useState(false);
+  const [, setIsCancelado] = useState(false);
+  const [, setIsFinalizado] = useState(false);
+  const [, setIsProcesoDeCreacion1] = useState(false);
+  const [, setIsProcesoDeCreacion2] = useState(false);
+  const [, setIsProcesoDeCreacion3] = useState(false);
   const [recargar, setRecargar] = useState(0);
   console.log(evento);
 
@@ -68,6 +67,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
 
   useEffect(() => {
     handleActualizarEstado();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [evento, recargar]);
 
   const confirmarEvento = () => {
@@ -132,12 +132,12 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       .catch((error) => toast.error("Error al confirmar evento"));
   };
 
-  const continuarPreparacion1 = () => {
+  /*const continuarPreparacion1 = () => {
     const eventoId = evento.id;
     navigate(`/registrar-evento3`, { state: { eventoId } });
-  };
+  };*/
 
-  const continuarPreparacion2 = () => {
+  /*const continuarPreparacion2 = () => {
     const eventoId = evento.id;
 
     // Hacer la solicitud al backend para obtener la cantidad de días del evento
@@ -160,9 +160,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         );
         toast.error("Error al confirmar evento");
       });
-  };
-
-  const continuarPreparacion3 = () => {};
+  };*/
 
   const pausarEvento = () => {
     fetch(
@@ -174,21 +172,6 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       .then((response) => response.json())
       .then(() => {
         toast.success("Evento Pausado con éxito");
-        handleRecargar();
-      })
-      .catch((error) => toast.error("Error al confirmar evento"));
-  };
-
-  const reprogramarEvento = () => {
-    fetch(
-      `${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/reprogramarEvento`,
-      {
-        method: "POST",
-      }
-    )
-      .then((response) => response.json())
-      .then(() => {
-        toast.success("Evento Reprogramado con éxito");
         handleRecargar();
       })
       .catch((error) => toast.error("Error al confirmar evento"));
@@ -208,9 +191,11 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       padding: "20px",
       gap: "20px",
       marginBottom: "20px",
+      border: `1px solid ${Colors.Naranja}`,
     },
     card: {
       display: "flex",
+      
     },
     imageContainer: {
       disolay: "flex",

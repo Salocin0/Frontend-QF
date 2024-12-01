@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import userImageURL from "../user-img.png";
 import botImageURL from "../bot-img.png";
-import logoURL from "../quickfood-logo.png";
 import useDynamicColors from "../../UseDinamicColors";
 import "./../ComponenteRegister/placeholder.css";
 import { useContext } from "react";
@@ -9,7 +8,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const Chatbot = () => {
   const Colors = useDynamicColors();
-  const { user, updateUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [messages, setMessages] = useState([]);
   console.log(user);
   const styles = {
@@ -25,13 +24,13 @@ const Chatbot = () => {
       backgroundColor: Colors.GrisAzulado,
       textAlign: "center",
       padding: "20px 0",
-      borderBottom: `5px solid ${Colors.Rosa}`,
+      borderBottom: `5px solid ${Colors.Naranja}`,
       borderRadius: "20px",
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
     },
     headerTitle: {
       margin: 0,
-      color: Colors.Rosa,
+      color: Colors.Naranja,
       fontSize: "1.5em",
     },
     chatContainer: {
@@ -45,7 +44,7 @@ const Chatbot = () => {
     chatBox: {
       height: "250px",
       overflowY: "auto",
-      border: `2px solid ${Colors.Rosa}`,
+      border: `2px solid ${Colors.Naranja}`,
       padding: "10px",
       marginBottom: "20px",
       backgroundColor: Colors.GrisAzuladoOscuro,
@@ -94,7 +93,7 @@ const Chatbot = () => {
     chatInput: {
       flex: 1,
       padding: "10px",
-      border: `2px solid ${Colors.Rosa}`,
+      border: `2px solid ${Colors.Naranja}`,
       borderRadius: "20px",
       backgroundColor: Colors.GrisAzuladoOscuro,
       color: Colors.BlancoEnBlanco,
@@ -102,7 +101,7 @@ const Chatbot = () => {
     },
     sendBtn: {
       padding: "10px 20px",
-      backgroundColor: Colors.Rosa,
+      backgroundColor: Colors.Naranja,
       color: "white",
       border: "none",
       borderRadius: "20px",
@@ -114,13 +113,13 @@ const Chatbot = () => {
       padding: "15px 0",
       backgroundColor: Colors.GrisAzuladoOscuro,
       fontSize: "1em",
-      borderTop: `5px solid ${Colors.Rosa}`,
+      borderTop: `5px solid ${Colors.Naranja}`,
       borderRadius: "20px",
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
       colors: Colors.BlancoEnBlanco,
     },
     footerLink: {
-      color: Colors.Rosa,
+      color: Colors.Naranja,
       textDecoration: "none",
       cursor: "pointer",
     },
@@ -167,7 +166,7 @@ const Chatbot = () => {
         },
       ]);
     }
-  }, [user, user.nombre]); // Run when `isLoggedIn` or `user.nombre` changes
+  }, [MenssageLogin, MenssageRegister, user, user.nombre]); // Run when `isLoggedIn` or `user.nombre` changes
   const chatInputRef = useRef(null);
   const chatBoxRef = useRef(null);
 
@@ -184,7 +183,7 @@ const Chatbot = () => {
     return () => {
       chatInput.removeEventListener("keypress", handleKeyPress);
     };
-  }, []);
+  });
 
   const sendMessage = () => {
     const chatInput = chatInputRef.current;
@@ -292,11 +291,11 @@ const Chatbot = () => {
       <footer style={styles.footer}>
         <p style={styles.text}>&copy; 2024 QuickFood. All rights reserved.</p>
         <p>
-          <a href="#" style={styles.footerLink}>
+          <a href="www.google.com" target="_blank" style={styles.footerLink}>
             Privacy Policy
           </a>{" "}
           |{" "}
-          <a href="#" style={styles.footerLink}>
+          <a href="www.google.com" target="_blank" style={styles.footerLink}>
             Terms of Service
           </a>
         </p>

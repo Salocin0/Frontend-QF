@@ -169,7 +169,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
     },
     buttonGroup: {
       display: "flex",
-      justifyContent: "space-around",
+      justifyContent: "center",
       marginTop: "1rem",
     },
     buttonInfo: {

@@ -8,7 +8,7 @@ import imgDefault from "../img/logoevento.webp";
 const EventoRepartidor = ({ evento, recargar }) => {
   const navigate = useNavigate();
   const Colors = useDynamicColors();
-  const [isEnPreparacion, setIsEnPreparacion] = useState(
+  const [isEnPreparacion,] = useState(
     evento.estado === "EnPreparacion"
   );
   const [tieneAsociacionPendiente, setTieneAsociacionPendiente] =
@@ -100,6 +100,9 @@ const EventoRepartidor = ({ evento, recargar }) => {
       padding: "10px 20px",
       borderRadius: "5px",
       cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
     },
     cardTextYellow: {
       fontSize: "0.9rem",
@@ -149,7 +152,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
       if (response.status === 404) {
         asociarmeAEvento(evento.id);
       } else if (response.status === 200) {
-        const responseData = await response.json();
+        //const responseData = await response.json();
         handleCrearForm();
       } else {
         console.error(`Error: ${response.status}`);
@@ -215,7 +218,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
           </div>
           <hr style={styles.hr}/>
           <div style={styles.mt2}>
-            <div>
+            <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
               {!tieneAsociacionPendiente && isEnPreparacion && (
                 <button
                   style={styles.btnSuccess}

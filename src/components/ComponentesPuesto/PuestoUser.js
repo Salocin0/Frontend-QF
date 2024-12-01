@@ -1,5 +1,3 @@
-import { default as React, useState } from "react";
-import { Link } from "react-router-dom";
 import imgDefault from "./../img/puestoLogoDefault.jpg";
 import useDynamicColors from "../../UseDinamicColors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
