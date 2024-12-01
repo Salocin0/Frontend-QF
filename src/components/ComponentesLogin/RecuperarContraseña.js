@@ -54,7 +54,7 @@ const RecuperarContraseña = () => {
     card: {
       borderRadius: "10px",
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: Colors.GrisAzuladoOscuro,
     },
     cardBody: {
       textAlign: "center",
@@ -79,7 +79,7 @@ const RecuperarContraseña = () => {
       borderRadius: "5px",
     },
     buttonBack: {
-      backgroundColor: Colors.Gris,
+      backgroundColor: Colors.GrisOscuro,
       color: Colors.BlancoEnBlanco,
       border: "none",
       padding: "0.5rem",

@@ -50,7 +50,7 @@ const UserProfile = ({ haveRol }) => {
       display: "none",
       padding: "0.5rem 0",
       marginTop: "0.125rem",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: Colors.GrisAzuladoOscuro,
       border:
         Colors.Blanco === "#fff"
           ? "1px solid rgba(0,0,0,0.60)"

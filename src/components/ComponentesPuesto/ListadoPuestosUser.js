@@ -178,7 +178,7 @@ const ListadoPuestosUser = () => {
     filtro: {
       width: "15%",
       position: "absolute",
-      top: "240px",
+      top: "230px",
       right: "2%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
@@ -188,7 +188,7 @@ const ListadoPuestosUser = () => {
     buscador: {
       width: "15%",
       position: "absolute",
-      top: "100px",
+      top: "90px",
       right: "2%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",

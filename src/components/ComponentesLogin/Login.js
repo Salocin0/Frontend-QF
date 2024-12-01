@@ -63,15 +63,15 @@ const Login = () => {
       padding: "2rem",
       borderRadius: "8px",
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: Colors.GrisAzuladoOscuro,
       textAlign: "center",
-      border: `1px solid ${Colors.Gris}`,
+      border: `1px solid ${Colors.Naranja}`,
     },
     titleStyle: {
       fontSize: "1.5rem",
       fontWeight: "bold",
       marginBottom: "1rem",
-      color: Colors.GrisOscuro,
+      color: Colors.Blanco,
     },
     subtitleStyle: {
       fontSize: "0.875rem",
@@ -94,7 +94,6 @@ const Login = () => {
       padding: "0.75rem",
       fontSize: "1rem",
       borderRadius: "4px",
-      border: `1px solid ${Colors.Gris}`,
     },
     buttonStyle: {
       width: "100%",

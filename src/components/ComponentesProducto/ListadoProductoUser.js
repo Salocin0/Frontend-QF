@@ -1,6 +1,6 @@
 import banner from "../ComponentesProducto/banner.jpg";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Footer from "../ComponentesGenerales/Footer";
 import ProductoUser from "./ProductoUser";
@@ -8,9 +8,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import BuscadorProductoConsumidor from "../Filtros y Buscadores/BuscadorProductoConsumidor";
-import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import { useLocation } from "react-router-dom";
 
 const ListadoProductoUser = () => {
   const { id } = useParams();
@@ -28,7 +26,6 @@ const ListadoProductoUser = () => {
   ];
   const location = useLocation();
   const selectedDay = location.state?.selectedDay || null;
-  console.log(selectedDay);
 
   useEffect(() => {
     if (user) {
@@ -62,7 +59,6 @@ const ListadoProductoUser = () => {
     }
   }, [user]);
 
-  // Maneja el filtro de productos
   const handleSearch = (searchTerm) => {
     const filtered = productos.filter(
       (producto) =>
@@ -78,17 +74,15 @@ const ListadoProductoUser = () => {
       flexDirection: "row",
       margin: "0",
       padding: "0",
-      minHeight: "100vh",
+      height: "100vh",
       backgroundColor: Colors.GrisAzuladoOscuro,
+      overflow: "hidden",
     },
     sidebar: {
       width: "20%",
-      padding: "0",
-      boxSizing: "border-box",
     },
     mainContent: {
       width: "80%",
-      padding: "0",
     },
     banner: {
       backgroundImage: `url(${banner})`,
@@ -114,21 +108,21 @@ const ListadoProductoUser = () => {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      padding: "0",
-      overflowY: "scroll", // Mantiene el desplazamiento
-      height: "calc(100vh - 200px)", // Altura ajustada para limitar el scroll
-      scrollbarWidth: "none", // Oculta barra en Firefox
-      msOverflowStyle: "none", // Oculta barra en IE y Edge
-      paddingBottom: "20px",
+      overflowY: "scroll",
+      height: "calc(100vh - 200px)",
+      paddingBottom: "40px",
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
+      "::-webkit-scrollbar": {
+        display: "none",
+      },
     },
     productCard: {
-      height: "100%",
       width: "100%",
       display: "flex",
       flexWrap: "wrap",
       justifyContent: "space-between",
       gap: "10px",
-      boxSizing: "border-box",
     },
     noProductsMessage: {
       textAlign: "center",
@@ -146,15 +140,10 @@ const ListadoProductoUser = () => {
       right: "2%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
-      height: "fit-content",
-      boxSizing: "border-box",
-      zIndex: 2, // Asegura que se mantenga visible
+      zIndex: 2,
     },
     boton: {
       width: "100%",
-      position: "absolute",
-      bottom: "-65px",
-      right: "0%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
       backgroundColor: Colors.Naranja,
@@ -178,15 +167,12 @@ const ListadoProductoUser = () => {
         <div style={styles.banner}>
           <h1 style={styles.bannerText}>{puesto?.nombreCarro}</h1>
         </div>
-        <div>
-          <Breadcrumb items={breadcrumbItems} />
-        </div>
-
+        <Breadcrumb items={breadcrumbItems} />
         <div style={styles.productsContainer}>
           {Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
             filteredProductos.map((producto, index) => (
               <div key={index} style={styles.productCard}>
-                <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay}/>
+                <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} />
               </div>
             ))
           ) : (

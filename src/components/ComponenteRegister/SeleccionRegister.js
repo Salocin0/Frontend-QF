@@ -12,10 +12,8 @@ import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import "./../sass/main.scss";
 import useDynamicColors from "../../UseDinamicColors";
-import { useNavigate } from "react-router-dom";
 
 const SeleccionRegister = () => {
-  const navigate = useNavigate();
   const Colors = useDynamicColors();
   const [selectedType, setSelectedType] = useState("consumidor");
 
@@ -50,7 +48,7 @@ const SeleccionRegister = () => {
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       textAlign: "center",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: Colors.GrisAzuladoOscuro,
     },
     cardHeader: {
       backgroundColor: Colors.Naranja,
@@ -107,7 +105,7 @@ const SeleccionRegister = () => {
       borderRadius: "5px",
       marginTop: "0.5rem",
       padding: "0.2rem 0.2rem",
-      backgroundColor: Colors.Gris,
+      backgroundColor: Colors.GrisOscuro,
     },
     nextButton: {
       backgroundColor: Colors.Azul,

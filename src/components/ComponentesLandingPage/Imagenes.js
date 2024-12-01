@@ -12,7 +12,7 @@ const Imagenes = () => {
       justifyContent: "center",
       flexDirection: "column",
       padding: "2rem 0", 
-      backgroundColor: Colors.GrisAzulado,
+      backgroundColor: Colors.GrisAzuladoClaro,
     },
     titleContainer: {
       textAlign: "center",

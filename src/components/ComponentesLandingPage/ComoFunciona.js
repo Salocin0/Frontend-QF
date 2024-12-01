@@ -9,7 +9,7 @@ const ComoFunciona = () => {
   const styles = {
     comofunciona: {
       height: "100%",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: Colors.GrisAzuladoOscuro,
     },
     row: {
       height: "100%",

@@ -176,7 +176,7 @@ const Pedido = ({ pedido,recargar }) => {
     },
     buttonGroup: {
       display: "flex",
-      justifyContent: "space-around",
+      justifyContent: "center",
       marginTop: "1rem",
     },
     buttonInfo: {
@@ -331,7 +331,6 @@ const Pedido = ({ pedido,recargar }) => {
                     pedido?.repartidore?.consumidore?.apellido || "Alberto"}
                 </h5>
               )}
-
               {pedido.estado === "EnCamino" && (
                 <h5 style={styles.cardSubTitle}>
                   <FontAwesomeIcon icon={faLocationPin} />

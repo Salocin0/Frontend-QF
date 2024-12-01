@@ -82,6 +82,7 @@ const ListadoPedidos = () => {
     },
     contentCol: {
       padding: 0,
+      
     },
     tituloSeccion: {
       display: "flex",
@@ -105,7 +106,7 @@ const ListadoPedidos = () => {
     },
     pedidosWrapper: {
       paddingTop: "0.5rem",
-      paddingBottom: "1rem",
+      paddingBottom: "1.5rem",
       width: "100%",
       margin: "0 2% 0 6%",
       overflowY: "scroll",

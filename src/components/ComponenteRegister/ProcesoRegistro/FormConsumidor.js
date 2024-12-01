@@ -171,7 +171,7 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario }) => 
     },
     card: {
       borderRadius: "8px",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: Colors.GrisAzuladoOscuro,
     },
     cardHeader: {
       backgroundColor: Colors.Naranja,

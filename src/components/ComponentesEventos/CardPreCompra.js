@@ -51,6 +51,7 @@ const CardPreCompra = ({ evento }) => {
       height: "55vh",
       marginLeft: "calc(20% + 20px)",
       border: `1px solid ${Colors.Naranja}`,
+
     },
     icon: {
       color: Colors.Naranja,
@@ -120,38 +121,50 @@ const CardPreCompra = ({ evento }) => {
 
   return (
     <div style={styles.card}>
-      <FontAwesomeIcon icon={faCalendarAlt} size="3x" style={styles.icon} />
-      <h2 style={styles.title}>PreCompra</h2>
-      <p style={styles.description}>
-        Seleccione una fecha disponible para la precompra.
-      </p>
+      {evento.tienePreventa ? (
+        <>
+          <FontAwesomeIcon icon={faCalendarAlt} size="3x" style={styles.icon} />
+          <h2 style={styles.title}>PreCompra</h2>
+          <p style={styles.description}>
+            Seleccione una fecha disponible para la precompra.
+          </p>
 
-      <div style={styles.dayGrid}>
-        {availableDays.map((dia, index) => {
-          const isDisabled = new Date(dia) <= currentDate;
-          return (
-            <div
-              key={index}
-              onClick={() => !isDisabled && handleSelectDay(dia)}
-              style={{
-                ...styles.dayItem,
-                ...(isDisabled ? styles.disabledDay : {}),
-                ...(selectedDay === dia ? styles.activeDay : {}),
-              }}
-            >
-              {new Date(dia).toLocaleDateString()}
+            <div style={styles.dayGrid}>
+              {availableDays.map((dia, index) => {
+                const isDisabled = new Date(dia) <= currentDate;
+                return (
+                  <div
+                    key={index}
+                    onClick={() => !isDisabled && handleSelectDay(dia)}
+                    style={{
+                      ...styles.dayItem,
+                      ...(isDisabled ? styles.disabledDay : {}),
+                      ...(selectedDay === dia ? styles.activeDay : {}),
+                    }}
+                  >
+                    {new Date(dia).toLocaleDateString()}
+                  </div>
+                );
+              })}
             </div>
-          );
-        })}
-      </div>
 
-      <button
-        onClick={handleNext}
-        style={styles.button}
-        disabled={!selectedDay}
-      >
-        Siguiente
-      </button>
+          <button
+            onClick={handleNext}
+            style={styles.button}
+            disabled={!selectedDay}
+          >
+            Siguiente
+          </button>
+        </>
+      ) : (
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", height: "100%"}}>
+          <FontAwesomeIcon icon={faCalendarAlt} size="3x" style={styles.icon} />
+          <h2 style={styles.title}>Precompra no disponible</h2>
+          <p style={styles.description}>
+            Precompra no disponible en este evento.
+          </p>
+        </div>
+      )}
 
       {/* Modal de advertencia */}
       <Modal show={showModal} onHide={handleCloseModal} centered>

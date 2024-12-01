@@ -63,10 +63,6 @@ const ListadoEventosUsers = () => {
     setLoanding(true);
   }, [user]);
 
-  const handleVolver = (e) => {
-    navigate(`/inicio`);
-  };
-
   const generateRows = (eventosList) => {
     const totalEventos = Math.ceil(eventosList.length / 4) * 4;
     const eventosConNulos = [
@@ -189,7 +185,7 @@ const ListadoEventosUsers = () => {
     filtro: {
       width: "15%",
       position: "absolute",
-      top: "240px",
+      top: "230px",
       right: "2%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
@@ -199,7 +195,7 @@ const ListadoEventosUsers = () => {
     buscador: {
       width: "15%",
       position: "absolute",
-      top: "100px",
+      top: "90px",
       right: "2%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",

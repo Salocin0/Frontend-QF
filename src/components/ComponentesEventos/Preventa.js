@@ -7,6 +7,8 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useParams } from "react-router-dom";
 import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify"; // Importa Toastify
+
 const Preventa = () => {
   const [evento, setEvento] = useState([]);
   const { user } = useContext(UserContext);
@@ -32,8 +34,13 @@ const Preventa = () => {
   }, [user]);
 
   const irACompraInstantanea = () => {
-    console.log(evento.id);
-    navigate(`/listado-puestos/${evento.id}`);
+    if (evento.estado !== "EnCurso") {
+      // Muestra un toast si el evento no está en estado "EnCurso"
+      toast.error("El evento todavía no ha comenzado.");
+    } else {
+      console.log(evento.id);
+      navigate(`/listado-puestos/${evento.id}`);
+    }
   };
 
   const styles = {

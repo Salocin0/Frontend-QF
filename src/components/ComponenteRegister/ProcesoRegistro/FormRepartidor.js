@@ -41,7 +41,7 @@ const FormRepartidor = ({ nextStep, backStep, handleRegistro }) => {
       maxWidth: "600px",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: Colors.GrisAzuladoOscuro,
     },
     title: {
       backgroundColor: Colors.Naranja,

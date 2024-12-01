@@ -6,11 +6,12 @@ const Breadcrumb = ({ items }) => {
   const Colors = useDynamicColors();
   const styles = {
     breadcrumbContainer: {
-      margin: '20px 30px',
+      margin: '10px 30px',
       backgroundColor: Colors.GrisAzuladoClaro,
       width: '75%',
       padding: '10px 20px',
-      borderRadius: '5px',
+      marginTop: '0px',
+      borderRadius: '10px',
       border: `1px solid ${Colors.Naranja}`,
     },
     breadcrumb: {

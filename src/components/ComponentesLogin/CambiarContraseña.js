@@ -69,7 +69,7 @@ const CambiarContraseña = () => {
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
       maxWidth: "600px",
       width: "100%",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: Colors.GrisAzuladoOscuro,
     },
     cardBody: {
       textAlign: "center",
@@ -106,7 +106,7 @@ const CambiarContraseña = () => {
       marginTop: "1rem",
     },
     buttonBack: {
-      backgroundColor: Colors.Gris,
+      backgroundColor: Colors.GrisOscuro,
       color: Colors.BlancoEnBlanco,
       padding: "0.5rem 1rem",
       cursor: "pointer",
@@ -119,9 +119,6 @@ const CambiarContraseña = () => {
       padding: "0.5rem 1rem",
       cursor: "pointer",
       borderRadius: "5px",
-    },
-    buttonSubmitHover: {
-      backgroundColor: "#333",
     },
     form: {
       padding: "20px",

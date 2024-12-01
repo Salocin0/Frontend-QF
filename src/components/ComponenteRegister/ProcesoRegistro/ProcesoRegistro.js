@@ -115,7 +115,7 @@ const ProcesoRegistro = () => {
         })
         .catch((error) => {
           console.error("Error en la solicitud:", error);
-          toast.error("Error al registrar. Por favor, vuelva a intentar.");
+          //toast.error("Error al registrar. Por favor, vuelva a intentar.");
           navigate(`/`);
         });
     }

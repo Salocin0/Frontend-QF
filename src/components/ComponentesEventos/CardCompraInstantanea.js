@@ -2,11 +2,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import useDynamicColors from "../../UseDinamicColors";
 
-const CardCompraInstantanea = () => {
+const CardCompraInstantanea = ({ evento }) => {
     const Colors = useDynamicColors();
+
+    // Verificamos el estado del evento
+    const eventStatus = evento?.estado; // Asumiendo que 'evento' tiene un atributo 'estado'
+
+    // Definir el mensaje de acuerdo al estado del evento
+    const eventMessage = eventStatus !== "EnCurso"
+        ? "El evento todavía no ha comenzado."
+        : "Comprar en un evento de manera instantánea.";
+
     const styles = {
         card: {
-            width: "calc(80% - 40px)", // 70%",
+            width: "calc(80% - 40px)", // 70%
             height: "30vh", // 30% del alto de la pantalla
             display: "flex",
             justifyContent: "center",
@@ -33,7 +42,7 @@ const CardCompraInstantanea = () => {
         },
         text: {
             fontSize: "16px",
-            color: "#666"
+            color: Colors.Blanco
         }
     };
 
@@ -47,7 +56,7 @@ const CardCompraInstantanea = () => {
                 />
                 <h3 style={styles.title}>Compra Instantánea</h3>
                 <p style={styles.text}>
-                    Comprar en un evento de manera instantánea.
+                    {eventMessage}
                 </p>
             </div>
         </div>
