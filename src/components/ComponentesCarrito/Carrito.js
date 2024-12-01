@@ -4,10 +4,6 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import PaymentSheet from "./PaymentSheet";
-import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 
 const Carrito = () => {
   const [carrito, setCarrito] = useState([]);
@@ -15,8 +11,8 @@ const Carrito = () => {
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
   const Colors = useDynamicColors();
-  
-  
+  console.log(carrito);
+
   const recargarComponente = () => {
     setRecargar((prevRecargar) => prevRecargar + 1);
   };
@@ -44,19 +40,28 @@ const Carrito = () => {
     }
   }, [user, recargar]);
 
-  const agruparProductosPorPuesto = (productos) => {
+  const agruparProductosPorPuestoYFecha = (productos) => {
     const productosAgrupados = {};
+
     productos?.forEach((item) => {
       const puestoId = item.puestoId;
+      const fechaKey = item.fecha ? `conFecha-${item.fecha}` : "sinFecha";
+
       if (!productosAgrupados[puestoId]) {
-        productosAgrupados[puestoId] = [];
+        productosAgrupados[puestoId] = {};
       }
-      productosAgrupados[puestoId].push(item);
+
+      if (!productosAgrupados[puestoId][fechaKey]) {
+        productosAgrupados[puestoId][fechaKey] = [];
+      }
+
+      productosAgrupados[puestoId][fechaKey].push(item);
     });
+
     return productosAgrupados;
   };
 
-  const productosAgrupados = agruparProductosPorPuesto(productos);
+  const productosAgrupados = agruparProductosPorPuestoYFecha(productos);
 
   const styles = {
     container: {
@@ -85,7 +90,7 @@ const Carrito = () => {
       paddingTop: "0.5rem",
     },
     sectionTitleNegative: {
-      color: Colors.Naranja, 
+      color: Colors.Naranja,
       textAlign: "center",
     },
     separator: {
@@ -117,14 +122,21 @@ const Carrito = () => {
         <hr style={styles.separator} />
         <div style={styles.productContainer}>
           <div style={styles.productList}>
-            {Object.values(productosAgrupados).length > 0 ? (
-              Object.values(productosAgrupados).map((productos, index) => (
-                <RenderizarTarjeta
-                  key={index}
-                  productos={productos}
-                  recargarComponente={recargarComponente}
-                />
-              ))
+            {Object.keys(productosAgrupados).length > 0 ? (
+              Object.entries(productosAgrupados).map(([puestoId, grupos]) =>
+                Object.entries(grupos).map(([fechaKey, productos], index) => (
+                  <RenderizarTarjeta
+                    key={`${puestoId}-${fechaKey}-${index}`}
+                    productos={productos}
+                    titulo={
+                      fechaKey.startsWith("conFecha")
+                        ? `Fecha: ${productos[0]?.fecha}`
+                        : "Productos sin fecha"
+                    }
+                    recargarComponente={recargarComponente}
+                  />
+                ))
+              )
             ) : (
               <h2 style={styles.sectionTitleNegative}>
                 No hay productos en el carrito

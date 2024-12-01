@@ -1,18 +1,23 @@
 import { default as React } from "react";
 import { toast } from "react-toastify";
-import productoDefecto from "./../img/productoDefecto.png"
+import productoDefecto from "./../img/productoDefecto.png";
 import useDynamicColors from "../../UseDinamicColors";
 
-const ProductoUser = ({ producto, user }) => {
+const ProductoUser = ({ producto, user, selectedDay }) => {
   const Colors = useDynamicColors();
   const handleAddtocart = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
+    headers.append("Content-Type", "application/json");
 
-    fetch(`${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${producto.id}`, {
-      method: "PUT",
-      headers: headers,
-    })
+    fetch(
+      `${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${producto.id}`,
+      {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify({ fecha: selectedDay }),
+      }
+    )
       .then((response) => {
         if (response.ok) {
           toast.success("Se agregó un producto al carrito: " + producto.nombre);
@@ -48,7 +53,7 @@ const ProductoUser = ({ producto, user }) => {
       width: "100%",
       padding: "15px",
       display: "flex",
-      flexDirection: "column", 
+      flexDirection: "column",
       justifyContent: "center",
     },
     title: {
@@ -76,7 +81,6 @@ const ProductoUser = ({ producto, user }) => {
       display: "flex",
       marginTop: "auto",
       marginBottom: "auto",
-      
     },
     button: {
       backgroundColor: Colors.Verde,
@@ -90,10 +94,10 @@ const ProductoUser = ({ producto, user }) => {
     buttonIcon: {
       fontSize: "20px",
     },
-    card:{
+    card: {
       display: "flex",
       flexDirection: "row",
-    }
+    },
   };
   console.log(producto);
   return (

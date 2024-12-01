@@ -13,6 +13,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const [isOpen, setIsOpen] = useState(false);
+  console.log(productos);
   const quitarDelCarrito = (producto) => {
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
@@ -83,6 +84,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       consumidorId: user.consumidorId,
       total: calcularTotal(productos),
       puestoId: productos[0].puestoId,
+      precompra: productos[0]?.fecha
     };
 
     fetch(`${process.env?.REACT_APP_BACK_URL}pedido`, {
@@ -142,11 +144,13 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       borderRadius: "8px",
       backgroundColor: Colors.GrisAzuladoClaro,
       margin: "20px",
+      position: "relative",
     },
     cardTitle: {
       fontSize: "18px",
       fontWeight: "bold",
       color: Colors.Naranja,
+      paddingBottom: "8px",
     },
     table: {
       width: "100%",
@@ -219,15 +223,32 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
     actionButtons: {
       textAlign: "right",
     },
+    preventaText: {
+      fontSize: "16px",
+      color: Colors.Blanco,
+      display: "flex",
+      position: "absolute",
+      top: "10px",
+      right: "15px",
+      padding: "5px 10px",
+      borderRadius: "5px",
+      backgroundColor: Colors.Naranja,
+    },
   };
 
   const handleCloseDialog = () => {
     setIsOpen(false);
   };
 
+  const obtenerTextoPreventa = () => {
+    const fechaPreventa = productos[0]?.fecha;
+    return fechaPreventa ? `Preventa para ${new Date(fechaPreventa).toLocaleDateString("es")}` : "Compra inmediata";
+  };
+
   return (
     <div key={productos?.puestoId} style={styles.card}>
       <h3 style={styles.cardTitle}>Puesto {productos[0]?.puestoId}</h3>
+      <span style={styles.preventaText}>{obtenerTextoPreventa()}</span>
       <table style={styles.table}>
         <thead>
           <tr style={styles.tableHeader}>

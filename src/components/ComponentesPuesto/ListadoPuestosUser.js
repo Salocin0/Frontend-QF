@@ -10,6 +10,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import FiltersPuestosConsumidor from "../Filtros y Buscadores/filtersPuestosConsumidor";
 import BuscadorPuestosConsumidor from "../Filtros y Buscadores/BuscadorPuestosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import { useLocation } from "react-router-dom";
 
 const ListadoPuestosUser = () => {
   const Colors = useDynamicColors();
@@ -27,6 +28,8 @@ const ListadoPuestosUser = () => {
     { title: "Eventos", url: "/Listado-eventos" },
     { title: "Puestos", url: `/listado-puestos/${idEvento}` },
   ];
+  const location = useLocation();
+  const selectedDay = location.state?.selectedDay || null;
 
   // Obtener datos iniciales
   useEffect(() => {
@@ -228,7 +231,7 @@ const ListadoPuestosUser = () => {
                       style={{ marginBottom: "10px", width: "100%" }}
                     >
                       {carrito !== null ? (
-                        <PuestoUser carrito={carrito} />
+                        <PuestoUser carrito={carrito} selectedDay={selectedDay} />
                       ) : null}
                     </div>
                   ))}

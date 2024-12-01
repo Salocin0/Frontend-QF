@@ -14,9 +14,10 @@ const CardCompraInstantanea = () => {
             backgroundColor: Colors.GrisAzuladoClaro, // Fondo gris claro
             borderRadius: "8px",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            margin: "20px",
+            marginBottom: "20px",
             marginLeft:"calc(20% + 20px)",
             border: `1px solid ${Colors.Naranja}`,
+            cursor: "pointer"
         },
         content: {
             textAlign: "center"

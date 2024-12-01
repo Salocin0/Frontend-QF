@@ -150,7 +150,7 @@ const EventoUser = ({ evento }) => {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <Link to={`/listado-puestos/${evento.id}`} style={styles.cardLink}>
+        <Link to={`/tipo-compra/${evento.id}`} style={styles.cardLink}>
           <div style={styles.cardBody}>
             <div>
               <img

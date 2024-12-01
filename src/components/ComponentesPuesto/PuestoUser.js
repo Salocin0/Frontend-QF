@@ -4,10 +4,14 @@ import imgDefault from "./../img/puestoLogoDefault.jpg";
 import useDynamicColors from "../../UseDinamicColors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faStar } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 
-const PuestoUser = ({ carrito }) => {
+const PuestoUser = ({ carrito, selectedDay }) => {
   const Color = useDynamicColors();
-  console.log(carrito);
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/productos-puesto/${carrito?.id}`, { state: { selectedDay } });
+  };
   const styles = {
     cardLink: {
       textDecoration: "none",
@@ -79,7 +83,7 @@ const PuestoUser = ({ carrito }) => {
   };
 
   return (
-    <Link to={`/productos-puesto/${carrito?.id}`} style={styles.cardLink}>
+    <div onClick={() => handleClick()} style={styles.cardLink}>
       <div style={styles.card}>
         <img
           src={carrito?.img || imgDefault}
@@ -90,16 +94,18 @@ const PuestoUser = ({ carrito }) => {
           <p style={styles.title}>{carrito.nombreCarro}</p>
           <p style={styles.descripcion}>{carrito.tipoNegocio}</p>
           <div style={styles.iconWrapper}>
-              <FontAwesomeIcon icon={faClock} />
-              <span style={styles.iconText}>{carrito?.tiempoEntrega || " 30 min"}</span>
-            </div>
-            <div style={styles.iconWrapper}>
-              <FontAwesomeIcon icon={faStar} />
-              <span style={styles.iconText}>{carrito?.estrellas || " 4.5"}</span>
-            </div>
+            <FontAwesomeIcon icon={faClock} />
+            <span style={styles.iconText}>
+              {carrito?.tiempoEntrega || " 30 min"}
+            </span>
+          </div>
+          <div style={styles.iconWrapper}>
+            <FontAwesomeIcon icon={faStar} />
+            <span style={styles.iconText}>{carrito?.estrellas || " 4.5"}</span>
+          </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

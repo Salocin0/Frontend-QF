@@ -10,6 +10,7 @@ import useDynamicColors from "../../UseDinamicColors";
 import BuscadorProductoConsumidor from "../Filtros y Buscadores/BuscadorProductoConsumidor";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import { useLocation } from "react-router-dom";
 
 const ListadoProductoUser = () => {
   const { id } = useParams();
@@ -25,6 +26,9 @@ const ListadoProductoUser = () => {
     { title: "Puestos", url: `/listado-puestos/${id}` },
     { title: "Productos", url: `/productos/${puesto?.id}` },
   ];
+  const location = useLocation();
+  const selectedDay = location.state?.selectedDay || null;
+  console.log(selectedDay);
 
   useEffect(() => {
     if (user) {
@@ -182,7 +186,7 @@ const ListadoProductoUser = () => {
           {Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
             filteredProductos.map((producto, index) => (
               <div key={index} style={styles.productCard}>
-                <ProductoUser producto={producto} user={user} idpuesto={id} />
+                <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay}/>
               </div>
             ))
           ) : (

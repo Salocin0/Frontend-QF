@@ -5,10 +5,14 @@ import Footer from "../ComponentesGenerales/Footer";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useParams } from "react-router-dom";
+import useDynamicColors from "../../UseDinamicColors";
+import { useNavigate } from "react-router-dom";
 const Preventa = () => {
   const [evento, setEvento] = useState([]);
   const { user } = useContext(UserContext);
   const { id } = useParams();
+  const Colors = useDynamicColors();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -27,11 +31,27 @@ const Preventa = () => {
     }
   }, [user]);
 
+  const irACompraInstantanea = () => {
+    console.log(evento.id);
+    navigate(`/listado-puestos/${evento.id}`);
+  };
+
+  const styles = {
+    fondo: {
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      margin: 0,
+      paddingTop: "20px",
+      height: "100vh",
+    },
+  };
+
   return (
-    <div>
+    <div style={styles.fondo}>
       <Sidebar />
-      <CardCompraInstantanea evento={evento} />
-      <CardPreCompra evento={evento}/>
+      <div onClick={() => irACompraInstantanea()}>
+        <CardCompraInstantanea evento={evento} />
+      </div>
+      <CardPreCompra evento={evento} />
       <Footer />
     </div>
   );

@@ -19,6 +19,7 @@ const ListadoEventosUsers = () => {
   const [filteredEventos, setFilteredEventos] = useState([]);
   const { user } = useContext(UserContext);
 
+  
   const [distancia, setDistancia] = useState(100);
   const [nombre, setNombre] = useState("");
   const [preventa, setPreventa] = useState("");
