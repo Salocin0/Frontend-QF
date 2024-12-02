@@ -2,15 +2,13 @@ import React from "react";
 import Chatbot from "./ChatBot";
 import useDynamicColors from "../../UseDinamicColors";
 
-const Panel = ({ onClose, position, bottom,right,top,left }) => {
+const Panel = ({ onClose, position, bottom,right,top,left,isLogin }) => {
   const Colors = useDynamicColors();
   const styles = {
     panel: {
-      position: position || "fixed",
-      bottom: bottom||55,
-      right: right||0,
-      top: top,
-      left: "20%",
+      position: "fixed",
+      bottom: "57px",
+      right: isLogin ? "calc(80% - 400px)": 0,
       width: "400px",
       height: "auto",
       backgroundColor: Colors.GrisAzuladoOscuro,

@@ -91,14 +91,6 @@ const MenuItems = ({
               </span>
             </a>
           </li>
-          <li className="navitem">
-            <a href="/pedidos-Encargado" className="navlink text-truncate">
-              <FontAwesomeIcon icon={faScroll} className="icono" />
-              <span className="ms-1 d-none d-sm-inline w-100">
-                Pedidos en curso
-              </span>
-            </a>
-          </li>
           <hr className="divicionnav" style={{ color: "white", width: "100%" }} />
         </>
       )}
@@ -164,7 +156,7 @@ const MenuItems = ({
         <span onClick={() => handleBotonChat()} className="navlink text-truncate">
           <FontAwesomeIcon icon={faRobot} className="icono" />
           <span className="ms-1 d-none d-sm-inline w-100">
-            ChatBot
+            Foody
           </span>
         </span>
       </li>

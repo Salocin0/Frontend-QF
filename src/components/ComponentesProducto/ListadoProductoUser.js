@@ -28,6 +28,7 @@ const ListadoProductoUser = () => {
   ];
   const location = useLocation();
   const selectedDay = location.state?.selectedDay || null;
+  const evento = location.state?.evento || null;
   console.log(selectedDay);
 
   useEffect(() => {
@@ -198,7 +199,7 @@ const ListadoProductoUser = () => {
           {Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
             filteredProductos.map((producto, index) => (
               <div key={index} style={styles.productCard}>
-                <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay}/>
+                <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} evento={evento}/>
               </div>
             ))
           ) : (

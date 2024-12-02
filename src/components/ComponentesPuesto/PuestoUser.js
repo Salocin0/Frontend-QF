@@ -4,11 +4,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faStar } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 
-const PuestoUser = ({ carrito, selectedDay }) => {
+const PuestoUser = ({ carrito, selectedDay,evento }) => {
   const Color = useDynamicColors();
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate(`/productos-puesto/${carrito?.id}`, { state: { selectedDay } });
+    navigate(`/productos-puesto/${carrito?.id}`, { state: { selectedDay,evento } });
   };
   const styles = {
     cardLink: {

@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 
-const RenderizarTarjeta = ({ productos, recargarComponente }) => {
+const RenderizarTarjeta = ({ productos, recargarComponente,evento }) => {
   console.log(productos[0]);
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
@@ -84,7 +84,8 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
       consumidorId: user.consumidorId,
       total: calcularTotal(productos),
       puestoId: productos[0].puestoId,
-      precompra: productos[0]?.fecha
+      precompra: productos[0]?.fecha,
+      eventoId:evento.id
     };
 
     fetch(`${process.env?.REACT_APP_BACK_URL}pedido`, {
@@ -247,7 +248,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente }) => {
 
   return (
     <div key={productos?.puestoId} style={styles.card}>
-      <h3 style={styles.cardTitle}>Puesto {productos[0]?.puestoId}</h3>
+      <h3 style={styles.cardTitle}>Puesto {productos[0]?.puestoId} - {evento?.nombre}</h3>
       <span style={styles.preventaText}>{obtenerTextoPreventa()}</span>
       <table style={styles.table}>
         <thead>

@@ -42,7 +42,7 @@ const initialData = {
   columnOrder: ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'],
 };
 
-const KanbanBoard = () => {
+const KanbanBoard = ({id}) => {
   const [data, setData] = useState(initialData);
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
@@ -59,13 +59,14 @@ const KanbanBoard = () => {
       const headers = new Headers();
       headers.append('ConsumidorId', user.consumidorId);
 
-      fetch(`${process.env?.REACT_APP_BACK_URL}pedido/puesto/`, {
+      fetch(`${process.env?.REACT_APP_BACK_URL}pedido/puesto/${id}`, {
         method: 'GET',
         headers: headers,
       })
         .then((response) => response.json())
         .then((data) => {
           const pedidos = data.data;
+          console.log(id);
           const newTasks = {};
           pedidos.forEach((pedido) => {
             newTasks[`task-${pedido.id}`] = {
@@ -113,7 +114,7 @@ const KanbanBoard = () => {
         })
         .catch((error) => console.log('No existen pedidos.', error));
     }
-  }, [user, recargar]);
+  }, [user, recargar,id]);
 
   const updatePedidoState = (taskId, newColumnId) => {
 

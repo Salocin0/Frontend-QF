@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import productoDefecto from "./../img/productoDefecto.png";
 import useDynamicColors from "../../UseDinamicColors";
 
-const ProductoUser = ({ producto, user, selectedDay }) => {
+const ProductoUser = ({ producto, user, selectedDay,evento }) => {
   const Colors = useDynamicColors();
   const handleAddtocart = () => {
     const headers = new Headers();
@@ -15,7 +15,7 @@ const ProductoUser = ({ producto, user, selectedDay }) => {
       {
         method: "PUT",
         headers: headers,
-        body: JSON.stringify({ fecha: selectedDay }),
+        body: JSON.stringify({ fecha: selectedDay,eventoId:evento.id }),
       }
     )
       .then((response) => {
@@ -33,6 +33,7 @@ const ProductoUser = ({ producto, user, selectedDay }) => {
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
       borderRadius: "10px",
       width: "75%",
+      height: "200px",
       overflow: "hidden",
       backgroundColor: Colors.GrisAzuladoClaro,
       marginBottom: "20px",

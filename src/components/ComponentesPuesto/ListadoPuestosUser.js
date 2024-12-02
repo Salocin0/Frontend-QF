@@ -229,7 +229,7 @@ const ListadoPuestosUser = () => {
                       style={{ marginBottom: "10px", width: "100%" }}
                     >
                       {carrito !== null ? (
-                        <PuestoUser carrito={carrito} selectedDay={selectedDay} />
+                        <PuestoUser carrito={carrito} selectedDay={selectedDay} evento={evento} />
                       ) : null}
                     </div>
                   ))}

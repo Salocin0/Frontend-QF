@@ -62,7 +62,7 @@ const ListadoProducto = ( ) => {
       position: "absolute",
       top: "25px",
       right: "20px",
-      backgroundColor: Colors.Gris,
+      backgroundColor: Colors.GrisOscuro,
       padding: "10px",
       borderRadius: "10px",
       color: Colors.BlancoEnBlanco,

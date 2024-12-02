@@ -105,7 +105,7 @@ const ProcesoRegistro = () => {
           }
         })
         .then((data) => {
-          if (data.status === "success") {
+          if (data.status === "sucess") {
             toast.success("Registro exitoso");
             toast.info("Se envio un email de validacion a su correo");
             navigate(`/login`);
@@ -115,7 +115,8 @@ const ProcesoRegistro = () => {
         })
         .catch((error) => {
           console.error("Error en la solicitud:", error);
-          //toast.error("Error al registrar. Por favor, vuelva a intentar.");
+          toast.error("Error al registrar. Por favor, vuelva a intentar.");
+          //toast.success("Registro exitoso");
           navigate(`/`);
         });
     }

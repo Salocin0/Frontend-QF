@@ -1,4 +1,4 @@
-import { default as React, useState,useEffect } from "react";
+import { default as React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useDynamicColors from "../../UseDinamicColors";
@@ -8,16 +8,18 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
   const navigate = useNavigate();
   const Colors = useDynamicColors();
   const [isCreado, setIsCreado] = useState(carrito.estado === "Creado");
-  const [isDeshabilitado, setIsDeshabilitado] = useState(carrito.estado === "Deshabilitado");
+  const [isDeshabilitado, setIsDeshabilitado] = useState(
+    carrito.estado === "Deshabilitado"
+  );
   const [actualizar, setActualizar] = useState(0);
 
   useEffect(() => {
     setIsCreado(carrito.estado === "Creado");
     setIsDeshabilitado(carrito.estado === "Deshabilitado");
-  }, [carrito,actualizar]);
+  }, [carrito, actualizar]);
 
   const handleactualizar = () => {
-    setActualizar(actualizar+1)
+    setActualizar(actualizar + 1);
     actualizarListado();
   };
 
@@ -65,6 +67,10 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
     navigate(`/listado-productos/${carrito.id}`, { state: carrito });
   };
 
+  const pedidosEnCurso = () => {
+    navigate(`/pedidos-Encargado/${carrito.id}`, { state: carrito });
+  };
+
   const styles = {
     container: {
       width: "90%",
@@ -79,6 +85,10 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       flexDirection: "row",
       alignItems: "center",
       position: "relative",
+    },
+    contenedor: {
+      display: "flex",
+      flexDirection: "column",
     },
     imgContainer: {
       display: "flex",
@@ -146,54 +156,65 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.cardBody}>
-        <div style={styles.imgContainer}>
-          <img
-            src={carrito.img || imgDefault}
-            alt="Logo del Evento"
-            style={styles.img}
-          />
+      <div style={styles.contenedor}>
+        <div style={styles.cardBody}>
+          <div style={styles.imgContainer}>
+            <img
+              src={carrito.img || imgDefault}
+              alt="Logo del Evento"
+              style={styles.img}
+            />
+          </div>
+
+          <div style={styles.detailsContainer}>
+            <h5 style={styles.title}>{carrito.nombreCarro}</h5>
+            <p style={styles.description}>
+              Id de Puesto: {carrito.numeroCarro}
+            </p>
+            <p style={styles.description}>Teléfono: {carrito.telefonoCarro}</p>
+            <p style={styles.estado}>{carrito.estado}</p>
+          </div>
         </div>
-        <div style={styles.detailsContainer}>
-          <h5 style={styles.title}>{carrito.nombreCarro}</h5>
-          <p style={styles.description}>Id de Puesto: {carrito.numeroCarro}</p>
-          <p style={styles.description}>Teléfono: {carrito.telefonoCarro}</p>
-          <p style={styles.estado}>{carrito.estado}</p>
-          <div style={styles.buttonsContainer}>
-            {isCreado && (
-              <button
-                style={{ ...styles.button, ...styles.successButton }}
-                onClick={suscribirPuesto}
-              >
-                Suscribir Puesto a Evento
-              </button>
-            )}
-            {isDeshabilitado && (
-              <button
-                style={{ ...styles.button, ...styles.successButton }}
-                onClick={habilitarPuesto}
-              >
-                Habilitar Puesto
-              </button>
-            )}
+        <div style={styles.buttonsContainer}>
+          {isCreado && (
             <button
               style={{ ...styles.button, ...styles.successButton }}
-              onClick={agregarProducto}
+              onClick={suscribirPuesto}
             >
-              Agregar Productos
+              Suscribir Puesto a Evento
             </button>
-            <button style={{ ...styles.button, ...styles.secondaryButton }}>
-              Editar Puesto
+          )}
+          {isDeshabilitado && (
+            <button
+              style={{ ...styles.button, ...styles.successButton }}
+              onClick={habilitarPuesto}
+            >
+              Habilitar Puesto
             </button>
-            {isCreado && (
-              <button
-                style={{ ...styles.button, ...styles.dangerButton }}
-                onClick={deshabilitarPuesto}
-              >
-                Deshabilitar Puesto
-              </button>
-            )}
-          </div>
+          )}
+          <button
+            style={{ ...styles.button, ...styles.successButton }}
+            onClick={agregarProducto}
+          >
+            Agregar Productos
+          </button>
+          <button
+            style={{ ...styles.button, ...styles.successButton }}
+            onClick={pedidosEnCurso}
+          >
+            Pedidos en curso
+          </button>
+          <button style={{ ...styles.button, ...styles.secondaryButton }}>
+            Editar Puesto
+          </button>
+          {isCreado && (
+            <button
+              style={{ ...styles.button, ...styles.dangerButton }}
+              onClick={deshabilitarPuesto}
+            >
+              Deshabilitar Puesto
+            </button>
+          )}
         </div>
       </div>
     </div>

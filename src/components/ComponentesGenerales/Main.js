@@ -88,7 +88,7 @@ export const Main = () => {
         <Route path="/listado-productos-deshabilitados/:id" element={<ListadoProductoDeshabilitado/>} />
         <Route path="/registrar-productos/:id" element={<RegistrarProductos />}/>
         <Route path="/misAsociacionesEPC" element={<AsociacionesEPC/>} />
-        <Route path="/pedidos-Encargado" element={<ListadoPedidosEncargado/>} />
+        <Route path="/pedidos-Encargado/:id" element={<ListadoPedidosEncargado/>} />
         <Route path="/listado-eventos-productor" element={<ListadoEventosProductor />} />
         <Route path="/ver-solicitudes-evento/:evento" element={<VerSolicitudesEvento/>} />
         <Route path="/registrar-evento2" element={<RegistrarEvento2 />} />

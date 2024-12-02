@@ -57,6 +57,7 @@ const Sidebar = ({ tipoUsuario }) => {
             position="fixed"
             bottom="56px"
             left="306px "
+            isLogin={true}
           />
         )}
         <UserProfile haveRol={haveRol} />

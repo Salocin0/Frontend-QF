@@ -51,7 +51,7 @@ const CardPreCompra = ({ evento }) => {
       height: "55vh",
       marginLeft: "calc(20% + 20px)",
       border: `1px solid ${Colors.Naranja}`,
-
+      position:"relative"
     },
     icon: {
       color: Colors.Naranja,
@@ -98,6 +98,10 @@ const CardPreCompra = ({ evento }) => {
       padding: "10px 20px",
       borderRadius: "5px",
       cursor: "pointer",
+      position: "absolute",
+      bottom: "20px",
+      width: "200px",
+      right: "calc(50% - 100px)",
     },
     modalHeader: {
       backgroundColor: Colors.GrisAzuladoClaro,

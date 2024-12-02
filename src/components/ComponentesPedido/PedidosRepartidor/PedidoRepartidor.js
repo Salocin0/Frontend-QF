@@ -404,7 +404,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
             <div style={styles.dialogButtons}>
               <button
                 style={{ ...styles.dialogButton, ...styles.cancelButton }}
-                onClick={() => setModalDetalleVisible(false)}
+                onClick={() => setModalEntregarVisible(false)}
               >
                 Cancel
               </button>

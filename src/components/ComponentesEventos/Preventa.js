@@ -54,7 +54,7 @@ const Preventa = () => {
 
   return (
     <div style={styles.fondo}>
-      <Sidebar />
+      <Sidebar tipoUsuario={user.tipoUsuario}/>
       <div onClick={() => irACompraInstantanea()}>
         <CardCompraInstantanea evento={evento} />
       </div>

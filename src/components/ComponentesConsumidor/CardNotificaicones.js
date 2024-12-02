@@ -1,9 +1,14 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye } from "@fortawesome/free-solid-svg-icons";
 import useDynamicColors from "../../UseDinamicColors";
+import { useEffect } from "react";
 
 const CardNotificaciones = ({ notificacion, recargarComponente }) => {
   const Colors = useDynamicColors();
+
+  useEffect(() => {
+    setTimeout(() => {
+      marcarComoLeida();
+    },3000)
+  }, []);
 
   const styles = {
     card: {
@@ -96,7 +101,6 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
   return (
     <div style={styles.card}>
       {/* Estado en la esquina superior derecha */}
-      <div style={styles.estado}>{notificacion.estado}</div>
 
       {/* Título de la notificación */}
       <div style={styles.titulo}>{notificacion.titulo}</div>
@@ -114,12 +118,6 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
         <div style={styles.circuloDorado}></div>
       )}
 
-      {/* Botón para marcar como leída solo si no está en estado 'visto' */}
-      {notificacion.estado !== "visto" && (
-        <button style={styles.boton} onClick={marcarComoLeida}>
-          <FontAwesomeIcon icon={faEye} style={styles.icono} />
-        </button>
-      )}
     </div>
   );
 };

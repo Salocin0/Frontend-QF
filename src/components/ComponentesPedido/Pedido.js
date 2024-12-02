@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
+import { toast } from "react-toastify";
 
 const Pedido = ({ pedido,recargar }) => {
   const Colors = useDynamicColors();
@@ -40,6 +41,37 @@ const Pedido = ({ pedido,recargar }) => {
   const handleCancelarPedido = async () => {
     await submitCancelar(pedido.id)
     setModalCancelarVisible(false);
+  };
+
+  const handleSolicitar = () => {
+    console.log(pedido)
+    if(new Date(pedido.fechaPreCompra)<=Date.now()){
+      toast.error(`Pedido Programado para ${new Date(pedido.fechaPreCompra).toLocaleDateString("es")}. no se puede solicitar`)
+    }else{
+      toast.success("Pedido Solicitado")
+      submitAceptar(pedido.id)
+    }
+  //if pedido.fecha
+  }
+
+  const submitAceptar = async (idPedido) => {
+    const url = `${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${idPedido}/aceptar`;
+    try {
+      const response = await fetch(url, {
+        method: "POST", // Método POST
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        console.log(response)
+      }
+      setModalValoracionVisible(false);
+      recargar();
+    } catch (error) {
+      console.error("Error al cancelar el pedido:", error);
+    }
   };
 
   const submitCancelar = async (idPedido) => {
@@ -369,7 +401,7 @@ const Pedido = ({ pedido,recargar }) => {
               </button>
             )}
             {mostrarBotonSolicitar && (
-              <button style={styles.buttonSolicitar} disabled>
+              <button style={styles.buttonSolicitar} onClick={() => handleSolicitar()}>
                 <FontAwesomeIcon icon={faCheck} /> Solicitar
               </button>
             )}

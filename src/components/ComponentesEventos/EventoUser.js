@@ -122,7 +122,7 @@ const EventoUser = ({ evento }) => {
       fontWeight: "bold",
       display: "flex",
       justifyContent: "center",
-      width: "100px",
+      width: "200px",
     },
     fecha: {
       fontSize: "16px",
@@ -133,9 +133,9 @@ const EventoUser = ({ evento }) => {
       position: "absolute",
       top: "10px",
       right: "10px",
-      width: "100px",
+      width: "180px",
     },
-    preventa : {
+    preventa: {
       fontSize: "16px",
       color: Color.Blanco,
       fontWeight: "bold",
@@ -144,7 +144,7 @@ const EventoUser = ({ evento }) => {
       backgroundColor: Color.Naranja,
       display: "flex",
       justifyContent: "center",
-    }
+    },
   };
 
   return (
@@ -161,9 +161,17 @@ const EventoUser = ({ evento }) => {
             </div>
 
             <div style={styles.content}>
-              <div style={styles.estadoContainer}>
-                <p style={styles.estado}>{evento.estado}</p>
-              </div>
+              {evento.estado !== "EnCurso" && (
+                <div style={styles.estadoContainer}>
+                  <p style={styles.estado}>
+                    {evento.estado === "EnCurso"
+                      ? ""
+                      : evento.estado === "Confirmado"
+                      ? "Empieza pronto"
+                      : evento.estado}
+                  </p>
+                </div>
+              )}
               <p style={styles.title}>{evento.nombre}</p>
               <p style={styles.descripcion}>{evento.descripcion}</p>
               <p style={styles.text}>

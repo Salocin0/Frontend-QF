@@ -10,8 +10,9 @@ const Carrito = () => {
   const [productos, setProductos] = useState([]);
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
+  const [evento, setEvento] = useState([]);
   const Colors = useDynamicColors();
-  console.log(carrito);
+  console.log(evento);
 
   const recargarComponente = () => {
     setRecargar((prevRecargar) => prevRecargar + 1);
@@ -39,6 +40,23 @@ const Carrito = () => {
         .catch((error) => console.log("No existen carritos.", error));
     }
   }, [user, recargar]);
+
+  useEffect(() => {
+    if (user) {
+      const headers = new Headers();
+      headers.append("ConsumidorId", user.consumidorId);
+      fetch(`${process.env?.REACT_APP_BACK_URL}evento/${productos[0]?.eventoId}`, {
+        method: "GET",
+        headers: headers,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setEvento(data.data);
+          console.log(data.data);
+        })
+        .catch((error) => console.log("No existen eventos.", error));
+    }
+  }, [productos, user]);
 
   const agruparProductosPorPuestoYFecha = (productos) => {
     const productosAgrupados = {};
@@ -134,6 +152,7 @@ const Carrito = () => {
                         : "Productos sin fecha"
                     }
                     recargarComponente={recargarComponente}
+                    evento={evento}
                   />
                 ))
               )

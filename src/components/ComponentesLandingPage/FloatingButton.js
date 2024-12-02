@@ -16,7 +16,7 @@ const FloatingButton = () => {
       right: '20px',
       borderRadius: '50px',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-      backgroundColor: Colors.Rosa,
+      backgroundColor: Colors.Naranja,
       border: 'none',
       display: 'flex',
       alignItems: 'center',

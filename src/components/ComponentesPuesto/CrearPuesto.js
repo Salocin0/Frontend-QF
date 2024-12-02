@@ -124,6 +124,7 @@ const CrearNuevoCarro = () => {
       border: `1px solid ${Colors.BlancoEnBlanco}`,
       borderRadius: "10px",
       marginBottom: "0.5rem",
+      backgroundColor: Colors.Blanco,
     },
     label: {
       margin: "0",
