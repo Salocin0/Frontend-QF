@@ -131,16 +131,20 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       fontWeight: "bold",
     },
     successButton: {
-      backgroundColor: "green",
-      color: "white",
+      backgroundColor: Colors.Verde,
+      color: Colors.Blanco,
+    },
+    primaryButton: {
+      backgroundColor: Colors.Azul,
+      color: Colors.Blanco,
     },
     secondaryButton: {
-      backgroundColor: "gray",
-      color: "white",
+      backgroundColor: Colors.GrisOscuro,
+      color: Colors.Blanco,
     },
     dangerButton: {
-      backgroundColor: "red",
-      color: "white",
+      backgroundColor: Colors.Rojo,
+      color: Colors.Blanco,
     },
     estado: {
       fontSize: "20px",
@@ -199,7 +203,7 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
             Agregar Productos
           </button>
           <button
-            style={{ ...styles.button, ...styles.successButton }}
+            style={{ ...styles.button, ...styles.primaryButton }}
             onClick={pedidosEnCurso}
           >
             Pedidos en curso
