@@ -1,60 +1,57 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import "./../sass/main.scss";
 import { useNavigate } from "react-router-dom";
+import UserProfileForm from "./FormUserPerfil";
+import EventProducerForm from "./FormEventPerfil";
+import EncargadoPuesto from "./FormEncargadoPerfil";
+import RepartidorComponent from "./FormRepartidorPerfil";
+import useDynamicColors from "../../UseDinamicColors";
 
 const ConsultarUsuario = () => {
   const [showModal, setShowModal] = useState(false);
-
-  const { user } = useContext(UserContext);
-
+  const Colors = useDynamicColors();
+  const { user, updateUser } = useContext(UserContext);
   const [mostrarContenidoProductor, setMostrarContenidoProductor] =
     useState(false);
   const [mostrarContenidoEncargadoPuesto, setMostrarContenidoEncargadoPuesto] =
     useState(false);
   const [mostrarContenidoRepartidor, setMostrarContenidoRepartidor] =
     useState(false);
-
   const [nombreC, setNombreC] = useState("");
   const [apellidoC, setApellidoC] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [dniC, setDniC] = useState("");
   const [localidad, setLocalidad] = useState("");
-  const [localidadC, setLocalidadC] = useState("");
   const [provinciaC, setProvinciaC] = useState("");
-
   const [selectedProvince, setSelectedProvince] = useState("");
-  const [localidadPrueba, setLocalidadPrueba] = useState("");
+  const [, setLocalidadPrueba] = useState("");
   const [filteredLocalidades, setFilteredLocalidades] = useState([]);
   const [provincias, setProvincias] = useState([]);
 
   const [telefono, setTelefono] = useState("");
-  const [telefonoC, setTelefonoC] = useState("");
+  const [, setTelefonoC] = useState("");
 
-  const [cuitR, setCuitR] = useState("");
   const [cuitPE, setCuitPE] = useState("");
   const [cuitEPC, setCuitEPC] = useState("");
 
-  const [razonSocialR, setRazonSocialR] = useState("");
   const [razonSocialEPC, setRazonSocialEPC] = useState("");
   const [condicionEPC, setCondicionEPC] = useState("");
   const [condicionIvaPE, setCondicionPE] = useState("");
 
   const [razonSocialPE, setRazonSocialPE] = useState("");
-  const [documentos, setDocumentos] = useState("");
+  const [, setDocumentos] = useState("");
 
   const [username, setUsername] = useState("");
-  const [usernameC, setUsernameC] = useState("");
+  const [, setUsernameC] = useState("");
 
   const [isDisabled, setIsDisabled] = useState(true);
   const [isDisabledC, setIsDisabledC] = useState(true);
-  const [isDisabledPE, setIsDisabledPE] = useState(true);
-  const [isDisabledEPC, setIsDisabledEPC] = useState(true);
+  const [, setIsDisabledPE] = useState(true);
+  const [, setIsDisabledEPC] = useState(true);
   const [isDisabledR, setIsDisabledR] = useState(true);
 
   const [editMode, setEditMode] = useState(false);
@@ -63,45 +60,14 @@ const ConsultarUsuario = () => {
   const [editModeEPC, setEditModeEPC] = useState(false);
   const [editModeR, setEditModeR] = useState(false);
 
-  const [mostrarBotonHabilitarDeNuevoR, setMostrarBotonHabilitarDeNuevoR] = useState(false);
-  const [mostrarBotonHabilitarDeNuevoEPC, setMostrarBotonHabilitarDeNuevoEPC] = useState(false);
-  const [mostrarBotonHabilitarDeNuevoPE, setMostrarBotonHabilitarDeNuevoPE] = useState(false);
-
-  const [session, setSession] = useState(null);
+  const [mostrarBotonHabilitarDeNuevoR, setMostrarBotonHabilitarDeNuevoR] =
+    useState(false);
+  const [mostrarBotonHabilitarDeNuevoEPC, setMostrarBotonHabilitarDeNuevoEPC] =
+    useState(false);
+  const [mostrarBotonHabilitarDeNuevoPE, setMostrarBotonHabilitarDeNuevoPE] =
+    useState(false);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSession(data.data);
-
-          console.log(data.data.tipoUsuario);
-
-          if (data.data.tipoUsuario === "repartidor")  {
-            setMostrarContenidoRepartidor(true);
-          } else if (data.data.tipoUsuario === "encargado")  {
-            setMostrarContenidoEncargadoPuesto(true);
-          } else if (data.data.tipoUsuario === "productor")  {
-            setMostrarContenidoProductor(true);
-          } else{
-            console.log("Eror");
-          }
-
-        })
-        .catch((error) => console.error("Error fetching session:", error));
-    }
-  }, []);
 
   useEffect(() => {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
@@ -156,10 +122,6 @@ const ConsultarUsuario = () => {
     setApellidoC(e.target.value);
   };
 
-  const handleFechaNacimientoChange = (e) => {
-    setFechaNacimiento(e.target.value);
-  };
-
   const handleFechaNacimientoChangeC = (e) => {
     setFechaNacimiento(e.target.value);
   };
@@ -172,18 +134,6 @@ const ConsultarUsuario = () => {
     setLocalidad(e.target.value);
   };
 
-  const handleLocalidadChangeC = (e) => {
-    setLocalidadC(e.target.value);
-  };
-
-  const handleProvinciaChangeC = (e) => {
-    setProvinciaC(e.target.value);
-  };
-
-  const handleTelefonoChange = (e) => {
-    setTelefono(e.target.value);
-  };
-
   const handleTelefonoChangeC = (e) => {
     setTelefonoC(e.target.value);
   };
@@ -194,10 +144,6 @@ const ConsultarUsuario = () => {
 
   const handleCuitChangeEPC = (e) => {
     setCuitEPC(e.target.value);
-  };
-
-  const handleCuitChangeR = (e) => {
-    setCuitR(e.target.value);
   };
 
   const handleRazonSocialChangePE = (e) => {
@@ -216,24 +162,8 @@ const ConsultarUsuario = () => {
     setCondicionEPC(e.target.value);
   };
 
-  const handleRazonSocialChangeR = (e) => {
-    setRazonSocialR(e.target.value);
-  };
-
-  const handleDocumentosChangePE = (e) => {
-    setDocumentos(e.target.files);
-  };
-
   const handleDocumentosChangeEPC = (e) => {
     setDocumentos(e.target.files);
-  };
-
-  const handleDocumentosChangeR = (e) => {
-    setDocumentos(e.target.files);
-  };
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
   };
 
   const handleUsernameChangeC = (e) => {
@@ -248,7 +178,7 @@ const ConsultarUsuario = () => {
   const handleCancelChangesC = () => {
     setEditModeC(false);
     setIsDisabledC(true);
-    cargarDatos(user); // Volver a cargar los datos originales
+    cargarDatos(user);
   };
 
   const handleSaveChangesC = (e) => {
@@ -313,9 +243,9 @@ const ConsultarUsuario = () => {
 
   const handleEliminarCuenta = async () => {
     try {
-      console.log(session)
+      console.log(user);
       const response = await fetch(
-        `${process.env?.REACT_APP_BACK_URL}user/${session.id}`,
+        `${process.env?.REACT_APP_BACK_URL}user/${user.id}`,
         {
           method: "DELETE",
           headers: {
@@ -344,7 +274,7 @@ const ConsultarUsuario = () => {
   const handleCancelChangesPE = () => {
     setEditModePE(false);
     setIsDisabledPE(true);
-    cargarDatos(user); // Volver a cargar los datos originales
+    cargarDatos(user);
   };
 
   const handleSaveChangesPE = (e) => {
@@ -415,7 +345,7 @@ const ConsultarUsuario = () => {
         setShowModal(false);
         setMostrarContenidoProductor(false);
         setMostrarBotonHabilitarDeNuevoPE(true);
-        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "consumidor" }));
+        updateUser({ user: { ...user, tipoUsuario: "consumidor" } });
         toast.success("Rol deshabilitado correctamente");
         cargarDatos(user);
       } else {
@@ -443,12 +373,10 @@ const ConsultarUsuario = () => {
         setShowModal(false);
         setMostrarContenidoProductor(true);
         setMostrarBotonHabilitarDeNuevoPE(false);
-        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "productor" }));
-
+        updateUser({ user: { ...user, tipoUsuario: "productor" } });
         toast.success("Rol Productor habilitado nuevamente");
 
         cargarDatos(user);
-
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -465,7 +393,7 @@ const ConsultarUsuario = () => {
   const handleCancelChangesEPC = () => {
     setEditModeEPC(false);
     setIsDisabledEPC(true);
-    cargarDatos(user); // Volver a cargar los datos originales
+    cargarDatos(user);
   };
 
   const handleSaveChangesEPC = async (e) => {
@@ -518,7 +446,6 @@ const ConsultarUsuario = () => {
   };
 
   const handleDeshabilitarEPC = async (e) => {
-    // Mostrar el modal de confirmación
     setShowModal(true);
   };
 
@@ -538,10 +465,9 @@ const ConsultarUsuario = () => {
         setShowModal(false);
         setMostrarContenidoEncargadoPuesto(false);
         setMostrarBotonHabilitarDeNuevoEPC(true);
-        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "consumidor" }));
+        updateUser({ user: { ...user, tipoUsuario: "consumidor" } });
         toast.success("Usuario deshabilitado correctamente");
         cargarDatos(user);
-
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -551,7 +477,7 @@ const ConsultarUsuario = () => {
     }
   };
 
- const handleVolverAHabilitarEPC = async () => {
+  const handleVolverAHabilitarEPC = async () => {
     try {
       const response = await fetch(
         `${process.env?.REACT_APP_BACK_URL}encargado/${user.consumidorId}/habilitacion`,
@@ -567,12 +493,10 @@ const ConsultarUsuario = () => {
         setShowModal(false);
         setMostrarContenidoEncargadoPuesto(true);
         setMostrarBotonHabilitarDeNuevoEPC(false);
-        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "encargado" }));
-
+        updateUser({ user: { ...user, tipoUsuario: "encargado" } });
         toast.success("Rol Encargado Puesto habilitado nuevamente");
 
         cargarDatos(user);
-
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -580,18 +504,6 @@ const ConsultarUsuario = () => {
       console.error("Error al habilitar el repartidor nuevamente:", error);
       toast.error("Error al actualizar los datos");
     }
-  };
-
-
-  const handleEditModeToggleR = () => {
-    setEditMode(!editModeR);
-    setIsDisabled(!isDisabledR);
-  };
-
-  const handleCancelChangesR = () => {
-    setEditModeR(false);
-    setIsDisabledR(true);
-    cargarDatos(user); // Volver a cargar los datos originales
   };
 
   const handleSaveChangesR = (e) => {
@@ -619,14 +531,10 @@ const ConsultarUsuario = () => {
         setShowModal(false);
         setMostrarContenidoRepartidor(false);
         setMostrarBotonHabilitarDeNuevoR(true);
-
-        // Cambiar session.tipoUsuario a "consumidor"
-        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "consumidor" }));
-
+        updateUser({ user: { ...user, tipoUsuario: "consumidor" } });
         toast.success("Usuario deshabilitado correctamente");
 
         cargarDatos(user);
-
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -635,7 +543,6 @@ const ConsultarUsuario = () => {
       toast.error("Error al actualizar los datos");
     }
   };
-
 
   const handleVolverAHabilitarR = async () => {
     try {
@@ -652,13 +559,11 @@ const ConsultarUsuario = () => {
       if (response.ok) {
         setShowModal(false);
         setMostrarBotonHabilitarDeNuevoR(false);
-        setSession((prevSession) => ({ ...prevSession, tipoUsuario: "repartidor" }));
-
+        updateUser({ user: { ...user, tipoUsuario: "repartidor" } });
         toast.success("Rol Repartidor habilitado nuevamente");
         setMostrarContenidoRepartidor(true);
 
         cargarDatos(user);
-
       } else {
         throw new Error("Error en la respuesta HTTP");
       }
@@ -700,7 +605,7 @@ const ConsultarUsuario = () => {
 
         setLocalidad(data1.data.localidad);
         setProvinciaC(data1.data.provincia);
-
+        console.log(data1.data.provincia);
         setTelefono(data1.data.telefono);
 
         if (
@@ -727,15 +632,14 @@ const ConsultarUsuario = () => {
           setCuitEPC(data1.data.encargado.cuit);
           setRazonSocialEPC(data1.data.encargado.razonSocial);
           setCondicionEPC(data1.data.encargado.condicionIva);
-        } else if (data1.data.encargado?.habilitado === false){
+        } else if (data1.data.encargado?.habilitado === false) {
           setMostrarBotonHabilitarDeNuevoEPC(true);
-
         }
 
         console.log(data1.data.repartidore?.habilitado);
         if (data1.data.repartidore?.habilitado === false) {
           setMostrarContenidoRepartidor(false);
-          setMostrarBotonHabilitarDeNuevoR(true)
+          setMostrarBotonHabilitarDeNuevoR(true);
         }
 
         if (data1.codigo === 200) {
@@ -751,718 +655,139 @@ const ConsultarUsuario = () => {
     }
   };
 
+  const styles = {
+    background: {
+      display: "flex",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    contentWrapper: { display: "flex", flexDirection: "row", height: "100%" },
+    mainContent: {
+      display: "flex",
+      marginRight:"Calc(25% + 20px)",
+      flexDirection: "column",
+      marginLeft: "calc(20% + 20px)",
+      marginBottom: "20px",
+    },
+    placeholderWrapper: {
+      width: "25%",
+      position: "fixed",
+      top:"0",
+      right:"0",
+      height: "Calc(100vh - 100px)",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      borderRadius: "10px",
+      border: `1px solid ${Colors.Blanco}`,
+      color: Colors.Blanco,
+      margin: "20px",
+      marginLeft: "0px",
+      padding: "20px",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+    },
+    card: {
+      marginBottom: "2rem",
+      marginTop: "20px",
+      display: "flex",
+      flexDirection: "column",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    cardBody: { paddingRight: "20px", marginBottom: "1.5rem" },
+    formWrapper: { width: "100%" },
+  };
+
   return (
-    <div className={`background row`}>
-      <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
-      </div>
-      <div className={`col-10`}>
-        <section
-          className={`form align-items-center justify-content-center col-6 offset-3 mt-0`}
-        >
-          <div className={`shadow-lg card`}>
-            <div className={`formulario card-body mt-3 mb-5`}>
+    <div style={styles.background}>
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
+      <div style={styles.contentWrapper}>
+        <div style={styles.mainContent}>
+          <div style={styles.card}>
+            <div style={styles.cardBody}>
               <form className="needs-validation">
-                <div>
-                  <section
-                    className={`form align-items-center justify-content-center col`}
-                  >
-                    <div className={`card shadow-lg`}>
-                      <div className={`formulario card-body p-3`}>
-                        <div className="row">
-                          <div className="justify-content-start col-6">
-                            <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                              Usuario <p>{session?.tipoUsuario}</p>
-                            </h1>
-                          </div>
-                          <div className="d-flex justify-content-end col-6">
-                            {editModeC ? (
-                              <>
-                                <button
-                                  type="button"
-                                  className=" btn btn-success mr-2"
-                                  onClick={handleSaveChangesCPrueba}
-                                >
-                                  Guardar
-                                </button>
-                                <br />
-                                <button
-                                  type="button"
-                                  className="btn btn-danger"
-                                  onClick={handleCancelChangesC}
-                                >
-                                  Cancelar
-                                </button>
-                              </>
-                            ) : (
-                              <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={handleEditModeToggleC}
-                              >
-                                Editar
-                              </button>
-                            )}
-                          </div>
-                        </div>
-
-                        <form
-                          onSubmit={handleSaveChangesC}
-                          className="needs-validation"
-                        >
-                          <div className="mb-2">
-                            <label
-                              className="mb-2 text-dark"
-                              htmlFor="username"
-                            >
-                              Nombre de Usuario
-                            </label>
-                            <input
-                              type="text"
-                              id="username"
-                              className="form-control"
-                              value={username}
-                              onChange={handleUsernameChangeC}
-                              readOnly={!editModeC}
-                              disabled={isDisabledC}
-                              required
-                            />
-                          </div>
-                          <div className=" mb-2">
-                            <label className="mb-2 text-dark" htmlFor="nombre">
-                              Nombre
-                            </label>
-                            <input
-                              type="text"
-                              id="nombre"
-                              className="form-control"
-                              value={nombreC}
-                              onChange={handleNombreChangeC}
-                              readOnly={!editModeC}
-                              disabled={isDisabledC}
-                              required
-                            />
-                          </div>
-                          <div className=" mb-2">
-                            <label
-                              className="mb-2 text-dark"
-                              htmlFor="apellido"
-                            >
-                              Apellido
-                            </label>
-                            <input
-                              type="text"
-                              id="apellido"
-                              className="form-control"
-                              value={apellidoC}
-                              onChange={handleApellidoChangeC}
-                              readOnly={!editModeC}
-                              disabled={isDisabledC}
-                              required
-                            />
-                          </div>
-                          <div className="mb-2">
-                            <label
-                              className="mb-2 text-dark"
-                              htmlFor="fechaNacimiento"
-                            >
-                              Fecha de Nacimiento
-                            </label>
-                            <input
-                              type="text"
-                              id="fechaNacimiento"
-                              className="form-control"
-                              value={fechaNacimiento}
-                              onChange={handleFechaNacimientoChangeC}
-                              readOnly={!editModeC}
-                              disabled={isDisabledC}
-                              required
-                            />
-                          </div>
-                          <div className="mb-2">
-                            <label className="mb-2 text-dark" htmlFor="dni">
-                              DNI
-                            </label>
-                            <input
-                              type="text"
-                              id="dni"
-                              className="form-control"
-                              value={dniC}
-                              onChange={handleDniChangeC}
-                              readOnly={!editModeC}
-                              disabled={isDisabledC}
-                              required
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label
-                              className="mb-2 text-black"
-                              htmlFor="provincia"
-                            >
-                              Provincia
-                            </label>
-                            <select
-                              id="provincia"
-                              className="form-control"
-                              value={selectedProvince}
-                              onChange={handleProvinceChange}
-                              readOnly={!editModeC}
-                              disabled={isDisabledC}
-                              required
-                            >
-                              <option value="" disabled>
-                                {provinciaC}
-                              </option>
-                              {provincias.map((prov) => (
-                                <option key={prov.id} value={prov.id}>
-                                  {prov.nombre}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-
-                          <div className="mb-3">
-                            <label
-                              className="mb-2 text-black"
-                              htmlFor="localidad"
-                            >
-                              Localidad
-                            </label>
-
-                            <select
-                              className="form-control mt-2"
-                              value={localidad}
-                              onChange={handleLocalidadChange}
-                              readOnly={!editModeC}
-                              disabled={isDisabledC}
-                              required
-                            >
-                              <option value="" disabled>
-                                {localidad}
-                              </option>
-                              {filteredLocalidades.map((loc) => (
-                                <option key={loc.nombre} value={loc.nombre}>
-                                  {loc.nombre}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-
-                          <div className="mb-2">
-                            <label
-                              className="mb-2 text-dark"
-                              htmlFor="telefono"
-                            >
-                              Teléfono
-                            </label>
-                            <input
-                              type="text"
-                              id="telefono"
-                              className="form-control"
-                              value={telefono}
-                              onChange={handleTelefonoChangeC}
-                              readOnly={!editModeC}
-                              disabled={isDisabledC}
-                              required
-                            />
-                          </div>
-                        </form>
-                        <div className="d-flex">
-                          <button
-                            type="button"
-                            className="btn btn-danger mr-2 w-100"
-                            onClick={handleEliminarCuenta}
-                          >
-                            Eliminar mi cuenta
-                          </button>
-                        </div>
-                        <br />
-                        {mostrarBotonHabilitarDeNuevoR && (
-                          <div className="d-flex">
-                            <button
-                              type="button"
-                              className="btn btn-success mr-2 w-100"
-                              onClick={handleVolverAHabilitarR}
-                            >
-                              Volver a habilitarme como 'Repartidor'
-                            </button>
-                          </div>
-                        )}
-                        {mostrarBotonHabilitarDeNuevoEPC && (
-                          <div className="d-flex">
-                            <button
-                              type="button"
-                              className="btn btn-success mr-2 w-100"
-                              onClick={handleVolverAHabilitarEPC}
-                            >
-                              Volver a habilitarme como 'Encargado de Puesto'
-                            </button>
-                          </div>
-                        )}
-                        {mostrarBotonHabilitarDeNuevoPE && (
-                          <div className="d-flex">
-                            <button
-                              type="button"
-                              className="btn btn-success mr-2 w-100"
-                              onClick={handleVolverAHabilitarPE}
-                            >
-                              Volver a habilitarme como 'Productor de Evento'
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    {mostrarContenidoProductor && (
-                      <>
-                        <hr />
-
-                        <section
-                          className={`form align-items-center justify-content-center col`}
-                        >
-                          <div className={`card card shadow-lg`}>
-                            <div
-                              className={`formulario card-body p-3`}
-                            >
-                              <div className="row">
-                                <div className="justify-content-start col-8">
-                                  <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                                    Productor de Eventos
-                                  </h1>
-                                </div>
-                                <div className="d-flex justify-content-end col-4">
-                                  {editModePE ? (
-                                    <>
-                                      <button
-                                        type="button"
-                                        className=" btn btn-success mr-2"
-                                        onClick={handleSaveChangesPEPrueba}
-                                      >
-                                        Guardar
-                                      </button>
-                                      <br />
-                                      <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                        onClick={handleCancelChangesPE}
-                                      >
-                                        Cancelar
-                                      </button>
-                                    </>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      className="btn btn-primary"
-                                      onClick={handleEditModeTogglePE}
-                                    >
-                                      Editar
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-
-                              <form
-                                onSubmit={handleSaveChangesPE}
-                                className="needs-validation"
-                              >
-                                {/* CUIT */}
-                                <div className="mb-2">
-                                  <label
-                                    className="mb-2 text-dark"
-                                    htmlFor="cuit"
-                                  >
-                                    CUIT
-                                  </label>
-                                  <input
-                                    type="number"
-                                    id="cuit"
-                                    className="form-control"
-                                    value={cuitPE}
-                                    onChange={handleCuitChangePE}
-                                    readOnly={!editModePE}
-                                    disabled={!editModePE}
-                                    required
-                                  />
-                                </div>
-                                {/* Razon Social */}
-                                <div className="mb-2">
-                                  <label
-                                    className="mb-2 text-dark"
-                                    htmlFor="razonSocial"
-                                  >
-                                    Razon Social
-                                  </label>
-                                  <input
-                                    type="text"
-                                    id="razonSocial"
-                                    className="form-control"
-                                    value={razonSocialPE}
-                                    onChange={handleRazonSocialChangePE}
-                                    readOnly={!editModePE}
-                                    disabled={!editModePE}
-                                    required
-                                  />
-                                </div>
-                                <div className="mb-2">
-                                  <label
-                                    className="mb-2 text-dark"
-                                    htmlFor="razonSocial"
-                                  >
-                                    Condicion IVA
-                                  </label>
-                                  <input
-                                    type="text"
-                                    id="condicion"
-                                    className="form-control"
-                                    value={condicionIvaPE}
-                                    onChange={handleCondicionPE}
-                                    readOnly={!editModePE}
-                                    disabled={!editModePE}
-                                    required
-                                  />
-                                </div>
-                              </form>
-                              <div className="d-flex">
-                                <button
-                                  type="button"
-                                  className="btn btn-danger mr-2 w-100"
-                                  onClick={handleDeshabilitarPE}
-                                >
-                                  Deshabilitar Usuario
-                                </button>
-                                <Modal
-                                  isOpen={showModal}
-                                  onRequestClose={() => setShowModal(false)}
-                                  contentLabel="Confirmación de deshabilitación"
-                                  style={{
-                                    overlay: {
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                    },
-                                    content: {
-                                      position: "relative",
-                                      top: "auto",
-                                      left: "auto",
-                                      right: "auto",
-                                      bottom: "auto",
-                                      borderRadius: "8px",
-                                      maxWidth: "400px", // Ajusta el ancho máximo aquí
-                                      padding: "20px",
-                                      textAlign: "center", // Centra el contenido del modal
-                                    },
-                                  }}
-                                >
-                                  <h2>
-                                    ¿Está seguro de deshabilitar su cuenta?
-                                  </h2>
-                                  <div className="d-flex justify-content-center">
-                                    <button
-                                      onClick={() => setShowModal(false)}
-                                      className="btn btn-secondary mr-2"
-                                    >
-                                      Cancelar
-                                    </button>
-                                    <button
-                                      onClick={confirmarDeshabilitarPE}
-                                      className="btn btn-danger ml-2"
-                                    >
-                                      Sí, deshabilitar
-                                    </button>
-                                  </div>
-                                </Modal>
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-                      </>
-                    )}
-                    {mostrarContenidoEncargadoPuesto && (
-                      <>
-                        <hr />
-                        <section
-                          className={`form align-items-center justify-content-center col`}
-                        >
-                          <div className={`card shadow-lg`}>
-                            <div
-                              className={`formulario card-body p-3`}
-                            >
-                              <div className="row">
-                                <div className="justify-content-start col-8">
-                                  <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                                    Encargado Puesto de Comida
-                                  </h1>
-                                </div>
-                                <div className="d-flex justify-content-end col-4">
-                                  {editModeEPC ? (
-                                    <>
-                                      <button
-                                        type="button"
-                                        className=" btn btn-success mr-2"
-                                        onClick={handleSaveChangesEPC}
-                                      >
-                                        Guardar
-                                      </button>
-                                      <br />
-                                      <button
-                                        type="button"
-                                        className="btn btn-danger"
-                                        onClick={handleCancelChangesEPC}
-                                      >
-                                        Cancelar
-                                      </button>
-                                    </>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      className="btn btn-primary"
-                                      onClick={handleEditModeToggleEPC}
-                                    >
-                                      Editar
-                                    </button>
-                                  )}
-                                </div>
-                              </div>
-                              <form
-                                onSubmit={handleSaveChangesEPC}
-                                className="needs-validation"
-                              >
-                                {/* CUIT */}
-                                <div className="mb-2">
-                                  <label
-                                    className="mb-2 text-dark"
-                                    htmlFor="cuit"
-                                  >
-                                    CUIT
-                                  </label>
-                                  <input
-                                    type="number"
-                                    id="cuit"
-                                    className="form-control"
-                                    value={cuitEPC}
-                                    onChange={handleCuitChangeEPC}
-                                    readOnly={!editModeEPC}
-                                    disabled={!editModeEPC}
-                                    required
-                                  />
-                                </div>
-                                {/* Razon Social */}
-                                <div className="mb-2">
-                                  <label
-                                    className="mb-2 text-dark"
-                                    htmlFor="razonSocial"
-                                  >
-                                    Razon Social
-                                  </label>
-                                  <input
-                                    type="text"
-                                    id="razonSocial"
-                                    className="form-control"
-                                    value={razonSocialEPC}
-                                    onChange={handleRazonSocialChangeEPC}
-                                    readOnly={!editModeEPC}
-                                    disabled={!editModeEPC}
-                                    required
-                                  />
-                                </div>
-                                <div className="mb-2">
-                                  <label
-                                    className="mb-2 text-dark"
-                                    htmlFor="Condicon"
-                                  >
-                                    Condicion IVA
-                                  </label>
-                                  <input
-                                    type="text"
-                                    id="IVA"
-                                    className="form-control"
-                                    value={condicionEPC}
-                                    onChange={handleCondicionEPC}
-                                    readOnly={!editModeEPC}
-                                    disabled={!editModeEPC}
-                                  />
-                                </div>
-                                {/* Documentos */}
-                                <div className="mb-2">
-                                  <label
-                                    className="mb-2 text-dark"
-                                    htmlFor="documentos"
-                                  >
-                                    Documentos
-                                  </label>
-                                  <input
-                                    type="file"
-                                    id="documentos"
-                                    className="form-control"
-                                    onChange={handleDocumentosChangeEPC}
-                                    readOnly={!editModeEPC}
-                                    disabled={!editModeEPC}
-                                  />
-                                </div>
-                              </form>
-                              <div>
-                                <button
-                                  type="button"
-                                  className="btn btn-danger mr-2 w-100"
-                                  onClick={handleDeshabilitarEPC}
-                                >
-                                  Deshabilitar Usuario
-                                </button>
-                                <Modal
-                                  isOpen={showModal}
-                                  onRequestClose={() => setShowModal(false)}
-                                  contentLabel="Confirmación de deshabilitación"
-                                  style={{
-                                    overlay: {
-                                      display: "flex",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                    },
-                                    content: {
-                                      position: "relative",
-                                      top: "auto",
-                                      left: "auto",
-                                      right: "auto",
-                                      bottom: "auto",
-                                      borderRadius: "8px",
-                                      maxWidth: "400px", // Ajusta el ancho máximo aquí
-                                      padding: "20px",
-                                      textAlign: "center", // Centra el contenido del modal
-                                    },
-                                  }}
-                                >
-                                  <h2>
-                                    ¿Está seguro de deshabilitar su cuenta?
-                                  </h2>
-                                  <div className="d-flex justify-content-center">
-                                    <button
-                                      onClick={() => setShowModal(false)}
-                                      className="btn btn-secondary mr-2"
-                                    >
-                                      Cancelar
-                                    </button>
-                                    <button
-                                      onClick={confirmarDeshabilitarEPC}
-                                      className="btn btn-danger ml-2"
-                                    >
-                                      Sí, deshabilitar
-                                    </button>
-                                  </div>
-                                </Modal>
-                              </div>
-                            </div>
-                          </div>
-                        </section>
-                      </>
-                    )}
-
-                    {mostrarContenidoRepartidor && (
-                      <>
-                        <hr />
-                        <section
-                          className={`form align-items-center justify-content-center col`}
-                        >
-                          <div className={`card card shadow-lg`}>
-                            <div
-                              className={`formulario card-body p-3`}
-                            >
-                              <div className="row">
-                                <div className="justify-content-start col-8">
-                                  <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                                    Repartidor
-                                  </h1>
-                                </div>
-                                <div className="d-flex justify-content-end col-4"></div>
-                              </div>
-
-                              <form
-                                onSubmit={handleSaveChangesR}
-                                className="needs-validation"
-                              >
-                                <div
-                                  className="mb-2 mt-0 text-center"
-                                  style={{
-                                    fontFamily: "Open Sans, sans-serif",
-                                  }}
-                                >
-                                  <label
-                                    className="mb-1 text-dark"
-                                    htmlFor="cuit"
-                                    style={{
-                                      fontSize: "18px", // Tamaño de fuente personalizado
-                                      fontWeight: "bold", // Peso de fuente en negrita
-                                      color: "#333", // Color de texto personalizado
-                                    }}
-                                  >
-                                    Usted actualmente es Repartidor
-                                  </label>
-                                </div>
-
-                                <div className="d-flex">
-                                  <button
-                                    type="button"
-                                    className="btn btn-danger mr-2 w-100"
-                                    onClick={handleDeshabilitarR}
-                                  >
-                                    Deshabilitar Usuario
-                                  </button>
-                                  <Modal
-                                    isOpen={showModal}
-                                    onRequestClose={() => setShowModal(false)}
-                                    contentLabel="Confirmación de deshabilitación"
-                                    style={{
-                                      overlay: {
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                      },
-                                      content: {
-                                        position: "relative",
-                                        top: "auto",
-                                        left: "auto",
-                                        right: "auto",
-                                        bottom: "auto",
-                                        borderRadius: "8px",
-                                        maxWidth: "400px", // Ajusta el ancho máximo aquí
-                                        padding: "20px",
-                                        textAlign: "center", // Centra el contenido del modal
-                                      },
-                                    }}
-                                  >
-                                    <h2>
-                                      ¿Está seguro de deshabilitar su cuenta?
-                                    </h2>
-                                    <div className="d-flex justify-content-center">
-                                      <button
-                                        onClick={() => setShowModal(false)}
-                                        className="btn btn-secondary mr-2"
-                                      >
-                                        Cancelar
-                                      </button>
-                                      <button
-                                        onClick={confirmarDeshabilitarR}
-                                        className="btn btn-danger ml-2"
-                                      >
-                                        Sí, deshabilitar
-                                      </button>
-                                    </div>
-                                  </Modal>
-                                </div>
-                              </form>
-                            </div>
-                          </div>
-                        </section>
-                      </>
-                    )}
-                  </section>
-                </div>
+                <section style={styles.formWrapper}>
+                  <UserProfileForm
+                    username={username}
+                    setUsername={setUsername}
+                    nombreC={nombreC}
+                    setNombreC={setNombreC}
+                    apellidoC={apellidoC}
+                    setApellidoC={setApellidoC}
+                    fechaNacimiento={fechaNacimiento}
+                    setFechaNacimiento={setFechaNacimiento}
+                    dniC={dniC}
+                    setDniC={setDniC}
+                    telefono={telefono}
+                    setTelefono={setTelefono}
+                    selectedProvince={selectedProvince}
+                    setSelectedProvince={setSelectedProvince}
+                    localidad={localidad}
+                    setLocalidad={setLocalidad}
+                    provincias={provincias}
+                    provinciaC={provinciaC}
+                    filteredLocalidades={filteredLocalidades}
+                    editModeC={editModeC}
+                    isDisabledC={isDisabledC}
+                    handleProvinceChange={handleProvinceChange}
+                    handleEditModeToggleC={handleEditModeToggleC}
+                    handleSaveChangesC={handleSaveChangesC}
+                    handleCancelChangesC={handleCancelChangesC}
+                    handleEliminarCuenta={handleEliminarCuenta}
+                    handleVolverAHabilitarR={handleVolverAHabilitarR}
+                    handleVolverAHabilitarEPC={handleVolverAHabilitarEPC}
+                    handleVolverAHabilitarPE={handleVolverAHabilitarPE}
+                  />
+                  <EventProducerForm
+                    mostrarContenidoProductor={mostrarContenidoProductor}
+                    editModePE={editModePE}
+                    handleEditModeTogglePE={handleEditModeTogglePE}
+                    handleSaveChangesPE={handleSaveChangesPE}
+                    handleCancelChangesPE={handleCancelChangesPE}
+                    cuitPE={cuitPE}
+                    handleCuitChangePE={handleCuitChangePE}
+                    razonSocialPE={razonSocialPE}
+                    handleRazonSocialChangePE={handleRazonSocialChangePE}
+                    condicionIvaPE={condicionIvaPE}
+                    handleCondicionPE={handleCondicionPE}
+                    handleDeshabilitarPE={handleDeshabilitarPE}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                    confirmarDeshabilitarPE={confirmarDeshabilitarPE}
+                  />
+                  <EncargadoPuesto
+                    mostrarContenidoEncargadoPuesto={
+                      mostrarContenidoEncargadoPuesto
+                    }
+                    editModeEPC={editModeEPC}
+                    cuitEPC={cuitEPC}
+                    razonSocialEPC={razonSocialEPC}
+                    condicionEPC={condicionEPC}
+                    handleSaveChangesEPC={handleSaveChangesEPC}
+                    handleCancelChangesEPC={handleCancelChangesEPC}
+                    handleEditModeToggleEPC={handleEditModeToggleEPC}
+                    handleCuitChangeEPC={handleCuitChangeEPC}
+                    handleRazonSocialChangeEPC={handleRazonSocialChangeEPC}
+                    handleCondicionEPC={handleCondicionEPC}
+                    handleDeshabilitarEPC={handleDeshabilitarEPC}
+                    confirmarDeshabilitarEPC={confirmarDeshabilitarEPC}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                  />
+                  <RepartidorComponent
+                    mostrarContenidoRepartidor={mostrarContenidoRepartidor}
+                    handleSaveChangesR={handleSaveChangesR}
+                    handleDeshabilitarR={handleDeshabilitarR}
+                    confirmarDeshabilitarR={confirmarDeshabilitarR}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                  />
+                </section>
               </form>
             </div>
           </div>
-        </section>
+        </div>
+        <div style={styles.placeholderWrapper}>
+          <div>Placeholder</div>
+        </div>
       </div>
-      <div style={{ position: "fixed", left: "0", bottom: "0" }}>
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };

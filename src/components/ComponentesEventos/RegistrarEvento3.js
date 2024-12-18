@@ -312,12 +312,14 @@ const RegistrarEvento3 = () => {
       display: "block",
       marginBottom: "0",
       fontWeight: "bold",
+      color: Colors.Negro,
     },
     formInput: {
       width: "100%",
       padding: "0.5rem",
       fontSize: "1rem",
       borderRadius: "10px",
+      color: Colors.NegroEnNegro,
     },
     optionContainerEvento: {
       display: "flex",

@@ -257,7 +257,7 @@ const RegistrarEvento2 = () => {
     formLabel: {
       display: "block",
       fontSize: "1rem",
-      color: Colors.Blanco,
+      color: Colors.Negro,
       margin: "0",
     },
     formInput: {

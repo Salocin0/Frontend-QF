@@ -179,7 +179,7 @@ const RegistrarEvento4 = () => {
       fontSize: "1rem",
       borderRadius: "4px",
       backgroundColor: Colors.Blanco,
-      color: Colors.Negro,
+      color: Colors.NegroEnNegro,
     },
     buttonContainer: {
       display: "flex",
@@ -197,7 +197,7 @@ const RegistrarEvento4 = () => {
       cursor: "pointer",
     },
     buttonSecondary: {
-      backgroundColor: Colors.Gris,
+      backgroundColor: Colors.GrisOscuro,
     },
     cartelExito: {
       position: "fixed",

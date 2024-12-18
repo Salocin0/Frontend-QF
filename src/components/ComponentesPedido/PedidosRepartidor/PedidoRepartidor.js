@@ -26,7 +26,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
 
   const pedidoEntregado = () => {
     if (codigo === pedido.codigoEntrega) {
-      console.log("entregado");
+      console.log("entregado",pedido.codigoEntrega);
       fetch(
         `${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${pedido.id}/pedidoEntregado`,
         {

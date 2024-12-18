@@ -45,7 +45,7 @@ const Pedido = ({ pedido,recargar }) => {
 
   const handleSolicitar = () => {
     console.log(pedido)
-    if(new Date(pedido.fechaPreCompra)<=Date.now()){
+    if(new Date(pedido.fechaPreCompra)>Date.now()){
       toast.error(`Pedido Programado para ${new Date(pedido.fechaPreCompra).toLocaleDateString("es")}. no se puede solicitar`)
     }else{
       toast.success("Pedido Solicitado")
