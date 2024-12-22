@@ -33,7 +33,7 @@ const EncargadoPuesto = ({
       marginTop: "20px",
       backgroundColor: Colors.GrisAzuladoClaro,
       borderRadius: "10px",
-      border: `1px solid ${Colors.Blanco}`,
+      border: `1px solid ${Colors.Naranja}`,
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     },
     form: {

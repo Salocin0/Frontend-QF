@@ -30,7 +30,7 @@ const RepartidorComponent = ({
       marginTop: "20px",
       backgroundColor: Colors.GrisAzuladoClaro,
       padding: "20px",
-      border: `1px solid ${Colors.Blanco}`,
+      border: `1px solid ${Colors.Naranja}`,
     },
     cardBody: {
       padding: "20px",

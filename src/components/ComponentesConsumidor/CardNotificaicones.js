@@ -14,11 +14,11 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
     card: {
       backgroundColor: Colors.GrisAzuladoClaro,
       padding: "20px",
-      margin: "10px 0",
+      margin: "10px 0px",
       borderRadius: "8px",
       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
       color: Colors.Blanco,
-      width: "95%",
+      width: "Calc(100% - 40px)",
       position: "relative",
       border:
         notificacion.estado === "pendiente"

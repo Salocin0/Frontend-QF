@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import useDynamicColors from '../../UseDinamicColors';
 
-const Breadcrumb = ({ items }) => {
+const Breadcrumb = ({ items, style }) => {
   const Colors = useDynamicColors();
-  const styles = {
+  let styles ={
     breadcrumbContainer: {
       margin: '10px 30px',
       backgroundColor: Colors.GrisAzuladoClaro,
@@ -38,6 +38,17 @@ const Breadcrumb = ({ items }) => {
       color: Colors.Negro,
     },
   };
+  if (style) {
+    styles = {
+      ...styles,
+      breadcrumbContainer: {
+        ...styles.breadcrumbContainer,
+        ...style,
+      },
+    };
+  }
+  
+  
 
   return (
     <nav style={styles.breadcrumbContainer} aria-label="breadcrumb">

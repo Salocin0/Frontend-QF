@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import usedynamicColors from "../../UseDinamicColors";
 import Tabs from "./PedidosRepartidor/Tabs";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ListadoPedidos = () => {
   const [rows, setRows] = useState([]);
@@ -17,7 +18,7 @@ const ListadoPedidos = () => {
 
   // Función para recargar el componente
   const recargarComponente = () => {
-    setRecargar(prev => prev + 1);
+    setRecargar((prev) => prev + 1);
   };
 
   // useEffect para cargar los pedidos
@@ -36,15 +37,17 @@ const ListadoPedidos = () => {
         })
         .catch((error) => console.log("No existen pedidos.", error));
     }
-  }, [user,recargar]);
+  }, [user, recargar]);
 
   // useEffect para filtrar los pedidos
   useEffect(() => {
     const pedidosFiltrados = pedidos.filter((pedido) => {
       if (activeTab === "Todos") return true;
       if (activeTab === "Pendientes") return pedido.estado === "Pendiente";
-      if (activeTab === "Aceptados") return pedido.estado === "Aceptado" || pedido.estado === "Precomprado";
-      if (activeTab === "En Preparacion") return pedido.estado === "EnPreparacion";
+      if (activeTab === "Aceptados")
+        return pedido.estado === "Aceptado" || pedido.estado === "Precomprado";
+      if (activeTab === "En Preparacion")
+        return pedido.estado === "EnPreparacion";
       if (activeTab === "En Camino") return pedido.estado === "EnCamino";
       if (activeTab === "Entregados") return pedido.estado === "Entregado";
       if (activeTab === "Cancelados") return pedido.estado === "Cancelado";
@@ -79,10 +82,13 @@ const ListadoPedidos = () => {
     },
     sidebarCol: {
       padding: 0,
+      margin: 0,
+      width: "20%",
     },
     contentCol: {
       padding: 0,
-      
+      margin: 0,
+      marginLeft: "Calc(20% - 10px)",
     },
     tituloSeccion: {
       display: "flex",
@@ -103,50 +109,67 @@ const ListadoPedidos = () => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      marginLeft: "30px",
+      width: "Calc(100% - 50px)",
     },
     pedidosWrapper: {
       paddingTop: "0.5rem",
-      paddingBottom: "1.5rem",
+      paddingBottom: "3rem",
       width: "100%",
-      margin: "0 2% 0 6%",
+      margin: "0",
       overflowY: "scroll",
-      height: "calc(100vh - 200px)", 
-      scrollbarWidth: "none", 
-      msOverflowStyle: "none", 
+      height: "calc(100vh - 250px)",
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
+    },
+    breadcrumbWrapper: {
+      width: "100%",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
   };
 
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis pedidos", url: "/Listado-eventos" },
+  ];
+
   return (
-    <div>
-      <div style={styles.mainFormEventos} className="row">
-        <div style={styles.sidebarCol} className="col-2">
-          <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <div style={styles.mainFormEventos}>
+      <div style={styles.sidebarCol}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
+      </div>
+      <div style={styles.contentCol}>
+        <div style={styles.tituloSeccion}>
+          <h1 style={styles.tituloTexto}>Pedidos</h1>
         </div>
-        <div style={styles.contentCol} className="col-10">
-          <div style={styles.tituloSeccion}>
-            <h1 style={styles.tituloTexto}>Pedidos</h1>
-          </div>
-          <hr style={styles.divider} />
-          <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-          <div style={styles.contentWrapper}>
-            <div style={styles.pedidosWrapper}>
-              {Array.isArray(pedidosFiltrados) && pedidosFiltrados.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex}>
-                    {row.map((pedido, index) => (
-                      <div key={index}>
-                        {pedido !== null ? (
-                          <Pedido pedido={pedido} recargar={recargarComponente} />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 style={styles.seccionNegativo}>No hay Pedidos hechos.</h2>
-              )}
-            </div>
+        <hr style={styles.divider} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 50px)" }}
+          />
+        </div>
+
+        <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
+        <div style={styles.contentWrapper}>
+          <div style={styles.pedidosWrapper}>
+            {Array.isArray(pedidosFiltrados) && pedidosFiltrados.length > 0 ? (
+              rows.length > 0 &&
+              rows.map((row, rowIndex) => (
+                <div key={rowIndex}>
+                  {row.map((pedido, index) => (
+                    <div key={index}>
+                      {pedido !== null ? (
+                        <Pedido pedido={pedido} recargar={recargarComponente} />
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              ))
+            ) : (
+              <h2 style={styles.seccionNegativo}>No hay Pedidos hechos.</h2>
+            )}
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import EventProducerForm from "./FormEventPerfil";
 import EncargadoPuesto from "./FormEncargadoPerfil";
 import RepartidorComponent from "./FormRepartidorPerfil";
 import useDynamicColors from "../../UseDinamicColors";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ConsultarUsuario = () => {
   const [showModal, setShowModal] = useState(false);
@@ -271,7 +272,13 @@ const ConsultarUsuario = () => {
   const styles = {
     background: {
       display: "flex",
+      flexDirection: "column",
       backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    breadcrumbWrapper: {
+      marginLeft: "20%",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     contentWrapper: { display: "flex", flexDirection: "row", height: "100%" },
     mainContent: {
@@ -283,13 +290,13 @@ const ConsultarUsuario = () => {
     },
     placeholderWrapper: {
       width: "25%",
-      position: "fixed",
-      top: "0",
+      position: "absolute",
+      top: "160px",
       right: "0",
-      height: "Calc(100vh - 100px)",
+      height: "Calc(100vh - 250px)",
       backgroundColor: Colors.GrisAzuladoClaro,
       borderRadius: "10px",
-      border: `1px solid ${Colors.Blanco}`,
+      border: `1px solid ${Colors.Naranja}`,
       color: Colors.Blanco,
       margin: "20px",
       marginLeft: "0px",
@@ -297,19 +304,50 @@ const ConsultarUsuario = () => {
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
     },
     card: {
-      marginBottom: "2rem",
-      marginTop: "20px",
+      marginBottom: "50px",
+      marginTop: "15px",
       display: "flex",
       flexDirection: "column",
       backgroundColor: Colors.GrisAzuladoOscuro,
     },
     cardBody: { paddingRight: "20px", marginBottom: "1.5rem" },
     formWrapper: { width: "100%" },
+    titleSection: {
+      display: "flex",
+      justifyContent: "center",
+      marginLeft: "20%",
+      marginBottom: "5px",
+      color: Colors.Naranja,
+    },
+    sectionTitleText: {
+      paddingTop: "20px",
+    },
+    sectionTitleNegative: {
+      color: Colors.Naranja,
+      textAlign: "center",
+    },
+    separator: {
+      border: "none",
+      borderTop: `1px solid ${Colors.Naranja}`,
+    },
   };
-
+  
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mi Perfil", url: "/Listado-eventos" },
+  ];
+  
   return (
     <div style={styles.background}>
       <Sidebar tipoUsuario={user?.tipoUsuario} />
+      <div style={styles.titleSection}>
+          <h1 style={styles.sectionTitleText}>Mi Perfil</h1>
+        </div>
+        <hr style={styles.separator} />
+      <div style={styles.breadcrumbWrapper}>
+        <Breadcrumb items={breadcrumbItems} style={{width:"Calc(100% - 40px)",margin: '0px 20px',}}/>
+      </div>
+  
       <div style={styles.contentWrapper}>
         <div style={styles.mainContent}>
           <div style={styles.card}>
@@ -317,17 +355,11 @@ const ConsultarUsuario = () => {
               <form className="needs-validation">
                 <section style={styles.formWrapper}>
                   <UserProfileForm
-                    mostrarBotonHabilitarDeNuevoR={
-                      mostrarBotonHabilitarDeNuevoR
-                    }
+                    mostrarBotonHabilitarDeNuevoR={mostrarBotonHabilitarDeNuevoR}
                     handleVolverAHabilitarR={handleVolverAHabilitarR}
-                    mostrarBotonHabilitarDeNuevoEPC={
-                      mostrarBotonHabilitarDeNuevoEPC
-                    }
+                    mostrarBotonHabilitarDeNuevoEPC={mostrarBotonHabilitarDeNuevoEPC}
                     handleVolverAHabilitarEPC={handleVolverAHabilitarEPC}
-                    mostrarBotonHabilitarDeNuevoPE={
-                      mostrarBotonHabilitarDeNuevoPE
-                    }
+                    mostrarBotonHabilitarDeNuevoPE={mostrarBotonHabilitarDeNuevoPE}
                     handleVolverAHabilitarPE={handleVolverAHabilitarPE}
                   />
                   <EventProducerForm
@@ -366,6 +398,8 @@ const ConsultarUsuario = () => {
             </div>
           </div>
         </div>
+        
+        {/* Placeholder a la derecha */}
         <div style={styles.placeholderWrapper}>
           <div>Placeholder</div>
         </div>

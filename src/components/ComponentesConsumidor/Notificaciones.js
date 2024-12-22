@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import CardNotificaciones from "./CardNotificaicones";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const Notificaciones = () => {
   const Colors = useDynamicColors();
@@ -64,7 +65,19 @@ const Notificaciones = () => {
       border: "1px solid",
       width: "100%",
     },
+    breadcrumbWrapper: {
+      width: "100%",
+      margin: "0",
+      padding: "0",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Notificaciones", url: "/Listado-eventos" },
+  ];
 
   return (
     <div style={styles.container}>
@@ -73,8 +86,16 @@ const Notificaciones = () => {
         style={styles.content}
         className="custom-scroll" // Clase CSS opcional
       >
-        <h2 style={{ color: Colors.TextoClaro, marginTop: "20px" }}>Notificaciones</h2>
+        <h2 style={{ color: Colors.TextoClaro, marginTop: "20px" }}>
+          Notificaciones
+        </h2>
         <hr style={styles.hr} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
+        </div>
         {notificaciones.length > 0 ? (
           notificaciones.map((notificacion) => (
             <CardNotificaciones

@@ -145,6 +145,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente,evento }) => {
       borderRadius: "8px",
       backgroundColor: Colors.GrisAzuladoClaro,
       margin: "20px",
+      marginBottom: "0",
       position: "relative",
     },
     cardTitle: {

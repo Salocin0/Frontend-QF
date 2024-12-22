@@ -4,6 +4,7 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const Carrito = () => {
   const [carrito, setCarrito] = useState([]);
@@ -45,10 +46,13 @@ const Carrito = () => {
     if (user) {
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
-      fetch(`${process.env?.REACT_APP_BACK_URL}evento/${productos[0]?.eventoId}`, {
-        method: "GET",
-        headers: headers,
-      })
+      fetch(
+        `${process.env?.REACT_APP_BACK_URL}evento/${productos[0]?.eventoId}`,
+        {
+          method: "GET",
+          headers: headers,
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
           setEvento(data.data);
@@ -84,10 +88,11 @@ const Carrito = () => {
   const styles = {
     container: {
       display: "flex",
-      flexDirection: "row",
+      flexDirection: "column",
       margin: 0,
       padding: 0,
       height: "100vh",
+      width: "100%",
       backgroundColor: Colors.GrisAzuladoOscuro,
     },
     sidebar: {
@@ -96,6 +101,7 @@ const Carrito = () => {
     },
     mainContent: {
       width: "80%",
+      marginLeft: "20%",
       padding: 0,
     },
     titleSection: {
@@ -121,12 +127,24 @@ const Carrito = () => {
       justifyContent: "center",
     },
     productList: {
-      paddingTop: "0.5rem",
+      paddingTop: "0rem",
       paddingBottom: "1rem",
       height: "100%",
       width: "100%",
     },
+    breadcrumbWrapper: {
+      width: "100%",
+      margin: "0",
+      padding: "0",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis pedidos", url: "/Listado-eventos" },
+  ];
 
   return (
     <div style={styles.container}>
@@ -138,6 +156,13 @@ const Carrito = () => {
           <h1 style={styles.sectionTitleText}>Carrito</h1>
         </div>
         <hr style={styles.separator} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
+        </div>
+
         <div style={styles.productContainer}>
           <div style={styles.productList}>
             {Object.keys(productosAgrupados).length > 0 ? (

@@ -32,7 +32,7 @@ const UserProfileForm = ({
   const styles = {
     container: {
       padding: "1rem",
-      border: `1px solid ${Colors.Blanco}`,
+      border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
       backgroundColor: Colors.GrisAzuladoClaro,
     },

@@ -7,6 +7,7 @@ import { useContext } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import useDinamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ListadoEventosProductor = () => {
   const [eventos, setEventos] = useState([]);
@@ -129,7 +130,19 @@ const ListadoEventosProductor = () => {
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
       zIndex: 1000,
     },
+    breadcrumbWrapper: {
+      width: "100%",
+      margin: "0",
+      padding: "0",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Notificaciones", url: "/Listado-eventos" },
+  ];
 
   return (
     <div style={styles.mainFormEventos}>
@@ -140,6 +153,12 @@ const ListadoEventosProductor = () => {
         <h1>Eventos</h1>
       </div>
       <hr style={styles.hr} />
+      <div style={styles.breadcrumbWrapper}>
+        <Breadcrumb
+          items={breadcrumbItems}
+          style={{ width: "Calc(80% - 40px)", marginLeft: "Calc(20% + 20px)" }}
+        />
+      </div>
       <div style={styles.content}>
         <div style={styles.container}>
           {Array.isArray(eventos) && eventos.length > 0 ? (

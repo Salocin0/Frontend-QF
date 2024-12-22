@@ -27,7 +27,7 @@ const EventProducerForm = ({
       width: "100%",
       backgroundColor: Colors.GrisAzuladoClaro,
       marginTop: "20px",
-      border: `1px solid ${Colors.Blanco}`,
+      border: `1px solid ${Colors.Naranja}`,
     },
     cardBody: {
       padding: "20px",
