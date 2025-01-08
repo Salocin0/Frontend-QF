@@ -1,172 +1,182 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Sidebar from "../../ComponentesGenerales/Sidebar";
 import Footer from "../../ComponentesGenerales/Footer";
-import { faUpLong, faDownLong } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import TopPuestos from "./TopPuestos";
 import GraficaBarras from "../GraficaBarras";
-import GraficaTorta from "../GraficaTorta";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../../UseDinamicColors";
+import TotalQuickFood from "./TotalGenerado";
 
 const PanelProductor = () => {
-  const { user } = useContext(UserContext)
-  const Colors = useDynamicColors()
+  const { user } = useContext(UserContext);
+  const Colors = useDynamicColors();
+  const [eventos, setEventos] = useState([]);
+  const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
+  console.log(eventoSeleccionado);
+
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const response = await fetch(`${process.env?.REACT_APP_BACK_URL}evento/all`, {
+          headers: {
+            "Content-Type": "application/json",
+            consumidorId: user?.id, // Reemplaza con la propiedad correcta
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setEventos(data?.data || []);
+          if (data?.data?.length > 0) {
+            setEventoSeleccionado(data.data[0].id); // Selecciona el primer evento por defecto
+          }
+        } else {
+          console.error("Error al obtener eventos");
+        }
+      } catch (error) {
+        console.error("Error en el fetch de eventos:", error);
+      }
+    };
+
+    if (user?.id) {
+      fetchEventos();
+    }
+  }, [user]);
+
+  const styles = {
+    container: {
+      height: "100vh",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    header: {
+      color: Colors.Naranja,
+      textAlign: "center",
+      marginLeft: "20%",
+      paddingTop: "10px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    select: {
+      borderRadius: "5px",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      position: "absolute",
+      top: "25px",
+      right: "20px",
+      border: "none",
+      color: "white",
+      padding: "5px",
+      marginLeft: "20px",
+    },
+    hr: {
+      color: Colors.Naranja,
+      width: "100%",
+      paddingBottom: "10px",
+    },
+    mainContent: {
+      display: "flex",
+      height: "75vh",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      marginBottom: "50px",
+      marginLeft: "20%",
+    },
+    graficaContainer: {
+      display: "grid",
+      gridTemplateColumns: "repeat(7, 1fr)",
+      gridTemplateRows: "repeat(6, 1fr)",
+      gap: "20px",
+      gridTemplateAreas: `
+        "div1 div1 div2 div2 toppuestos toppuestos toppuestos"
+        "div1 div1 div2 div2 toppuestos toppuestos toppuestos"
+        "grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+        "grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+        "grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+        "grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+      `,
+      marginLeft: "5%",
+    },
+    div2: {
+      gridArea: "div2",
+      marginTop: "20px",
+      borderRadius: "20px",
+      backgroundColor: Colors.AzulDashboard,
+      paddingTop: "100px",
+      backgroundImage: "url(./../../img/wave2.svg)",
+      backgroundSize: "cover",
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "100% 25%",
+      border: "2px solid white",
+      position: "relative",
+    },
+    graficaBarras: {
+      gridArea: "grafica",
+      borderRadius: "20px",
+      marginBottom: "20px",
+      marginLeft: "10px",
+      border: "2px solid white",
+      overflow: "hidden",
+    },
+    toppuestos: {
+      gridArea: "toppuestos",
+      marginTop: "20px",
+      borderRadius: "20px",
+      background: Colors.GrisAzuladoClaro,
+      marginBottom: "20px",
+      marginRight: "10px",
+      border: "2px solid white",
+    },
+    footer: {
+      marginTop: "auto",
+    },
+  };
+
+  const handleEventoChange = (e) => {
+    setEventoSeleccionado(e.target.value);
+  };
+
   return (
-    <div style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro }}>
-      <h1 style={{ color: Colors.Naranja, textAlign: "center", marginLeft: "20%", paddingTop: "10px" }}>Estadisticas Productor</h1>
-      <hr style={{ color: Colors.Naranja, width: "100%", paddingBottom: "10px"}}/>
-      <div className="d-flex mainFormEventos" style={{ height: "75vh", backgroundColor:Colors.GrisAzuladoOscuro,marginBottom: "50px" }}>
-      
-        <div className="col-2">
-          <Sidebar tipoUsuario={user?.tipoUsuario} />
-        </div>
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <h1>Estadísticas Productor</h1>
         
-        <div className="container containerGraficaProductor ms-5">
-        
-          <div className="div1productor d-flex" style={{ position: "relative" }}>
-          
-            <div
-              className="ps-3 pb-3"
-              style={{ position: "absolute", bottom: 0, left: 0 }}
-            >
-              <button style={{backgroundColor: "#7F53D8", color: "white",border:"none",padding:"5px",borderRadius:"5px"}}>Ver por puesto</button>
-              <h1 style={{ color: "white" }}>$3.000.000</h1>
-              <p>
-                <strong style={{ color: "white" }}>
-                  Total Generado con QuickFood
-                </strong>
-              </p>
+      </div>
+      <select
+          style={styles.select}
+          value={eventoSeleccionado || ""}
+          onChange={handleEventoChange}
+        >
+          {eventos.map((evento) => (
+            <option key={evento.id} value={evento.id}>
+              {evento.nombre}
+            </option>
+          ))}
+        </select>
+      <hr style={styles.hr} />
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
+      <div style={styles.mainContent}>
+        <div style={styles.graficaContainer}>
+          <TotalQuickFood eventId={eventoSeleccionado} />
+          <div style={styles.div2}>
+            <div style={{ position: "absolute", top: 0, left: 0 }}>
             </div>
-          </div>
-
-          <div className="div2productor" style={{ position: "relative" }}>
-            <div
-              className="pt-3 ps-3"
-              style={{ position: "absolute", top: 0, left: 0 }}
-            >
-              <select
-                name=""
-                id=""
-                style={{
-                  borderRadius: "5px",
-                  backgroundColor: "#1E88E5",
-                  border: "none",
-                  color: "white",
-                }}
-              >
-                <option value="">Todos</option>
-                <option value="">Cosquin Rock</option>
-                <option value="">Festival de Villa Maria</option>
-              </select>
-            </div>
-
-            <div
-              className="pt-3 pe-3"
-              style={{ position: "absolute", top: 0, right: 0 }}
-            >
-            </div>
-
-            <div
-              className="ps-3 pb-3"
-              style={{ position: "absolute", bottom: 0, left: 0 }}
-            >
+            <div style={{ position: "absolute", bottom: 0, left: 0 }}>
               <h1 style={{ color: "white" }}>3.5/5</h1>
               <p>
                 <strong style={{ color: "white" }}>
-                  Valoracion promedio en mis eventos
+                  Valoración promedio en mis eventos
                 </strong>
               </p>
             </div>
           </div>
-          <div className="toppuestosproductor text-center p-3">
-            <h2>Top Puestos</h2>
-            <p>Puestos actualizados a las 22:20</p>
-            <hr />
-            <div>
-              <table id="miTabla" className="w-100">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Pedidos</th>
-                    <th>Dinero</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Puesto 3</td>
-                    <td>15</td>
-                    <td>$53000</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faUpLong}
-                        style={{ color: "green" }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Puesto 5</td>
-                    <td>10</td>
-                    <td>$48600</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faUpLong}
-                        style={{ color: "green" }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Puesto 4</td>
-                    <td>8</td>
-                    <td>$36000</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faDownLong}
-                        style={{ color: "red" }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Puesto 1</td>
-                    <td>5</td>
-                    <td>$23400</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faUpLong}
-                        style={{ color: "green" }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>Puesto 2</td>
-                    <td>3</td>
-                    <td>$18500</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faDownLong}
-                        style={{ color: "red" }}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div className="graficaTortaproductor" style={{ marginTop: "0px" }}>
-              <GraficaTorta />
-            </div>
+          <div style={styles.toppuestos}>
+            <TopPuestos eventoId={eventoSeleccionado} />
           </div>
-          <div className="graficaBarrasproductor">
-            <GraficaBarras />
+          <div style={styles.graficaBarras}>
+            <GraficaBarras eventId={eventoSeleccionado} />
           </div>
         </div>
-        <div>
-          <Footer/>
+        <div style={styles.footer}>
+          <Footer />
         </div>
       </div>
     </div>
