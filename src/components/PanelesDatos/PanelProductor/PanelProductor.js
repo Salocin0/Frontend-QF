@@ -6,29 +6,32 @@ import GraficaBarras from "../GraficaBarras";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../../UseDinamicColors";
 import TotalQuickFood from "./TotalGenerado";
+import ValoracionPromedio from "./ValoracionPromedio";
 
 const PanelProductor = () => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const [eventos, setEventos] = useState([]);
-  const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
-  console.log(eventoSeleccionado);
+  const [eventoSeleccionado, setEventoSeleccionado] = useState("Todos");
 
   useEffect(() => {
     const fetchEventos = async () => {
       try {
-        const response = await fetch(`${process.env?.REACT_APP_BACK_URL}evento/all`, {
-          headers: {
-            "Content-Type": "application/json",
-            consumidorId: user?.id, // Reemplaza con la propiedad correcta
-          },
-        });
+        const response = await fetch(
+          `${process.env?.REACT_APP_BACK_URL}evento/all`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              consumidorId: user?.id,
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
-          setEventos(data?.data || []);
+          setEventos([{nombre:"Todos",id:"Todos"},...data?.data] || []);
           if (data?.data?.length > 0) {
-            setEventoSeleccionado(data.data[0].id); // Selecciona el primer evento por defecto
+            setEventoSeleccionado(eventos[0]);
           }
         } else {
           console.error("Error al obtener eventos");
@@ -67,6 +70,7 @@ const PanelProductor = () => {
       color: "white",
       padding: "5px",
       marginLeft: "20px",
+      width:"200px"
     },
     hr: {
       color: Colors.Naranja,
@@ -99,14 +103,19 @@ const PanelProductor = () => {
       gridArea: "div2",
       marginTop: "20px",
       borderRadius: "20px",
-      backgroundColor: Colors.AzulDashboard,
       paddingTop: "100px",
-      backgroundImage: "url(./../../img/wave2.svg)",
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
       backgroundPosition: "100% 25%",
       border: "2px solid white",
       position: "relative",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      color: "white",
+      padding: "16px",
     },
     graficaBarras: {
       gridArea: "grafica",
@@ -138,35 +147,25 @@ const PanelProductor = () => {
     <div style={styles.container}>
       <div style={styles.header}>
         <h1>Estadísticas Productor</h1>
-        
       </div>
       <select
-          style={styles.select}
-          value={eventoSeleccionado || ""}
-          onChange={handleEventoChange}
-        >
-          {eventos.map((evento) => (
-            <option key={evento.id} value={evento.id}>
-              {evento.nombre}
-            </option>
-          ))}
-        </select>
+        style={styles.select}
+        value={eventoSeleccionado || ""}
+        onChange={handleEventoChange}
+      >
+        {eventos.map((evento) => (
+          <option key={evento.id} value={evento.id}>
+            {evento.nombre}
+          </option>
+        ))}
+      </select>
       <hr style={styles.hr} />
       <Sidebar tipoUsuario={user?.tipoUsuario} />
       <div style={styles.mainContent}>
         <div style={styles.graficaContainer}>
           <TotalQuickFood eventId={eventoSeleccionado} />
           <div style={styles.div2}>
-            <div style={{ position: "absolute", top: 0, left: 0 }}>
-            </div>
-            <div style={{ position: "absolute", bottom: 0, left: 0 }}>
-              <h1 style={{ color: "white" }}>3.5/5</h1>
-              <p>
-                <strong style={{ color: "white" }}>
-                  Valoración promedio en mis eventos
-                </strong>
-              </p>
-            </div>
+            <ValoracionPromedio eventoId={eventoSeleccionado} />
           </div>
           <div style={styles.toppuestos}>
             <TopPuestos eventoId={eventoSeleccionado} />

@@ -1,235 +1,234 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Sidebar from "../../ComponentesGenerales/Sidebar";
 import Footer from "../../ComponentesGenerales/Footer";
-import { faUpLong, faDownLong } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import GraficaLineas from "../GraficaLineas";
-import GraficaTortaProductos from "../GraficaTortaProductos";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
-import { useContext } from "react";
 import useDynamicColors from "../../../UseDinamicColors";
+import TopProductos from "./TopProductos";
+import TiempoPromedioEntrega from "./TiempoPromedioEntrega";
+import ValoracionPromedio from "./ValoracionPromedio";
+import TotalRecaudadoEvento from "./TotalRecaudado";
 
 const PanelEncargado = () => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
 
+  const [eventos, setEventos] = useState([]);
+  const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
+  const [puestos, setPuestos] = useState([]);
+  const [puestoSeleccionado, setPuestoSeleccionado] = useState(null);
+
+  const styles = {
+    container: {
+      height: "100vh",
+      width: "100%",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    header: {
+      color: Colors.Naranja,
+      textAlign: "center",
+      marginLeft: "20%",
+      paddingTop: "10px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    select1: {
+      borderRadius: "5px",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      position: "absolute",
+      top: "25px",
+      right: "20px",
+      border: "none",
+      color: "white",
+      padding: "5px",
+      marginLeft: "20px",
+      width: "200px",
+    },
+    select2: {
+      borderRadius: "5px",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      position: "absolute",
+      top: "25px",
+      right: "230px",
+      border: "none",
+      color: "white",
+      padding: "5px",
+      marginLeft: "20px",
+      width: "150px",
+    },
+    hr: {
+      color: Colors.Naranja,
+      width: "100%",
+      paddingBottom: "10px",
+    },
+    mainContent: {
+      display: "flex",
+      height: "Calc(100% - 160px)",
+      width: "80%",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      marginBottom: "50px",
+      marginLeft: "20%",
+    },
+    graficaContainer: {
+      display: "grid",
+      width: "100%",
+      height: "100%",
+      gridTemplateColumns: "repeat(9, 1fr)",
+      gridTemplateRows: "repeat(6, 1fr)",
+      gap: "20px",
+      gridTemplateAreas: `
+        "div1 div1 div2 div2 div3 div3 toppuestos toppuestos toppuestos"
+        "div1 div1 div2 div2 div3 div3 toppuestos toppuestos toppuestos"
+        "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+        "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+        "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+        "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+      `,
+    },
+    footer: {
+      marginTop: "auto",
+    },
+  };
+
+  const handleEventoChange = (e) => {
+    if (e.target.value === "Todos") {
+      setEventoSeleccionado({ nombre: "Todos", id: "Todos" });
+      return;
+    }
+    setEventoSeleccionado({
+      nombre: eventos[e.target.value].nombre,
+      id: eventos[e.target.value].id,
+    });
+  };
+
+  const handlePuestoChange = (e) => {
+    if (e.target.value === "Todos") {
+      setPuestoSeleccionado({ nombre: "Todos", id: "Todos" });
+      return;
+    }
+    setPuestoSeleccionado({
+      nombre: puestos[e.target.value].nombreCarro,
+      id: puestos[e.target.value].id,
+    });
+  };
+
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACK_URL}evento/all`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              consumidorId: user?.id,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setEventos([{ nombre: "Todos", id: "Todos" }, ...data?.data] || []);
+          setEventoSeleccionado({ nombre: "Todos", id: "Todos" });
+        } else {
+          console.error("Error al obtener eventos");
+        }
+      } catch (error) {
+        console.error("Error en el fetch de eventos:", error);
+      }
+    };
+
+    if (user?.id) {
+      fetchEventos();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const fetchPuestos = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACK_URL}puesto/`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              consumidorId: user?.id,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setPuestos(
+            [{ nombreCarro: "Todos", id: "Todos" }, ...data?.data] || []
+          );
+          setPuestoSeleccionado({ nombre: "Todos", id: "Todos" });
+        } else {
+          console.error("Error al obtener puestos");
+        }
+      } catch (error) {
+        console.error("Error en el fetch de puestos:", error);
+      }
+    };
+
+    if (user?.id) {
+      fetchPuestos();
+    }
+  }, [user]);
+
   return (
-    <div style={{ height: "100vh", backgroundColor:Colors.GrisAzuladoOscuro }}>
-      <h1 style={{ color: Colors.Naranja, textAlign: "center", marginLeft: "20%", paddingTop: "10px" }}>Estadisticas Productor</h1>
-      <hr style={{ color: Colors.Naranja, width: "100%", paddingBottom: "10px"}}/>
-      <div className="d-flex mainFormEventos" style={{ height: "75vh", backgroundColor:Colors.GrisAzuladoOscuro,marginBottom: "50px" }}>
-        <div className="col-2">
-          <Sidebar tipoUsuario={user?.tipoUsuario} />
-        </div>
-        <div className="container containerGraficaEncargado ms-5">
-          <div
-            className="div1Encargado d-flex"
-            style={{ position: "relative" }}
-          >
-            <div
-              className="ps-3 pb-3"
-              style={{ position: "absolute", bottom: 0, left: 0 }}
-            >
-
-<select
-                name=""
-                id=""
-                style={{
-                  borderRadius: "5px",
-                  backgroundColor: "#5E35B1",
-                  border: "none",
-                  color: "white",
-                  width: "70%",
-                }}
-              >
-                <option value="">Cosquin Rock</option>
-                <option value="">Festival de Villa Maria</option>
-              </select>
-              <h1 style={{ color: "white" }}>$725.300</h1>
-              <p>
-                <strong style={{ color: "white" }}>
-                  Total Recaudado en Evento
-                </strong>
-              </p>
-            </div>
-          </div>
-
-          <div className="div2Encargado" style={{ position: "relative" }}>
-            <div
-              className="pt-3 ps-3"
-              style={{ position: "absolute", top: 0, left: 0 }}
-            >
-              <select
-                name=""
-                id=""
-                style={{
-                  borderRadius: "5px",
-                  backgroundColor: "#1E88E5",
-                  border: "none",
-                  color: "white",
-                  width: "100%",
-                }}
-              >
-                <option value="">Taco Fiesta</option>
-                <option value="">Taco Fiesta</option>
-              </select>
-            </div>
-
-            <div
-              className="ps-3 pb-3"
-              style={{ position: "absolute", bottom: 0, left: 0 }}
-            >
-              <h1 style={{ color: "white" }}>4.2/5</h1>
-              <p>
-                <strong style={{ color: "white" }}>
-                  Valoracion Promedio
-                </strong>
-              </p>
-
-              <button style={{ backgroundColor: "#1E88E5", color: "white", border:"none", padding:"2px", borderRadius:"5px"}}>Ver Valoraciones</button>
-            </div>
-          </div>
-
-          <div className="div3Encargado" style={{ position: "relative" }}>
-            <div
-              className="pt-3 ps-3"
-              style={{ position: "absolute", top: 0, left: 0 }}
-            >
-              <select
-                name=""
-                id=""
-                style={{
-                  borderRadius: "5px",
-                  backgroundColor: "#ec93c2",
-                  border: "none",
-                  color: "white",
-                }}
-              >
-                <option value="">Taco Fiesta</option>
-                <option value="">Taco Fiesta</option>
-              </select>
-            </div>
-            <div
-              className="pt-3 pe-3"
-              style={{ position: "absolute", top: 0, right: 0 }}
-            >
-              <button className="btn btn-sm" style={{ color: "white" }}>
-                Mejor
-              </button>
-              <button
-                className="btn btn-sm"
-                style={{ backgroundColor: "#ec93c2", color: "white" }}
-              >
-                Promedio
-              </button>
-            </div>
-
-            <div
-              className="ps-3 pb-3"
-              style={{ position: "absolute", bottom: 0, left: 0 }}
-            >
-              <h1 style={{ color: "white" }}>15:43</h1>
-              <p>
-                <strong style={{ color: "white" }}>
-                  Tiempo Promedio de entrega
-                </strong>
-              </p>
-            </div>
-          </div>
-
-          <div className="toppuestosEncargado text-center p-3">
-            <h2>Top Productos</h2>
-            <p>Puestos actualizados a las 22:20</p>
-            <hr />
-            <div>
-              <table id="miTabla" className="w-100">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Pedidos</th>
-                    <th>Dinero</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Prod 3</td>
-                    <td>15</td>
-                    <td>$53000</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faUpLong}
-                        style={{ color: "green" }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Prod 5</td>
-                    <td>10</td>
-                    <td>$48600</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faUpLong}
-                        style={{ color: "green" }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Prod 4</td>
-                    <td>8</td>
-                    <td>$36000</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faDownLong}
-                        style={{ color: "red" }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>4</td>
-                    <td>Prod 1</td>
-                    <td>5</td>
-                    <td>$23400</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faUpLong}
-                        style={{ color: "green" }}
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>Prod 2</td>
-                    <td>3</td>
-                    <td>$18500</td>
-                    <td>
-                      <FontAwesomeIcon
-                        icon={faDownLong}
-                        style={{ color: "red" }}
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div
-              className="graficaTortaEncargado "
-              style={{ marginTop: "0px" }}
-            >
-              <GraficaTortaProductos />
-            </div>
-          </div>
-          <div className="graficaBarrasEncargado">
-            <GraficaLineas />
+    <div style={styles.container}>
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
+      <h1 style={styles.header}>Estadísticas Encargado</h1>
+      <select
+        style={styles.select1}
+        value={eventoSeleccionado?.id}
+        onChange={handleEventoChange}
+      >
+        {eventos.map((evento) => (
+          <option key={evento.id} value={evento.id}>
+            {evento.nombre}
+          </option>
+        ))}
+      </select>
+      <select
+        style={styles.select2}
+        value={puestoSeleccionado?.id}
+        onChange={handlePuestoChange}
+      >
+        {puestos.map((puesto) => (
+          <option key={puesto.id} value={puesto.id}>
+            {puesto.nombreCarro}
+          </option>
+        ))}
+      </select>
+      <hr style={styles.hr} />
+      <div style={styles.mainContent}>
+        <div style={styles.graficaContainer}>
+          <TotalRecaudadoEvento
+            puestoId={puestoSeleccionado?.id}
+            eventoId={eventoSeleccionado?.id}
+          />
+          <ValoracionPromedio
+            puestoId={puestoSeleccionado?.id}
+            eventoId={eventoSeleccionado?.id}
+          />
+          <TiempoPromedioEntrega
+            puestoId={puestoSeleccionado?.id}
+            eventoId={eventoSeleccionado?.id}
+          />
+          <TopProductos
+            puestoId={puestoSeleccionado?.id}
+            eventoId={eventoSeleccionado?.id}
+          />
+          <div className="graficaBarrasEncargado" style={{ marginLeft: "20px" }}>
+            <GraficaLineas
+              key={eventoSeleccionado?.id}
+              puestoId={puestoSeleccionado?.id}
+              eventId={eventoSeleccionado?.id}
+            />
           </div>
         </div>
-        <div>
-          <Footer />
-        </div>
+        <Footer />
       </div>
     </div>
   );

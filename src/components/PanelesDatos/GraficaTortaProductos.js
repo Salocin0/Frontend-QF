@@ -1,56 +1,92 @@
-import React, { useState } from "react";
-import { useEffect } from "react";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
-const GraficaTortaProductos = () => {
+import useDynamicColors from "../../UseDinamicColors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
+const GraficaTortaProductos = ({ height, productos }) => {
+  const [chartData, setChartData] = useState([]);
+  const [decalEnabled, setDecalEnabled] = useState(false); // Estado para activar/desactivar decal
+  const Colors = useDynamicColors();
+
+  useEffect(() => {
+    if (productos.length > 0) {
+      const totalRecaudado = productos.reduce((sum, producto) => sum + producto.dinero, 0);
+      const dataFormatted = productos.map((producto) => ({
+        name: producto.nombre,
+        value: ((producto.dinero / totalRecaudado) * 100).toFixed(2),
+      }));
+      setChartData(dataFormatted);
+    }
+  }, [productos]);
+
+  // Patrones para los decals
+  const patterns = [
+    { symbol: "circle" },
+    { symbol: "rect" },
+    { symbol: "triangle" },
+    { symbol: "diamond" },
+    { symbol: "line" },
+  ];
+
   const option = {
+    backgroundColor: Colors.GrisAzuladoClaro,
     tooltip: {
-      trigger: 'item'
+      trigger: "item",
+      formatter: "{b}: {c}% ({d}%)",
     },
     legend: {
-      top: '1%',
-      left: 'center'
+      top: "7%",
+      left: "center",
     },
     series: [
       {
-        name: 'Access From',
-        type: 'pie',
-        radius: ['30%', '60%'],
-        avoidLabelOverlap: false,
+        name: "Recaudación",
+        type: "pie",
+        radius: ["25%", "40%"],
+        avoidLabelOverlap: true,
         itemStyle: {
-          borderRadius: 10,
-          borderColor: '#000',
-          borderWidth: 2
+          borderRadius: 0,
+          border: "none",
         },
         label: {
-          show: false,
-          position: 'center'
-        },
-        emphasis: {
-          label: {
-            show: true,
-            fontSize: 20,
-            fontWeight: 'bold'
-          }
+          show: true,
+          fontSize: "10px",
         },
         labelLine: {
-          show: false
+          show: true,
         },
-        data: [
-          { value: 1048, name: 'Producto 1' },
-          { value: 735, name: 'Producto 2' },
-          { value: 580, name: 'Producto 3' },
-          { value: 484, name: 'Producto 4' },
-          { value: 300, name: 'Producto 5' }
-        ]
-      }
-    ]
+        data: chartData.map((item, index) => ({
+          ...item,
+          itemStyle: {
+            decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null,
+          },
+        })),
+      },
+    ],
   };
 
   return (
-    <div className="h-75 w-100">
-      <ReactECharts option={option} theme="dark" className="h-100 w-100" />
+    <div style={{ position: "relative", height: "34vh", width: "100%" }}>
+      <button
+        onClick={() => setDecalEnabled((prev) => !prev)}
+        style={{
+          backgroundColor: Colors.GrisAzuladoOscuro,
+          padding: "3px 10px",
+          borderRadius: "10px",
+          border: "none",
+          cursor: "pointer",
+          fontSize: "18px",
+          color: Colors.BlancoEnBlanco,
+          position: "absolute",
+          top: "-5px",
+          right: "0px",
+          zIndex: 900,
+        }}
+      >
+        <FontAwesomeIcon icon={!decalEnabled ? faEye : faEyeSlash} />
+      </button>
+      <ReactECharts option={option} theme="dark" style={{ height: "100%", width: "100%" }} />
     </div>
   );
 };

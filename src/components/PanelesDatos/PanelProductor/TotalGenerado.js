@@ -50,11 +50,13 @@ const TotalQuickFood = ({ eventId }) => {
     heading: {
       color: "white",
       margin: "0",
+      fontSize: "2rem",
     },
     paragraph: {
       color: "white",
       fontWeight: "bold",
       margin: "0",
+      fontSize: "1rem",
     },
   };
 

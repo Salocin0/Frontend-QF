@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
 import useDynamicColors from "../../UseDinamicColors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const GraficaBarras = ({ eventId }) => {
   const [chartData, setChartData] = useState(null); // Estado para los datos de la gráfica
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado para errores
+  const [decalEnabled, setDecalEnabled] = useState(false); // Estado para activar/desactivar decal
   const Colors = useDynamicColors();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -19,19 +23,16 @@ const GraficaBarras = ({ eventId }) => {
         }
         const data = await response.json();
 
-        // Si no hay pedidos, mostramos un toast y limpiamos completamente el gráfico
         if (data.data === 0) {
           toast.error("No hay Pedidos en este evento para mostrar");
-          setChartData(null); // Aseguramos que el gráfico quede vacío
+          setChartData(null);
           setLoading(false);
           return;
         }
 
         const groupedData = {};
-
-        // Procesar datos para la gráfica
         data.data.forEach((item) => {
-          const dia = new Date(item.diaevento).toLocaleDateString(); // Agrupar por día en formato legible
+          const dia = new Date(item.diaevento).toLocaleDateString();
           if (!groupedData[dia]) {
             groupedData[dia] = [];
           }
@@ -41,11 +42,10 @@ const GraficaBarras = ({ eventId }) => {
           });
         });
 
-        const xAxisData = Object.keys(groupedData); // Fechas de los días
+        const xAxisData = Object.keys(groupedData);
         const seriesData = [];
         const puestosMap = new Map();
 
-        // Estructurar series dinámicamente
         xAxisData.forEach((dia) => {
           groupedData[dia].forEach((puesto) => {
             if (!puestosMap.has(puesto.nombrepuesto)) {
@@ -59,7 +59,17 @@ const GraficaBarras = ({ eventId }) => {
           });
         });
 
+        let index = 0;
         puestosMap.forEach((data, puesto) => {
+          const patterns = [
+            { symbol: "circle" },
+            { symbol: "rect" },
+            { symbol: "triangle" },
+            { symbol: "diamond" },
+            { symbol: "line" },
+          ];
+          const pattern = patterns[index % patterns.length];
+
           seriesData.push({
             name: puesto,
             type: "bar",
@@ -67,7 +77,12 @@ const GraficaBarras = ({ eventId }) => {
             label: { show: true },
             emphasis: { focus: "series" },
             data,
+            itemStyle: {
+              decal: decalEnabled ? { symbol: pattern.symbol } : null, // Condicional para mostrar/ocultar decal
+            },
           });
+
+          index++;
         });
 
         setChartData({
@@ -75,12 +90,19 @@ const GraficaBarras = ({ eventId }) => {
             trigger: "axis",
             axisPointer: { type: "shadow" },
           },
-          legend: { top: "3%" },
+          backgroundColor: Colors.GrisAzuladoClaro,
+          title: {
+            text: "Recaudacion por Puesto y Dia",
+            subtext: "Total Recaudado por cada Puesto en cada Dia",
+            top: "3%",
+            left: "center",
+          },
+          legend: { top: "20%" },
           grid: {
             left: "3%",
             right: "4%",
             bottom: "3%",
-            top: "25%",
+            top: "30%",
             containLabel: true,
           },
           yAxis: { type: "value" },
@@ -96,22 +118,65 @@ const GraficaBarras = ({ eventId }) => {
       }
     };
 
-    if (eventId !== null) {
+    if (eventId) {
       fetchData();
     }
-  }, [eventId]);
+  }, [eventId, decalEnabled]); // Dependencia decalEnabled para actualizar el gráfico
+
+  const toggleDecal = () => {
+    setDecalEnabled(!decalEnabled);
+  };
 
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="h-100 w-100">
+    <div className="h-100 w-100" style={{position:"relative"}}>
       {chartData ? (
-        <ReactECharts option={chartData} theme="dark" className="h-100 w-100" />
+        <>
+          <ReactECharts
+            option={chartData}
+            theme="dark"
+            className="h-100 w-100"
+          />
+          <button
+            onClick={toggleDecal}
+            style={{
+              backgroundColor: Colors.GrisAzuladoOscuro,
+              padding: "3px 10px",
+              borderRadius:"10px",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "18px",
+              color: Colors.BlancoEnBlanco,
+              position: "absolute",
+              top: "20px",
+              right: "20px",
+              zIndex:"900"
+            }}
+          >
+            <FontAwesomeIcon icon={!decalEnabled ? faEye : faEyeSlash} />
+          </button>
+        </>
       ) : (
-        <div style={{backgroundColor:Colors.GrisAzuladoClaro,height:"100%", display:"flex",justifyContent:"center",alignItems:"center"}}>
-          <h1 style={{color:Colors.BlancoEnBlanco,fontSize:"18px"}}>Todavia no hay Pedidos Realizados</h1>
-          </div>
+        <div
+          style={{
+            backgroundColor: Colors.GrisAzuladoClaro,
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <h1
+            style={{
+              color: Colors.BlancoEnBlanco,
+              fontSize: "18px",
+            }}
+          >
+            Todavia no hay Pedidos Realizados
+          </h1>
+        </div>
       )}
     </div>
   );

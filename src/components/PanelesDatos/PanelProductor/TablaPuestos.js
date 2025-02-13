@@ -88,7 +88,6 @@ const EstadisticasTable = ({ id }) => {
           ))}
         </tbody>
       </table>
-      <button style={{margin:"10px", borderRadius:"5px", padding:"5px 10px", border:"none", backgroundColor:Colors.Info, color:Colors.BlancoEnBlanco}}>Ver Mas</button>
     </div>
   );
 };

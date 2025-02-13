@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
+import useDynamicColors from "../../UseDinamicColors";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const GraficaTorta = ({ id }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [decalEnabled, setDecalEnabled] = useState(false); // Estado para activar/desactivar decal
+  const Colors = useDynamicColors();
 
   useEffect(() => {
     const fetchEstadisticas = async () => {
@@ -24,7 +29,7 @@ const GraficaTorta = ({ id }) => {
         setLoading(false);
       }
     };
-    if(id) fetchEstadisticas();
+    if (id) fetchEstadisticas();
   }, [id]);
 
   if (loading) return <p>Cargando datos...</p>;
@@ -35,23 +40,44 @@ const GraficaTorta = ({ id }) => {
     name: item.nombre,
   }));
 
+  // Patrones para los decals
+  const patterns = [
+    { symbol: "circle" },
+    { symbol: "rect" },
+    { symbol: "triangle" },
+    { symbol: "diamond" },
+    { symbol: "line" },
+  ];
+
   const option = {
     height: "90%",
     tooltip: {
       trigger: "item",
       formatter: "{a} <br/>{b}: {c} ({d}%)",
     },
+    backgroundColor: Colors.GrisAzuladoClaro,
+    title: {
+      text: "Porcentaje de Recaudación por Puesto",
+      subtext: "Porcentaje de lo recaudado en el evento por cada puesto",
+      top: "3%",
+      left: "center",
+    },
     legend: {
       show: false,
     },
     series: [
       {
+        top: "15%",
         name: "Total Recaudado",
         type: "pie",
         radius: ["30%", "60%"], // Ajusta el tamaño del gráfico (más pequeño o más grande)
         center: ["50%", "50%"], // Ajusta la posición del gráfico dentro del contenedor
-        data: formattedData,
-
+        data: formattedData.map((item, index) => ({
+          ...item,
+          itemStyle: {
+            decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null, // Aplica un patrón distinto por sección
+          },
+        })),
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
@@ -68,11 +94,28 @@ const GraficaTorta = ({ id }) => {
       style={{
         borderRadius: "20px",
         overflow: "hidden", // Recorta las esquinas del contenido
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // (Opcional) Añade un poco de sombra para resaltar
-        height: "28vh", // Ajusta el tamaño del contenedor
-        border: "1px solid white",
+        height: "30vh", // Ajusta el tamaño del contenedor
+        position: "relative",
       }}
     >
+      <button
+                  onClick={() => setDecalEnabled((prev) => !prev)}
+                  style={{
+                    backgroundColor: Colors.GrisAzuladoOscuro,
+                    padding: "3px 10px",
+                    borderRadius:"10px",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "18px",
+                    color: Colors.BlancoEnBlanco,
+                    position: "absolute",
+                    top: "20px",
+                    right: "5px",
+                    zIndex:"900"
+                  }}
+                >
+                  <FontAwesomeIcon icon={!decalEnabled ? faEye : faEyeSlash} />
+                </button>
       <ReactECharts
         option={option}
         theme="dark"
