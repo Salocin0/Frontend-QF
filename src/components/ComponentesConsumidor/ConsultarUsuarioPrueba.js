@@ -9,6 +9,7 @@ import EncargadoPuesto from "./FormEncargadoPerfil";
 import RepartidorComponent from "./FormRepartidorPerfil";
 import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import EstadisticasPerfil from "./estadisticasPerfil/EstadisticasPerfil";
 
 const ConsultarUsuario = () => {
   const [showModal, setShowModal] = useState(false);
@@ -352,7 +353,7 @@ const ConsultarUsuario = () => {
         <div style={styles.mainContent}>
           <div style={styles.card}>
             <div style={styles.cardBody}>
-              <form className="needs-validation">
+              <div className="needs-validation">
                 <section style={styles.formWrapper}>
                   <UserProfileForm
                     mostrarBotonHabilitarDeNuevoR={mostrarBotonHabilitarDeNuevoR}
@@ -394,14 +395,14 @@ const ConsultarUsuario = () => {
                     setMostrarBotonHabilitarDeNuevoR={setMostrarBotonHabilitarDeNuevoR}
                   />
                 </section>
-              </form>
+              </div>
             </div>
           </div>
         </div>
         
         {/* Placeholder a la derecha */}
         <div style={styles.placeholderWrapper}>
-          <div>Placeholder</div>
+          <EstadisticasPerfil/>
         </div>
       </div>
       <Footer />

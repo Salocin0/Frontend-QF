@@ -21,7 +21,7 @@ const Notificaciones = () => {
     const fetchNotificaciones = async () => {
       try {
         const response = await fetch(
-          `${process.env?.REACT_APP_BACK_URL}notificaciones/`,
+          `${process.env?.REACT_APP_BACK_URL}notificaciones/web`,
           {
             method: "GET",
             headers: {

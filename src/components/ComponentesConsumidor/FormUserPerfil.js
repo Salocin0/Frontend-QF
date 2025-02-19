@@ -225,7 +225,6 @@ const UserProfileForm = ({
 
       if (response1.ok) {
         const data1 = await response1.json();
-        console.log(data1);
         setApellido(data1.data.apellido);
         setNombre(data1.data.nombre);
         setDNI(data1.data.dni);
@@ -238,7 +237,6 @@ const UserProfileForm = ({
 
         setLocalidad(data1.data.localidad);
         setProvincia(data1.data.provincia);
-        console.log(data1.data.provincia);
         setTelefono(data1.data.telefono);
 
         if (data1.codigo === 200) {
