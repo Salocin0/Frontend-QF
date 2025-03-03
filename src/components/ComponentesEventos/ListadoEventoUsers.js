@@ -151,7 +151,7 @@ const ListadoEventosUsers = () => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      padding: "10px 0",
+      padding: "0px",
       height: "100%",
       width: "100%",
       overflowY: "auto",

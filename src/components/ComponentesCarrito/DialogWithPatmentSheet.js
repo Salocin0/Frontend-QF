@@ -42,7 +42,7 @@ const DialogWithPaymentSheet = ({
         console.error("Error fetching Payment Sheet data:", error);
       }
     };
-    fetchPaymentSheetData(amount * 1000);
+    fetchPaymentSheetData(amount*100);
   }, [paymentSheetData]);
 
   const handleClose = () => {

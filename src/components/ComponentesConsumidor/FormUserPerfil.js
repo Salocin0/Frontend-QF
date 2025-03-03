@@ -143,7 +143,8 @@ const UserProfileForm = ({
       !fechaNacimiento ||
       !provincia ||
       !localidad ||
-      !telefono
+      !telefono ||
+      !username
     ) {
       toast.error("Rellene todos los campos");
       return;
@@ -157,9 +158,8 @@ const UserProfileForm = ({
       provincia,
       localidad,
       telefono,
+      nombreUsuario: username,
     };
-
-    console.log(datosActualizados);
 
     try {
       const response = await fetch(

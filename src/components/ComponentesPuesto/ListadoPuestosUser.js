@@ -52,7 +52,7 @@ const ListadoPuestosUser = () => {
         console.log("evento",data.data);
       })
       .catch((error) => console.log("No existen eventos."));
-  });
+  },[idEvento]);
 
   // Filtrar carritos cuando cambien los filtros
   useEffect(() => {

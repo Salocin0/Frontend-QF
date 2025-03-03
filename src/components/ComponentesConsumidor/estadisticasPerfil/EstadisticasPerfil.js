@@ -14,18 +14,20 @@ const EstadisticasPerfil = () => {
         let dataRepartidor = null;
         let dataConsumidor = null;
 
-        if (user.usuario === "Repartidor") {
+        if (user.tipoUsuario === "repartidor") {
           const responseRepartidor = await fetch(
             `${process.env?.REACT_APP_BACK_URL}estadisticas/repartidor/${user.consumidorId}`
           );
-          if (!responseRepartidor.ok) throw new Error("Error en la API de repartidor");
+          if (!responseRepartidor.ok)
+            throw new Error("Error en la API de repartidor");
           dataRepartidor = await responseRepartidor.json();
         }
 
         const responseConsumidor = await fetch(
           `${process.env?.REACT_APP_BACK_URL}estadisticas/consumidor/${user.consumidorId}`
         );
-        if (!responseConsumidor.ok) throw new Error("Error en la API de consumidor");
+        if (!responseConsumidor.ok)
+          throw new Error("Error en la API de consumidor");
         dataConsumidor = await responseConsumidor.json();
 
         setEstadisticasRepartidor(dataRepartidor?.data || null);
@@ -43,18 +45,38 @@ const EstadisticasPerfil = () => {
   if (isLoading) return <p>Cargando estadísticas...</p>;
 
   return (
-    <div>
-      {user.usuario === "Repartidor" && (
-        <div>
-          <CardGenericaEstadistica titulo={"Eventos Trabajados"} valor={estadisticasRepartidor.eventos_participados} />
-          <CardGenericaEstadistica titulo={"Pedidos Entregados"} valor={estadisticasRepartidor.pedidos_entregados} />
-        </div>
+    <div
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      {user.tipoUsuario === "repartidor" && (
+        <CardGenericaEstadistica
+          titulo={"Eventos Trabajados"}
+          valor={estadisticasRepartidor.eventos_participados}
+        />
       )}
-      <div>
-        <CardGenericaEstadistica titulo={"Total Gastado"} valor={estadisticasConsumidor.total_gastado} />
-        <CardGenericaEstadistica titulo={"Pedidos Realizados"} valor={estadisticasConsumidor.total_pedidos} />
-        <CardGenericaEstadistica titulo={"Eventos Participados"} valor={estadisticasConsumidor.total_eventos} />
-      </div>
+      {user.tipoUsuario === "repartidor" && (
+        <CardGenericaEstadistica
+          titulo={"Pedidos Entregados"}
+          valor={estadisticasRepartidor.pedidos_entregados}
+        />
+      )}
+      <CardGenericaEstadistica
+        titulo={"Total Gastado"}
+        valor={estadisticasConsumidor.total_gastado}
+      />
+      <CardGenericaEstadistica
+        titulo={"Pedidos Realizados"}
+        valor={estadisticasConsumidor.total_pedidos}
+      />
+      <CardGenericaEstadistica
+        titulo={"Eventos Participados"}
+        valor={estadisticasConsumidor.total_eventos}
+      />
     </div>
   );
 };

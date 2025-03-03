@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
@@ -11,8 +11,8 @@ import useDynamicColors from "../../UseDinamicColors";
 const AdquirirNuevoRolR = () => {
   const navigate = useNavigate();
   const [confirmacionMayorDeEdad, setConfirmacionMayorDeEdad] = useState(false);
-  const [nuevoRol, setNuevorol] = useState(false);
-  const { user } = useContext(UserContext);
+  const [,setNuevorol] = useState(false);
+  const { user,updateUser } = useContext(UserContext);
   const Colors = useDynamicColors();
 
   const styles = {
@@ -69,7 +69,27 @@ const AdquirirNuevoRolR = () => {
       cursor: "not-allowed",
     },
   };
-  console.log(user)
+  const handleLogout = () => {
+      if (user.id) {
+        fetch(`${process.env?.REACT_APP_BACK_URL}user/cerrarWeb`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: user.id }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            updateUser({});
+            navigate("/login");
+            toast.success("Sesión cerrada");
+          })
+          .catch((error) => {
+            console.log(error);
+            toast.error("Error al cerrar sesion");
+          });
+      }
+    };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -84,17 +104,13 @@ const AdquirirNuevoRolR = () => {
 
         if (response.ok) {
           toast.success("Actualizado a repartidor");
-          const data = await response.json();
           setNuevorol(true);
-          console.log(data);
-          navigate(`/login`);
+          handleLogout()
         } else {
           toast.error("Error al actualizar a repartidor");
-          console.log(await response.json());
         }
       }
     } catch (error) {
-      console.error(error);
       toast.error("Error");
     }
   };

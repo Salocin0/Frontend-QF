@@ -131,8 +131,7 @@ const UserProfile = ({ haveRol }) => {
       href: "/adquirir-nuevo-rolR",
       showWhenNoRol: false,
     },
-    { label: "Perfil", href: "/perfil-nuevo", showWhenNoRol: true },
-    { label: "Configuración", href: "/configuracion", showWhenNoRol: true },
+    { label: "Perfil", href: "/perfil", showWhenNoRol: true },
   ];
 
   return (

@@ -79,7 +79,7 @@ const ListadoEventosProductor = () => {
       paddingBottom: "20px",
     },
     container: {
-      paddingTop: "20px",
+      paddingTop: "0px",
       paddingBottom: "40px",
       width: "100%",
       marginLeft: "20px",
@@ -141,7 +141,7 @@ const ListadoEventosProductor = () => {
 
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
-    { title: "Mis Notificaciones", url: "/Listado-eventos" },
+    { title: "Mis Eventos", url: "/listado-eventos-productor" },
   ];
 
   return (

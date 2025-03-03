@@ -20,6 +20,7 @@ const ListadoProductoUser = () => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const navigate = useNavigate();
+  
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Eventos", url: "/Listado-eventos" },
@@ -28,7 +29,13 @@ const ListadoProductoUser = () => {
   ];
   const location = useLocation();
   const selectedDay = location.state?.selectedDay || null;
-  const evento = location.state?.evento || null;
+  let evento = location.state?.evento || null;
+  const eventoId = location.state?.eventoid;
+  console.log(eventoId);
+  if(evento===null){
+    evento={id:eventoId}
+  }
+  
   console.log(selectedDay);
 
   useEffect(() => {
@@ -123,9 +130,9 @@ const ListadoProductoUser = () => {
       flexDirection: "column",
       alignItems: "center",
       padding: "0",
-      paddingBottom: "60px",
+      paddingBottom: "80px",
       // Mantiene el desplazamiento
-      height: "calc(100vh - 200px)", // Altura ajustada para limitar el scroll
+      height: "100vh", // Altura ajustada para limitar el scroll
       scrollbarWidth: "none",
       msOverflowStyle: "none",
       "::-webkit-scrollbar": {

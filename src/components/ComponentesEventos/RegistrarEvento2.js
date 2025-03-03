@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
@@ -7,6 +7,7 @@ import "./../sass/main.scss";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const RegistrarEvento2 = () => {
   const [nombre, setNombre] = useState("");
@@ -160,28 +161,6 @@ const RegistrarEvento2 = () => {
     setTipoPago(value);
   };
 
-  const handleProvinceChange = (e) => {
-    setSelectedProvince(e.target.value);
-    setProvincia(e.target.value);
-    if (e.target.value !== "") {
-      fetch(
-        `https://apis.datos.gob.ar/georef/api/municipios?provincia=${e.target.value}&campos=id,nombre&max=700`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          const sortedLocalidades = data.municipios.sort((a, b) =>
-            a.nombre.localeCompare(b.nombre)
-          );
-          setLocalidades(sortedLocalidades);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      setLocalidades([]);
-    }
-  };
-
   const handleUbicacionChange = (e) => {
     const value = e.target.value;
     setUbicacion(value);
@@ -235,7 +214,6 @@ const RegistrarEvento2 = () => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-
     },
     darkFormWrapper: {
       backgroundColor: Colors.GrisAzuladoClaro,
@@ -243,16 +221,9 @@ const RegistrarEvento2 = () => {
       padding: "2rem",
       borderRadius: "10px",
     },
-    tituloSeccion: {
-      fontSize: "1.8rem",
-      fontWeight: "bold",
-      textAlign: "center",
-      color: Colors.Blanco,
-      marginBottom: "1rem",
-    },
     formGroup: {
       marginBottom: "0.5rem",
-      position: "relative"
+      position: "relative",
     },
     formLabel: {
       display: "block",
@@ -330,12 +301,43 @@ const RegistrarEvento2 = () => {
       borderRadius: "5px",
       cursor: "pointer",
     },
+    breadcrumbWrapper: {
+      width: "100%",
+      margin: "0",
+      padding: "0",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
+    tituloSeccion: {
+      display: "flex",
+      justifyContent: "center",
+      marginTop: "20px",
+      fontSize: "24px",
+      marginLeft: "20%",
+      color: Colors.Blanco,
+    },
+    hr: {
+      color: Colors.Naranja,
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Eventos", url: "/listado-eventos-productor" },
+    { title: "Crear un Evento (1/3)", url: "registrar-evento2" },
+  ];
 
   return (
     <div style={styles.containerFluid}>
       <Sidebar tipoUsuario={user?.tipoUsuario} />
       <div style={styles.rowFormEvento}>
+        <div style={styles.header}>
+          <h1 style={styles.title}>Crear un Evento</h1>
+        </div>
+        <hr style={styles.separator} />
+        <div>
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
         <div style={styles.colForm}>
           <div style={styles.darkFormWrapper}>
             <form action="#" method="POST">
@@ -473,7 +475,10 @@ const RegistrarEvento2 = () => {
                   id="imagen"
                   accept="image/*"
                   onChange={handleImagenEventoChange}
-                  style={{...styles.formInput, backgroundColor: Colors.Blanco}}
+                  style={{
+                    ...styles.formInput,
+                    backgroundColor: Colors.Blanco,
+                  }}
                 />
               </div>
 

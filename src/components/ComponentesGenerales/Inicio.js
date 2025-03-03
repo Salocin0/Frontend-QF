@@ -43,7 +43,7 @@ const Inicio = () => {
   };
 
   const handleProfile = () => {
-    navigate("/perfil-nuevo");
+    navigate("/perfil");
   };
 
   const handleCart = () => {

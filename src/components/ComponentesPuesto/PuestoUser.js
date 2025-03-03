@@ -3,13 +3,32 @@ import useDynamicColors from "../../UseDinamicColors";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faStar } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { useEffect,useState } from "react";
 
-const PuestoUser = ({ carrito, selectedDay,evento }) => {
+const PuestoUser = ({ carrito, selectedDay, evento }) => {
   const Color = useDynamicColors();
   const navigate = useNavigate();
+  const [estrellas, setEstrellas] = useState(0);
+  const [tiempoEntrega, setTiempoEntrega] = useState(0);
   const handleClick = () => {
-    navigate(`/productos-puesto/${carrito?.id}`, { state: { selectedDay,evento } });
+    navigate(`/productos-puesto/${carrito?.id}`, {
+      state: { selectedDay, evento },
+    });
   };
+
+  useEffect(() => {
+    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/getEstadisticas/${carrito.id}`, {
+      method: "GET",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.data)
+        setEstrellas(data.data.estrellas);
+        setTiempoEntrega(data.data.tiempo);
+      })
+      .catch((error) => console.log("error al obtener estadisticas."));
+  }, [carrito]);
+
   const styles = {
     cardLink: {
       textDecoration: "none",
@@ -94,12 +113,12 @@ const PuestoUser = ({ carrito, selectedDay,evento }) => {
           <div style={styles.iconWrapper}>
             <FontAwesomeIcon icon={faClock} />
             <span style={styles.iconText}>
-              {carrito?.tiempoEntrega || " 30 min"}
+              {tiempoEntrega || " 30"} {"Min"}
             </span>
           </div>
           <div style={styles.iconWrapper}>
             <FontAwesomeIcon icon={faStar} />
-            <span style={styles.iconText}>{carrito?.estrellas || " 4.5"}</span>
+            <span style={styles.iconText}>{estrellas || " 4.5"}</span>
           </div>
         </div>
       </div>

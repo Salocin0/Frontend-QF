@@ -71,6 +71,10 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
     navigate(`/pedidos-Encargado/${carrito.id}`, { state: carrito });
   };
 
+  const infoPuesto = () => {
+    navigate(`/info-puesto/${carrito.id}`, { state: carrito });
+  }
+
   const styles = {
     container: {
       width: "90%",
@@ -208,8 +212,8 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
           >
             Pedidos en curso
           </button>
-          <button style={{ ...styles.button, ...styles.secondaryButton }}>
-            Editar Puesto
+          <button style={{ ...styles.button, ...styles.primaryButton }} onClick={infoPuesto}>
+            info Puesto
           </button>
           {isCreado && (
             <button

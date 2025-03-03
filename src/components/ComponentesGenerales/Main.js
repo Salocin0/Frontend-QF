@@ -100,7 +100,7 @@ export const Main = () => {
         {/*nuevos estilos por aplicar*/}
         <Route path="/puestos-deshabilitados" element={<ListadoPuestosDeshabilitados />} />
         <Route path="/notificaciones" element={<Notificaciones/>}/>
-        <Route path="/perfil-nuevo" element={<ConsultarUsuarioPrueba />} />
+        <Route path="/perfil" element={<ConsultarUsuarioPrueba />} />
         
         <Route path="/info-puesto/:id" element={<ConsultarPuestoSolicitud />} />
         <Route path="/puesto/:id" element={<ConsultarPuesto />} />

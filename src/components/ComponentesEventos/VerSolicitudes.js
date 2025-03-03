@@ -1,14 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const VerSolicitudesEvento = () => {
   const { evento } = useParams();
-  const navigate = useNavigate();
   const [eventos, setEventos] = useState([]);
   const [asociaciones, setAsociaciones] = useState([]);
   const { user } = useContext(UserContext);
@@ -16,50 +16,42 @@ const VerSolicitudesEvento = () => {
   const [recargar, setRecargar] = useState(0);
 
   const recargarComponente = () => {
-    setRecargar(+1);
+    setRecargar((prev) => prev + 1);
   };
 
   useEffect(() => {
-    if (!asociaciones.length && evento) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data.data);
-          setAsociaciones(data.data);
-        })
-        .catch((error) => {
-          console.error("Error al obtener las asociaciones:", error);
-        });
-    }
-  }, [evento, asociaciones, recargar]);
+    fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data.data);
+        setAsociaciones(data.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener las asociaciones:", error);
+      });
+  }, [asociaciones.length, evento, recargar]);
 
   useEffect(() => {
-    if (!eventos.length) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}evento/${evento}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data.data);
-          setEventos(data.data);
-        })
-        .catch((error) => {
-          console.error("Error al obtener el evento:", error);
-        });
-    }
-  });
-
-  const infoEvento = (eventoId) => {
-    navigate(`/info-puesto/${eventoId}`);
-  };
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/${evento}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data.data);
+        setEventos(data.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener el evento:", error);
+      });
+  }, [evento, eventos.length, recargar]);
 
   const aceptarSolicitud = (asociacionId) => {
     fetch(
@@ -71,9 +63,11 @@ const VerSolicitudesEvento = () => {
       .then((response) => response.json())
       .then(() => {
         toast.success("Asociacion Aceptada con éxito");
-        recargarComponente();
       })
-      .catch((error) => toast.error("Error al Asociar Puesto"));
+      .catch((error) => toast.error("Error al Asociar Puesto"))
+      .finally(() => {
+        recargarComponente();
+      });
   };
 
   const rechazarSolicitud = (asociacionId) => {
@@ -87,9 +81,11 @@ const VerSolicitudesEvento = () => {
       .then((response) => response.json())
       .then(() => {
         toast.success("Asociacion Rechazada con éxito");
-        recargarComponente();
       })
-      .catch((error) => toast.error("Error al Asociar Puesto"));
+      .catch((error) => toast.error("Error al Asociar Puesto"))
+      .finally(() => {
+        recargarComponente();
+      });
   };
 
   const cancelarSolicitud = (asociacionId) => {
@@ -103,9 +99,11 @@ const VerSolicitudesEvento = () => {
       .then((response) => response.json())
       .then(() => {
         toast.success("Asociacion Cancelada con éxito");
-        recargarComponente();
       })
-      .catch((error) => toast.error("Error al Cancelar Puesto"));
+      .catch((error) => toast.error("Error al Cancelar Puesto"))
+      .finally(() => {
+        recargarComponente();
+      });
   };
 
   const styles = {
@@ -151,7 +149,7 @@ const VerSolicitudesEvento = () => {
       flexDirection: "column",
       backgroundColor: Colors.GrisAzuladoClaro,
       borderRadius: "10px",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `1px solid ${Colors.Naranja}`,
       width: "100%",
       paddingBottom: "20px",
     },
@@ -196,7 +194,20 @@ const VerSolicitudesEvento = () => {
     linkAgregarEvento: {
       textDecoration: "none",
     },
+    breadcrumbWrapper: {
+      width: "100%",
+      margin: "0",
+      padding: "0",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Eventos", url: "/listado-eventos-productor" },
+    { title: "Ver Solicitudes", url: "/listado-eventos-productor" },
+  ];
 
   return (
     <div className="row" style={styles.mainFormEventos}>
@@ -210,6 +221,15 @@ const VerSolicitudesEvento = () => {
                 <h1>Mis Solicitudes para {eventos.nombre}</h1>
               </div>
               <hr style={styles.hrStyle} />
+              <div style={styles.breadcrumbWrapper}>
+                <Breadcrumb
+                  items={breadcrumbItems}
+                  style={{
+                    width: "Calc(100% - 40px)",
+                    marginLeft: "Calc(20px)",
+                  }}
+                />
+              </div>
               {asociaciones.map((asociacion, index) => (
                 <div style={styles.card} key={index}>
                   <div style={styles.cardEstadoProductor}>
@@ -258,6 +278,7 @@ const VerSolicitudesEvento = () => {
                             </button>
                           )}
                         {asociacion.estado !== "Rechazada" &&
+                          asociacion.estado !== "Cancelada" &&
                           asociacion.estado !== "Aceptada" && (
                             <button
                               className="btn btn-danger"
@@ -267,8 +288,7 @@ const VerSolicitudesEvento = () => {
                               Rechazar Solicitud
                             </button>
                           )}
-                        {(asociacion.estado === "Rechazada" ||
-                          asociacion.estado === "Aceptada") && (
+                        {asociacion.estado === "Aceptada" && (
                           <button
                             className="btn btn-danger"
                             style={styles.button}
@@ -280,7 +300,6 @@ const VerSolicitudesEvento = () => {
                         <button
                           className="btn btn-secondary"
                           style={styles.button}
-                          /*onClick={() => infoEvento(asociacion.puesto.id)}*/
                           disabled
                         >
                           Info

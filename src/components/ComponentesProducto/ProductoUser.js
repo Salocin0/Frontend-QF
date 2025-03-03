@@ -3,8 +3,9 @@ import { toast } from "react-toastify";
 import productoDefecto from "./../img/productoDefecto.png";
 import useDynamicColors from "../../UseDinamicColors";
 
-const ProductoUser = ({ producto, user, selectedDay,evento }) => {
+const ProductoUser = ({ producto, user, selectedDay, evento }) => {
   const Colors = useDynamicColors();
+  console.log(evento);
   const handleAddtocart = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
@@ -33,10 +34,10 @@ const ProductoUser = ({ producto, user, selectedDay,evento }) => {
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
       borderRadius: "10px",
       width: "75%",
-      height: "200px",
+      height: "250px",
       overflow: "hidden",
       backgroundColor: Colors.GrisAzuladoClaro,
-      marginBottom: "20px",
+      marginBottom: "30px",
       marginLeft: "30px",
       border: `1px solid ${Colors.Naranja}`,
     },
