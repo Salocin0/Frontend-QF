@@ -10,6 +10,7 @@ const Breadcrumb = ({ items, style }) => {
       backgroundColor: Colors.GrisAzuladoClaro,
       width: '75%',
       padding: '10px 20px',
+      marginBottom: '10px',
       marginTop: '0px',
       borderRadius: '10px',
       border: `1px solid ${Colors.Naranja}`,

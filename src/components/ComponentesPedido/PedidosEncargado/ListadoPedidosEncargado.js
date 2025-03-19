@@ -7,6 +7,7 @@ import useDynamicColors from "../../../UseDinamicColors.js";
 import Footer from "../../ComponentesGenerales/Footer.js";
 import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import Breadcrumb from "../../ComponentesGenerales/Breadcrumb.js";
 
 const ListadoPedidosEncargado = () => {
   const { user } = useContext(UserContext);
@@ -15,7 +16,7 @@ const ListadoPedidosEncargado = () => {
   const Colors = useDynamicColors();
   const { id } = useParams();
   const location = useLocation();
-  const carrito = location.state; 
+  const carrito = location.state;
   console.log(carrito);
 
   const recargarComponente = () => {
@@ -38,7 +39,7 @@ const ListadoPedidosEncargado = () => {
         })
         .catch((error) => console.log("No existen pedidos.", error));
     }
-  }, [user, recargar,id]);
+  }, [user, recargar, id]);
 
   const initialData = {
     tasks: pedidos.reduce((acc, pedido) => {
@@ -105,12 +106,14 @@ const ListadoPedidosEncargado = () => {
   const styles = {
     container: {
       marginBottom: "0",
-      width: "100%",
+      width: "Calc(100% - 30px)",
+      marginLeft: "20px",
+      marginRight: "20px"
     },
     tituloSeccion: {
       display: "flex",
       justifyContent: "center",
-      paddingTop: "2rem",
+      paddingTop: "1rem",
       fontSize: "2rem",
       color: Colors.Naranja,
     },
@@ -118,10 +121,10 @@ const ListadoPedidosEncargado = () => {
       margin: 0,
       backgroundColor: Colors.GrisAzuladoOscuro,
       height: "100vh",
-      overflowY: "auto", // Permite el desplazamiento solo si es necesario
-      msOverflowStyle: "none", // IE and Edge
-      scrollbarWidth: "none", // Firefox
-      WebkitScrollbar: { display: "none" }, // Hide scrollbar for Chrome, Safari, and Opera
+      overflowY: "auto",
+      msOverflowStyle: "none",
+      scrollbarWidth: "none",
+      WebkitScrollbar: { display: "none" },
     },
     colContent: {
       marginLeft: "20%",
@@ -133,7 +136,6 @@ const ListadoPedidosEncargado = () => {
       flexDirection: "column",
     },
     boardContainer: {
-      paddingTop: "2rem",
       paddingBottom: "4rem",
       width: "100%",
       height: "100%",
@@ -143,7 +145,17 @@ const ListadoPedidosEncargado = () => {
       color: Colors.Naranja,
       textAlign: "center",
     },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Puestos", url: "/listado-puestos-encargado" },
+    { title: "Mis Pedidos", url: `/pedidos-Encargado/${carrito.id}` },
+  ];
 
   return (
     <div style={styles.row}>
@@ -153,6 +165,12 @@ const ListadoPedidosEncargado = () => {
           <h1>Pedidos {carrito?.nombreCarro}</h1>
         </div>
         <hr style={{ color: Colors.Naranja }} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
+        </div>
         <div style={styles.container}>
           <div style={styles.boardContainer}>
             {Array.isArray(pedidos) && pedidos.length > 0 ? (
@@ -169,7 +187,7 @@ const ListadoPedidosEncargado = () => {
           </div>
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

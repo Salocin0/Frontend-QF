@@ -7,6 +7,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/logoevento.webp";
 import Footer from "../ComponentesGenerales/Footer";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const AsociacionesR = () => {
   const navigate = useNavigate();
@@ -100,7 +101,7 @@ const AsociacionesR = () => {
       paddingTop: "20px",
     },
     card: {
-      margin: "20px 30px",
+      margin: "20px 20px",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "8px",
       backgroundColor: Colors.GrisAzuladoClaro,
@@ -143,7 +144,17 @@ const AsociacionesR = () => {
       marginBottom: "10px",
     },
     noEventosContainer: { paddingBottom: "50px" },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis asociaciones", url: "/misAsociacionesR" },
+  ];
 
   return (
     <div>
@@ -155,6 +166,15 @@ const AsociacionesR = () => {
               <h1>Mis Asociaciones</h1>
             </div>
             <hr style={styles.hrStyle} />
+            <div style={styles.breadcrumbWrapper}>
+              <Breadcrumb
+                items={breadcrumbItems}
+                style={{
+                  width: "Calc(100% - 40px)",
+                  marginLeft: "Calc(20px)",
+                }}
+              />
+            </div>
             <div style={styles.noEventosContainer}>
               {eventos.length > 0 ? (
                 <>

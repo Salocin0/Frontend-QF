@@ -4,6 +4,7 @@ import EventoEncargado from "../ComponentesEventos/EventoEncargado";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const AsociarPuestoAEvento = () => {
   const { puestoId } = useParams();
@@ -87,7 +88,18 @@ const AsociarPuestoAEvento = () => {
       color: Colors.Naranja,
       textAlign: "center",
     },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Puestos", url: "/listado-puestos-encargado" },
+    { title: "Asociarme a un Evento", url: `/asociarPuestoAEvento/${puestoId}` },
+  ];
 
   return (
     <div style={styles.container}>
@@ -97,6 +109,12 @@ const AsociarPuestoAEvento = () => {
           <h1 style={styles.title}>Asociate a un Evento</h1>
         </div>
         <hr style={styles.separator} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100%)" }}
+          />
+        </div>
         <div style={styles.eventsContainer}>
           <div style={styles.eventsList}>
             {Array.isArray(eventos) && eventos.length > 0 ? (

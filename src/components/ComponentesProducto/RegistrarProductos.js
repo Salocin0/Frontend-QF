@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const RegistrarProductos = () => {
   const [nombre, setNombre] = useState("");
@@ -99,11 +100,10 @@ const RegistrarProductos = () => {
   const styles = {
     mainFormEventos: {
       padding: "0",
-      height: "100vh",
       backgroundColor: Colors.GrisAzuladoOscuro,
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
+      
     },
     cardBody: {
       padding: "20px",
@@ -111,14 +111,14 @@ const RegistrarProductos = () => {
       flexDirection: "column",
       backgroundColor: Colors.GrisAzuladoClaro,
       marginLeft: "20%",
-      width: "400px",
-      height: "630px",
+      width: "Calc(80% - 40px)",
       border: `1px solid ${Colors.Naranja}`,
+      height: "100%",
     },
     formTitle: {
       fontSize: "1.25rem",
       fontWeight: "bold",
-      marginBottom: "1rem",
+      marginBottom: "0.5rem",
       color: Colors.Naranja,
       textAlign: "center",
     },
@@ -163,27 +163,96 @@ const RegistrarProductos = () => {
       border: "none",
       cursor: "pointer",
     },
+    breadcrumbWrapper: {
+      marginLeft: "20%",
+      width: "Calc(80%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: "20%",
+      width: "80%",
+      padding: "20px",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+    },
+    fondo: {
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      paddingBottom: "80px"
+    },
+    divider: {
+      borderColor: Colors.Naranja,
+      width: "100%",
+      margin: "10px 0",
+    },
+    title: {
+      color: Colors.Naranja,
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    row: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
   };
 
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Puestos", url: "/listado-puestos-encargado" },
+    { title: "Mis Productos", url: `/listado-productos/${id}` },
+    { title: "Crear Producto Nuevo", url: `/registrar-productos` },
+  ];
+
   return (
-    <>
+    <div style={styles.fondo}>
+      <div>
+        <div style={styles.header}>
+          <h1 style={styles.title}>Crear Producto Nuevo</h1>
+        </div>
+        <hr style={styles.divider} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
+        </div>
+      </div>
+
       <Sidebar tipoUsuario={user?.tipoUsuario} />
       <div style={styles.mainFormEventos}>
         <div style={styles.cardBody}>
           <h1 style={styles.formTitle}>Registrar Producto</h1>
           <form onSubmit={handleSubmit} className="needs-validation">
-            <div className="mb-3">
-              <label style={styles.formLabel} htmlFor="nombre">
-                Nombre del Producto
-              </label>
-              <input
-                type="text"
-                id="nombre"
-                style={styles.formControl}
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-              />
+            <div style={styles.row}>
+              <div className="mb-3" style={{ width: "50%", marginRight: "20px" }}>
+                <label style={styles.formLabel} htmlFor="nombre">
+                  Nombre del Producto
+                </label>
+                <input
+                  type="text"
+                  id="nombre"
+                  style={styles.formControl}
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="mb-3" style={{ width: "50%" }}>
+                <label style={styles.formLabel} htmlFor="precio">
+                  Precio
+                </label>
+                <input
+                  id="precio"
+                  style={styles.formControl}
+                  value={precio}
+                  onChange={(e) => setPrecio(e.target.value)}
+                  required
+                />
+              </div>
             </div>
 
             <div className="mb-3">
@@ -199,20 +268,8 @@ const RegistrarProductos = () => {
                 required
               />
             </div>
-
-            <div className="mb-3">
-              <label style={styles.formLabel} htmlFor="precio">
-                Precio
-              </label>
-              <input
-                id="precio"
-                style={styles.formControl}
-                value={precio}
-                onChange={(e) => setPrecio(e.target.value)}
-                required
-              />
-            </div>
-            <div className="mb-3">
+            <div style={styles.row}>
+            <div className="mb-3" style={{ width: "50%", marginRight: "20px" }}>
               <label style={styles.formLabel} htmlFor="descripcion">
                 Descripción
               </label>
@@ -225,7 +282,7 @@ const RegistrarProductos = () => {
               />
             </div>
 
-            <div className="mb-3">
+            <div className="mb-3" style={{ width: "50%" }}>
               <label style={styles.formLabel} htmlFor="aderezos">
                 Aderezos
               </label>
@@ -237,6 +294,8 @@ const RegistrarProductos = () => {
                 required
               />
             </div>
+            </div>
+            
 
             <div className="mb-3">
               <label style={styles.formLabel} htmlFor="estado">
@@ -263,7 +322,7 @@ const RegistrarProductos = () => {
         </div>
         <Footer />
       </div>
-    </>
+    </div>
   );
 };
 

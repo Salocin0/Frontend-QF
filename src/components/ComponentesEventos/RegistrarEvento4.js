@@ -7,6 +7,7 @@ import "./../sass/main.scss";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const RegistrarEvento4 = () => {
   const { diferenciaDiasEvento } = useParams();
@@ -141,29 +142,22 @@ const RegistrarEvento4 = () => {
       flexWrap: "wrap",
     },
     colForm: {
-      width: "100%",
-      padding: "0",
-      marginLeft: "20%",
-      height: "calc(100vh - 50px)",
+      height: "Calc(75% - 60px)",
+      padding: 0,
       display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      width: "Calc(100% - 20%)",
+      marginLeft: "20%",
+      marginBottom: "70px",
     },
     formWrapper: {
       color: Colors.Blanco,
       padding: "2rem",
-      width: "80%",
+      width: "100%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
       backgroundColor: Colors.GrisAzuladoClaro,
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      margin: "auto",
-    },
-    tituloSeccion: {
-      fontSize: "1.5rem",
-      fontWeight: "bold",
-      marginBottom: "1rem",
+      margin: "0 20px",
     },
     formGroup: {
       marginBottom: "1rem",
@@ -177,8 +171,7 @@ const RegistrarEvento4 = () => {
       width: "100%",
       padding: "0.5rem",
       fontSize: "1rem",
-      borderRadius: "4px",
-      backgroundColor: Colors.Blanco,
+      borderRadius: "10px",
       color: Colors.NegroEnNegro,
     },
     buttonContainer: {
@@ -187,14 +180,15 @@ const RegistrarEvento4 = () => {
       gap: "0.5rem",
     },
     button: {
-      padding: "0.75rem 1.5rem",
-      fontSize: "1rem",
-      fontWeight: "bold",
       backgroundColor: Colors.Azul,
       color: Colors.Blanco,
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
+      width: "100%",
+      padding: "0.75rem",
+      fontSize: "1rem",
+      fontWeight: "bold",
     },
     buttonSecondary: {
       backgroundColor: Colors.GrisOscuro,
@@ -214,17 +208,57 @@ const RegistrarEvento4 = () => {
       maxWidth: "400px",
       width: "100%",
     },
+    tituloSeccion: {
+      display: "flex",
+      justifyContent: "center",
+      marginTop: "20px",
+      fontSize: "24px",
+      marginLeft: "20%",
+      color: Colors.Blanco,
+      width: "80%",
+    },
+    separator: {
+      border: "none",
+      marginBottom: "5px",
+      marginTop: "0px",
+      borderTop: `1px solid ${Colors.Naranja}`,
+    },
+    breadcrumbWrapper: {
+      marginLeft: "20%",
+      width: "80%",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
+    hr: {
+      color: Colors.Naranja,
+      border: `1px solid ${Colors.Naranja}`,
+      width: "100%",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Eventos", url: "/listado-eventos-productor" },
+    { title: "Crear un Evento (3/3)", url: "registrar-evento4" },
+  ];
 
   return (
     <div style={styles.containerFluid}>
       <div style={styles.rowFormEvento}>
         <Sidebar tipoUsuario={user?.tipoUsuario} />
+        <div style={styles.tituloSeccion}>
+          <h1 style={{ textAlign: "center" }}>Crear un Evento</h1>
+        </div>
+        <hr style={styles.hr} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
+        </div>
         <div style={styles.colForm}>
           <div style={styles.formWrapper}>
             <form action="#" method="POST">
-              <h3 style={styles.tituloSeccion}>Horas del Evento</h3>
-
               {horasPorDia.map((hora) => (
                 <div key={hora.dia} style={styles.rowFormEvento}>
                   <div style={{ width: "50%", paddingRight: "1rem" }}>
@@ -294,7 +328,7 @@ const RegistrarEvento4 = () => {
           </p>
         </div>
       )}
-      <Footer/>
+      <Footer />
     </div>
   );
 };

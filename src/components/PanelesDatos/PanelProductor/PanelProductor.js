@@ -7,6 +7,7 @@ import { UserContext } from "../../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../../UseDinamicColors";
 import TotalQuickFood from "./TotalGenerado";
 import ValoracionPromedio from "./ValoracionPromedio";
+import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
 
 const PanelProductor = () => {
   const { user } = useContext(UserContext);
@@ -29,7 +30,7 @@ const PanelProductor = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setEventos([{nombre:"Todos",id:"Todos"},...data?.data] || []);
+          setEventos([{ nombre: "Todos", id: "Todos" }, ...data?.data] || []);
           if (data?.data?.length > 0) {
             setEventoSeleccionado(eventos[0]);
           }
@@ -70,7 +71,7 @@ const PanelProductor = () => {
       color: "white",
       padding: "5px",
       marginLeft: "20px",
-      width:"200px"
+      width: "200px",
     },
     hr: {
       color: Colors.Naranja,
@@ -79,9 +80,8 @@ const PanelProductor = () => {
     },
     mainContent: {
       display: "flex",
-      height: "75vh",
+      height: "70vh",
       backgroundColor: Colors.GrisAzuladoOscuro,
-      marginBottom: "50px",
       marginLeft: "20%",
     },
     graficaContainer: {
@@ -97,7 +97,7 @@ const PanelProductor = () => {
         "grafica grafica grafica grafica toppuestos toppuestos toppuestos"
         "grafica grafica grafica grafica toppuestos toppuestos toppuestos"
       `,
-      marginLeft: "5%",
+      margin : "0 10px",
     },
     div2: {
       gridArea: "div2",
@@ -137,7 +137,16 @@ const PanelProductor = () => {
     footer: {
       marginTop: "auto",
     },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Estadisticas", url: "/grafica-productor" },
+  ];
 
   const handleEventoChange = (e) => {
     setEventoSeleccionado(e.target.value);
@@ -160,6 +169,15 @@ const PanelProductor = () => {
         ))}
       </select>
       <hr style={styles.hr} />
+      <div style={styles.breadcrumbWrapper}>
+        <Breadcrumb
+          items={breadcrumbItems}
+          style={{
+            width: "Calc(80% - 40px)",
+            marginLeft: "Calc(20% + 20px)",
+          }}
+        />
+      </div>
       <Sidebar tipoUsuario={user?.tipoUsuario} />
       <div style={styles.mainContent}>
         <div style={styles.graficaContainer}>

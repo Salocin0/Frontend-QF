@@ -6,6 +6,7 @@ import ProductoDeshabilitado from "./ProductoDeshabilitado";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ListadoProductoDeshabilitado = ({ carrito }) => {
   const { user } = useContext(UserContext);
@@ -67,8 +68,7 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
       display: "grid",
       gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
       gap: "1rem",
-      width: "80%",
-      margin: "0 auto",
+      width: "Calc(100% - 40px)",
     },
     noProductsMessage: {
       fontSize: "1.5rem",
@@ -85,7 +85,19 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
       fontWeight: "bold",
       cursor: "pointer",
     },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Puestos", url: "/listado-puestos-encargado" },
+    { title: "Mis Productos", url: `/listado-productos/${id}` },
+    { title: "Mis Productos Deshabilitados", url: `/listado-productos-deshabilitados/${id}` },
+  ];
 
   return (
     <div style={styles.container}>
@@ -98,6 +110,12 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
           </Link>
         </div>
         <hr style={styles.divider} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
+        </div>
         <div style={styles.gridContainer}>
           {Array.isArray(productos) && productos.length > 0 ? (
             productos.map((producto, index) => (

@@ -17,8 +17,8 @@ const EventoRepartidor = ({ evento, recargar }) => {
 
   const styles = {
     containerFluid: {
-      width: "90%",
-      margin: "0 auto",
+      width: "Calc(100% - 40px)",
+      margin: "0 20px",
     },
     hr:{
       color : Colors.Naranja

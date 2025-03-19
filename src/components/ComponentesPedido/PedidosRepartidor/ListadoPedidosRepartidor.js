@@ -4,6 +4,7 @@ import PedidoRepartidor from "./PedidoRepartidor";
 import { useContext } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../../UseDinamicColors";
+import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
 
 const ListadoPedidosRepartidor = () => {
   const [rows, setRows] = useState([]);
@@ -59,6 +60,7 @@ const ListadoPedidosRepartidor = () => {
       width: "100%",
       height: "100%",
       marginLeft: "20%",
+
     },
     titleSection: {
       display: "flex",
@@ -76,50 +78,69 @@ const ListadoPedidosRepartidor = () => {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      
     },
     listContainer: {
       paddingTop: "0.5rem",
       paddingBottom: "1rem",
       height: "100%",
       width: "100%",
+      marginBottom: "20px",
     },
     noPedidosText: {
       color: Colors.Naranja,
       textAlign: "center",
     },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
 
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Pedidos Asignados", url: "/pedidos-asignados" },
+  ];
+
   return (
-    <div>
-      <div style={styles.container}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-        <div style={styles.content}>
-          <div style={styles.titleSection}>
-            <h1 style={styles.titleText}>Pedidos asignados</h1>
-          </div>
-          <hr style={styles.separator} />
-          <div style={styles.centerContent}>
-            <div style={styles.listContainer}>
-              {Array.isArray(pedidos) && pedidos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex}>
-                    {row.map((pedido, index) => (
-                      <div key={index}>
-                        {pedido !== null ? (
-                          <PedidoRepartidor
-                            pedido={pedido}
-                            recargar={recargarComponente}
-                          />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 style={styles.noPedidosText}>No hay Pedidos asignados</h2>
-              )}
-            </div>
+    <div style={styles.container}>
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
+      <div style={styles.content}>
+        <div style={styles.titleSection}>
+          <h1 style={styles.titleText}>Pedidos asignados</h1>
+        </div>
+        <hr style={styles.separator} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{
+              width: "Calc(100% - 40px)",
+              marginLeft: "Calc(20px)",
+            }}
+          />
+        </div>
+        <div style={styles.centerContent}>
+          <div style={styles.listContainer}>
+            {Array.isArray(pedidos) && pedidos.length > 0 ? (
+              rows.length > 0 &&
+              rows.map((row, rowIndex) => (
+                <div key={rowIndex}>
+                  {row.map((pedido, index) => (
+                    <div key={index}>
+                      {pedido !== null ? (
+                        <PedidoRepartidor
+                          pedido={pedido}
+                          recargar={recargarComponente}
+                        />
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              ))
+            ) : (
+              <h2 style={styles.noPedidosText}>No hay Pedidos asignados</h2>
+            )}
           </div>
         </div>
       </div>

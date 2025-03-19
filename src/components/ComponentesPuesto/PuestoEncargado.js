@@ -77,12 +77,14 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
 
   const styles = {
     container: {
-      width: "90%",
+      width: "Calc(100% - 40px)",
       margin: "1rem auto",
       padding: "1rem",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "8px",
       backgroundColor: Colors.GrisAzuladoClaro,
+      marginLeft: "20px",
+      marginRight: "20px",
     },
     cardBody: {
       display: "flex",

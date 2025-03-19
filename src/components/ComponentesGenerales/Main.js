@@ -58,7 +58,8 @@ export const Main = () => {
   return (
     <main>
       <Routes>
-        {/*nuevos estilos aplicados*/}
+        {/*rutas de repartidor*/}
+
         <Route path="/registrarse/:tipoUsuario" element={<ProcesoRegistro />} />
         <Route path="/login" element={<Login />} />
         <Route path="/seleccion-perfil" element={<SeleccionRegister />} />

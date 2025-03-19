@@ -65,7 +65,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
       backgroundColor: Colors.GrisAzuladoClaro,
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       border: `1px solid ${Colors.Naranja}`,
-      margin: "0 30px",
+      margin: "10px 20px",
     },
     cardBody: {
       padding: "1rem",

@@ -88,6 +88,7 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       marginBottom: "20px",
       position: "relative",
       border: "2px solid white",
+       overflow: "hidden"
     },
     tablaTexto: {
       color: Colors.Blanco,

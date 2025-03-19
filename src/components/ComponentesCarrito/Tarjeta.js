@@ -101,15 +101,15 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     const detalles = {
         detalles: productos.map((producto) => ({
             cantidad: producto.cantidad,
-            productoId: producto.producto.id, // Accede correctamente al ID del producto
-            precio: producto.producto.precio, // Asegura que el precio viene desde producto
-            aderezos: producto.producto.aderezos, // Agregar aderezos si son relevantes
+            productoId: producto.producto.id,
+            precio: producto.producto.precio,
+            aderezos: producto.producto.aderezos,
         })),
         consumidorId: user.consumidorId,
         total: calcularTotal(productos)*1.15,
         puestoId: productos[0].producto.puestoId,
-        eventoId: productos[0].evento.id, // Extrae el evento del primer producto
-        precompra: productos[0]?.fecha, // Si la fecha es relevante
+        eventoId: productos[0].evento.id,
+        precompra: productos[0]?.fecha,
     };
 
     fetch(`${process.env?.REACT_APP_BACK_URL}pedido`, {

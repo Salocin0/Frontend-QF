@@ -5,6 +5,7 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
 import useDynamicColors from "../../UseDinamicColors";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const RegistrarEvento3 = () => {
   const location = useLocation();
@@ -274,6 +275,8 @@ const RegistrarEvento3 = () => {
   const styles = {
     containerFluid: {
       width: "100%",
+      height: "100%",
+      minHeight: "100vh",
       padding: "0",
       backgroundColor: Colors.GrisAzuladoOscuro,
     },
@@ -282,27 +285,23 @@ const RegistrarEvento3 = () => {
       flexWrap: "wrap",
     },
     formCol: {
+      height: "Calc(75% - 60px)",
+      padding: 0,
+      display: "flex",
+      width: "Calc(100% - 20%)",
       marginLeft: "20%",
-      padding: "0",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      width: "100%",
-      marginTop: "20px",
-      marginBottom: "70px",
+      
     },
     formWrapper: {
-      padding: "2rem",
-      borderRadius: "8px",
+      padding: "1rem",
+      borderRadius: "10px",
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      margin: "auto",
-      width: "50%",
+      marginLeft: "20px",
+      marginRight: "20px",
+      marginBottom: "20px",
+      width: "100%",
       backgroundColor: Colors.GrisAzuladoClaro,
       border: `1px solid ${Colors.Naranja}`,
-    },
-    tituloSeccion: {
-      fontSize: "1.5rem",
-      fontWeight: "bold",
-      marginBottom: "1rem",
-      textAlign: "center",
     },
     formGroup: {
       marginBottom: "1rem",
@@ -364,7 +363,39 @@ const RegistrarEvento3 = () => {
       borderRadius: "4px",
       cursor: "pointer",
     },
+    tituloSeccion: {
+      display: "flex",
+      justifyContent: "center",
+      marginTop: "20px",
+      fontSize: "24px",
+      marginLeft: "20%",
+      color: Colors.Blanco,
+      width: "80%",
+    },
+    separator: {
+      border: "none",
+      marginBottom: "5px",
+      marginTop: "0px",
+      borderTop: `1px solid ${Colors.Naranja}`,
+    },
+    breadcrumbWrapper: {
+      marginLeft: "20%",
+      width: "80%",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
+    hr: {
+      color: Colors.Naranja,
+      border: `1px solid ${Colors.Naranja}`,
+      width: "100%",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Eventos", url: "/listado-eventos-productor" },
+    { title: "Crear un Evento (2/3)", url: "registrar-evento3" },
+  ];
 
   return (
     <div style={styles.containerFluid}>
@@ -372,11 +403,19 @@ const RegistrarEvento3 = () => {
         <div style={styles.sidebarCol}>
           <Sidebar tipoUsuario={user?.tipoUsuario} />
         </div>
+        <div style={styles.tituloSeccion}>
+          <h1 style={{ textAlign: "center" }}>Crear un Evento</h1>
+        </div>
+        <hr style={styles.hr} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
+        </div>
         <div style={styles.formCol}>
           <div style={styles.formWrapper}>
             <form action="#" method="POST">
-              <h3 style={styles.tituloSeccion}>Datos del Evento</h3>
-
               <div style={styles.formGroup}>
                 <label htmlFor="fechaInicioEvento" style={styles.formLabel}>
                   Fecha Inicio Evento*
@@ -521,9 +560,7 @@ const RegistrarEvento3 = () => {
                   <div
                     style={{
                       ...styles.disabledOption,
-                      ...(selectedOptionRepartidores === 2
-                        ? {}
-                        : {}),
+                      ...(selectedOptionRepartidores === 2 ? {} : {}),
                     }}
                     /*onClick={() => handleOptionClickRepartidores(2)}*/
                   >

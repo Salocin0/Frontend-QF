@@ -7,6 +7,7 @@ import { useContext } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/logoevento.webp";
 import Footer from "../ComponentesGenerales/Footer";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const AsociacionesEPC = () => {
   const { user } = useContext(UserContext);
@@ -208,7 +209,17 @@ const AsociacionesEPC = () => {
       textDecoration: "none",
       fontWeight: "bold",
     },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis asociaciones", url: "/misAsociacionesEPC" },
+  ];
 
   return (
     <div>
@@ -219,6 +230,15 @@ const AsociacionesEPC = () => {
             <h1>Mis Asociaciones</h1>
           </div>
           <hr style={{ color: Colors.Naranja }} />
+          <div style={styles.breadcrumbWrapper}>
+            <Breadcrumb
+              items={breadcrumbItems}
+              style={{
+                width: "Calc(100% - 40px)",
+                marginLeft: "Calc(20px)",
+              }}
+            />
+          </div>
           <div style={styles.container}>
             <div>
               {eventos.length > 0 ? (
@@ -264,7 +284,11 @@ const AsociacionesEPC = () => {
                               </div>
                             </div>
                           )}
-                          <p style={styles.estadoText}>{asociacion.estado==="PendienteDeAceptacion"?"Pendiente de Aceptacion":asociacion.estado}</p>
+                          <p style={styles.estadoText}>
+                            {asociacion.estado === "PendienteDeAceptacion"
+                              ? "Pendiente de Aceptacion"
+                              : asociacion.estado}
+                          </p>
                         </div>
                       </div>
                     );

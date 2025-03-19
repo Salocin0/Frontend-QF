@@ -67,7 +67,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
   };
 
   return (
-    <div style={{ position: "relative", height: "34vh", width: "100%" }}>
+    <div style={{ position: "relative", height: "32vh", width: "100%" }}>
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{

@@ -5,6 +5,7 @@ import "./../sass/main.css";
 import EventoRepartidor from "./EventoRepartidor";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const AsociarRepartidorAEvento = () => {
   const {user} = useContext(UserContext);
@@ -84,7 +85,17 @@ const AsociarRepartidorAEvento = () => {
       height: "100%",
       width: "100%",
     },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Asociarte a evento", url: "/asociarRepartidorAEvento" },
+  ];
 
   return (
     <div style={styles.container}>
@@ -94,6 +105,15 @@ const AsociarRepartidorAEvento = () => {
           <h1 style={styles.titleText}>Asociate a un Evento</h1>
         </div>
         <hr style={styles.separator} />
+        <div style={styles.breadcrumbWrapper}>
+                  <Breadcrumb
+                    items={breadcrumbItems}
+                    style={{
+                      width: "Calc(100% - 40px)",
+                      marginLeft: "Calc(20px)",
+                    }}
+                  />
+                </div>
         <div style={styles.eventsContainer}>
           <div style={styles.eventsList}>
             {Array.isArray(eventos) && eventos.length > 0 ? (

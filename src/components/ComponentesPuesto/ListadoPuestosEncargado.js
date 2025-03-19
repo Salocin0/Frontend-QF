@@ -6,6 +6,7 @@ import PuestoEncargado from "./PuestoEncargado";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ListadoPuestosEncargado = () => {
   const [rows, setRows] = useState([]);
@@ -16,10 +17,10 @@ const ListadoPuestosEncargado = () => {
   const [actualizar, setActualizar] = useState(0);
 
   const actualizarListado = () => {
-    setActualizar(prev => prev + 1);
+    setActualizar((prev) => prev + 1);
     console.log(actualizar);
-  }
-  
+  };
+
   useEffect(() => {
     console.log(actualizar);
     if (user) {
@@ -50,7 +51,7 @@ const ListadoPuestosEncargado = () => {
         })
         .catch((error) => console.log("No existen carritos."));
     }
-  }, [actualizar,user]);
+  }, [actualizar, user]);
 
   const styles = {
     container: {
@@ -61,7 +62,7 @@ const ListadoPuestosEncargado = () => {
       scrollbarWidth: "none",
       msOverflowStyle: "none",
     },
-    header:{
+    header: {
       width: "100%",
       paddingBottom: "50px",
     },
@@ -128,12 +129,22 @@ const ListadoPuestosEncargado = () => {
       top: "0",
       right: "20px",
     },
+    breadcrumbWrapper: {
+      width: "100%",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
   };
-  
+
   const agregarNuevo = () => {
     navigate(`/crear-puesto`);
   };
-  
+
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Mis Puestos", url: "/listado-puestos-encargado" },
+  ];
+
   return (
     <div style={styles.container}>
       <Sidebar tipoUsuario={user?.tipoUsuario} />
@@ -145,6 +156,12 @@ const ListadoPuestosEncargado = () => {
           </button>
         </div>
         <hr style={styles.divider} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
+        </div>
         <div style={styles.header}>
           {Array.isArray(carritos) && carritos.length > 0 ? (
             <>
@@ -154,7 +171,10 @@ const ListadoPuestosEncargado = () => {
                     {row.map((carrito, index) => (
                       <div key={index}>
                         {carrito !== null ? (
-                          <PuestoEncargado carrito={carrito} actualizarListado={actualizarListado} />
+                          <PuestoEncargado
+                            carrito={carrito}
+                            actualizarListado={actualizarListado}
+                          />
                         ) : null}
                       </div>
                     ))}
@@ -183,6 +203,6 @@ const ListadoPuestosEncargado = () => {
       <Footer />
     </div>
   );
-};  
+};
 
 export default ListadoPuestosEncargado;

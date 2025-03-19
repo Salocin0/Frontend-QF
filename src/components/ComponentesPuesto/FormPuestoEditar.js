@@ -72,6 +72,7 @@ function FormPuestoEditar({ carrito }) {
       padding: "16px",
       backgroundColor: Colors.GrisAzuladoClaro,
       position: "relative",
+      width: "Calc(100% - 40px)",
     },
     title: {
       flex: 1,

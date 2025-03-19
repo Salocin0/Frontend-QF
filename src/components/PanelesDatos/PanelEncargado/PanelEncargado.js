@@ -8,6 +8,7 @@ import TopProductos from "./TopProductos";
 import TiempoPromedioEntrega from "./TiempoPromedioEntrega";
 import ValoracionPromedio from "./ValoracionPromedio";
 import TotalRecaudadoEvento from "./TotalRecaudado";
+import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
 
 const PanelEncargado = () => {
   const { user } = useContext(UserContext);
@@ -60,11 +61,11 @@ const PanelEncargado = () => {
     hr: {
       color: Colors.Naranja,
       width: "100%",
-      paddingBottom: "10px",
+      paddingBottom: "0",
     },
     mainContent: {
       display: "flex",
-      height: "Calc(100% - 160px)",
+      height: "Calc(100% - 200px)",
       width: "80%",
       backgroundColor: Colors.GrisAzuladoOscuro,
       marginBottom: "50px",
@@ -88,6 +89,11 @@ const PanelEncargado = () => {
     },
     footer: {
       marginTop: "auto",
+    },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
   };
 
@@ -175,6 +181,11 @@ const PanelEncargado = () => {
     }
   }, [user]);
 
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Estadisticas", url: "/grafica-encargado" },
+  ];
+
   return (
     <div style={styles.container}>
       <Sidebar tipoUsuario={user?.tipoUsuario} />
@@ -202,6 +213,15 @@ const PanelEncargado = () => {
         ))}
       </select>
       <hr style={styles.hr} />
+      <div style={styles.breadcrumbWrapper}>
+        <Breadcrumb
+          items={breadcrumbItems}
+          style={{
+            width: "Calc(80% - 40px)",
+            marginLeft: "Calc(20% + 20px)",
+          }}
+        />
+      </div>
       <div style={styles.mainContent}>
         <div style={styles.graficaContainer}>
           <TotalRecaudadoEvento
@@ -220,7 +240,10 @@ const PanelEncargado = () => {
             puestoId={puestoSeleccionado?.id}
             eventoId={eventoSeleccionado?.id}
           />
-          <div className="graficaBarrasEncargado" style={{ marginLeft: "20px" }}>
+          <div
+            className="graficaBarrasEncargado"
+            style={{ marginLeft: "20px" }}
+          >
             <GraficaLineas
               key={eventoSeleccionado?.id}
               puestoId={puestoSeleccionado?.id}

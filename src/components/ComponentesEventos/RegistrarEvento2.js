@@ -207,19 +207,20 @@ const RegistrarEvento2 = () => {
       justifyContent: "center",
     },
     colForm: {
-      marginLeft: "20%",
-      height: "calc(100vh - 50px)",
+      height: "Calc(75% - 60px)",
       padding: 0,
       display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      width: "Calc(100% - 20%)",
+      marginLeft: "20%",
     },
     darkFormWrapper: {
       backgroundColor: Colors.GrisAzuladoClaro,
       border: `1px solid ${Colors.Naranja}`,
-      padding: "2rem",
+      padding: "1rem",
       borderRadius: "10px",
+      width: "100%",
+      marginLeft: "20px",
+      marginRight: "20px",
     },
     formGroup: {
       marginBottom: "0.5rem",
@@ -301,12 +302,11 @@ const RegistrarEvento2 = () => {
       borderRadius: "5px",
       cursor: "pointer",
     },
-    breadcrumbWrapper: {
-      width: "100%",
-      margin: "0",
-      padding: "0",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    title: {
+      fontSize: "1.25rem",
+      fontWeight: "bold",
+      marginBottom: "0.5rem",
+      color: Colors.Naranja,
     },
     tituloSeccion: {
       display: "flex",
@@ -316,8 +316,22 @@ const RegistrarEvento2 = () => {
       marginLeft: "20%",
       color: Colors.Blanco,
     },
+    separator: {
+      border: "none",
+      marginBottom: "5px",
+      marginTop: "0px",
+      borderTop: `1px solid ${Colors.Naranja}`,
+    },
+    breadcrumbWrapper: {
+      marginLeft: "20%",
+      width: "80%",
+      paddingTop: "10px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
     hr: {
       color: Colors.Naranja,
+      border: `1px solid ${Colors.Naranja}`,
+      width: "100%",
     },
   };
 
@@ -331,18 +345,19 @@ const RegistrarEvento2 = () => {
     <div style={styles.containerFluid}>
       <Sidebar tipoUsuario={user?.tipoUsuario} />
       <div style={styles.rowFormEvento}>
-        <div style={styles.header}>
-          <h1 style={styles.title}>Crear un Evento</h1>
+        <div style={styles.tituloSeccion}>
+          <h1>Crear un Evento</h1>
         </div>
-        <hr style={styles.separator} />
-        <div>
-          <Breadcrumb items={breadcrumbItems} />
+        <hr style={styles.hr} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+          />
         </div>
         <div style={styles.colForm}>
           <div style={styles.darkFormWrapper}>
             <form action="#" method="POST">
-              <h3 style={styles.tituloSeccion}>Datos del Evento</h3>
-
               <div style={styles.formGroup}>
                 <label htmlFor="nombre" style={styles.formLabel}>
                   Nombre Del Evento*
@@ -439,47 +454,48 @@ const RegistrarEvento2 = () => {
                   </div>
                 </div>
               </div>
+              <div style={{display: "flex", displayDirection: "row"}}>
+                <div style={{...styles.formGroup, width: "50%", marginRight: "10px"}}>
+                  <label htmlFor="ubicacion" style={styles.formLabel}>
+                    Ubicación Del Evento*
+                  </label>
+                  <input
+                    type="text"
+                    id="ubicacion"
+                    style={styles.formInput}
+                    value={ubicacion}
+                    onChange={handleUbicacionChange}
+                  />
+                  {showSuggestions && (
+                    <ul style={styles.suggestionsList}>
+                      {suggestions.map((suggestion, index) => (
+                        <li
+                          key={index}
+                          style={styles.suggestionItem}
+                          onClick={() => handleSuggestionClick(suggestion)}
+                        >
+                          {suggestion}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
 
-              <div style={styles.formGroup}>
-                <label htmlFor="ubicacion" style={styles.formLabel}>
-                  Ubicación Del Evento*
-                </label>
-                <input
-                  type="text"
-                  id="ubicacion"
-                  style={styles.formInput}
-                  value={ubicacion}
-                  onChange={handleUbicacionChange}
-                />
-                {showSuggestions && (
-                  <ul style={styles.suggestionsList}>
-                    {suggestions.map((suggestion, index) => (
-                      <li
-                        key={index}
-                        style={styles.suggestionItem}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                      >
-                        {suggestion}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="imagen" style={styles.formLabel}>
-                  Imagen del Evento
-                </label>
-                <input
-                  type="file"
-                  id="imagen"
-                  accept="image/*"
-                  onChange={handleImagenEventoChange}
-                  style={{
-                    ...styles.formInput,
-                    backgroundColor: Colors.Blanco,
-                  }}
-                />
+                <div style={{...styles.formGroup, width: "50%"}}>
+                  <label htmlFor="imagen" style={styles.formLabel}>
+                    Imagen del Evento
+                  </label>
+                  <input
+                    type="file"
+                    id="imagen"
+                    accept="image/*"
+                    onChange={handleImagenEventoChange}
+                    style={{
+                      ...styles.formInput,
+                      backgroundColor: Colors.Blanco,
+                    }}
+                  />
+                </div>
               </div>
 
               <button
