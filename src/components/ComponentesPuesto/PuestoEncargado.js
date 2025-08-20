@@ -77,24 +77,28 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
 
   const styles = {
     container: {
-      width: "Calc(100% - 40px)",
-      margin: "1rem auto",
+      width: "Calc(100% - 20px)",
+      margin: "0.5rem 20px",
+      marginTop: "0px",
+      marginRight: "0px",
       padding: "1rem",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "8px",
       backgroundColor: Colors.GrisAzuladoClaro,
-      marginLeft: "20px",
-      marginRight: "20px",
+      boxSizing: "border-box",
+      
     },
     cardBody: {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
       position: "relative",
+      width: "100%",
     },
     contenedor: {
       display: "flex",
       flexDirection: "column",
+      width: "100%",
     },
     imgContainer: {
       display: "flex",
@@ -109,9 +113,10 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       display: "flex",
       width: "80%",
       flexDirection: "column",
-      justifyContent: "center",
+      justifyContent: "space-between", // Cambiado a space-between
       alignItems: "center",
       padding: "0 1rem",
+      flexWrap: "wrap", // Permite que los botones pasen a otra línea si es necesario
     },
     title: {
       fontSize: "1.5rem",
@@ -128,6 +133,8 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       display: "flex",
       justifyContent: "center",
       gap: "0.5rem",
+      width: "100%",
+      minWidth: "100%",
     },
     button: {
       padding: "0.5rem 1rem",
@@ -135,6 +142,7 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       borderRadius: "5px",
       cursor: "pointer",
       fontWeight: "bold",
+      flex: "1 1 0",
     },
     successButton: {
       backgroundColor: Colors.Verde,

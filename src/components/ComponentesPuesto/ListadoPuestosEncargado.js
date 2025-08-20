@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Footer from "../ComponentesGenerales/Footer";
@@ -7,10 +7,15 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import Buscador from "../Filtros y Buscadores/Buscador";
+import Filtros from "../Filtros y Buscadores/Filtros";
 
 const ListadoPuestosEncargado = () => {
   const [rows, setRows] = useState([]);
   const [carritos, setCarritos] = useState([]);
+  const [carritosOriginales, setCarritosOriginales] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
+  const [filtrosAplicados, setFiltrosAplicados] = useState({});
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const navigate = useNavigate();
@@ -18,69 +23,65 @@ const ListadoPuestosEncargado = () => {
 
   const actualizarListado = () => {
     setActualizar((prev) => prev + 1);
-    console.log(actualizar);
   };
 
-  useEffect(() => {
-    console.log(actualizar);
-    if (user) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", user?.id);
-      headers.append("Content-Type", "application/json");
-
-      fetch(`${process.env?.REACT_APP_BACK_URL}puesto/creados`, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setCarritos(data.data);
-          console.log(data.data);
-          const totalCarritos = Math.ceil(data.data.length / 4) * 4;
-          const carritosConNulos = [
-            ...data.data,
-            ...Array(totalCarritos - data.data.length).fill(null),
-          ];
-
-          const generatedRows = [];
-          for (let i = 0; i < carritosConNulos.length; i += 4) {
-            const row = carritosConNulos.slice(i, i + 4);
-            generatedRows.push(row);
-          }
-          setRows(generatedRows);
-        })
-        .catch((error) => console.log("No existen carritos."));
-    }
-  }, [actualizar, user]);
+  const gruposEjemplo = [
+    {
+      nombre: "estado",
+      opciones: [
+        { valor: "Creado", etiqueta: "Creado" },
+        { valor: "Deshabilitado", etiqueta: "Deshabilitado" },
+      ],
+    },
+    {
+      nombre: "tipo",
+      opciones: [
+        { valor: "comida_rapida", etiqueta: "Comida Rápida" },
+        { valor: "restaurante", etiqueta: "Restaurante" },
+      ],
+    },
+  ];
 
   const styles = {
     container: {
       margin: 0,
       backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-      overflowY: "scroll",
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
     },
-    header: {
-      width: "100%",
-      paddingBottom: "50px",
+    mainContent: {
+      display: "flex",
+      flexDirection: "column",
+      flexGrow: 1,
+      marginLeft: "20%",
     },
     contentContainer: {
       display: "flex",
+      flexDirection: "row",
+      alignItems: "flex-start",
+      padding: "0",
+      gap: "10px",
+    },
+    cardsContainer: {
+      flex: 1,
+      display: "flex",
       flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "2rem 0",
-      marginLeft: "20%",
+      width: "100%",
+    },
+    filtersContainer: {
+      width: "30%",
+      borderRadius: "8px",
+      paddingRight: "20px",
+      top: "20px",
     },
     headerContainer: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       width: "100%",
-      padding: "0 2rem",
       position: "relative",
+      marginTop: "1rem",
     },
     sectionTitle: {
       color: Colors.Naranja,
@@ -88,16 +89,18 @@ const ListadoPuestosEncargado = () => {
       fontWeight: "bold",
     },
     divider: {
-      color: Colors.Naranja,
-      margin: "1rem 0",
+      border: `1px solid ${Colors.Naranja}`,
       width: "100%",
     },
     rowContainer: {
-      marginBottom: "1rem",
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      width: "100%",
     },
     gridContainer: {
       textAlign: "center",
-      padding: "2rem 0",
+      width: "100%",
     },
     gridTitle: {
       fontSize: "2rem",
@@ -116,6 +119,7 @@ const ListadoPuestosEncargado = () => {
       color: Colors.Negro,
       borderRadius: "5px",
       fontWeight: "bold",
+      display: "inline-block",
     },
     agregarButton: {
       padding: "0.5rem 1rem",
@@ -131,10 +135,87 @@ const ListadoPuestosEncargado = () => {
     },
     breadcrumbWrapper: {
       width: "100%",
-      paddingTop: "10px",
+      padding: "0px 0px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
+    searchFilterContainer: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "0px",
+    },
   };
+
+  useEffect(() => {
+    if (user) {
+      const headers = new Headers();
+      headers.append("ConsumidorId", user?.id);
+      headers.append("Content-Type", "application/json");
+
+      fetch(`${process.env?.REACT_APP_BACK_URL}puesto/creados`, {
+        method: "GET",
+        headers: headers,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setCarritos(data.data);
+          setCarritosOriginales(data.data);
+          const totalCarritos = Math.ceil(data.data.length / 4) * 4;
+          const carritosConNulos = [
+            ...data.data,
+            ...Array(totalCarritos - data.data.length).fill(null),
+          ];
+
+          const generatedRows = [];
+          for (let i = 0; i < carritosConNulos.length; i += 4) {
+            const row = carritosConNulos.slice(i, i + 4);
+            generatedRows.push(row);
+          }
+          setRows(generatedRows);
+        })
+        .catch((error) => console.log("No existen carritos."));
+    }
+  }, [actualizar, user]);
+
+  const handleBuscar = (texto) => {
+    setBusqueda(texto);
+  };
+
+  const handleFiltrar = (filtros) => {
+    setFiltrosAplicados(filtros);
+  };
+
+  const carritosFiltrados = useMemo(() => {
+    return carritosOriginales.filter((carrito) => {
+      const coincideBusqueda =
+        !busqueda ||
+        JSON.stringify(carrito).toLowerCase().includes(busqueda.toLowerCase());
+
+      const coincideFiltros = Object.entries(filtrosAplicados).every(
+        ([campo, valor]) => {
+          if (!valor) return true;
+          return carrito[campo] === valor;
+        }
+      );
+
+      return coincideBusqueda && coincideFiltros;
+    });
+  }, [busqueda, filtrosAplicados, carritosOriginales]);
+
+  useEffect(() => {
+    setCarritos(carritosFiltrados);
+    const totalCarritos = Math.ceil(carritosFiltrados.length / 4) * 4;
+    const carritosConNulos = [
+      ...carritosFiltrados,
+      ...Array(totalCarritos - carritosFiltrados.length).fill(null),
+    ];
+
+    const generatedRows = [];
+    for (let i = 0; i < carritosConNulos.length; i += 4) {
+      const row = carritosConNulos.slice(i, i + 4);
+      generatedRows.push(row);
+    }
+    setRows(generatedRows);
+  }, [carritosFiltrados]);
 
   const agregarNuevo = () => {
     navigate(`/crear-puesto`);
@@ -148,7 +229,8 @@ const ListadoPuestosEncargado = () => {
   return (
     <div style={styles.container}>
       <Sidebar tipoUsuario={user?.tipoUsuario} />
-      <div style={styles.contentContainer}>
+
+      <div style={styles.mainContent}>
         <div style={styles.headerContainer}>
           <h1 style={styles.sectionTitle}>Mis Puestos</h1>
           <button onClick={agregarNuevo} style={styles.agregarButton}>
@@ -156,51 +238,68 @@ const ListadoPuestosEncargado = () => {
           </button>
         </div>
         <hr style={styles.divider} />
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
-          />
-        </div>
-        <div style={styles.header}>
-          {Array.isArray(carritos) && carritos.length > 0 ? (
-            <>
-              {rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div style={styles.rowContainer} key={rowIndex}>
-                    {row.map((carrito, index) => (
-                      <div key={index}>
-                        {carrito !== null ? (
-                          <PuestoEncargado
-                            carrito={carrito}
-                            actualizarListado={actualizarListado}
-                          />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-            </>
-          ) : (
-            <div style={styles.gridContainer}>
-              <div style={styles.gridTitle}>
-                <h2>Puestos</h2>
-              </div>
-              <div style={styles.description}>
-                <p>
-                  Con Quickfood, crea tus Puestos de Comida para hacerlo mejor.
-                  Descubre nuestras increíbles características y ofrece una
-                  experiencia única a tus consumidores.
-                </p>
-              </div>
-              <Link to={`/crear-puesto`} style={styles.linkButton}>
-                Crear Puesto
-              </Link>
+        <div style={styles.contentContainer}>
+          <div style={styles.cardsContainer}>
+            <div style={styles.breadcrumbWrapper}>
+              <Breadcrumb
+                items={breadcrumbItems}
+                style={{ width: "Calc(100% - 20px)", marginLeft: "20px" }}
+              />
             </div>
-          )}
+            {Array.isArray(carritos) && carritos.length > 0 ? (
+              <>
+                {rows.length > 0 &&
+                  rows.map((row, rowIndex) => (
+                    <div style={styles.rowContainer} key={rowIndex}>
+                      {row.map((carrito, index) => (
+                        <div key={index}>
+                          {carrito !== null ? (
+                            <PuestoEncargado
+                              carrito={carrito}
+                              actualizarListado={actualizarListado}
+                            />
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+              </>
+            ) : (
+              <div style={styles.gridContainer}>
+                <div style={styles.gridTitle}>
+                  <h2>Puestos</h2>
+                </div>
+                <div style={styles.description}>
+                  <p>
+                    Con Quickfood, crea tus Puestos de Comida para hacerlo
+                    mejor. Descubre nuestras increíbles características y ofrece
+                    una experiencia única a tus consumidores.
+                  </p>
+                </div>
+                <Link to={`/crear-puesto`} style={styles.linkButton}>
+                  Crear Puesto
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Panel de filtros al lado de las cards */}
+          <div style={styles.filtersContainer}>
+            <div style={styles.searchFilterContainer}>
+              <Buscador
+                placeholder="Buscar puestos..."
+                onBuscar={handleBuscar}
+              />
+              <Filtros
+                gruposFiltros={gruposEjemplo}
+                onFiltrar={handleFiltrar}
+                titulo="FILTRAR PUESTOS"
+              />
+            </div>
+          </div>
         </div>
+        <Footer />
       </div>
-      <Footer />
     </div>
   );
 };

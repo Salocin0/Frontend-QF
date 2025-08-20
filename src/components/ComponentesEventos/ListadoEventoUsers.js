@@ -78,22 +78,19 @@ const ListadoEventosUsers = () => {
 
   useEffect(() => {
     const applyFilters = () => {
-      let filtered = eventos;
+      let filtered = Array.isArray(eventos) ? eventos : [];
 
       if (distancia) {
-        console.log("Distancia:", distancia);
         filtered = filtered.filter(
-          (evento) => evento.distancia || 1 <= distancia
+          (evento) => (evento.distancia || 1) <= distancia
         );
       }
       if (nombre) {
-        console.log("Nombre:", nombre);
         filtered = filtered.filter((evento) =>
           evento.nombre.toLowerCase().includes(nombre.toLowerCase())
         );
       }
       if (preventa) {
-        console.log("Preventa:", preventa);
         filtered = filtered.filter(
           (evento) =>
             (evento.tienePreventa && preventa.conPreventa) ||
