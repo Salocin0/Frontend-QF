@@ -51,7 +51,6 @@
     "web-vitals": "^3.3.2"
   },
   "scripts": {
-    "start-dev": "env-cmd -f .env.dev react-scripts start",
     "start-prod": "env-cmd -f .env.prod react-scripts start",
     "build": "env-cmd && react-scripts build --no-warnings",
     "serve": "env-cmd && serve build",
