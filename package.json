@@ -52,7 +52,7 @@
   },
   "scripts": {
     "start": "env-cmd -f .env.prod react-scripts start",
-    "build": "env-cmd -f .env.prod react-scripts build --no-warnings",
+    "build": "env-cmd -f .env.prod sh -c \"CI=false react-scripts build --no-warnings\"",
     "serve": "env-cmd && serve build",
     "test": "cls && react-scripts test --watch --detectOpenHandles",
     "buildCI": "CI=false react-scripts build",
