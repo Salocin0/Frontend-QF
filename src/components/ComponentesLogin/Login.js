@@ -1,6 +1,6 @@
 import React, { useContext,useEffect } from "react";
 import { getToken } from '@firebase/messaging';
-import { messaging } from '../../firebase.js';
+import { fetchToken } from '../../firebase.js';
 import PasswordToggle from "../ComponenteRegister/PasswordToggle.jsx";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -16,16 +16,14 @@ const Login = () => {
     try {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        const token = await getToken(messaging, {
-          vapidKey: "BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o"
-        });
+        const token = await fetchToken();
         if (token) {
-          setTokenWeb(token)
+          setTokenWeb(token);
         } else {
-          console.log("No se pudo obtener el token.");
+          console.log('No se pudo obtener el token.');
         }
       } else {
-        console.log("Permiso de notificación denegado.");
+        console.log('Permiso de notificación denegado.');
       }
     } catch (error) {
       console.log("Error al activar mensajes:", error);

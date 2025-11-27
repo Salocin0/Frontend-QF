@@ -1,5 +1,5 @@
 // firebase.js
-import { getMessaging, getToken } from "@firebase/messaging";
+import { getMessaging, getToken, isSupported } from "@firebase/messaging";
 import { initializeApp } from "firebase/app";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,7 +14,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+let messaging = null; // will be initialized if supported
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
@@ -27,12 +27,34 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+const ensureMessagingSupported = async () => {
+  try {
+    const supported = await isSupported();
+    if (supported && !messaging) {
+      messaging = getMessaging(app);
+    }
+    return supported;
+  } catch (err) {
+    console.warn('Error comprobando soporte de messaging:', err);
+    return false;
+  }
+};
+
 const fetchToken = async () => {
   try {
+    const supported = await ensureMessagingSupported();
+    if (!supported) {
+      console.log('Firebase messaging no está disponible en este navegador.');
+      return null;
+    }
+
+    const registration = await navigator.serviceWorker.ready;
     const currentToken = await getToken(messaging, {
-      vapidKey: 'BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o',
-      serviceWorkerRegistration: await navigator.serviceWorker.ready
+      vapidKey:
+        'BD9cxckj-2F0CSMqdTEBcR5HzxidWWBnJwgZQXeFILXO6n2yDUPOUQbwU3YR4Y9X1b1mmPZix0T_LZ1QCFe_59o',
+      serviceWorkerRegistration: registration,
     });
+
     if (currentToken) {
       console.log('Token de registro:', currentToken);
       return currentToken;
@@ -46,4 +68,4 @@ const fetchToken = async () => {
   }
 };
 
-export { fetchToken, messaging };
+export { fetchToken, ensureMessagingSupported, messaging };
