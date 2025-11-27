@@ -49,6 +49,8 @@
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.22.4",
     "web-vitals": "^3.3.2"
+    ,
+    "serve": "^14.1.1"
   },
   "scripts": {
     "start": "env-cmd -f .env.prod serve -s build -l $PORT",
