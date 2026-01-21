@@ -17,7 +17,10 @@ const useLogin = () => {
   };
 
   const handleLogin = async () => {
-    const url = `${process.env.REACT_APP_BACK_URL}login/`;
+    const rawBase = process.env.REACT_APP_BACK_URL || "";
+    const prefixed = rawBase.startsWith("http://") || rawBase.startsWith("https://") ? rawBase : `https://${rawBase}`;
+    const base = prefixed.endsWith("/") ? prefixed : `${prefixed}/`;
+    const url = `${base}login/`;
     const data = {
       contraseña: password,
       correoElectronico: email,
@@ -25,6 +28,8 @@ const useLogin = () => {
     };
 
     console.log(data)
+    console.log("Base backend utilizada:", base);
+    console.log("URL de login:", url);
 
     const options = {
       method: "POST",
@@ -39,7 +44,15 @@ const useLogin = () => {
         throw new Error("Error en la solicitud");
       }
 
-      const responseData = await response.json();
+      const contentType = response.headers.get("content-type") || "";
+      let responseData;
+      if (contentType.includes("application/json")) {
+        responseData = await response.json();
+      } else {
+        const text = await response.text();
+        console.error("Respuesta no JSON recibida al iniciar sesión:", text);
+        throw new Error("Respuesta del servidor no es JSON");
+      }
 
       if (Number(responseData.code) === 200) {
         sessionStorage.setItem("sessionId", responseData.data.sessionId);
