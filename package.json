@@ -53,7 +53,7 @@
     "serve": "^14.1.1"
   },
   "scripts": {
-    "start": "env-cmd -f .env.prod serve -s build",
+    "start": "env-cmd -f .env serve -s build",
     "build": "env-cmd -f .env.prod react-scripts build --no-warnings",
     "serve": "env-cmd -f .env.prod serve build",
     "test": "cls && react-scripts test --watch --detectOpenHandles",
