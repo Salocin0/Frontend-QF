@@ -1,5 +1,7 @@
-import { DragDropContext, Draggable, Droppable } from '@hello-pangea/dnd';
 import React, { useEffect, useState } from 'react';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
+import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { toast } from "react-toastify";
 import useDynamicColors from '../../UseDinamicColors';
 import { UserContext } from '../ComponentesGenerales/UserContext';
@@ -283,109 +285,169 @@ const KanbanBoard = ({id}) => {
       .catch((error) => console.error("Error canceling pedido:", error));
   };
 
+  const sensors = useSensors(useSensor(PointerSensor));
+
+  const SortableItem = ({task}) => {
+    const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id});
+    const style = {
+      transform: CSS.Transform.toString(transform),
+      transition,
+      userSelect: 'none',
+      padding: '8px',
+      margin: '0 0 8px 0',
+      minHeight: '100px',
+      backgroundColor: Colors.GrisAzuladoClaro,
+      color: '#F7B813',
+      border: '1px solid #F7B813',
+      borderRadius: '4px',
+      display: 'flex',
+      flexDirection: 'column',
+      position: 'relative',
+    };
+
+    return (
+      <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>#{task.id.replace('task-', '')}</div>
+          <button
+            onClick={() => handleDelete(task.id)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#F7B813',
+              fontSize: '20px',
+              cursor: 'pointer',
+              marginTop: '-30px',
+            }}
+          >
+            &times;
+          </button>
+        </div>
+        <div style={{ marginTop: '4px', marginBottom: '8px' }}>
+          <div>{new Date(task.fecha).toLocaleDateString()} {new Date(task.fecha).toLocaleTimeString("es")}</div>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
+          <div style={{ fontWeight: 'bold', fontSize: '1.5em' }}>${Number(task.total).toFixed(2)}</div>
+          <div style={{ backgroundColor: getStatusColor(task.estado), color: 'black', padding: '10px 4px', fontSize: '10px', fontWeight: 'bold', borderRadius: '10px', margin:0 }}>
+            {task.estado}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const Column = ({column}) => {
+    const {id} = column;
+    const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
+    const {isOver, setNodeRef} = useDroppable({id});
+
+    const headerColors = {
+      'column-1': '#FFC107', // Amarillo
+      'column-2': 'lightgreen',
+      'column-3': 'lightblue', // Verde
+      'column-4': 'pink', // Verde
+      'column-5': 'green',
+      'column-6': 'red',
+    };
+
+    if (id === 'column-6' && !showCancelledColumn) return null;
+    if (id === 'column-3') column.title = 'En Prep.';
+
+    return (
+      <div key={column.id} style={{ flex: 1, margin: '8px' }}>
+        <h3 style={{ textAlign: 'center', color: '#FFF', backgroundColor: headerColors[column.id], padding: '8px', borderRadius: '4px' }}>{column.title}</h3>
+        <div ref={setNodeRef} style={{ background: '#333', padding: '8px', height: '90%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <SortableContext items={column.taskIds} strategy={rectSortingStrategy}>
+            {tasks.map((task) => (
+              <SortableItem key={task.id} task={task} />
+            ))}
+          </SortableContext>
+        </div>
+      </div>
+    );
+  };
+
+  const handleDragEnd = (event) => {
+    const {active, over} = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    // Find source and destination columns
+    let sourceColumnId = null;
+    let destColumnId = null;
+    Object.keys(data.columns).forEach((colId) => {
+      if (data.columns[colId].taskIds.includes(activeId)) sourceColumnId = colId;
+      if (data.columns[colId].taskIds.includes(overId)) destColumnId = colId;
+    });
+
+    // If dropped on empty column, overId may be column id
+    if (!destColumnId && data.columns[overId]) destColumnId = overId;
+
+    if (!sourceColumnId || !destColumnId) return;
+
+    if (sourceColumnId === destColumnId) {
+      const items = Array.from(data.columns[sourceColumnId].taskIds);
+      const oldIndex = items.indexOf(activeId);
+      const newIndex = items.indexOf(overId);
+      if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        const newState = {
+          ...data,
+          columns: {
+            ...data.columns,
+            [sourceColumnId]: {
+              ...data.columns[sourceColumnId],
+              taskIds: newItems,
+            },
+          },
+        };
+        setData(newState);
+      }
+      return;
+    }
+
+    // Moving between columns: put at end of dest
+    const sourceTaskIds = Array.from(data.columns[sourceColumnId].taskIds).filter(id => id !== activeId);
+    const destTaskIds = Array.from(data.columns[destColumnId].taskIds);
+    destTaskIds.push(activeId);
+
+    setConfirmPopup({
+      taskId: activeId,
+      fromColumn: sourceColumnId,
+      toColumn: destColumnId,
+      onConfirm: () => {
+        const newState = {
+          ...data,
+          columns: {
+            ...data.columns,
+            [sourceColumnId]: {
+              ...data.columns[sourceColumnId],
+              taskIds: sourceTaskIds,
+            },
+            [destColumnId]: {
+              ...data.columns[destColumnId],
+              taskIds: destTaskIds,
+            },
+          },
+        };
+        setData(newState);
+        updatePedidoState(activeId, destColumnId);
+        setConfirmPopup(null);
+      },
+      onCancel: () => setConfirmPopup(null),
+    });
+  };
+
   return (
     <div style={{ display: 'flex', height: '70vh', margin: 0, padding: 0 }}>
-      <DragDropContext onDragEnd={onDragEnd}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];
-          const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
-          const headerColors = {
-            'column-1': '#FFC107', // Amarillo
-            'column-2': 'lightgreen',
-            'column-3': 'lightblue', // Verde
-            'column-4': 'pink', // Verde
-            'column-5': 'green',
-            'column-6': 'red',
-          };
-
-          if (columnId === 'column-6' && !showCancelledColumn) {
-            return null; // No renderizar la columna si está oculta
-          } else if (columnId === 'column-3')  {
-            column.title = 'En Prep.'
-
-          }
-
-          return (
-            <div key={column.id} style={{ flex: 1, margin: '8px' }}>
-              <h3 style={{ textAlign: 'center', color: '#FFF', backgroundColor: headerColors[column.id], padding: '8px', borderRadius: '4px' }}>{column.title}</h3>
-              <Droppable droppableId={column.id}>
-                {(provided) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    style={{
-                      background: '#333',
-                      padding: '8px',
-                      height: '90%',
-                      overflowY: 'auto',
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    {tasks.map((task, index) => (
-                      <Draggable
-                        key={task.id}
-                        draggableId={task.id}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={{
-                              userSelect: 'none',
-                              padding: '8px',
-                              margin: '0 0 8px 0',
-                              minHeight: '100px',
-                              backgroundColor: Colors.GrisAzuladoClaro,
-                              color: '#F7B813',
-                              border: '1px solid #F7B813',
-                              borderRadius: '4px',
-                              transition: 'transform 0.2s',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              position: 'relative',
-                              ...provided.draggableProps.style,
-                            }}
-                          >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>#{task.id.replace('task-', '')}</div>
-                              <button
-                                onClick={() => handleDelete(task.id)}
-                                style={{
-                                  background: 'transparent',
-                                  border: 'none',
-                                  color: '#F7B813',
-                                  fontSize: '20px',
-                                  cursor: 'pointer',
-                                  marginTop: '-30px',
-                                }}
-                              >
-                                &times;
-                              </button>
-                            </div>
-                            <div style={{ marginTop: '4px', marginBottom: '8px' }}>
-                              <div>{new Date(task.fecha).toLocaleDateString()} {new Date(task.fecha).toLocaleTimeString("es")}</div>
-                            </div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
-                              <div style={{ fontWeight: 'bold', fontSize: '1.5em' }}>${Number(task.total).toFixed(2)}</div>
-                              <div style={{ backgroundColor: getStatusColor(task.estado), color: 'black', padding: '10px 4px', fontSize: '10px', fontWeight: 'bold', borderRadius: '10px', margin:0 }}>
-                                {task.estado}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </div>
-          );
+          return <Column key={columnId} column={column} />;
         })}
-      </DragDropContext>
+      </DndContext>
 
       {confirmPopup && (
         <div style={{
