@@ -19,6 +19,7 @@ const Inicio = () => {
   const Colors = useDynamicColors();
   const navigate = useNavigate();
 
+
   useEffect(() => {
     const sessionId = sessionStorage.getItem("sessionId");
     if (sessionId) {
@@ -151,6 +152,36 @@ const Inicio = () => {
   const togglePanel = () => {
     setIsPanelOpen((prevState) => !prevState);
   };
+
+  // Debug: verificar tipos de los componentes usados en el render
+  console.log('Debug Inicio - CardInicio type:', typeof CardInicio);
+  console.log('Debug Inicio - ActionButton type:', typeof ActionButton);
+  console.log('Debug Inicio - Sidebar type:', typeof Sidebar);
+  console.log('Debug Inicio - Panel type:', typeof Panel);
+  console.log('Debug Inicio - Footer type:', typeof Footer);
+
+  // Diagnostic UI: if any imported component is undefined, render a clear message
+  const missing = [];
+  if (typeof CardInicio === 'undefined') missing.push('CardInicio');
+  if (typeof ActionButton === 'undefined') missing.push('ActionButton');
+  if (typeof Sidebar === 'undefined') missing.push('Sidebar');
+  if (typeof Panel === 'undefined') missing.push('Panel');
+  if (typeof Footer === 'undefined') missing.push('Footer');
+
+  if (missing.length > 0) {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>Diagnóstico: componente(s) faltante(s)</h2>
+        <p>Los siguientes componentes importados están undefined:</p>
+        <ul>
+          {missing.map((m) => (
+            <li key={m}>{m}</li>
+          ))}
+        </ul>
+        <p>Revisa las exportaciones/imports (default vs named) y mayúsculas/minúsculas en los archivos indicados.</p>
+      </div>
+    );
+  }
 
   const cardsData = [
     {

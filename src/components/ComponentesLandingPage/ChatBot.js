@@ -137,13 +137,12 @@ const Chatbot = () => {
   const MenssageRegister = `Tambien podes crearte una cuenta haciendo click aquí.`;
 
   useEffect(() => {
-    const greetingMessage = user.nombre
-      ? `Hola ${user.nombre} 👋 👋, \nespero que estés bien! Acá Foody 🤖.  \nDecime, ¿en qué puedo ayudarte?`
+    const nombre = user?.nombre;
+    const greetingMessage = nombre
+      ? `Hola ${nombre} 👋 👋, \nespero que estés bien! Acá Foody 🤖.  \nDecime, ¿en qué puedo ayudarte?`
       : `Hola Usuario 👋 👋,  \nespero que estés bien! Acá Foody 🤖.  \nDecime, ¿en qué puedo ayudarte?`;
 
-    
-
-    if (user.nombre) {
+    if (nombre) {
       setMessages([
         {
           message: greetingMessage,
@@ -166,7 +165,7 @@ const Chatbot = () => {
         },
       ]);
     }
-  }, [MenssageLogin, MenssageRegister, user, user.nombre]); // Run when `isLoggedIn` or `user.nombre` changes
+  }, [user]);
   const chatInputRef = useRef(null);
   const chatBoxRef = useRef(null);
 
