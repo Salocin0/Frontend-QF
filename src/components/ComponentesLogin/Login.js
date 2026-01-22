@@ -12,6 +12,12 @@ const Login = () => {
   const { email, password, setTokenWeb, handleEmailChange, handlePasswordChange, handleLogin } = useLogin();
   const Colors = useDynamicColors();
 
+  // Debug: verificar que las importaciones existen
+  console.log('Debug imports - PasswordToggle:', PasswordToggle);
+  console.log('Debug imports - Footer:', Footer);
+  console.log('Debug imports - useDynamicColors:', useDynamicColors);
+  console.log('Debug imports - fetchToken:', fetchToken);
+
   const activarMensajes = async () => {
     try {
       const permission = await Notification.requestPermission();
