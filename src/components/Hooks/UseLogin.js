@@ -41,7 +41,10 @@ const useLogin = () => {
       const response = await fetch(url, options);
 
       if (!response.ok) {
-        throw new Error("Error en la solicitud");
+        // Intentar leer cuerpo para obtener detalles del error (JSON o texto)
+        const bodyText = await response.text().catch(() => '<no body>');
+        console.error('Error HTTP al iniciar sesión:', response.status, bodyText);
+        throw new Error(`Error en la solicitud: ${response.status} ${bodyText}`);
       }
 
       const contentType = response.headers.get("content-type") || "";
