@@ -165,7 +165,7 @@ const Chatbot = () => {
         },
       ]);
     }
-  }, [user]);
+  }, [user, MenssageLogin, MenssageRegister]);
   const chatInputRef = useRef(null);
   const chatBoxRef = useRef(null);
 
@@ -182,7 +182,7 @@ const Chatbot = () => {
     return () => {
       chatInput.removeEventListener("keypress", handleKeyPress);
     };
-  });
+  }, []);
 
   const sendMessage = () => {
     const chatInput = chatInputRef.current;

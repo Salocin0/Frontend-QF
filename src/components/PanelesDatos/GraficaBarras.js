@@ -121,7 +121,7 @@ const GraficaBarras = ({ eventId }) => {
     if (eventId) {
       fetchData();
     }
-  }, [eventId, decalEnabled]); // Dependencia decalEnabled para actualizar el gráfico
+  }, [eventId, decalEnabled, Colors.GrisAzuladoClaro]); // Dependencia decalEnabled y color para actualizar el gráfico
 
   const toggleDecal = () => {
     setDecalEnabled(!decalEnabled);

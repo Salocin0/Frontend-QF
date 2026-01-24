@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useContext, useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
@@ -30,7 +30,7 @@ const ValidarEmail = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [id, codigo, navigate]);
 
   return (
     <section

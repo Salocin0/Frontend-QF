@@ -97,15 +97,7 @@ const RegistrarEvento = () => {
     });
   };
 
-  function tieneNumeros(cadena) {
-    const pattern = /\d/;
-    return pattern.test(cadena);
-  }
 
-  function tieneLetras(cadena) {
-    const regex = /[a-zA-Z]/;
-    return regex.test(cadena);
-  }
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -40,7 +40,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       fetchData();
     }
     console.log(puestoId, eventoId);
-  }, [puestoId, eventoId]);
+  }, [puestoId, eventoId, user?.consumidorId]);
 
   const styles = {
     container: {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { useContext } from "react";
@@ -10,10 +10,8 @@ import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const AsociacionesR = () => {
-  const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
-  const [isPendienteDeAceptacion, setIsPendienteDeAceptacion] = useState(false);
   const [asociaciones, setAsociaciones] = useState([]);
   const Colors = useDynamicColors();
 
@@ -39,18 +37,7 @@ const AsociacionesR = () => {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (asociaciones.length > 0) {
-      let pendienteDeAceptacion = false;
-      asociaciones.forEach((asociacion) => {
-        pendienteDeAceptacion = false;
-        if (asociacion.estado === "PendienteDeAceptacion") {
-          pendienteDeAceptacion = true;
-        }
-      });
-      setIsPendienteDeAceptacion(pendienteDeAceptacion);
-    }
-  }, [asociaciones]);
+
 
   const cancelarAsociacion = (asociacionID) => {
     fetch(

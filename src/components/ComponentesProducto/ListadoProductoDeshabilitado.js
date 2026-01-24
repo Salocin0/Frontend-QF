@@ -33,7 +33,7 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
         .then((data) => setProductos(data.data))
         .catch((error) => console.log("No existen carritos.", error));
     }
-  }, [user, recargar]);
+  }, [user, recargar, id]);
 
   const styles = {
     container: {

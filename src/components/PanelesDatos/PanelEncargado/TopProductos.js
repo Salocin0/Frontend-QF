@@ -47,7 +47,7 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     if (puestoId && eventoId) {
       fetchTopProductos();
     }
-  }, [puestoId, eventoId]);
+  }, [puestoId, eventoId, user?.consumidorId]);
 
   useEffect(() => {
     if (graficoRef.current) {

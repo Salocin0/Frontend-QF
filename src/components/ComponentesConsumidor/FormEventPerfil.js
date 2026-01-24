@@ -18,7 +18,7 @@ const EventProducerForm = ({
   const [isDisabledPE, setIsDisabledPE] = useState(true);
   const [editModePE, setEditModePE] = useState(false);
   const [cuitPE, setCuitPE] = useState("");
-  const { user, updateUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const styles = {
     card: {
@@ -169,7 +169,7 @@ const EventProducerForm = ({
     setShowModal(true);
   };
 
-  const cargarDatos = async (user) => {
+  const cargarDatos = React.useCallback(async (user) => {
     try {
       const response1 = await fetch(
         `${process.env?.REACT_APP_BACK_URL}consumidor/${user.consumidorId}`,
@@ -206,13 +206,13 @@ const EventProducerForm = ({
     } catch (error) {
       console.error("Error al cargar los datos:", error);
     }
-  };
+  }, [setMostrarContenidoProductor]);
 
   useEffect(() => {
     if (user) {
       cargarDatos(user);
     }
-  }, [user]);
+  }, [user, cargarDatos]);
   if (!mostrarContenidoProductor) return null;
   return (
     <div style={styles.card}>

@@ -12,7 +12,7 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
 
   useEffect(() => {
     setPreventa(localPreventa);
-  }, []);
+  }, [localPreventa, setPreventa]);
 
   // Manejo de cambios en los filtros
   const handleDistanciaChange = (value) => {

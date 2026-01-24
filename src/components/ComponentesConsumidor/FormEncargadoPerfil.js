@@ -16,7 +16,7 @@ const EncargadoPuesto = ({
   confirmarDeshabilitarEPC,
 }) => {
   const Colors = useDynamicColors();
-  const { user, updateUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [cuitEPC, setCuitEPC] = useState("");
   const [razonSocialEPC, setRazonSocialEPC] = useState("");
   const [condicionEPC, setCondicionEPC] = useState("");
@@ -193,7 +193,7 @@ const EncargadoPuesto = ({
 
 
 
-  const cargarDatos = async (user) => {
+  const cargarDatos = React.useCallback(async (user) => {
     try {
       const response1 = await fetch(
         `${process.env?.REACT_APP_BACK_URL}consumidor/${user.consumidorId}`,
@@ -231,13 +231,13 @@ const EncargadoPuesto = ({
     } catch (error) {
       console.error("Error al cargar los datos:", error);
     }
-  };
+  }, [setMostrarContenidoEncargadoPuesto, setMostrarBotonHabilitarDeNuevoEPC]);
 
   useEffect(() => {
     if (user) {
       cargarDatos(user);
     }
-  }, [user]);
+  }, [user, cargarDatos]);
 
   return mostrarContenidoEncargadoPuesto ? (
     <section style={styles.container}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
@@ -15,7 +15,7 @@ const CrearNuevoPuesto = () => {
   const [tipoNegocio, setTipoNegocio] = useState("");
   const [telefonoCarro, setTelefonoCarro] = useState("");
   const [pdfAfip, setPdfAfip] = useState(null);
-  const [pdfCuil, setPdfCuil] = useState(null);
+  const [pdfCuil, _setPdfCuil] = useState(null);
   const [logoBase64, setLogoBase64] = useState(null);
   const [bannerBase64, setBannerBase64] = useState(null);
   const { user } = useContext(UserContext);
@@ -43,6 +43,7 @@ const CrearNuevoPuesto = () => {
       nombreCarro,
       tipoNegocio,
       pdfAfip,
+      pdfCuil,
       logo: logoBase64,
       banner: bannerBase64,
       telefonoCarro,
@@ -308,7 +309,7 @@ const CrearNuevoPuesto = () => {
                     type="file"
                     id="pdfCuil"
                     style={styles.input}
-                    onChange={(e) => setPdfCuil(e.target.files[0])}
+                    onChange={(e) => _setPdfCuil(e.target.files[0])}
                     required
                   />
                 </div>

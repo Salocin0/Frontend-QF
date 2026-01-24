@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import { useNavigate } from "react-router-dom";
@@ -21,9 +21,6 @@ const RegistrarProductos = () => {
   const navigate = useNavigate();
   const Colors = useDynamicColors();
 
-  function tieneNumeros(cadena) {
-    return /\d/.test(cadena);
-  }
 
   function tieneLetras(cadena) {
     const regex = /[a-zA-Z]/;
@@ -84,7 +81,7 @@ const RegistrarProductos = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.code == 200) {
+        if (data.code === 200) {
           toast.success("producto registrado correctamente");
           navigate(`/listado-productos/${id}`);
         } else {

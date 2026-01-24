@@ -32,7 +32,10 @@ const PanelProductor = () => {
           const data = await response.json();
           setEventos([{ nombre: "Todos", id: "Todos" }, ...data?.data] || []);
           if (data?.data?.length > 0) {
-            setEventoSeleccionado(eventos[0]);
+            // Selecciona el primer evento por su id (evita usar el state 'eventos' recién asignado)
+            setEventoSeleccionado(data.data[0]?.id || "Todos");
+          } else {
+            setEventoSeleccionado("Todos");
           }
         } else {
           console.error("Error al obtener eventos");

@@ -1,5 +1,4 @@
 import React, { useContext,useEffect } from "react";
-import { getToken } from '@firebase/messaging';
 import { fetchToken } from '../../firebase.js';
 import PasswordToggle from "../ComponenteRegister/PasswordToggle.jsx";
 import Footer from "../ComponentesGenerales/Footer";

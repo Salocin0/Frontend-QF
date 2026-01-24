@@ -10,7 +10,6 @@ const AsociarPuestoAEvento = () => {
   const { puestoId } = useParams();
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
-  const [asociaciones, setAsociaciones] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const Colors = useDynamicColors();
 
@@ -33,15 +32,7 @@ const AsociarPuestoAEvento = () => {
         })
         .catch((error) => console.log("No existen carritos.", error));
 
-      fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/`, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setAsociaciones(data.data);
-        })
-        .catch((error) => console.log("No existen carritos.", error));
+
     }
   }, [user, recargar]);
 

@@ -16,7 +16,7 @@ const RepartidorComponent = ({
 
   const [isDisabledR, setIsDisabledR] = useState(true);
   const [editModeR, setEditModeR] = useState(false);
-    const { user, updateUser } = useContext(UserContext);
+    const { user } = useContext(UserContext);
   const styles = {
     buttonGroup: {
       display: "flex",
@@ -91,13 +91,7 @@ const RepartidorComponent = ({
     setShowModal(true);
   };
 
-   useEffect(() => {
-      if (user) {
-        cargarDatos(user);
-      }
-    }, [user]);
-  
-    const cargarDatos = async (user) => {
+    const cargarDatos = React.useCallback(async (user) => {
       try {
         const response1 = await fetch(
           `${process.env?.REACT_APP_BACK_URL}consumidor/${user.consumidorId}`,
@@ -128,7 +122,13 @@ const RepartidorComponent = ({
       } catch (error) {
         console.error("Error al cargar los datos:", error);
       }
-    };
+    }, [setMostrarContenidoRepartidor, setMostrarBotonHabilitarDeNuevoR]);
+
+    useEffect(() => {
+      if (user) {
+        cargarDatos(user);
+      }
+    }, [user, cargarDatos]);
 
   if (!mostrarContenidoRepartidor) {
     return null;

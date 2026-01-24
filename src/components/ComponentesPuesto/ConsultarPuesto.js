@@ -9,8 +9,7 @@ import "./../sass/main.scss";
 const ConsultarPuesto = () => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
-  const [cargarDatos, setCargarDatos] = useState(null);
-  const [carrito, setCarrito] = useState();
+  const [_carrito, setCarrito] = useState();
   const [editMode, setEditMode] = useState(false);
   const [numeroCarro, setNumeroCarro] = useState("");
   const [nombreCarro, setNombreCarro] = useState("");
@@ -21,7 +20,7 @@ const ConsultarPuesto = () => {
   const [telefonoCarro, setTelefonoCarro] = useState("");
   const [pdfAfip, setPdfAfip] = useState(null);
   const [pdfCuil, setPdfCuil] = useState(null);
-  const [pdfDNI, setPdfDNI] = useState(null);
+  const [pdfDNI, _setPdfDNI] = useState(null);
 
   const navigate = useNavigate();
 

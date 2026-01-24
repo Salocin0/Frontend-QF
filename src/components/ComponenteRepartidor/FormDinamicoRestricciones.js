@@ -12,8 +12,6 @@ function FormDinamicoRestricciones({ data, userType }) {
   const { id } = useParams();
   const [filteredData, setFilteredData] = useState([]);
 
-  const [nuevoRol, setNuevorol] = useState(false);
-
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
 
@@ -32,7 +30,7 @@ function FormDinamicoRestricciones({ data, userType }) {
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
-  }, [nuevoRol]);
+  }, []);
 
   const handleChange = (fieldName, value) => {
     setFormResponses({
@@ -96,7 +94,7 @@ function FormDinamicoRestricciones({ data, userType }) {
         console.error(error);
         toast.error("Error al crear el formulario");
       });
-  }, [session]);
+  }, [session, id]);
 
   return (
 <div className={`row m-0 mainFormRestricciones`}>

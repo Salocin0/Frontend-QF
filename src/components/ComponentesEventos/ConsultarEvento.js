@@ -10,7 +10,6 @@ import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 const ConsultarEvento = () => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
-  const [cargarDatos, setCargarDatos] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [nombre, setNombre] = useState("");
   const [imagenEvento, setImagenEvento] = useState(null);
@@ -43,6 +42,14 @@ const ConsultarEvento = () => {
   const [localidades, setLocalidades] = useState([]);
   const [selectedLocalidad, setSelectedLocalidad] = useState("");
 
+  // Cargar provincias al montar el componente
+  React.useEffect(() => {
+    fetch("https://apis.datos.gob.ar/georef/api/provincias")
+      .then((resp) => resp.json())
+      .then((data) => setProvincias(data.provincias || []))
+      .catch((err) => console.error("Error fetching provinces:", err));
+  }, []);
+
   const [restriccionesdb, setRestriccionesdb] = useState([]);
 
   const [restriccionesEvento, setRestriccionesEvento] = useState([]);
@@ -62,29 +69,7 @@ const ConsultarEvento = () => {
     setEditMode(!editMode);
   };
 
-  const handleDelete = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
 
-    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/${id}`, {
-      method: "DELETE",
-      headers: headers,
-    })
-      .then((response) => {
-        if (response.ok) {
-          // Si la respuesta es exitosa (código 200), mostramos un toast de éxito
-          toast.success("Puesto deshabilitado correctamente");
-          navigate(`/listado-puestos`); // Redireccionamos a la página de listado de puestos
-        } else {
-          // Si la respuesta tiene un código diferente a 200, mostramos un toast con el error
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
-  };
 
   const handleSaveChanges = (e) => {
     e.preventDefault();

@@ -89,7 +89,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
     };
 
     fetchData();
-  }, [eventId, puestoId, decalEnabled]); // Se ejecuta también cuando cambia decalEnabled
+  }, [eventId, puestoId, decalEnabled, Colors.GrisAzuladoClaro]); // Se ejecuta también cuando cambia decalEnabled o color
 
   const onChartClick = (params) => {
     setSelectedDay(params.name);
@@ -206,7 +206,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [selectedDay, idevento, idpuesto]);
+  }, [selectedDay, idevento, idpuesto, Colors.GrisAzuladoClaro]);
 
   if (loading) return <p>Cargando datos...</p>;
   if (error) return <p>Error: {error}</p>;

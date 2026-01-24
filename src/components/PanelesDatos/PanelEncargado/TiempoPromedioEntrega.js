@@ -81,7 +81,7 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     if (puestoId || eventoId) {
       fetchTiempoPromedio();
     }
-  }, [puestoId, eventoId]);
+  }, [puestoId, eventoId, user?.consumidorId]);
 
   if (isLoading) {
     return (

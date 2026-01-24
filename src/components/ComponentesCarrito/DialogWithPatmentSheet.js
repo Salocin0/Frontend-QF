@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogActions,
-  Button,
   CircularProgress,
 } from "@mui/material";
 import { Elements } from "@stripe/react-stripe-js";
@@ -43,7 +41,7 @@ const DialogWithPaymentSheet = ({
       }
     };
     fetchPaymentSheetData(amount*100);
-  }, [paymentSheetData]);
+  }, [paymentSheetData, amount]);
 
   const handleClose = () => {
     onClose();

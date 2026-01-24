@@ -84,7 +84,7 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     };
 
     fetchValoracionPromedio();
-  }, [puestoId, eventoId]);
+  }, [puestoId, eventoId, user?.consumidorId]);
 
   if (loading) {
     return (

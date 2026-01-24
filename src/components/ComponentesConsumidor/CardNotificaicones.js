@@ -1,14 +1,38 @@
 import useDynamicColors from "../../UseDinamicColors";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 
 const CardNotificaciones = ({ notificacion, recargarComponente }) => {
   const Colors = useDynamicColors();
 
+  const marcarComoLeida = useCallback(async () => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BACK_URL}notificaciones/${notificacion.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        console.log("Notificación marcada como leída.");
+        recargarComponente(); // Recarga el componente después de actualizar
+      } else {
+        console.error("Error al marcar la notificación como leída.");
+      }
+    } catch (error) {
+      console.error("Error al realizar la solicitud:", error);
+    }
+  }, [notificacion.id, recargarComponente]);
+
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       marcarComoLeida();
-    },3000)
-  }, []);
+    }, 3000);
+    return () => clearTimeout(timeout);
+  }, [marcarComoLeida]);
 
   const styles = {
     card: {
@@ -73,29 +97,6 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
       fontSize: "16px",
     },
     icono: {},
-  };
-
-  const marcarComoLeida = async () => {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_BACK_URL}notificaciones/${notificacion.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.ok) {
-        console.log("Notificación marcada como leída.");
-        recargarComponente(); // Recarga el componente después de actualizar
-      } else {
-        console.error("Error al marcar la notificación como leída.");
-      }
-    } catch (error) {
-      console.error("Error al realizar la solicitud:", error);
-    }
   };
 
   return (
