@@ -6,6 +6,14 @@ import Main from "./Main";
 import NotificationHandler from './NotificationHandler'; // Ajusta la ruta según tu estructura de proyecto
 import { UserProvider } from './UserContext';
 
+console.log("App.js - Global Diagnostic:", {
+  Main: typeof Main,
+  NotificationHandler: typeof NotificationHandler,
+  UserProvider: typeof UserProvider,
+  Router: typeof Router,
+  ToastContainer: typeof ToastContainer
+});
+
 const App = () => {
   return (
     <UserProvider>

@@ -1,16 +1,9 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faInstagram,
-  faTwitterSquare,
-  faFacebookSquare,
-} from "@fortawesome/free-brands-svg-icons";
-import { faSun, faMoon } from "@fortawesome/free-solid-svg-icons"; // Importación de iconos de sol y luna
 import useDynamicColors from "../../UseDinamicColors";
-import zIndex from "@mui/material/styles/zIndex";
 
 const Footer = () => {
   const Colors = useDynamicColors();
+  const ICON = "ICON";
   
   const toggleTheme = () => {
     const newMode = !Colors.modoOscuroActivo;
@@ -87,7 +80,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               style={styles.iconStyle}
             >
-              <FontAwesomeIcon icon={faInstagram} size="lg" />
+              {ICON}
             </a>
             <a
               href="https://www.instagram.com/"
@@ -95,7 +88,7 @@ const Footer = () => {
               rel="noopener noreferrer"
               style={styles.iconStyle}
             >
-              <FontAwesomeIcon icon={faTwitterSquare} size="lg" />
+              {ICON}
             </a>
             <a
               href="https://www.instagram.com/"
@@ -103,13 +96,14 @@ const Footer = () => {
               rel="noopener noreferrer"
               style={styles.iconStyle}
             >
-              <FontAwesomeIcon icon={faFacebookSquare} size="lg" />
+              {ICON}
             </a>
-            <FontAwesomeIcon
-              icon={Colors.modoOscuroActivo ? faSun : faMoon}
+            <span
+              style={{ ...styles.iconStyle, marginRight: "1rem", fontSize: "1.5rem", cursor: "pointer" }}
               onClick={toggleTheme}
-              style={{ ...styles.iconStyle, marginRight: "1rem", fontSize: "1.5rem" }}
-            />
+            >
+              {ICON}
+            </span>
           </div>
           <div style={styles.rightSection}>
             

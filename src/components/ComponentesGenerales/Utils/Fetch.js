@@ -45,19 +45,28 @@ class Fetch {
 
   async getDataSession(sessionId) {
     try {
-      const response = await fetch(`${this.baseUrl}/user/session`, {
+      const base = this.baseUrl || "";
+      const normalizedBase = base.startsWith("http") ? base : `https://${base}`;
+      const url = normalizedBase.endsWith("/") ? `${normalizedBase}user/session` : `${normalizedBase}/user/session`;
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ sessionID: sessionId }),
       });
+
+      if (!response.ok) {
+        const text = await response.text().catch(() => "<no body>");
+        throw new Error(`Non-OK response: ${response.status} ${text}`);
+      }
+
       const data = await response.json();
       return data;
     } catch (error) {
       throw new Error(
-        "Error al realizar la solicitud Post a /user/session para obtener la sesion",
-        error
+        "Error al realizar la solicitud Post a /user/session para obtener la sesion: " +
+          (error && error.message ? error.message : error)
       );
     }
   }

@@ -4,12 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import FiltersEventosConsumidor from "../../Filtros y Buscadores/filtersEventosConsumidor";
 import "./../../sass/main.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleInfo,
-  faBan,
-  faCheck,
-} from "@fortawesome/free-solid-svg-icons";
+
+const ICON = "ICON";
 
 const PedidoEncargado = ({ pedido, recargar }) => {
   const { id } = useParams();
@@ -180,7 +176,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
                     className="btn btn-success btn-sm me-2"
                     onClick={tomarPedido}
                   >
-                    <FontAwesomeIcon icon={faCheck} />
+                    <span>{ICON}</span>
                   </button>
                 )}
 
@@ -188,7 +184,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
                   className="btn btn-info btn-sm me-2"
                   onClick={mostrarDialog}
                 >
-                  <FontAwesomeIcon icon={faCircleInfo} />
+                  <span>{ICON}</span>
                 </button>
 
                 {(pedido.estado === "Pendiente" ||
@@ -197,7 +193,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
                     className="btn btn-danger btn-sm me-2"
                     onClick={cancelarPedido}
                   >
-                    <FontAwesomeIcon icon={faBan} />
+                    <span>{ICON}</span>
                   </button>
                 )}
               </div>

@@ -1,5 +1,3 @@
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
@@ -13,21 +11,37 @@ const UserProfile = ({ haveRol }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { user, updateUser } = useContext(UserContext);
   const [isHoveredIndex, setIsHoveredIndex] = useState(null);
+  const ICON = "ICON";
 
   const handleLogout = () => {
     if (user.id) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/cerrarWeb`, {
+      const base = process.env?.REACT_APP_BACK_URL || "";
+      const normalizedBase = base.startsWith("http") ? base : `https://${base}`;
+      const url = normalizedBase.endsWith("/") ? `${normalizedBase}user/cerrarWeb` : `${normalizedBase}/user/cerrarWeb`;
+      console.log('UserProfile - logout url:', url);
+
+      fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id: user.id }),
       })
-        .then((response) => response.json())
+        .then(async (response) => {
+          if (!response.ok) {
+            const text = await response.text().catch(() => "<no body>");
+            console.error("Error closing session - non-OK response:", response.status, text);
+            toast.error("Error al cerrar sesion");
+            return;
+          }
+          return response.json();
+        })
         .then((data) => {
-          updateUser({});
-          navigate("/login");
-          toast.success("Sesión cerrada");
+          if (data) {
+            updateUser({});
+            navigate("/login");
+            toast.success("Sesión cerrada");
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -153,7 +167,7 @@ const UserProfile = ({ haveRol }) => {
             dropdown.style.display === "block" ? "none" : "block";
         }}
       >
-        <FontAwesomeIcon icon={faUser} style={styles.icon} className="icono" />
+        <span className="icono" style={styles.icon}>{ICON}</span>
         <span
           className="ms-1 d-none d-sm-inline text-center"
           style={{ color: isHovered ? Colors.Negro : Colors.Naranja }}

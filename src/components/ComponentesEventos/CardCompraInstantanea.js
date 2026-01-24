@@ -1,6 +1,6 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import useDynamicColors from "../../UseDinamicColors";
+
+const ICON = "ICON";
 
 const CardCompraInstantanea = ({ evento }) => {
     const Colors = useDynamicColors();
@@ -49,11 +49,7 @@ const CardCompraInstantanea = ({ evento }) => {
     return (
         <div style={styles.card}>
             <div style={styles.content}>
-                <FontAwesomeIcon 
-                    icon={faShoppingCart} 
-                    size="3x"
-                    style={styles.icon}
-                />
+                <span style={styles.icon}>{ICON}</span>
                 <h3 style={styles.title}>Compra Instantánea</h3>
                 <p style={styles.text}>
                     {eventMessage}

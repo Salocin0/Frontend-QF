@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
 import useDynamicColors from "../../UseDinamicColors";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
+const ICON = "ICON";
 
 const GraficaBarras = ({ eventId }) => {
   const [chartData, setChartData] = useState(null); // Estado para los datos de la gráfica
@@ -155,7 +155,7 @@ const GraficaBarras = ({ eventId }) => {
               zIndex:"900"
             }}
           >
-            <FontAwesomeIcon icon={!decalEnabled ? faEye : faEyeSlash} />
+            <span>{ICON}</span>
           </button>
         </>
       ) : (

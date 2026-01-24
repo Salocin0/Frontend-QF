@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import { Modal, Button } from "react-bootstrap"; // Utilizando Bootstrap para el modal
 import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
+
+const ICON = "ICON";
 
 const CardPreCompra = ({ evento }) => {
   const [selectedDay, setSelectedDay] = useState(null); // Día seleccionado
@@ -127,7 +127,7 @@ const CardPreCompra = ({ evento }) => {
     <div style={styles.card}>
       {evento.tienePreventa ? (
         <>
-          <FontAwesomeIcon icon={faCalendarAlt} size="3x" style={styles.icon} />
+          <span style={styles.icon}>{ICON}</span>
           <h2 style={styles.title}>PreCompra</h2>
           <p style={styles.description}>
             Seleccione una fecha disponible para la precompra.
@@ -162,7 +162,7 @@ const CardPreCompra = ({ evento }) => {
         </>
       ) : (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", height: "100%"}}>
-          <FontAwesomeIcon icon={faCalendarAlt} size="3x" style={styles.icon} />
+          <span style={styles.icon}>{ICON}</span>
           <h2 style={styles.title}>Precompra no disponible</h2>
           <p style={styles.description}>
             Precompra no disponible en este evento.

@@ -1,10 +1,9 @@
 import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faArrowRightToBracket, faShoppingCart } from '@fortawesome/free-solid-svg-icons'; // Asegúrate de importar faShoppingCart
 import useDynamicColors from "../../UseDinamicColors";
 
 const ActionButton = ({ title, icon, onClick, style }) => {
   const Colors = useDynamicColors();
+  const ICON = "ICON";
   
   const styles = {
     container: {
@@ -36,13 +35,7 @@ const ActionButton = ({ title, icon, onClick, style }) => {
 
   // Nueva lógica para seleccionar el ícono basado en el título
   const renderIcon = () => {
-    if (title === "Carrito") {
-      return <FontAwesomeIcon icon={faShoppingCart} style={styles.iconFont} />;
-    } else if (title === "Mi Perfil") {
-      return <FontAwesomeIcon icon={faUser} style={styles.iconFont} />;
-    } else {
-      return <FontAwesomeIcon icon={faArrowRightToBracket} style={styles.iconFont} />;
-    }
+    return <span style={styles.iconFont}>{ICON}</span>;
   };
 
   return (

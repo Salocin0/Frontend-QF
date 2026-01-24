@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const PasswordToggle = ({ inputId, value, onChange, placeholder, style, name }) => {
   const [showPassword, setShowPassword] = useState(false);
+  const ICON = "ICON";
 
   const togglePasswordVisibility = (e) => {
     e.stopPropagation();
@@ -21,8 +20,7 @@ const PasswordToggle = ({ inputId, value, onChange, placeholder, style, name }) 
         style={style}
         name={name}
       />
-      <FontAwesomeIcon
-        icon={showPassword ? faEyeSlash : faEye}
+      <span
         onClick={togglePasswordVisibility}
         style={{
           position: "absolute",
@@ -32,7 +30,9 @@ const PasswordToggle = ({ inputId, value, onChange, placeholder, style, name }) 
           cursor: "pointer",
           color: "#888"
         }}
-      />
+      >
+        {ICON}
+      </span>
     </div>
   );
 };

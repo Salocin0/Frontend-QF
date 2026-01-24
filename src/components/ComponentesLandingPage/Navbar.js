@@ -1,9 +1,9 @@
-import { faRightToBracket, faUser } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "../img/QuickFood_LogoYellow.png";
 import useDynamicColors from "../../UseDinamicColors";
+
+const ICON = "ICON";
 
 const Navbar = () => {
   const Colors = useDynamicColors();
@@ -74,13 +74,13 @@ const Navbar = () => {
         <ul style={{ display: "flex", listStyle: "none", margin: 0, padding: 0 }}>
           <Link to="/seleccion-perfil" style={styles.navItemGray}>
             <li>
-              <FontAwesomeIcon icon={faUser} />
+              <span>{ICON}</span>
               &nbsp;Registrarse
             </li>
           </Link>
           <Link to="/login" style={styles.navItemYellow}>
             <li>
-              <FontAwesomeIcon icon={faRightToBracket} />
+              <span>{ICON}</span>
               &nbsp;Ingresar
             </li>
           </Link>

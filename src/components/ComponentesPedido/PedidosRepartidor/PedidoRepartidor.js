@@ -1,15 +1,9 @@
 import { default as React, useState } from "react";
 import { toast } from "react-toastify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleInfo,
-  faCalendar,
-  faUser,
-  faLocationPin,
-  faStore,
-} from "@fortawesome/free-solid-svg-icons";
 import useDynamicColors from "../../../UseDinamicColors";
 import Footer from "../../ComponentesGenerales/Footer";
+
+const ICON = "ICON";
 
 const PedidoRepartidor = ({ pedido, recargar }) => {
   const Colors = useDynamicColors();
@@ -296,23 +290,23 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
             <div className="position-relative">
               <h5 style={styles.cardTitle}>Pedido #{pedido?.id}</h5>
               <h5 style={styles.cardSubTitle}>
-                <FontAwesomeIcon icon={faStore} />
+                <span>{ICON}</span>
                 {" " + pedido.puesto.nombreCarro}
               </h5>
               <h5 style={styles.cardSubTitle}>
-                <FontAwesomeIcon icon={faCalendar} />
+                <span>{ICON}</span>
                 {" " + new Date(pedido.fecha).toLocaleDateString("es")}
               </h5>
 
               <h5 style={styles.cardSubTitle}>
-                <FontAwesomeIcon icon={faUser} />{" "}
+                <span>{ICON}</span>{" "}
                 {pedido?.consumidore?.nombre +
                   ", " +
                   pedido?.consumidore?.apellido || "Alberto"}
               </h5>
 
               <h5 style={styles.cardSubTitle}>
-                <FontAwesomeIcon icon={faLocationPin} />{" "}
+                <span>{ICON}</span>{" "}
                 {pedido?.puntoEncuentro?.nombre || "Punto de encuentro 3"}
               </h5>
 
@@ -327,7 +321,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
                 style={styles.buttonInfo}
                 onClick={() => setModalDetalleVisible(true)}
               >
-                <FontAwesomeIcon icon={faCircleInfo} /> Detalle
+                <span>{ICON}</span> Detalle
               </button>
             )}
             {mostrarBotonEntregar && (
@@ -335,7 +329,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
                 style={styles.buttonSolicitar}
                 onClick={() => setModalEntregarVisible(true)}
               >
-                <FontAwesomeIcon icon={faCircleInfo} /> Entregar
+                <span>{ICON}</span> Entregar
               </button>
             )}
           </div>

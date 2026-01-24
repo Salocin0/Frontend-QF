@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import useDynamicColors from "../../UseDinamicColors";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
+const ICON = "ICON";
 
 const GraficaTortaProductos = ({ height, productos }) => {
   const [chartData, setChartData] = useState([]);
@@ -84,7 +84,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
           zIndex: 900,
         }}
       >
-        <FontAwesomeIcon icon={!decalEnabled ? faEye : faEyeSlash} />
+        <span>{ICON}</span>
       </button>
       <ReactECharts option={option} theme="dark" style={{ height: "100%", width: "100%" }} />
     </div>

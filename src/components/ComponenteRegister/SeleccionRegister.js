@@ -1,12 +1,5 @@
 import React, { useState } from "react";
 import classnames from "classnames";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faDolly,
-  faShop,
-  faUser,
-  faBriefcase,
-} from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
@@ -16,6 +9,7 @@ import useDynamicColors from "../../UseDinamicColors";
 const SeleccionRegister = () => {
   const Colors = useDynamicColors();
   const [selectedType, setSelectedType] = useState("consumidor");
+  const ICON = "ICON";
 
   const handleTypeChange = (type) => {
     setSelectedType(type);
@@ -139,7 +133,7 @@ const SeleccionRegister = () => {
               style={{ display: "none" }}
             />
             <span style={styles.span}>Consumidor</span>
-            <FontAwesomeIcon icon={faUser} style={styles.icon} />
+              <span style={styles.icon}>{ICON}</span>
           </label>
           <hr style={styles.hr} />
           <div style={styles.buttonGroup}>
@@ -164,7 +158,7 @@ const SeleccionRegister = () => {
                 style={{ display: "none" }}
               />
               <span style={styles.span}>Productor</span>
-              <FontAwesomeIcon icon={faBriefcase} style={styles.icon} />
+              <span style={styles.icon}>{ICON}</span>
             </label>
             <label
               className={classnames(
@@ -187,7 +181,7 @@ const SeleccionRegister = () => {
                 style={{ display: "none" }}
               />
               <span style={styles.span}>Repartidor</span>
-              <FontAwesomeIcon icon={faDolly} style={styles.icon} />
+              <span style={styles.icon}>{ICON}</span>
             </label>
             <label
               className={classnames(
@@ -210,7 +204,7 @@ const SeleccionRegister = () => {
                 style={{ display: "none" }}
               />
               <span style={styles.span}>Encargado</span>
-              <FontAwesomeIcon icon={faShop} style={styles.icon} />
+              <span style={styles.icon}>{ICON}</span>
             </label>
             <button
               style={styles.clearButton}

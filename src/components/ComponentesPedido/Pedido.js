@@ -1,18 +1,9 @@
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleInfo,
-  faBan,
-  faStore,
-  faCalendar,
-  faUser,
-  faLocationPin,
-  faStar,
-  faCheck,
-} from "@fortawesome/free-solid-svg-icons";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import { toast } from "react-toastify";
+
+const ICON = "ICON";
 
 const Pedido = ({ pedido,recargar }) => {
   const Colors = useDynamicColors();
@@ -342,16 +333,16 @@ const Pedido = ({ pedido,recargar }) => {
             <div className="position-relative">
               <h5 style={styles.cardTitle}>Pedido #{pedido?.id}</h5>
               <h5 style={styles.cardSubTitle}>
-                <FontAwesomeIcon icon={faStore} />
+                <span>{ICON}</span>
                 {" " + pedido.puesto.nombreCarro}
               </h5>
               <h5 style={styles.cardSubTitle}>
-                <FontAwesomeIcon icon={faCalendar} />
+                <span>{ICON}</span>
                 {" " + new Date(pedido.fecha).toLocaleDateString("es")}
               </h5>
               {pedido.estado === "EnCamino" && (
                 <h5 style={styles.cardSubTitle}>
-                  <FontAwesomeIcon icon={faUser} />
+                  <span>{ICON}</span>
                   {" " +
                     pedido?.repartidore?.consumidore?.nombre +
                     ", " +
@@ -360,7 +351,7 @@ const Pedido = ({ pedido,recargar }) => {
               )}
               {pedido.estado === "EnCamino" && (
                 <h5 style={styles.cardSubTitle}>
-                  <FontAwesomeIcon icon={faLocationPin} />
+                  <span>{ICON}</span>
                   {pedido?.puntoEncuentro?.nombre}
                 </h5>
               )}
@@ -376,7 +367,7 @@ const Pedido = ({ pedido,recargar }) => {
                 style={styles.buttonInfo}
                 onClick={() => setModalDetalleVisible(true)}
               >
-                <FontAwesomeIcon icon={faCircleInfo} /> Detalle
+                <span>{ICON}</span> Detalle
               </button>
             )}
             {mostrarBotonDanger && (
@@ -384,12 +375,12 @@ const Pedido = ({ pedido,recargar }) => {
                 style={styles.buttonDanger}
                 onClick={() => setModalCancelarVisible(true)}
               >
-                <FontAwesomeIcon icon={faBan} /> Cancelar
+                <span>{ICON}</span> Cancelar
               </button>
             )}
             {mostrarBotonMapa && (
               <button style={styles.buttonMap} disabled>
-                <FontAwesomeIcon icon={faLocationPin} /> Ver Mapa
+                <span>{ICON}</span> Ver Mapa
               </button>
             )}
             {mostrarBotonValorar && (
@@ -397,12 +388,12 @@ const Pedido = ({ pedido,recargar }) => {
                 style={styles.buttonValorar}
                 onClick={() => setModalValoracionVisible(true)}
               >
-                <FontAwesomeIcon icon={faStar} /> Valorar
+                <span>{ICON}</span> Valorar
               </button>
             )}
             {mostrarBotonSolicitar && (
               <button style={styles.buttonSolicitar} onClick={() => handleSolicitar()}>
-                <FontAwesomeIcon icon={faCheck} /> Solicitar
+                <span>{ICON}</span> Solicitar
               </button>
             )}
           </div>

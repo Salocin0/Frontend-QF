@@ -9,7 +9,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
-const CrearNuevoCarro = () => {
+const CrearNuevoPuesto = () => {
   const [numeroCarro, setNumeroCarro] = useState("");
   const [nombreCarro, setNombreCarro] = useState("");
   const [tipoNegocio, setTipoNegocio] = useState("");
@@ -332,4 +332,4 @@ const CrearNuevoCarro = () => {
   );
 };
 
-export default CrearNuevoCarro;
+export default CrearNuevoPuesto;

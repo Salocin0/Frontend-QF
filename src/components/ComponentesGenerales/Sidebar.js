@@ -14,6 +14,11 @@ const Sidebar = ({ tipoUsuario }) => {
   const [showPanel, setShowPanel] = useState(false);
   const  Colors  = useDynamicColors();
 
+  // Verificación de seguridad
+  const SafeMenuItems = (props) => typeof MenuItems === 'function' ? <MenuItems {...props} /> : <div>Error: MenuItems undefined</div>;
+  const SafeUserProfile = (props) => typeof UserProfile === 'function' ? <UserProfile {...props} /> : <div>Error: UserProfile undefined</div>;
+  const SafePanel = (props) => typeof Panel === 'function' ? <Panel {...props} /> : <div>Error: Panel undefined</div>;
+
   const togglePanel = () => {
     setShowPanel(!showPanel);
   };
@@ -45,14 +50,14 @@ const Sidebar = ({ tipoUsuario }) => {
         </a>
       </div>
       <div className="menu-container">
-        <MenuItems
+        <SafeMenuItems
           isResponsable={isResponsable}
           isProductor={isProductor}
           isRepartidor={isRepartidor}
           togglePanel={togglePanel}
         />
         {showPanel && (
-          <Panel
+          <SafePanel
             onClose={togglePanel}
             position="fixed"
             bottom="56px"
@@ -60,7 +65,7 @@ const Sidebar = ({ tipoUsuario }) => {
             isLogin={true}
           />
         )}
-        <UserProfile haveRol={haveRol} />
+        <SafeUserProfile haveRol={haveRol} />
       </div>
     </div>
   );

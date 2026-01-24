@@ -7,7 +7,7 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
-const ConsultarPuesto = () => {
+const ConsultarProducto = () => {
   const { id } = useParams();
   const Colors = useDynamicColors();
   const [session, setSession] = useState(null);
@@ -275,4 +275,4 @@ const ConsultarPuesto = () => {
   );
 };
 
-export default ConsultarPuesto;
+export default ConsultarProducto;

@@ -14,6 +14,7 @@ import Footer from "./Footer";
 import asociarEvento from "../img/asociarevento.png";
 import estadisticas from "../img/Estadísticas.jpg";
 import { useNavigate } from "react-router-dom";
+
 const Inicio = () => {
   const [session, setSession] = useState(null);
   const Colors = useDynamicColors();
@@ -23,16 +24,28 @@ const Inicio = () => {
   useEffect(() => {
     const sessionId = sessionStorage.getItem("sessionId");
     if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
+      const base = process.env?.REACT_APP_BACK_URL || "";
+      const normalizedBase = base.startsWith("http") ? base : `https://${base}`;
+      const url = normalizedBase.endsWith("/") ? `${normalizedBase}user/session` : `${normalizedBase}/user/session`;
+
+      console.log('Inicio - session fetch url:', url);
+      fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ sessionID: sessionId }),
       })
-        .then((response) => response.json())
+        .then(async (response) => {
+          if (!response.ok) {
+            const text = await response.text().catch(() => "<no body>");
+            console.error("Error fetching session - non-OK response:", response.status, text);
+            return;
+          }
+          return response.json();
+        })
         .then((data) => {
-          setSession(data.data);
+          if (data) setSession(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -153,35 +166,43 @@ const Inicio = () => {
     setIsPanelOpen((prevState) => !prevState);
   };
 
-  // Debug: verificar tipos de los componentes usados en el render
-  console.log('Debug Inicio - CardInicio type:', typeof CardInicio);
-  console.log('Debug Inicio - ActionButton type:', typeof ActionButton);
-  console.log('Debug Inicio - Sidebar type:', typeof Sidebar);
-  console.log('Debug Inicio - Panel type:', typeof Panel);
-  console.log('Debug Inicio - Footer type:', typeof Footer);
+  // Verificación de seguridad para evitar renderizar componentes undefined
+  const SafeCardInicio = (props) => {
+    if (typeof CardInicio === 'function') {
+      return <CardInicio {...props} />;
+    } else {
+      return <div>Error: CardInicio no cargó</div>;
+    }
+  };
+  const SafeActionButton = (props) => {
+    if (typeof ActionButton === 'function') {
+      return <ActionButton {...props} />;
+    } else {
+      return <div>Error: ActionButton no cargó</div>;
+    }
+  };
+  const SafeSidebar = (props) => {
+    if (typeof Sidebar === 'function') {
+      return <Sidebar {...props} />;
+    } else {
+      return <div>Error: Sidebar no cargó</div>;
+    }
+  };
+  const SafePanel = (props) => {
+    if (typeof Panel === 'function') {
+      return <Panel {...props} />;
+    } else {
+      return <div>Error: Panel no cargó</div>;
+    }
+  };
+  const SafeFooter = (props) => {
+    if (typeof Footer === 'function') {
+      return <Footer {...props} />;
+    } else {
+      return <div>Error: Footer no cargó</div>;
+    }
+  };
 
-  // Diagnostic UI: if any imported component is undefined, render a clear message
-  const missing = [];
-  if (typeof CardInicio === 'undefined') missing.push('CardInicio');
-  if (typeof ActionButton === 'undefined') missing.push('ActionButton');
-  if (typeof Sidebar === 'undefined') missing.push('Sidebar');
-  if (typeof Panel === 'undefined') missing.push('Panel');
-  if (typeof Footer === 'undefined') missing.push('Footer');
-
-  if (missing.length > 0) {
-    return (
-      <div style={{ padding: 20 }}>
-        <h2>Diagnóstico: componente(s) faltante(s)</h2>
-        <p>Los siguientes componentes importados están undefined:</p>
-        <ul>
-          {missing.map((m) => (
-            <li key={m}>{m}</li>
-          ))}
-        </ul>
-        <p>Revisa las exportaciones/imports (default vs named) y mayúsculas/minúsculas en los archivos indicados.</p>
-      </div>
-    );
-  }
 
   const cardsData = [
     {
@@ -364,18 +385,18 @@ const Inicio = () => {
   return (
     <div style={styles.container}>
       <div style={styles.sidebar}>
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
+        <SafeSidebar tipoUsuario={session?.tipoUsuario} />
       </div>
       <div style={contentStyles}>
         {cardsData.map((card, index) => (
-          <CardInicio key={index} data={card} />
+          <SafeCardInicio key={index} data={card} />
         ))}
         {actionButtonsData.map((button, index) => (
-          <ActionButton key={index} {...button} />
+          <SafeActionButton key={index} {...button} />
         ))}
       </div>
-      {isPanelOpen && <Panel onClose={togglePanel} />}
-      <Footer />
+      {isPanelOpen && <SafePanel onClose={togglePanel} />}
+      <SafeFooter />
     </div>
   );
 };

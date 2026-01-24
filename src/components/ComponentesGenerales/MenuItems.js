@@ -1,15 +1,4 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faDolly,
-  faAddressBook,
-  faSquarePlus,
-  faScroll,
-  faChartColumn,
-  faCalendarDays,
-  faShop,
-  faRobot,
-} from "@fortawesome/free-solid-svg-icons";
 
 const MenuItems = ({
   isResponsable,
@@ -17,6 +6,7 @@ const MenuItems = ({
   isRepartidor,
   togglePanel,
 }) => {
+  const ICON = "ICON";
 
    const handleBotonChat = () => {
     togglePanel();
@@ -71,13 +61,13 @@ const MenuItems = ({
               href="/listado-puestos-encargado"
               className="navlink text-truncate"
             >
-              <FontAwesomeIcon icon={faShop} className="icono" />
+              <span className="icono">{ICON}</span>
               <span className="ms-1 d-none d-sm-inline w-100">Mis Puestos</span>
             </a>
           </li>
           <li className="navitem">
             <a href="/misAsociacionesEPC" className="navlink text-truncate">
-              <FontAwesomeIcon icon={faAddressBook} className="icono" />
+              <span className="icono">{ICON}</span>
               <span className="ms-1 d-none d-sm-inline w-100">
                 Mis asociaciones
               </span>
@@ -85,7 +75,7 @@ const MenuItems = ({
           </li>
           <li className="navitem">
             <a href="/grafica-encargado" className="navlink text-truncate">
-              <FontAwesomeIcon icon={faChartColumn} className="icono" />
+              <span className="icono">{ICON}</span>
               <span className="ms-1 d-none d-sm-inline w-100">
                 Estadisticas Puesto
               </span>
@@ -103,13 +93,13 @@ const MenuItems = ({
               href="/listado-eventos-productor"
               className="navlink text-truncate"
             >
-              <FontAwesomeIcon icon={faCalendarDays} className="icono" />
+              <span className="icono">{ICON}</span>
               <span className="ms-1 d-none d-sm-inline w-100">Mis Eventos</span>
             </a>
           </li>
           <li className="navitem">
             <a href="/grafica-productor" className="navlink text-truncate">
-              <FontAwesomeIcon icon={faChartColumn} className="icono" />
+              <span className="icono">{ICON}</span>
               <span className="ms-1 d-none d-sm-inline w-100">
                 Estadisticas Eventos
               </span>
@@ -123,7 +113,7 @@ const MenuItems = ({
         <>
           <li className="navitem">
             <a href="/pedidos-asignados" className="navlink text-truncate">
-              <FontAwesomeIcon icon={faDolly} className="icono" />
+              <span className="icono">{ICON}</span>
               <span className="ms-1 d-none d-sm-inline w-100">
                 Pedidos Asignados
               </span>
@@ -134,7 +124,7 @@ const MenuItems = ({
               href="/asociarRepartidorAEvento"
               className="navlink text-truncate"
             >
-              <FontAwesomeIcon icon={faSquarePlus} className="icono" />
+              <span className="icono">{ICON}</span>
               <span className="ms-1 d-none d-sm-inline w-100">
                 Asociar A Evento
               </span>
@@ -142,7 +132,7 @@ const MenuItems = ({
           </li>
           <li className="navitem">
             <a href="/misAsociacionesR" className="navlink text-truncate">
-              <FontAwesomeIcon icon={faAddressBook} className="icono" />
+              <span className="icono">{ICON}</span>
               <span className="ms-1 d-none d-sm-inline w-100">
                 Mis asociaciones
               </span>
@@ -154,7 +144,7 @@ const MenuItems = ({
 
       <li className="navitem">
         <span onClick={() => handleBotonChat()} className="navlink text-truncate">
-          <FontAwesomeIcon icon={faRobot} className="icono" />
+          <span className="icono">{ICON}</span>
           <span className="ms-1 d-none d-sm-inline w-100">
             Foody
           </span>

@@ -3,8 +3,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCross, faTrash, faXmark } from "@fortawesome/free-solid-svg-icons";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 
 const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
@@ -13,6 +11,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const [isOpen, setIsOpen] = useState(false);
+  const ICON = "ICON";
   const quitarDelCarrito = (producto) => {
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
@@ -343,7 +342,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
                   style={{ ...styles.button, ...styles.deleteButton }}
                   onClick={() => eliminarDelCarrito(item)}
                 >
-                  <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
+                  <span>{ICON}</span>
                 </button>
               </td>
             </tr>
