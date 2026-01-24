@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
@@ -12,11 +12,12 @@ const RegistrarEvento = () => {
   const [croquis, setCroquis] = useState(null);
   const [descripcion, setDescripcion] = useState("");
   const [tieneButacas, setTieneButacas] = useState(false);
-  const [estado, setEstado] = useState("Standby");
+  const [estado] = useState("Standby");
   const [ubicacion, setUbicacion] = useState("");
   const [localidad, setLocalidad] = useState("");
   const [provincia, setProvincia] = useState("");
   const [tipoEvento, setTipoEvento] = useState("");
+  const [, setRestriccionesdb] = useState([]);
   const [fechaInicioEvento, setFechaInicioEvento] = useState("");
   const [horaInicioEvento, setHoraInicioEvento] = useState("");
   const [fechaFinEvento, setFechaFinEvento] = useState("");
@@ -32,7 +33,6 @@ const RegistrarEvento = () => {
   const [tipoPago, setTipoPago] = useState("");
   const [linkVentaEntradas, setLinkVentaEntradas] = useState("");
 
-  const { id } = useParams();
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
 
@@ -40,8 +40,6 @@ const RegistrarEvento = () => {
   const [selectedProvince, setSelectedProvince] = useState("");
   const [localidades, setLocalidades] = useState([]);
   const [selectedLocalidad, setSelectedLocalidad] = useState("");
-
-  const [restriccionesdb, setRestriccionesdb] = useState([]);
 
   const [restricciones, setRestricciones] = useState([]);
 
@@ -72,14 +70,7 @@ const RegistrarEvento = () => {
     }
   }, []);
 
-  function tieneNumeros(cadena) {
-    return /\d/.test(cadena);
-  }
 
-  function tieneLetras(cadena) {
-    const regex = /[a-zA-Z]/;
-    return regex.test(cadena);
-  }
 
   const handleImagenEventoChange = (e) => {
     const file = e.target.files[0];

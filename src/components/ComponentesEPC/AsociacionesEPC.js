@@ -12,7 +12,7 @@ import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 const AsociacionesEPC = () => {
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
-  const [isPendienteDeAceptacion, setIsPendienteDeAceptacion] = useState(false);
+  const [, setIsPendienteDeAceptacion] = useState(false);
   const [asociaciones, setAsociaciones] = useState([]);
   const Colors = useDynamicColors();
 

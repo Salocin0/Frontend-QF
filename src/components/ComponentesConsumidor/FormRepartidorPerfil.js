@@ -14,8 +14,7 @@ const RepartidorComponent = ({
 }) => {
   const Colors = useDynamicColors();
 
-  const [isDisabledR, setIsDisabledR] = useState(true);
-  const [editModeR, setEditModeR] = useState(false);
+  const [, setEditModeR] = useState(false);
     const { user } = useContext(UserContext);
   const styles = {
     buttonGroup: {

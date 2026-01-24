@@ -49,7 +49,7 @@ const KanbanBoard = ({id}) => {
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
   const [confirmPopup, setConfirmPopup] = useState(null);
-  const [showCancelledColumn, setShowCancelledColumn] = useState(true);
+  const [showCancelledColumn] = useState(true);
   const Colors = useDynamicColors();
 
   const recargarComponente = () => {
@@ -145,83 +145,7 @@ const KanbanBoard = ({id}) => {
   };
 
 
-  const onDragEnd = (result) => {
-    const { destination, source, draggableId } = result;
 
-    if (!destination) return;
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
-    const start = data.columns[source.droppableId];
-    const finish = data.columns[destination.droppableId];
-
-    if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
-
-      const newColumn = {
-        ...start,
-        taskIds: newTaskIds,
-      };
-
-      const newState = {
-        ...data,
-        columns: {
-          ...data.columns,
-          [newColumn.id]: newColumn,
-        },
-      };
-
-      setData(newState);
-      return;
-    }
-
-    const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      taskIds: startTaskIds,
-    };
-
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finish,
-      taskIds: finishTaskIds,
-    };
-
-    const task = data.tasks[draggableId];
-
-    setConfirmPopup({
-      taskId: draggableId,
-      fromColumn: start.id,
-      toColumn: finish.id,
-      onConfirm: () => {
-        const newState = {
-          ...data,
-          columns: {
-            ...data.columns,
-            [newStart.id]: newStart,
-            [newFinish.id]: newFinish,
-          },
-        };
-
-        setData(newState);
-
-        // Update the state in the backend
-        updatePedidoState(task.id, finish.id);
-
-        setConfirmPopup(null);
-      },
-      onCancel: () => setConfirmPopup(null),
-    });
-  };
 
 
   const getStatusColor = (estado) => {
@@ -339,7 +263,7 @@ const KanbanBoard = ({id}) => {
   const Column = ({column}) => {
     const {id} = column;
     const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
-    const {isOver, setNodeRef} = useDroppable({id});
+    const { setNodeRef } = useDroppable({id});
 
     const headerColors = {
       'column-1': '#FFC107', // Amarillo

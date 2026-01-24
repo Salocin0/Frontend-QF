@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import { UserContext } from "../ComponentesGenerales/UserContext";
+
 import "./../sass/main.scss";
 import { useParams } from "react-router-dom";
 

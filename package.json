@@ -48,10 +48,11 @@
   "scripts": {
     "dev": "react-scripts start",
     "start": "serve -s build",
-    "build": "CI=false react-scripts build --no-warnings",
+    "build": "cross-env CI=false react-scripts build --no-warnings",
+    "build:win": "set \"CI=false\" && react-scripts build --no-warnings",
     "serve": "serve -s build",
     "test": "cls && react-scripts test --watch --detectOpenHandles",
-    "buildCI": "CI=false react-scripts build",
+    "buildCI": "cross-env CI=false react-scripts build",
     "testCI": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject"
   },
@@ -79,6 +80,7 @@
     "@babel/preset-react": "^7.22.5",
     "babel-loader": "^9.1.3",
     "css-loader": "^6.8.1",
+    "cross-env": "^7.0.3",
     "customize-cra": "^1.0.0",
     "fetch-mock-jest": "^1.5.1",
     "react-app-rewired": "^2.2.1",

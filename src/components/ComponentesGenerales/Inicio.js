@@ -8,7 +8,6 @@ import productor from "../img/productor.jpg";
 import repartidor from "../img/repartidor.jpg";
 import useDynamicColors from "../../UseDinamicColors";
 import ActionButton from "./ActionButton";
-import chatboticon from "../bot-img.png";
 import Panel from "../ComponentesLandingPage/ChatPanel";
 import Footer from "./Footer";
 import asociarEvento from "../img/asociarevento.png";

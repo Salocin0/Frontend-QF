@@ -9,7 +9,6 @@ import "./../sass/main.scss";
 const ConsultarPuesto = () => {
   const { id } = useParams();
   const [session, setSession] = useState(null);
-  const [_carrito, setCarrito] = useState();
   const [editMode, setEditMode] = useState(false);
   const [numeroCarro, setNumeroCarro] = useState("");
   const [nombreCarro, setNombreCarro] = useState("");
@@ -20,7 +19,6 @@ const ConsultarPuesto = () => {
   const [telefonoCarro, setTelefonoCarro] = useState("");
   const [pdfAfip, setPdfAfip] = useState(null);
   const [pdfCuil, setPdfCuil] = useState(null);
-  const [pdfDNI, _setPdfDNI] = useState(null);
 
   const navigate = useNavigate();
 
@@ -60,7 +58,6 @@ const ConsultarPuesto = () => {
       tipoNegocio: tipoNegocio,
       pdfAfip: pdfAfip,
       pdfCuil: pdfCuil,
-      pdfDNI: pdfDNI,
       telefonoContacto: telefonoContacto,
       razonSocial: razonSocial,
       cuit: cuit,
@@ -114,7 +111,6 @@ const ConsultarPuesto = () => {
       })
       .then((response) => response.json())
       .then((data) => {
-        setCarrito(data.data);
         setNumeroCarro(data.data.numeroCarro);
         setNombreCarro(data.data.nombreCarro);
         setTipoNegocio(data.data.tipoNegocio);

@@ -20,7 +20,6 @@ const EncargadoPuesto = ({
   const [cuitEPC, setCuitEPC] = useState("");
   const [razonSocialEPC, setRazonSocialEPC] = useState("");
   const [condicionEPC, setCondicionEPC] = useState("");
-  const [, setDocumentos] = useState("");
   const [isDisabledEPC, setIsDisabledEPC] = useState(true);
   const [editModeEPC, setEditModeEPC] = useState(false);
   const styles = {
@@ -128,9 +127,6 @@ const EncargadoPuesto = ({
     setCondicionEPC(e.target.value);
   };
 
-  const handleDocumentosChangeEPC = (e) => {
-    setDocumentos(e.target.files);
-  };
   const handleEditModeToggleEPC = () => {
     setEditModeEPC(!editModeEPC);
     setIsDisabledEPC(!isDisabledEPC);

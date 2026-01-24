@@ -1,16 +1,17 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const ConsultarProducto = () => {
   const { id } = useParams();
   const Colors = useDynamicColors();
-  const [session, setSession] = useState(null);
+  const { user } = useContext(UserContext);
   const [producto, setProducto] = useState();
   const [editMode, setEditMode] = useState(false);
   const [nombre, setNombre] = useState("");
@@ -170,7 +171,7 @@ const ConsultarProducto = () => {
 
   return (
     <div style={styles.container}>
-      <Sidebar tipoUsuario={session?.tipoUsuario} />
+      <Sidebar tipoUsuario={user?.tipoUsuario} />
       <div style={styles.content}>
         <div style={styles.header}>
           <h1 style={styles.title}>Actualizar Producto</h1>

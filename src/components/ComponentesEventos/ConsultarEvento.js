@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./../sass/main.scss";
 import Footer from "../ComponentesGenerales/Footer";
@@ -54,7 +54,7 @@ const ConsultarEvento = () => {
 
   const [restriccionesEvento, setRestriccionesEvento] = useState([]);
 
-  const [restricciones, setRestricciones] = useState([]);
+
 
   const [nuevaColumna, setNuevaColumna] = useState({
     titulo: "",
@@ -63,7 +63,7 @@ const ConsultarEvento = () => {
     usuario: "",
   });
 
-  const navigate = useNavigate();
+
 
   const handleEditModeToggle = () => {
     setEditMode(!editMode);

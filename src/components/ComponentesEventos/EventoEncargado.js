@@ -69,7 +69,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
       if (response.status === 404) {
         asociarmeAEvento(evento.id);
       } else if (response.status === 200) {
-        const responseData = await response.json();
+        await response.json();
         handleCrearForm();
       } else {
         console.error(`Error: ${response.status}`);

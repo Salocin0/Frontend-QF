@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import userImageURL from "../user-img.png";
 import botImageURL from "../bot-img.png";
 import useDynamicColors from "../../UseDinamicColors";
@@ -136,6 +136,41 @@ const Chatbot = () => {
 
   const MenssageRegister = `Tambien podes crearte una cuenta haciendo click aquí.`;
 
+  const chatInputRef = useRef(null);
+  const chatBoxRef = useRef(null);
+
+  const addMessageToChat = useCallback((message, sender) => {
+    setMessages((prevMessages) => [...prevMessages, { message, sender }]);
+
+    setTimeout(() => {
+      if (chatBoxRef.current) {
+        chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
+      }
+    }, 100);
+  }, []);
+
+  const sendMessage = useCallback(() => {
+    const chatInput = chatInputRef.current;
+    const message = chatInput.value.trim();
+    if (message) {
+      addMessageToChat(message, "user");
+      chatInput.value = "";
+
+      fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
+        method: "POST",
+        body: new URLSearchParams("userMessage=" + message),
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          addMessageToChat(data.data.chat_response, "bot");
+        })
+        .catch((error) => console.error("Error:", error));
+    }
+  }, [addMessageToChat]);
+
   useEffect(() => {
     const nombre = user?.nombre;
     const greetingMessage = nombre
@@ -166,8 +201,6 @@ const Chatbot = () => {
       ]);
     }
   }, [user, MenssageLogin, MenssageRegister]);
-  const chatInputRef = useRef(null);
-  const chatBoxRef = useRef(null);
 
   useEffect(() => {
     const chatInput = chatInputRef.current;
@@ -182,39 +215,9 @@ const Chatbot = () => {
     return () => {
       chatInput.removeEventListener("keypress", handleKeyPress);
     };
-  }, []);
+  }, [sendMessage]);
 
-  const sendMessage = () => {
-    const chatInput = chatInputRef.current;
-    const message = chatInput.value.trim();
-    if (message) {
-      addMessageToChat(message, "user");
-      chatInput.value = "";
 
-      fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
-        method: "POST",
-        body: new URLSearchParams("userMessage=" + message),
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          addMessageToChat(data.data.chat_response, "bot");
-        })
-        .catch((error) => console.error("Error:", error));
-    }
-  };
-
-  const addMessageToChat = (message, sender) => {
-    setMessages((prevMessages) => [...prevMessages, { message, sender }]);
-
-    setTimeout(() => {
-      if (chatBoxRef.current) {
-        chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight;
-      }
-    }, 100);
-  };
 
   const renderMessageContent = (msg) => {
     if (msg === MenssageLogin) {
