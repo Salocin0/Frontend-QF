@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import "./../sass/main.scss";
 import useDynamicColors from "../../UseDinamicColors";
+import { FaUser, FaSeedling, FaTruck, FaStore } from "react-icons/fa";
 
 const SeleccionRegister = () => {
   const Colors = useDynamicColors();
@@ -132,8 +133,8 @@ const SeleccionRegister = () => {
               onChange={() => {}}
               style={{ display: "none" }}
             />
-            <span style={styles.span}>Consumidor</span>
-              <span style={styles.icon}>{ICON}</span>
+              <span style={styles.span}>Consumidor</span>
+              <span style={styles.icon}><FaUser /></span>
           </label>
           <hr style={styles.hr} />
           <div style={styles.buttonGroup}>
@@ -158,7 +159,7 @@ const SeleccionRegister = () => {
                 style={{ display: "none" }}
               />
               <span style={styles.span}>Productor</span>
-              <span style={styles.icon}>{ICON}</span>
+              <span style={styles.icon}><FaSeedling /></span>
             </label>
             <label
               className={classnames(
@@ -181,7 +182,7 @@ const SeleccionRegister = () => {
                 style={{ display: "none" }}
               />
               <span style={styles.span}>Repartidor</span>
-              <span style={styles.icon}>{ICON}</span>
+              <span style={styles.icon}><FaTruck /></span>
             </label>
             <label
               className={classnames(
@@ -204,7 +205,7 @@ const SeleccionRegister = () => {
                 style={{ display: "none" }}
               />
               <span style={styles.span}>Encargado</span>
-              <span style={styles.icon}>{ICON}</span>
+              <span style={styles.icon}><FaStore /></span>
             </label>
             <button
               style={styles.clearButton}

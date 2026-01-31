@@ -2,8 +2,7 @@ import imgDefault from "./../img/puestoLogoDefault.jpg";
 import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import { useEffect,useState } from "react";
-
-const ICON = "ICON";
+import { FaClock, FaStar } from "react-icons/fa";
 
 const PuestoUser = ({ carrito, selectedDay, evento }) => {
   const Color = useDynamicColors();
@@ -111,13 +110,13 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
           <p style={styles.title}>{carrito.nombreCarro}</p>
           <p style={styles.descripcion}>{carrito.tipoNegocio}</p>
           <div style={styles.iconWrapper}>
-            <span>{ICON}</span>
+            <FaClock />
             <span style={styles.iconText}>
               {tiempoEntrega || " 30"} {"Min"}
             </span>
           </div>
           <div style={styles.iconWrapper}>
-            <span>{ICON}</span>
+            <FaStar />
             <span style={styles.iconText}>{estrellas || " 4.5"}</span>
           </div>
         </div>

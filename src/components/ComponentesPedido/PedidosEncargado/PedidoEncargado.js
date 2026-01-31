@@ -4,8 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import FiltersEventosConsumidor from "../../Filtros y Buscadores/filtersEventosConsumidor";
 import "./../../sass/main.css";
-
-const ICON = "ICON";
+import { FaClipboardCheck, FaInfoCircle, FaTimesCircle } from "react-icons/fa";
 
 const PedidoEncargado = ({ pedido, recargar }) => {
   const { id } = useParams();
@@ -176,7 +175,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
                     className="btn btn-success btn-sm me-2"
                     onClick={tomarPedido}
                   >
-                    <span>{ICON}</span>
+                    <span><FaClipboardCheck /></span>
                   </button>
                 )}
 
@@ -184,7 +183,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
                   className="btn btn-info btn-sm me-2"
                   onClick={mostrarDialog}
                 >
-                  <span>{ICON}</span>
+                  <span><FaInfoCircle /></span>
                 </button>
 
                 {(pedido.estado === "Pendiente" ||
@@ -193,7 +192,7 @@ const PedidoEncargado = ({ pedido, recargar }) => {
                     className="btn btn-danger btn-sm me-2"
                     onClick={cancelarPedido}
                   >
-                    <span>{ICON}</span>
+                    <span><FaTimesCircle /></span>
                   </button>
                 )}
               </div>

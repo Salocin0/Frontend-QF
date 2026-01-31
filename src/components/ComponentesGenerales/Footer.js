@@ -1,9 +1,9 @@
 import React from "react";
 import useDynamicColors from "../../UseDinamicColors";
+import { FaInstagram, FaFacebook, FaTwitter, FaMoon } from "react-icons/fa";
 
 const Footer = () => {
   const Colors = useDynamicColors();
-  const ICON = "ICON";
   
   const toggleTheme = () => {
     const newMode = !Colors.modoOscuroActivo;
@@ -80,29 +80,29 @@ const Footer = () => {
               rel="noopener noreferrer"
               style={styles.iconStyle}
             >
-              {ICON}
+              <FaInstagram />
             </a>
             <a
-              href="https://www.instagram.com/"
+              href="https://www.facebook.com/"
               target="_blank"
               rel="noopener noreferrer"
               style={styles.iconStyle}
             >
-              {ICON}
+              <FaFacebook />
             </a>
             <a
-              href="https://www.instagram.com/"
+              href="https://www.twitter.com/"
               target="_blank"
               rel="noopener noreferrer"
               style={styles.iconStyle}
             >
-              {ICON}
+              <FaTwitter />
             </a>
             <span
               style={{ ...styles.iconStyle, marginRight: "1rem", fontSize: "1.5rem", cursor: "pointer" }}
               onClick={toggleTheme}
             >
-              {ICON}
+              <FaMoon />
             </span>
           </div>
           <div style={styles.rightSection}>

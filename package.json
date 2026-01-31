@@ -33,6 +33,7 @@
     "react": "^19.2.3",
     "react-bootstrap": "^2.8.0",
     "react-dom": "^19.2.3",
+    "react-icons": "^5.5.0",
     "react-modal": "^3.16.1",
     "react-router-dom": "^7.13.0",
     "react-scripts": "^5.0.1",
@@ -81,7 +82,6 @@
       "^msw/node$": "<rootDir>/src/__mocks__/msw-node-shim.js",
       "\\.(css|less|sass|scss)$": "<rootDir>/src/__mocks__/styleMock.js"
     },
-
     "transformIgnorePatterns": [
       "node_modules/(?!(msw|until-async|@mswjs|whatwg-fetch|abort-controller)/)"
     ],

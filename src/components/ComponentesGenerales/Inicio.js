@@ -8,6 +8,7 @@ import productor from "../img/productor.jpg";
 import repartidor from "../img/repartidor.jpg";
 import useDynamicColors from "../../UseDinamicColors";
 import ActionButton from "./ActionButton";
+import { FaUser, FaSignOutAlt, FaShoppingCart } from 'react-icons/fa'
 import Panel from "../ComponentesLandingPage/ChatPanel";
 import Footer from "./Footer";
 import asociarEvento from "../img/asociarevento.png";
@@ -313,6 +314,7 @@ const Inicio = () => {
   const actionButtonsData = [
     {
       title: "Mi Perfil",
+      icon: <FaUser />,
       onClick: handleProfile,
       style: {
         gridArea: "perfil",
@@ -324,6 +326,7 @@ const Inicio = () => {
     },
     {
       title: "Cerrar Sesión",
+      icon: <FaSignOutAlt />,
       onClick: handleLogout,
       style: {
         gridArea: "cerrarSesion",
@@ -335,6 +338,7 @@ const Inicio = () => {
     },
     {
       title: "Carrito",
+      icon: <FaShoppingCart />,
       onClick: handleCart,
       style: {
         gridArea: "carrito",

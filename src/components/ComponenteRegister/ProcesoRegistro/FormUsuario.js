@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import Footer from "../../ComponentesGenerales/Footer";
 import useDynamicColors from "../../../UseDinamicColors.js";
 import PasswordToggle from "../PasswordToggle.jsx";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "../placeholder.css"
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
@@ -196,8 +197,8 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
             />
           </div>
           <div style={styles.buttonGroup}>
-            <Link to={"/seleccion-perfil"} style={styles.backButton}>Volver</Link>
-            <button type="submit" style={styles.nextButton}>Siguiente</button>
+            <Link to={"/seleccion-perfil"} style={styles.backButton}><FaArrowLeft /> Volver</Link>
+            <button type="submit" style={styles.nextButton}>Siguiente <FaArrowRight /></button>
           </div>
         </form>
       </div>

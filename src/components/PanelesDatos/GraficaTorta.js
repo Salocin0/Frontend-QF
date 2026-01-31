@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import useDynamicColors from "../../UseDinamicColors";
-
-const ICON = "ICON";
+import { FaChartPie } from "react-icons/fa";
 
 const GraficaTorta = ({ id }) => {
   const [data, setData] = useState([]);
@@ -114,7 +113,7 @@ const GraficaTorta = ({ id }) => {
                     zIndex:"900"
                   }}
                 >
-                  <span>{ICON}</span>
+                  <span><FaChartPie /></span>
                 </button>
       <ReactECharts
         option={option}

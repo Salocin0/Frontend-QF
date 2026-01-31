@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap"; // Utilizando Bootstrap para el modal
 import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
+import { FaCalendarAlt } from 'react-icons/fa';
 
 const ICON = "ICON";
 
@@ -162,7 +163,7 @@ const CardPreCompra = ({ evento }) => {
         </>
       ) : (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", height: "100%"}}>
-          <span style={styles.icon}>{ICON}</span>
+          <span style={styles.icon}><FaCalendarAlt /></span>
           <h2 style={styles.title}>Precompra no disponible</h2>
           <p style={styles.description}>
             Precompra no disponible en este evento.

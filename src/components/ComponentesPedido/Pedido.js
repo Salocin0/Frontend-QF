@@ -2,8 +2,7 @@ import { useState } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import { toast } from "react-toastify";
-
-const ICON = "ICON";
+import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay } from "react-icons/fa";
 
 const Pedido = ({ pedido,recargar }) => {
   const Colors = useDynamicColors();
@@ -333,16 +332,16 @@ const Pedido = ({ pedido,recargar }) => {
             <div className="position-relative">
               <h5 style={styles.cardTitle}>Pedido #{pedido?.id}</h5>
               <h5 style={styles.cardSubTitle}>
-                <span>{ICON}</span>
+                <span><FaStore /></span>
                 {" " + pedido.puesto.nombreCarro}
               </h5>
               <h5 style={styles.cardSubTitle}>
-                <span>{ICON}</span>
+                <span><FaCalendarAlt /></span>
                 {" " + new Date(pedido.fecha).toLocaleDateString("es")}
               </h5>
               {pedido.estado === "EnCamino" && (
                 <h5 style={styles.cardSubTitle}>
-                  <span>{ICON}</span>
+                  <span><FaMotorcycle /></span>
                   {" " +
                     pedido?.repartidore?.consumidore?.nombre +
                     ", " +
@@ -351,7 +350,7 @@ const Pedido = ({ pedido,recargar }) => {
               )}
               {pedido.estado === "EnCamino" && (
                 <h5 style={styles.cardSubTitle}>
-                  <span>{ICON}</span>
+                  <span><FaMapMarkedAlt /></span>
                   {pedido?.puntoEncuentro?.nombre}
                 </h5>
               )}
@@ -363,11 +362,11 @@ const Pedido = ({ pedido,recargar }) => {
           <hr style={styles.separator} />
           <div style={styles.buttonGroup}>
             {mostrarBotonInfo && (
-              <button
+                <button
                 style={styles.buttonInfo}
                 onClick={() => setModalDetalleVisible(true)}
               >
-                <span>{ICON}</span> Detalle
+                <span><FaInfoCircle /></span> Detalle
               </button>
             )}
             {mostrarBotonDanger && (
@@ -375,12 +374,12 @@ const Pedido = ({ pedido,recargar }) => {
                 style={styles.buttonDanger}
                 onClick={() => setModalCancelarVisible(true)}
               >
-                <span>{ICON}</span> Cancelar
+                <span><FaTimesCircle /></span> Cancelar
               </button>
             )}
             {mostrarBotonMapa && (
               <button style={styles.buttonMap} disabled>
-                <span>{ICON}</span> Ver Mapa
+                <span><FaMapMarkedAlt /></span> Ver Mapa
               </button>
             )}
             {mostrarBotonValorar && (
@@ -388,12 +387,12 @@ const Pedido = ({ pedido,recargar }) => {
                 style={styles.buttonValorar}
                 onClick={() => setModalValoracionVisible(true)}
               >
-                <span>{ICON}</span> Valorar
+                <span><FaStar /></span> Valorar
               </button>
             )}
             {mostrarBotonSolicitar && (
               <button style={styles.buttonSolicitar} onClick={() => handleSolicitar()}>
-                <span>{ICON}</span> Solicitar
+                <span><FaPlay /></span> Solicitar
               </button>
             )}
           </div>

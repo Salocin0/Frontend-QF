@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
 import useDynamicColors from "../../UseDinamicColors";
-
-const ICON = "ICON";
+import { FaChartBar } from "react-icons/fa";
 
 const GraficaBarras = ({ eventId }) => {
   const [chartData, setChartData] = useState(null); // Estado para los datos de la gráfica
@@ -155,7 +154,7 @@ const GraficaBarras = ({ eventId }) => {
               zIndex:"900"
             }}
           >
-            <span>{ICON}</span>
+            <span><FaChartBar /></span>
           </button>
         </>
       ) : (

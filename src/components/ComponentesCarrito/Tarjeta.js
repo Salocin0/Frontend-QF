@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
+import { FaTrash } from "react-icons/fa";
 
 const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   console.log(productos);
@@ -342,7 +343,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
                   style={{ ...styles.button, ...styles.deleteButton }}
                   onClick={() => eliminarDelCarrito(item)}
                 >
-                  <span>{ICON}</span>
+                  <span><FaTrash /></span>
                 </button>
               </td>
             </tr>

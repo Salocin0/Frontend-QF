@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 
 const PasswordToggle = ({ inputId, value, onChange, placeholder, style, name }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const ICON = "ICON";
 
   const togglePasswordVisibility = (e) => {
     e.stopPropagation();
@@ -11,13 +11,20 @@ const PasswordToggle = ({ inputId, value, onChange, placeholder, style, name }) 
 
   return (
     <div style={{ position: "relative", width: "100%" }}>
+      <FaLock style={{
+        position: "absolute",
+        left: "15px",
+        top: "50%",
+        transform: "translateY(-50%)",
+        color: "#888"
+      }} />
       <input
         id={inputId}
         type={showPassword ? "text" : "password"}
         value={value || ""}
         onChange={onChange}
         placeholder={placeholder}
-        style={style}
+        style={{ ...style, paddingLeft: "40px" }}
         name={name}
       />
       <span
@@ -31,7 +38,7 @@ const PasswordToggle = ({ inputId, value, onChange, placeholder, style, name }) 
           color: "#888"
         }}
       >
-        {ICON}
+        {showPassword ? <FaEyeSlash /> : <FaEye />}
       </span>
     </div>
   );

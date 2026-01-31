@@ -1,4 +1,5 @@
 import useDynamicColors from "../../UseDinamicColors";
+import { FaBolt } from 'react-icons/fa'
 
 const ICON = "ICON";
 
@@ -49,7 +50,7 @@ const CardCompraInstantanea = ({ evento }) => {
     return (
         <div style={styles.card}>
             <div style={styles.content}>
-                <span style={styles.icon}>{ICON}</span>
+                <span style={styles.icon}><FaBolt /></span>
                 <h3 style={styles.title}>Compra Instantánea</h3>
                 <p style={styles.text}>
                     {eventMessage}

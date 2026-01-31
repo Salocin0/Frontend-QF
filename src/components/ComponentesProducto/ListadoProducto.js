@@ -8,6 +8,7 @@ import { useContext } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import { useLocation } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import { FaEyeSlash, FaPlus } from "react-icons/fa";
 
 const ListadoProducto = () => {
   const { id } = useParams();
@@ -138,7 +139,7 @@ const ListadoProducto = () => {
               to={`/listado-productos-deshabilitados/${id}`}
               style={styles.disabledLink}
             >
-              Productos Deshabilitados
+              <FaEyeSlash /> Productos Deshabilitados
             </Link>
           </div>
           <hr style={styles.divider} />
@@ -150,7 +151,7 @@ const ListadoProducto = () => {
           </div>
           <div style={styles.addButtonContainer}>
             <Link to={`/registrar-productos/${id}`} style={styles.addButton}>
-              <i className="bi bi-plus-lg"></i> Agregar Producto
+              <FaPlus /> Agregar Producto
             </Link>
           </div>
           <div style={styles.contentContainer}>

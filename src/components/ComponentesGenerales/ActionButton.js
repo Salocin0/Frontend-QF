@@ -1,9 +1,9 @@
 import React from "react";
 import useDynamicColors from "../../UseDinamicColors";
+import { FaRegSquare } from "react-icons/fa";
 
 const ActionButton = ({ title, icon, onClick, style }) => {
   const Colors = useDynamicColors();
-  const ICON = "ICON";
   
   const styles = {
     container: {
@@ -33,9 +33,10 @@ const ActionButton = ({ title, icon, onClick, style }) => {
     },
   };
 
-  // Nueva lógica para seleccionar el ícono basado en el título
+  // Renderiza el icono recibido por prop o un icono genérico por defecto
   const renderIcon = () => {
-    return <span style={styles.iconFont}>{ICON}</span>;
+    if (React.isValidElement(icon)) return <span style={styles.iconFont}>{icon}</span>;
+    return <span style={styles.iconFont}><FaRegSquare /></span>;
   };
 
   return (

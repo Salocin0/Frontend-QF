@@ -503,6 +503,20 @@ a:-webkit-any-link {
   font-size: 40px;
 }
 
+/* Ensure SVG icons from react-icons scale and inherit color */
+.icono, .lefticon, .footericon, .circleicon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icono svg, .lefticon svg, .footericon svg, .circleicon svg {
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  fill: currentColor;
+}
+
 .carousel-image {
   width: 100%;
   height: 100%;

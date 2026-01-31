@@ -3,6 +3,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./../sass/main.scss";
 import img from "./../img/comida-rapida-casera.jpg";
 import useDynamicColors from "../../UseDinamicColors";
+import { FaCalendarAlt, FaStore, FaShoppingCart, FaMapMarkedAlt } from 'react-icons/fa'
 
 const ComoFunciona = () => {
   const Colors = useDynamicColors();
@@ -69,25 +70,22 @@ const ComoFunciona = () => {
           </p>
           <div style={styles.itemsContainer}>
             <div style={styles.item}>
-              <i style={styles.icon} className="circleicon bi bi-balloon"></i>
+              <span className="circleicon" style={styles.icon}><FaCalendarAlt /></span>
               <p style={styles.text}>Selecciona el evento en el que deseas realizar tu pedido</p>
             </div>
 
             <div style={styles.item}>
-              <i style={styles.icon} className="circleicon bi bi-shop"></i>
+              <span className="circleicon" style={styles.icon}><FaStore /></span>
               <p style={styles.text}>Selecciona el puesto al cual quieres hacer el pedido</p>
             </div>
 
             <div style={styles.item}>
-              <i style={styles.icon} className="circleicon bi bi-cart"></i>
+              <span className="circleicon" style={styles.icon}><FaShoppingCart /></span>
               <p style={styles.text}>Realiza la compra de tu pedido</p>
             </div>
 
             <div style={styles.item}>
-              <i
-                style={styles.icon}
-                className="circleicon bi bi-signpost-split"
-              ></i>
+              <span className="circleicon" style={styles.icon}><FaMapMarkedAlt /></span>
               <p style={styles.text}>
                 Recibe el pedido en cualquier parte del evento
               </p>

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { toast } from "react-toastify";
+import { FaUser } from "react-icons/fa";
 
 const UserProfile = ({ haveRol }) => {
   const Colors = useDynamicColors();
@@ -11,7 +12,6 @@ const UserProfile = ({ haveRol }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { user, updateUser } = useContext(UserContext);
   const [isHoveredIndex, setIsHoveredIndex] = useState(null);
-  const ICON = "ICON";
 
   const handleLogout = () => {
     if (user.id) {
@@ -167,7 +167,7 @@ const UserProfile = ({ haveRol }) => {
             dropdown.style.display === "block" ? "none" : "block";
         }}
       >
-        <span className="icono" style={styles.icon}>{ICON}</span>
+        <span className="icono" style={styles.icon}><FaUser /></span>
         <span
           className="ms-1 d-none d-sm-inline text-center"
           style={{ color: isHovered ? Colors.Negro : Colors.Naranja }}

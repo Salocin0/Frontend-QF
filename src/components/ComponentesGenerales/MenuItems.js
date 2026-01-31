@@ -1,4 +1,5 @@
 import React from "react";
+import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser, FaCog } from "react-icons/fa";
 
 const MenuItems = ({
   isResponsable,
@@ -6,7 +7,6 @@ const MenuItems = ({
   isRepartidor,
   togglePanel,
 }) => {
-  const ICON = "ICON";
 
    const handleBotonChat = () => {
     togglePanel();
@@ -17,7 +17,7 @@ const MenuItems = ({
       {/* Enlace a la página de inicio */}
       <li className="navitem">
         <a href="/inicio" className="navlink text-truncate">
-          <i className="icono bi bi-house"></i>
+          <FaHome className="icono" />
           <span className="ms-1 d-none d-sm-inline w-100">Inicio</span>
         </a>
       </li>
@@ -25,7 +25,7 @@ const MenuItems = ({
       {/* Enlace a eventos */}
       <li className="navitem">
         <a href="/Listado-eventos" className="navlink text-truncate">
-          <i className="icono bi bi-balloon"></i>
+          <FaCalendarAlt className="icono" />
           <span className="ms-1 d-none d-sm-inline w-100">Eventos</span>
         </a>
       </li>
@@ -33,7 +33,7 @@ const MenuItems = ({
       {/* Enlace a pedidos */}
       <li className="navitem">
         <a href="/pedidos" className="navlink text-truncate">
-          <i className="icono bi bi-bag"></i>
+          <FaShoppingBag className="icono" />
           <span className="ms-1 d-none d-sm-inline w-100">Pedidos</span>
         </a>
       </li>
@@ -41,14 +41,14 @@ const MenuItems = ({
       {/* Enlace al carrito */}
       <li className="navitem">
         <a href="/carrito" className="navlink text-truncate">
-          <i className="icono bi bi-cart"></i>
+          <FaShoppingCart className="icono" />
           <span className="ms-1 d-none d-sm-inline w-100">Carrito</span>
         </a>
       </li>
       {/* Enlace al carrito */}
       <li className="navitem">
         <a href="/notificaciones" className="navlink text-truncate">
-          <i className="icono bi bi-bell"></i>
+          <FaBell className="icono" />
           <span className="ms-1 d-none d-sm-inline w-100">Notificaciones</span>
         </a>
       </li>
@@ -61,13 +61,13 @@ const MenuItems = ({
               href="/listado-puestos-encargado"
               className="navlink text-truncate"
             >
-              <span className="icono">{ICON}</span>
+              <FaStore className="icono" />
               <span className="ms-1 d-none d-sm-inline w-100">Mis Puestos</span>
             </a>
           </li>
           <li className="navitem">
             <a href="/misAsociacionesEPC" className="navlink text-truncate">
-              <span className="icono">{ICON}</span>
+              <FaHandshake className="icono" />
               <span className="ms-1 d-none d-sm-inline w-100">
                 Mis asociaciones
               </span>
@@ -75,7 +75,7 @@ const MenuItems = ({
           </li>
           <li className="navitem">
             <a href="/grafica-encargado" className="navlink text-truncate">
-              <span className="icono">{ICON}</span>
+              <FaChartBar className="icono" />
               <span className="ms-1 d-none d-sm-inline w-100">
                 Estadisticas Puesto
               </span>
@@ -93,13 +93,13 @@ const MenuItems = ({
               href="/listado-eventos-productor"
               className="navlink text-truncate"
             >
-              <span className="icono">{ICON}</span>
+              <FaCalendarAlt className="icono" />
               <span className="ms-1 d-none d-sm-inline w-100">Mis Eventos</span>
             </a>
           </li>
           <li className="navitem">
             <a href="/grafica-productor" className="navlink text-truncate">
-              <span className="icono">{ICON}</span>
+              <FaChartBar className="icono" />
               <span className="ms-1 d-none d-sm-inline w-100">
                 Estadisticas Eventos
               </span>
@@ -113,7 +113,7 @@ const MenuItems = ({
         <>
           <li className="navitem">
             <a href="/pedidos-asignados" className="navlink text-truncate">
-              <span className="icono">{ICON}</span>
+              <FaTruck className="icono" />
               <span className="ms-1 d-none d-sm-inline w-100">
                 Pedidos Asignados
               </span>
@@ -124,7 +124,7 @@ const MenuItems = ({
               href="/asociarRepartidorAEvento"
               className="navlink text-truncate"
             >
-              <span className="icono">{ICON}</span>
+              <FaUsers className="icono" />
               <span className="ms-1 d-none d-sm-inline w-100">
                 Asociar A Evento
               </span>
@@ -132,7 +132,7 @@ const MenuItems = ({
           </li>
           <li className="navitem">
             <a href="/misAsociacionesR" className="navlink text-truncate">
-              <span className="icono">{ICON}</span>
+              <FaHandshake className="icono" />
               <span className="ms-1 d-none d-sm-inline w-100">
                 Mis asociaciones
               </span>
@@ -144,7 +144,7 @@ const MenuItems = ({
 
       <li className="navitem">
         <span onClick={() => handleBotonChat()} className="navlink text-truncate">
-          <span className="icono">{ICON}</span>
+          <FaUser className="icono" />
           <span className="ms-1 d-none d-sm-inline w-100">
             Foody
           </span>

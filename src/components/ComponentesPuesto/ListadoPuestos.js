@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
+import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
@@ -113,7 +114,7 @@ const ListadoPuestos = () => {
           to={`/crear-puesto`}
           className={`btn btn-primary btnfloating btn-lg`}
         >
-          <i className="bi bi-plus-lg"></i> Agregar Puesto
+          <FaPlus className="lefticon" /> Agregar Puesto
         </Link>
         <Footer />
       </div>
