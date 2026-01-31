@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { PruebaTest } from "./pruebaTest";
+import { PruebaTest } from "./PruebaTest";
 
 describe("prueba", () => {
   it("must display", () => {

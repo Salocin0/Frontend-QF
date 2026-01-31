@@ -45,7 +45,7 @@ describe("Test de Login", () => {
         </MemoryRouter>
       </UserContext.Provider>
     );
-    const ingresarButton = screen.getByText("Ingresar");
+    const ingresarButton = screen.getByText("Iniciar sesión");
     expect(ingresarButton).toBeInTheDocument();
   });
 
@@ -57,7 +57,7 @@ describe("Test de Login", () => {
         </MemoryRouter>
       </UserContext.Provider>
     );
-    const recuperarContraseñaLink = screen.getByText("Recuperar Contraseña");
+    const recuperarContraseñaLink = screen.getByText(/¿Olvidaste tu contraseña\?/i);
     expect(recuperarContraseñaLink).toBeInTheDocument();
   });
 
@@ -70,9 +70,9 @@ describe("Test de Login", () => {
       </UserContext.Provider>
     );
 
-    const recuperarContraseñaLink = screen.getByText("Recuperar Contraseña");
+    const recuperarContraseñaLink = screen.getByText(/¿Olvidaste tu contraseña\?/i);
     expect(recuperarContraseñaLink).toBeInTheDocument();
-    expect.toHaveAttribute("href", "/recuperar");
+    expect(recuperarContraseñaLink).toHaveAttribute("href", "/recuperar");
   });
 
   it("debe redirigir a la página de registrarse al hacer clic en el enlace", () => {
@@ -84,7 +84,7 @@ describe("Test de Login", () => {
       </UserContext.Provider>
     );
 
-    const registrarmeLink = screen.getByText("Registrarme");
+    const registrarmeLink = screen.getByText(/registrarse/i);
     expect(registrarmeLink).toBeInTheDocument();
     expect(registrarmeLink).toHaveAttribute("href", "/seleccion-perfil");
   });
@@ -98,7 +98,7 @@ describe("Test de Login", () => {
       </UserContext.Provider>
     );
 
-    const ingresarButton = screen.getByRole("button", { name: "Ingresar" });
+    const ingresarButton = screen.getByRole("button", { name: /iniciar sesión/i });
     expect(ingresarButton).toBeInTheDocument();
   });
 
@@ -114,7 +114,7 @@ describe("Test de Login", () => {
       </UserContext.Provider>
     );
 
-    const ingresarButton = screen.getByRole("button", { name: "Ingresar" });
+    const ingresarButton = screen.getByRole("button", { name: /iniciar sesión/i });
     fireEvent.click(ingresarButton);
     await Promise.resolve();
     expect(navigateMock).toHaveBeenCalledTimes(1);

@@ -51,7 +51,7 @@
     "build": "cross-env CI=false react-scripts build --no-warnings",
     "build:win": "set \"CI=false\" && react-scripts build --no-warnings",
     "serve": "serve -s build",
-    "test": "cls && react-scripts test --watch --detectOpenHandles",
+    "test": "cls && react-scripts test --detectOpenHandles",
     "buildCI": "cross-env CI=false react-scripts build",
     "testCI": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject"
@@ -74,17 +74,38 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "moduleNameMapper": {
+      "^react-router-dom$": "<rootDir>/src/__mocks__/react-router-dom.js",
+      "^msw$": "<rootDir>/src/__mocks__/msw-shim.js",
+      "^msw/node$": "<rootDir>/src/__mocks__/msw-node-shim.js",
+      "\\.(css|less|sass|scss)$": "<rootDir>/src/__mocks__/styleMock.js"
+    },
+
+    "transformIgnorePatterns": [
+      "node_modules/(?!(msw|until-async|@mswjs|whatwg-fetch|abort-controller)/)"
+    ],
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+    }
+  },
   "devDependencies": {
     "@babel/core": "^7.22.11",
     "@babel/preset-env": "^7.22.14",
     "@babel/preset-react": "^7.22.5",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "babel-jest": "^30.2.0",
     "babel-loader": "^9.1.3",
-    "css-loader": "^6.8.1",
+    "broadcast-channel": "^7.3.0",
     "cross-env": "^7.0.3",
+    "css-loader": "^6.8.1",
     "customize-cra": "^1.0.0",
     "fetch-mock-jest": "^1.5.1",
+    "node-fetch": "^3.3.2",
     "react-app-rewired": "^2.2.1",
     "style-loader": "^3.3.3",
+    "text-encoding": "^0.7.0",
     "typescript": "^4.9.5",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
