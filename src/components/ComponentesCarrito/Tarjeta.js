@@ -12,7 +12,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const [isOpen, setIsOpen] = useState(false);
-  const ICON = "ICON";
+ 
   const quitarDelCarrito = (producto) => {
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);

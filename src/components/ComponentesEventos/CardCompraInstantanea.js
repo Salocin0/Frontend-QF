@@ -1,8 +1,6 @@
 import useDynamicColors from "../../UseDinamicColors";
 import { FaBolt } from 'react-icons/fa'
 
-const ICON = "ICON";
-
 const CardCompraInstantanea = ({ evento }) => {
     const Colors = useDynamicColors();
 

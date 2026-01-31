@@ -10,7 +10,7 @@ import { FaUser, FaSeedling, FaTruck, FaStore } from "react-icons/fa";
 const SeleccionRegister = () => {
   const Colors = useDynamicColors();
   const [selectedType, setSelectedType] = useState("consumidor");
-  const ICON = "ICON";
+  
 
   const handleTypeChange = (type) => {
     setSelectedType(type);

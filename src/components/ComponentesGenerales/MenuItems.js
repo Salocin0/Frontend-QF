@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser, FaCog } from "react-icons/fa";
+import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser } from "react-icons/fa";
 
 const MenuItems = ({
   isResponsable,

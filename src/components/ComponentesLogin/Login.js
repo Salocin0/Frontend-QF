@@ -5,7 +5,7 @@ import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useLogin from "../Hooks/UseLogin";
 import useDynamicColors from "../../UseDinamicColors.js";
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 
 const Login = () => {
   const { updateUser } = useContext(UserContext);
