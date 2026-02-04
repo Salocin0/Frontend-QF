@@ -54,8 +54,11 @@ const useLogin = () => {
       } else {
         const text = await response.text();
         console.error("Respuesta no JSON recibida al iniciar sesión:", text);
-        throw new Error("Respuesta del servidor no es JSON");
+        // Mostrar el texto de error en consola y devolver fallo
+        return { success: false, error: text };
       }
+
+      console.log('Login response data:', responseData);
 
       if (Number(responseData.code) === 200) {
         sessionStorage.setItem("sessionId", responseData.data.sessionId);
@@ -69,6 +72,7 @@ const useLogin = () => {
         toast.info("Usuario inhabilitado");
         navigate(`/habilitar-Usuario-deshabilitado/${responseData.data.id}`);
       } else {
+        console.error('Login fallido. Datos del servidor:', responseData);
         toast.error("Datos incorrectos");
       }
     } catch (error) {
