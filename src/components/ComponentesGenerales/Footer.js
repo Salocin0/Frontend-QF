@@ -1,19 +1,13 @@
 import React from "react";
 import useDynamicColors from "../../UseDinamicColors";
-import { FaInstagram, FaFacebook, FaTwitter, FaMoon } from "react-icons/fa";
+import { FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
 
 const Footer = () => {
   const Colors = useDynamicColors();
-  
-  const toggleTheme = () => {
-    const newMode = !Colors.modoOscuroActivo;
-    localStorage.setItem("modoOscuroActivo", newMode);
-    window.location.reload(); // Recarga para aplicar el cambio en toda la aplicación
-  };
 
   const styles = {
     footerStyle: {
-      padding: "1rem",
+      padding: "0.5rem 1rem",
       backgroundColor: Colors.GrisAzuladoOscuro,
       textAlign: "center",
       position: "fixed",
@@ -98,12 +92,6 @@ const Footer = () => {
             >
               <FaTwitter />
             </a>
-            <span
-              style={{ ...styles.iconStyle, marginRight: "1rem", fontSize: "1.5rem", cursor: "pointer" }}
-              onClick={toggleTheme}
-            >
-              <FaMoon />
-            </span>
           </div>
           <div style={styles.rightSection}>
             

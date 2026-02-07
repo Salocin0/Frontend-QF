@@ -5,7 +5,8 @@ import useDynamicColors from "../../UseDinamicColors";
 
 const ProductoUser = ({ producto, user, selectedDay, evento }) => {
   const Colors = useDynamicColors();
-  console.log(evento);
+  const [isHovered, setIsHovered] = React.useState(false);
+
   const handleAddtocart = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
@@ -31,107 +32,155 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
 
   const styles = {
     cardContainer: {
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      borderRadius: "10px",
-      width: "75%",
-      height: "250px",
+      boxShadow: isHovered ? "0px 8px 15px rgba(0, 0, 0, 0.3)" : "0px 4px 6px rgba(0, 0, 0, 0.1)",
+      borderRadius: "12px",
+      width: "98%",
+      minHeight: "120px",
       overflow: "hidden",
       backgroundColor: Colors.GrisAzuladoClaro,
-      marginBottom: "30px",
-      marginLeft: "30px",
+      margin: "0 auto 14px auto",
       border: `1px solid ${Colors.Naranja}`,
+      transition: "all 0.25s ease",
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      cursor: "default",
+      transform: isHovered ? "translateY(-2px)" : "none",
+      paddingLeft: "16px",
+      paddingRight: "16px",
+    },
+    imageContainer: {
+      width: "140px",
+      minWidth: "140px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "0",
+      backgroundColor: "transparent",
     },
     image: {
-      width: "150px",
-      height: "140px",
+      width: "100%",
+      height: "90px",
       objectFit: "cover",
-      borderRadius: "10px",
-      backgroundColor: Colors.BlancoEnBlanco,
-      display: "flex",
-      margin: "auto 0",
-      marginLeft: "45px",
+      borderRadius: "8px",
+      boxShadow: "none",
+      display: "block",
     },
     cardBody: {
-      width: "100%",
-      padding: "15px",
+      flex: 1,
+      padding: "10px 18px",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+
+    infoSection: {
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center",
+      gap: "5px",
     },
     title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      textAlign: "center",
-      marginBottom: "10px",
-      color: Colors.Negro,
+      fontSize: "18px",
+      fontWeight: "700",
+      margin: 0,
+      color: Colors.Blanco,
+      letterSpacing: "0.3px",
     },
     description: {
-      fontSize: "18px",
-      textAlign: "center",
+      fontSize: "13px",
+      color: Colors.Blanco,
+      opacity: 0.8,
+      margin: "0",
+      lineHeight: "1.2",
+      display: "-webkit-box",
+      WebkitLineClamp: "1",
+      WebkitBoxOrient: "vertical",
       overflow: "hidden",
-      color: Colors.Negro,
     },
-    priceAndButtonContainer: {
-      display: "flex",
-      justifyContent: "center",
-      alingItems: "center",
+    aderezos: {
+      fontSize: "12px",
+      color: Colors.Naranja,
+      fontWeight: "600",
+      fontStyle: "italic",
+      margin: "0",
     },
-    containerbtn:{
+    actionSection: {
       display: "flex",
-      justifyContent: "center",
-      alingItems: "center",
-      flexDirection: "column",
-    },
-    price: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      color: Colors.Negro,
-      display: "flex",
-      marginTop: "auto",
-      marginBottom: "20px",
+      justifyContent: "flex-end",
+      alignItems: "center",
+      gap: "14px",
+      marginTop: "0",
     },
     button: {
       backgroundColor: Colors.Verde,
       border: "none",
       color: Colors.Negro,
-      padding: "10px 20px",
-      borderRadius: "10px",
+      padding: "10px 25px",
+      borderRadius: "8px",
       cursor: "pointer",
+      fontWeight: "bold",
+      fontSize: "15px",
+      transition: "all 0.2s ease",
+      boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+      marginLeft: "8px",
     },
-    buttonIcon: {
-      fontSize: "20px",
+    price: {
+      fontSize: "28px",
+      fontWeight: "bold",
+      color: Colors.Blanco,
+      margin: 0,
     },
-    card: {
-      display: "flex",
-      flexDirection: "row",
+    priceSymbol: {
+      fontSize: "18px",
+      marginRight: "4px",
+      color: Colors.Naranja,
     },
   };
-  console.log(producto);
+
   return (
-    <div style={styles.cardContainer}>
-      <div style={styles.card}>
+    <div 
+      style={styles.cardContainer}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div style={styles.imageContainer}>
         <img
           src={producto?.img || productoDefecto}
-          alt="Thumbnail"
+          alt={producto?.nombre}
           style={styles.image}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = productoDefecto;
+          }}
         />
-        <div style={styles.cardBody}>
+      </div>
+      <div style={styles.cardBody}>
+        <div style={styles.infoSection}>
+          <h2 style={styles.title}>{producto?.nombre}</h2>
+          <p style={styles.description}>{producto?.descripcion}</p>
+          {producto?.aderezos && (
+            <p style={styles.aderezos}>Aderezos: {producto.aderezos}</p>
+          )}
+        </div>
+        
+        <div style={styles.actionSection}>
           <div>
-            <h6 style={styles.title}>{producto?.nombre}</h6>
+            <p style={styles.price}>
+              <span style={styles.priceSymbol}>$</span>
+              {producto?.precio}
+            </p>
           </div>
-          <div>
-            <p style={styles.description}>{producto?.descripcion}</p>
-          </div>
-          <div style={styles.containerbtn}>
-            <div style={styles.priceAndButtonContainer}>
-              <h4 style={styles.price}>$ {producto?.precio}</h4>
-            </div>
-            <div style={styles.priceAndButtonContainer}>
-              <button style={styles.button} onClick={handleAddtocart}>
-                Agregar a carrito
-              </button>
-            </div>
-          </div>
+          <button 
+            style={{
+              ...styles.button,
+              transform: isHovered ? "scale(1.05)" : "scale(1)",
+              backgroundColor: isHovered ? "#38a169" : Colors.Verde // Ajuste ligero de color en hover
+            }} 
+            onClick={handleAddtocart}
+          >
+            Agregar al carrito
+          </button>
         </div>
       </div>
     </div>

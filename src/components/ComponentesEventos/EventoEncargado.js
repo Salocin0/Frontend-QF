@@ -202,6 +202,10 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
                 src={evento.img || imgDefault}
                 alt="Logo del Evento"
                 style={styles.imgFluid}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = imgDefault;
+                }}
               />
             </div>
             <div style={styles.colMd8}>

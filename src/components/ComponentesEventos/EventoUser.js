@@ -1,9 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logoevento from "./../img/logoevento.webp";
 import useDynamicColors from "../../UseDinamicColors";
+import { toast } from "react-toastify";
 
 const EventoUser = ({ evento }) => {
+  const navigate = useNavigate();
   const Color = useDynamicColors();
   const calcularTiempoRestante = (fecha) => {
     const ahora = new Date();
@@ -56,31 +58,47 @@ const EventoUser = ({ evento }) => {
 
   const styles = {
     container: {
-      width: "79%",
-      margin: "0 30px",
+      width: "100%",
+      margin: "0",
+      padding: "0",
     },
     card: {
       border: `1px solid ${Color.Naranja}`,
       borderRadius: "8px",
-      width: "100%",
+      width: "98%",
+      minHeight: "110px",
       backgroundColor: Color.GrisAzuladoClaro,
-      marginBottom: "20px",
+      margin: "0 auto 14px auto",
       color: Color.Blanco,
-      padding: "0px",
+      padding: "8px 16px",
       transition: "transform 0.2s ease-in-out",
+      cursor: "pointer",
     },
     cardBody: {
+      flex: 1,
       display: "flex",
       flexDirection: "row",
-      gap: "20px",
+      gap: "12px",
       alignItems: "center",
       cursor: "pointer",
+      padding: "10px 18px",
+    },
+    imageContainer: {
+      width: "140px",
+      minWidth: "140px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "0",
+      backgroundColor: "transparent",
     },
     img: {
       width: "100%",
-      maxWidth: "150px",
+      maxWidth: "110px",
       borderRadius: "8px",
-      marginLeft: "40px",
+      marginLeft: "0",
+      boxShadow: "none",
+      display: "block",
     },
     content: {
       flexGrow: 1,
@@ -89,7 +107,7 @@ const EventoUser = ({ evento }) => {
       alignItems: "start",
       display: "flex",
       flexDirection: "column",
-      marginLeft: "40px",
+      marginLeft: "0",
     },
     title: {
       fontSize: "24px",
@@ -147,16 +165,28 @@ const EventoUser = ({ evento }) => {
     },
   };
 
+  const handleCardClick = () => {
+    if (evento.estado === "Finalizado") {
+      toast.error("El evento ha finalizado.");
+    } else {
+      navigate(`/tipo-compra/${evento.id}`);
+    }
+  };
+
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
-        <Link to={`/tipo-compra/${evento.id}`} style={styles.cardLink}>
+      <div style={styles.card} onClick={handleCardClick}>
+        <div style={styles.cardLink}>
           <div style={styles.cardBody}>
-            <div>
+            <div style={styles.imageContainer}>
               <img
                 src={evento.img || logoevento}
                 alt="Logo del Evento"
                 style={styles.img}
+                onError={(e) => {
+                  e.target.onerror = null; // Previene bucles infinitos si el placeholder también falla
+                  e.target.src = logoevento;
+                }}
               />
             </div>
 
@@ -186,7 +216,7 @@ const EventoUser = ({ evento }) => {
               )}
             </div>
           </div>
-        </Link>
+        </div>
       </div>
     </div>
   );

@@ -28,6 +28,7 @@ const ListadoEventosUsers = () => {
 
   useEffect(() => {
     if (user) {
+      setLoanding(false);
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
       fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/EnCurso`, {
@@ -39,26 +40,28 @@ const ListadoEventosUsers = () => {
           setEventos(data.data);
           setFilteredEventos(data.data);
           generateRows(data.data);
-          fetch(
+          return fetch(
             `${process.env?.REACT_APP_BACK_URL}evento/enEstado/Confirmado`,
             {
               method: "GET",
               headers: headers,
             }
-          )
-            .then((response) => response.json())
-            .then((confirmadoData) => {
-              const allEventos = [...data.data, ...confirmadoData.data];
-              setEventos(allEventos);
-              generateRows(allEventos);
-            })
-            .catch((error) =>
-              console.log("Error fetching Confirmado eventos.", error)
-            );
+          );
         })
-        .catch((error) => console.log("No existen carritos.", error));
+        .then((response) => response.json())
+        .then((confirmadoData) => {
+          setEventos((prev) => {
+            const allEventos = [...prev, ...confirmadoData.data];
+            generateRows(allEventos);
+            return allEventos;
+          });
+          setLoanding(true);
+        })
+        .catch((error) => {
+          console.log("Error fetching eventos.", error);
+          setLoanding(true);
+        });
     }
-    setLoanding(true);
   }, [user]);
 
   const generateRows = (eventosList) => {
@@ -111,7 +114,6 @@ const ListadoEventosUsers = () => {
       flexDirection: "row",
       backgroundColor: Colors.GrisAzuladoOscuro,
       height: "calc(100vh - 50px)",
-      width: "100%",
       overflow: "hidden",
     },
     sidebar: {
@@ -127,15 +129,50 @@ const ListadoEventosUsers = () => {
       flexDirection: "column",
       boxSizing: "border-box",
     },
+    headerWrapper: {
+      flexShrink: 0,
+      width: "100%",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      zIndex: 10,
+    },
+    scrollableContent: {
+      flex: 1,
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+    },
+    contentRow: {
+      display: "flex",
+      gap: "20px",
+      alignItems: "flex-start",
+      height: "100%",
+      overflow: "hidden",
+    },
+    leftCol: {
+      width: "70%",
+      boxSizing: "border-box",
+    },
+    rightColInner: {
+      width: "30%",
+      boxSizing: "border-box",
+      display: "flex",
+      flexDirection: "column",
+      gap: "12px",
+      alignItems: "center",
+    },
     header: {
       display: "flex",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       color: Colors.Naranja,
-    },
+      paddingLeft: "16px",
+    }, 
     title: {
       paddingTop: "10px",
       fontSize: "32px",
       fontWeight: "bold",
+      margin: 0,
+      width: "98%",
+      textAlign: "left",
     },
     separator: {
       color: Colors.Naranja,
@@ -148,7 +185,6 @@ const ListadoEventosUsers = () => {
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      padding: "0px",
       height: "100%",
       width: "100%",
       overflowY: "auto",
@@ -159,7 +195,7 @@ const ListadoEventosUsers = () => {
       width: "100%",
       display: "flex",
       flexWrap: "wrap",
-      justifyContent: "space-between",
+      justifyContent: "center",
       gap: "10px",
       boxSizing: "border-box",
       overflowY: "scroll",
@@ -177,66 +213,51 @@ const ListadoEventosUsers = () => {
       height: "80%",
       width: "80%",
     },
-    filtro: {
-      width: "15%",
-      position: "absolute",
-      top: "230px",
-      right: "2%",
+    rightCol: {
+      width: "20%",
+      padding: "20px",
+      boxSizing: "border-box",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: "12px",
+    },
+    buscadorBox: {
+      width: "98%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
-      height: "fit-content",
+      padding: "8px 16px",
       boxSizing: "border-box",
     },
-    buscador: {
-      width: "15%",
-      position: "absolute",
-      top: "90px",
-      right: "2%",
+    filtroBox: {
+      width: "98%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
-      height: "fit-content",
+      padding: "10px",
       boxSizing: "border-box",
-    },
-    button: {
-      position: "absolute",
-      top: "12px",
-      left: "21%",
-      color: Colors.Blanco,
-      fontWeight: "bold",
-      border: `1px solid ${Colors.Blanco}`,
-      borderRadius: "10px",
-      height: "fit-content",
-      boxSizing: "border-box",
-      backgroundColor: Colors.Naranja,
-      padding: "10px 20px",
-      cursor: "pointer",
+      marginTop: "10px",
     },
   };
 
   return (
-    <div>
-      <div style={styles.container}>
-        <div style={styles.sidebar}>
-          <Sidebar tipoUsuario={user?.tipoUsuario} />
-        </div>
-        <div style={styles.filtro}>
-          <FiltersEventosConsumidor
-            setDistancia={setDistancia}
-            setPreventa={setPreventa}
-          />
-        </div>
-
-        <div style={styles.buscador}>
-          <Buscador setNombre={setNombre} />
-        </div>
-        <div style={styles.mainContent}>
+    <div style={styles.container}>
+      <div style={styles.sidebar}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
+      </div>
+      <div style={styles.mainContent}>
+        <div style={styles.headerWrapper}>
           <div style={styles.header}>
             <h1 style={styles.title}>Eventos</h1>
           </div>
           <hr style={styles.separator} />
+        </div>
+        <div style={styles.scrollableContent}>
+          <div style={styles.contentRow}>
+        <div style={styles.leftCol}>
           <div>
             <Breadcrumb items={breadcrumbItems} />
           </div>
+
           <div style={styles.eventsContainer}>
             <div style={styles.eventsWrapper}>
               {!loanding ? (
@@ -245,7 +266,7 @@ const ListadoEventosUsers = () => {
                 filteredEventos.length > 0 ? (
                 rows.length > 0 &&
                 rows.map((row, rowIndex) => (
-                  <div key={rowIndex} style={{ width: "95%" }}>
+                  <div key={rowIndex} style={{ width: "100%" }}>
                     {row.map((evento, index) => (
                       <div
                         key={index}
@@ -266,7 +287,22 @@ const ListadoEventosUsers = () => {
             </div>
           </div>
         </div>
+
+        <div style={styles.rightColInner}>
+          <div style={styles.buscadorBox}>
+            <Buscador setNombre={setNombre} />
+          </div>
+          <div style={styles.filtroBox}>
+            <FiltersEventosConsumidor
+              setDistancia={setDistancia}
+              setPreventa={setPreventa}
+            />
+          </div>
+        </div>
       </div>
+        </div>
+      </div>
+
       <Footer />
     </div>
   );

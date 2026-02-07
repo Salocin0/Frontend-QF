@@ -167,12 +167,12 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
 
   const styles = {
     card: {
-      padding: "16px",
+      padding: "12px",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "8px",
       backgroundColor: Colors.GrisAzuladoClaro,
-      margin: "20px",
-      marginBottom: "0",
+      margin: "10px auto",
+      width: "98%",
       position: "relative",
     },
     cardTitle: {

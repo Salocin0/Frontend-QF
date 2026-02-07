@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Pedido from "./Pedido";
+import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import usedynamicColors from "../../UseDinamicColors";
@@ -8,6 +9,7 @@ import Tabs from "./PedidosRepartidor/Tabs";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ListadoPedidos = () => {
+  const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
@@ -24,6 +26,7 @@ const ListadoPedidos = () => {
   // useEffect para cargar los pedidos
   useEffect(() => {
     if (user) {
+      setLoanding(false);
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 
@@ -34,8 +37,12 @@ const ListadoPedidos = () => {
         .then((response) => response.json())
         .then((data) => {
           setPedidos(data.data);
+          setLoanding(true);
         })
-        .catch((error) => console.log("No existen pedidos.", error));
+        .catch((error) => {
+          console.log("No existen pedidos.", error);
+          setLoanding(true);
+        });
     }
   }, [user, recargar]);
 
@@ -154,7 +161,9 @@ const ListadoPedidos = () => {
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
         <div style={styles.contentWrapper}>
           <div style={styles.pedidosWrapper}>
-            {Array.isArray(pedidosFiltrados) && pedidosFiltrados.length > 0 ? (
+            {!loanding ? (
+              <LoandingComponent />
+            ) : Array.isArray(pedidosFiltrados) && pedidosFiltrados.length > 0 ? (
               rows.length > 0 &&
               rows.map((row, rowIndex) => (
                 <div key={rowIndex}>

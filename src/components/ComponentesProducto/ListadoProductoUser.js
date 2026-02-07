@@ -2,6 +2,7 @@ import banner from "../ComponentesProducto/banner.jpg";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
+import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import Footer from "../ComponentesGenerales/Footer";
 import ProductoUser from "./ProductoUser";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -14,6 +15,7 @@ import { useLocation } from "react-router-dom";
 
 const ListadoProductoUser = () => {
   const { id } = useParams();
+  const [loanding, setLoanding] = useState(false);
   const [productos, setProductos] = useState([]);
   const [filteredProductos, setFilteredProductos] = useState([]);
   const [puesto, setPuesto] = useState();
@@ -40,35 +42,33 @@ const ListadoProductoUser = () => {
 
   useEffect(() => {
     if (user) {
+      setLoanding(false);
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
       headers.append("puestoId", id);
 
-      fetch(`${process.env?.REACT_APP_BACK_URL}producto`, {
+      const fetchProductos = fetch(`${process.env?.REACT_APP_BACK_URL}producto`, {
         method: "GET",
         headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setProductos(data.data);
-          setFilteredProductos(data.data); // Inicializa los productos filtrados
-        })
-        .catch((error) => console.log("No existen productos.", error));
-    }
-  }, [user,id]);
+      }).then((response) => response.json());
 
-  useEffect(() => {
-    if (user) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}puesto/consultar/${id}`, {
+      const fetchPuesto = fetch(`${process.env?.REACT_APP_BACK_URL}puesto/consultar/${id}`, {
         method: "GET",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setPuesto(data.data);
+      }).then((response) => response.json());
+
+      Promise.all([fetchProductos, fetchPuesto])
+        .then(([productosData, puestoData]) => {
+          setProductos(productosData.data);
+          setFilteredProductos(productosData.data);
+          setPuesto(puestoData.data);
+          setLoanding(true);
         })
-        .catch((error) => console.log("No existen carritos.", error));
+        .catch((error) => {
+          console.log("Error al cargar productos.", error);
+          setLoanding(true);
+        });
     }
-  }, [user,id]);
+  }, [user, id]);
 
   // Maneja el filtro de productos
   const handleSearch = (searchTerm) => {
@@ -86,14 +86,10 @@ const ListadoProductoUser = () => {
       flexDirection: "row",
       margin: "0",
       padding: "0",
-      Height: "100vh",
+      height: "calc(100vh - 50px)",
       backgroundColor: Colors.GrisAzuladoOscuro,
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
-      "::-webkit-scrollbar": {
-        display: "none",
-      },
-      overflowY: "scroll", 
+      overflow: "hidden",
+      boxSizing: "border-box",
     },
     sidebar: {
       width: "20%",
@@ -103,7 +99,41 @@ const ListadoProductoUser = () => {
     mainContent: {
       width: "80%",
       padding: "0",
-
+      boxSizing: "border-box",
+    },
+    contentRow: {
+      display: "flex",
+      gap: "20px",
+      alignItems: "flex-start",
+    },
+    leftCol: {
+      width: "70%",
+      boxSizing: "border-box",
+    },
+    rightColInner: {
+      width: "30%",
+      boxSizing: "border-box",
+      display: "flex",
+      flexDirection: "column",
+      gap: "12px",
+      alignItems: "flex-start",
+    },
+    buscadorBox: {
+      width: "98%",
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "10px",
+      padding: "8px 16px",
+      boxSizing: "border-box",
+      backgroundColor: Colors.GrisAzuladoClaro,
+    },
+    boton: {
+      width: "98%",
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "10px",
+      backgroundColor: Colors.Naranja,
+      padding: "10px",
+      color: Colors.Blanco,
+      cursor: "pointer",
     },
     banner: {
       backgroundImage: `url(${banner})`,
@@ -111,19 +141,23 @@ const ListadoProductoUser = () => {
       backgroundSize: "100%",
       backgroundRepeat: "no-repeat",
       display: "flex",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       alignItems: "center",
       borderBottom: `2px solid ${Colors.BlancoEnBlanco}`,
       marginBottom: "20px",
+      paddingLeft: "16px",
     },
     bannerText: {
       fontSize: "32px",
       fontWeight: "bold",
       color: Colors.Naranja,
       backgroundColor: Colors.GrisAzuladoClaro,
-      padding: "20px",
+      padding: "10px 16px",
       borderRadius: "10px",
       border: `2px solid ${Colors.BlancoEnBlanco}`,
+      width: "98%",
+      margin: 0,
+      textAlign: "left",
     },
     productsContainer: {
       display: "flex",
@@ -131,22 +165,15 @@ const ListadoProductoUser = () => {
       alignItems: "center",
       padding: "0",
       paddingBottom: "80px",
-      // Mantiene el desplazamiento
-      height: "100vh", // Altura ajustada para limitar el scroll
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
-      "::-webkit-scrollbar": {
-        display: "none",
-      },
-      overflowY: "scroll", 
+      // Dejar que la página maneje el scroll, no el contenedor
+      overflow: "visible",
+      width: "100%",
+      boxSizing: "border-box",
     },
     productCard: {
-      height: "100%",
       width: "100%",
       display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-between",
-      gap: "10px",
+      justifyContent: "center",
       boxSizing: "border-box",
     },
     noProductsMessage: {
@@ -158,28 +185,7 @@ const ListadoProductoUser = () => {
       justifyContent: "center",
       alignItems: "center",
     },
-    buscador: {
-      width: "15%",
-      position: "absolute",
-      top: "140px",
-      right: "2%",
-      border: `1px solid ${Colors.Naranja}`,
-      borderRadius: "10px",
-      height: "fit-content",
-      boxSizing: "border-box",
-      zIndex: 2, // Asegura que se mantenga visible
-    },
-    boton: {
-      width: "100%",
-      position: "absolute",
-      bottom: "-65px",
-      right: "0%",
-      border: `1px solid ${Colors.Naranja}`,
-      borderRadius: "10px",
-      backgroundColor: Colors.Naranja,
-      padding: "10px",
-      color: Colors.Blanco,
-    },
+
   };
 
   return (
@@ -187,35 +193,47 @@ const ListadoProductoUser = () => {
       <div style={styles.sidebar}>
         <Sidebar tipoUsuario={user?.tipoUsuario} />
       </div>
-      <div style={styles.buscador}>
-        <BuscadorProductoConsumidor onSearch={handleSearch} />
-        <button style={styles.boton} onClick={() => navigate("/carrito")}>
-          Ir a mi Carrito
-        </button>
-      </div>
 
       <div style={styles.mainContent}>
         <div style={styles.banner}>
           <h1 style={styles.bannerText}>{puesto?.nombreCarro}</h1>
         </div>
-        <div>
-          <Breadcrumb items={breadcrumbItems} />
-        </div>
+        <div style={styles.contentRow}>
+          <div style={styles.leftCol}>
+            <div>
+              <Breadcrumb items={breadcrumbItems} />
+            </div>
 
-        <div style={styles.productsContainer}>
-          {Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
-            filteredProductos.map((producto, index) => (
-              <div key={index} style={styles.productCard}>
-                <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} evento={evento}/>
-              </div>
-            ))
-          ) : (
-            <h2 style={styles.noProductsMessage}>
-              No existen productos en este carrito.
-            </h2>
-          )}
+            <div style={styles.productsContainer}>
+              {!loanding ? (
+                <LoandingComponent />
+              ) : Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
+                filteredProductos.map((producto, index) => (
+                  <div key={index} style={styles.productCard}>
+                    <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} evento={evento}/>
+                  </div>
+                ))
+              ) : (
+                <h2 style={styles.noProductsMessage}>
+                  No existen productos en este carrito.
+                </h2>
+              )}
+            </div>
+          </div>
+
+          <div style={styles.rightColInner}>
+            <div style={styles.buscadorBox}>
+              <BuscadorProductoConsumidor onSearch={handleSearch} />
+            </div>
+            <button style={styles.boton} onClick={() => navigate("/carrito")}>
+              Ir a mi Carrito
+            </button>
+          </div>
         </div>
       </div>
+
+
+
       <Footer />
     </div>
   );

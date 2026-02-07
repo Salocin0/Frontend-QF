@@ -48,7 +48,7 @@ const CardCompraInstantanea = ({ evento }) => {
     return (
         <div style={styles.card}>
             <div style={styles.content}>
-                <span style={styles.icon}><FaBolt /></span>
+                <span style={styles.icon}><FaBolt size={30} /></span>
                 <h3 style={styles.title}>Compra Instantánea</h3>
                 <p style={styles.text}>
                     {eventMessage}

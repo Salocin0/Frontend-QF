@@ -2,10 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "../img/QuickFood_LogoYellow.png";
 import useDynamicColors from "../../UseDinamicColors";
-import { FaUserPlus, FaSignInAlt } from "react-icons/fa";
+import { FaUserPlus, FaSignInAlt, FaMoon } from "react-icons/fa";
 
 const Navbar = () => {
   const Colors = useDynamicColors();
+
+  const toggleTheme = () => {
+    const newMode = !Colors.modoOscuroActivo;
+    localStorage.setItem("modoOscuroActivo", newMode);
+    window.location.reload();
+  };
   const styles = {
     navbar: {
       display: "flex",
@@ -62,6 +68,15 @@ const Navbar = () => {
       alignItems: "center",
       padding: "5px",
     },
+    themeButton: {
+      color: Colors.Naranja,
+      fontSize: "1.5rem",
+      cursor: "pointer",
+      backgroundColor: "transparent",
+      border: "none",
+      padding: "5px",
+      marginLeft: "10px",
+    },
   };
 
   return (
@@ -84,6 +99,9 @@ const Navbar = () => {
             </li>
           </Link>
         </ul>
+        <button style={styles.themeButton} onClick={toggleTheme}>
+          <FaMoon />
+        </button>
       </div>
     </nav>
   );

@@ -6,10 +6,10 @@ const Breadcrumb = ({ items, style }) => {
   const Colors = useDynamicColors();
   let styles ={
     breadcrumbContainer: {
-      margin: '10px 30px',
+      margin: '8px auto',
       backgroundColor: Colors.GrisAzuladoClaro,
-      width: '75%',
-      padding: '10px 20px',
+      width: '98%',
+      padding: '8px 16px',
       marginBottom: '10px',
       marginTop: '0px',
       borderRadius: '10px',

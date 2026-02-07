@@ -35,16 +35,19 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
     card: {
       border: `1px solid ${Color.Naranja}`,
       borderRadius: "10px",
-      width: "85%",
+      width: "98%",
       backgroundColor: Color.GrisAzuladoClaro,
-      marginBottom: "20px",
+      marginBottom: "16px",
+      margin: "0 auto 16px auto",
       color: Color.Negro,
       transition: "transform 0.2s ease-in-out",
       cursor: "pointer",
       display: "flex",
       flexDirection: "row",
-      paddingTop: "20px",
-      paddingBottom: "20px",
+      paddingTop: "12px",
+      paddingBottom: "12px",
+      paddingLeft: "16px",
+      paddingRight: "16px",
     },
     cardBody: {
       display: "flex",
@@ -53,12 +56,24 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
       alignItems: "center",
       cursor: "pointer",
     },
+    imageContainer: {
+      width: "140px",
+      minWidth: "140px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "0",
+      backgroundColor: "transparent",
+    },
     img: {
       width: "100%",
       maxWidth: "150px",
       borderRadius: "8px",
-      marginLeft: "40px",
+      marginLeft: "0",
+      marginRight: "16px",
       objectFit: "cover",
+      boxShadow: "none",
+      display: "block",
     },
     content: {
       flexGrow: 1,
@@ -67,7 +82,7 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
       alignItems: "start",
       display: "flex",
       flexDirection: "column",
-      marginLeft: "40px",
+      marginLeft: "0",
     },
     title: {
       fontSize: "24px",
@@ -101,11 +116,13 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
   return (
     <div onClick={() => handleClick()} style={styles.cardLink}>
       <div style={styles.card}>
-        <img
-          src={carrito?.img || imgDefault}
-          style={styles.img}
-          alt="Thumbnail"
-        />
+        <div style={styles.imageContainer}>
+          <img
+            src={carrito?.img || imgDefault}
+            style={styles.img}
+            alt="Thumbnail"
+          />
+        </div>
         <div style={styles.content}>
           <p style={styles.title}>{carrito.nombreCarro}</p>
           <p style={styles.descripcion}>{carrito.tipoNegocio}</p>

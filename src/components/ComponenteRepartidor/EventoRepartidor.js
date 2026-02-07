@@ -206,6 +206,10 @@ const EventoRepartidor = ({ evento, recargar }) => {
               src={evento.img || imgDefault}
               alt="Logo del Evento"
               style={styles.img}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = imgDefault;
+              }}
             />
             <div style={styles.datos}>
               <h5 style={styles.cardTitle}>{evento.nombre}</h5>

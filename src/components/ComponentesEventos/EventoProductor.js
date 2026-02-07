@@ -301,6 +301,10 @@ const EventoProductor = ({ evento, recargarComponente }) => {
             src={evento.img || imgDefault}
             alt="Logo del Evento"
             style={styles.img}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = imgDefault;
+            }}
           />
         </div>
 

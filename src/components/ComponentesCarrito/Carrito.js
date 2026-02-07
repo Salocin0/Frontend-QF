@@ -74,6 +74,7 @@ const Carrito = () => {
     mainContent: {
       width: "80%",
       marginLeft: "20%",
+      paddingRight: "20%", // Para mantener la consistencia con las otras vistas
       height: "100%",
       marginBottom: "5rem",
     },

@@ -4,8 +4,6 @@ import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt } from 'react-icons/fa';
 
-const ICON = "ICON";
-
 const CardPreCompra = ({ evento }) => {
   const [selectedDay, setSelectedDay] = useState(null); // Día seleccionado
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
@@ -31,13 +29,13 @@ const CardPreCompra = ({ evento }) => {
   // Manejador para el botón "Siguiente" que muestra el modal de advertencia
   const handleNext = () => {
     setShowModal(true);
-    navigate(`/listado-puestos/${evento.id}`, { state: { selectedDay } });
   };
 
   // Manejadores para el modal de advertencia
   const handleCloseModal = () => setShowModal(false);
   const handleAccept = () => {
     setShowModal(false);
+    navigate(`/listado-puestos/${evento.id}`, { state: { selectedDay } });
   };
   const handleReject = () => setShowModal(false);
 
@@ -128,8 +126,8 @@ const CardPreCompra = ({ evento }) => {
     <div style={styles.card}>
       {evento.tienePreventa ? (
         <>
-          <span style={styles.icon}>{ICON}</span>
-          <h2 style={styles.title}>PreCompra</h2>
+          <span style={styles.icon}><FaCalendarAlt size={30} /></span>
+          <h2 style={styles.title}>Pre Compra</h2>
           <p style={styles.description}>
             Seleccione una fecha disponible para la precompra.
           </p>

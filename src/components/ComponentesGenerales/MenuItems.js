@@ -1,5 +1,6 @@
 import React from "react";
-import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser } from "react-icons/fa";
+import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser, FaMoon } from "react-icons/fa";
+import useDynamicColors from "../../UseDinamicColors";
 
 const MenuItems = ({
   isResponsable,
@@ -7,6 +8,13 @@ const MenuItems = ({
   isRepartidor,
   togglePanel,
 }) => {
+  const Colors = useDynamicColors();
+
+  const toggleTheme = () => {
+    const newMode = !Colors.modoOscuroActivo;
+    localStorage.setItem("modoOscuroActivo", newMode);
+    window.location.reload();
+  };
 
    const handleBotonChat = () => {
     togglePanel();
@@ -52,6 +60,7 @@ const MenuItems = ({
           <span className="ms-1 d-none d-sm-inline w-100">Notificaciones</span>
         </a>
       </li>
+      
       <hr className="divicionnav" style={{ color: "white", width: "100%" }} />
       {/* Enlaces específicos para el responsable */}
       {isResponsable && (
@@ -148,6 +157,14 @@ const MenuItems = ({
           <span className="ms-1 d-none d-sm-inline w-100">
             Foody
           </span>
+        </span>
+      </li>
+      
+      {/* Botón de cambiar tema */}
+      <li className="navitem" onClick={toggleTheme} style={{ cursor: "pointer" }}>
+        <span className="navlink text-truncate">
+          <FaMoon className="icono" />
+          <span className="ms-1 d-none d-sm-inline w-100">Cambiar Tema</span>
         </span>
       </li>
     </ul>

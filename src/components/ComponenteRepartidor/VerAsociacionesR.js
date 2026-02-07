@@ -179,6 +179,10 @@ const AsociacionesR = () => {
                               src={evento.img || imgDefault}
                               alt="Logo del Evento"
                               style={styles.cardImage}
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = imgDefault;
+                              }}
                             />
                             <div style={styles.cardTextContainer}>
                               <h5 style={styles.cardTitle}>{evento.nombre}</h5>

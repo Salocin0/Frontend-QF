@@ -4,8 +4,15 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const LoandingComponent = () => {
     return (
-        <div className="d-flex justify-content-center align-items-center">
-          <Spinner color="warning" />
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+          width: "100%",
+          minHeight: "200px"
+        }}>
+          <Spinner color="warning" style={{ width: '3rem', height: '3rem' }} />
         </div>
       );
 };

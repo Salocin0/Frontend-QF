@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import Sidebar from "../ComponentesGenerales/Sidebar";
+import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import PuestoUser from "./PuestoUser";
 import { useParams } from "react-router-dom";
 import useDynamicColors from "../../UseDinamicColors";
@@ -13,6 +14,7 @@ import { useLocation } from "react-router-dom";
 const ListadoPuestosUser = () => {
   const Colors = useDynamicColors();
   const { idEvento } = useParams();
+  const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [carritos, setCarritos] = useState([]);
   const [filteredCarritos, setFilteredCarritos] = useState([]); // Estado para los carritos filtrados
@@ -31,28 +33,27 @@ const ListadoPuestosUser = () => {
 
   // Obtener datos iniciales
   useEffect(() => {
-    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/evento/${idEvento}`, {
+    setLoanding(false);
+    const fetchPuestos = fetch(`${process.env?.REACT_APP_BACK_URL}puesto/evento/${idEvento}`, {
       method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setCarritos(data.data);
-        setFilteredCarritos(data.data); // Inicialmente todos los carritos están filtrados
-      })
-      .catch((error) => console.log("No existen carritos."));
-  }, [user,idEvento]);
+    }).then((response) => response.json());
 
-  useEffect(() => {
-    fetch(`${process.env?.REACT_APP_BACK_URL}evento/${idEvento}`, {
+    const fetchEvento = fetch(`${process.env?.REACT_APP_BACK_URL}evento/${idEvento}`, {
       method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setEvento(data.data);
-        console.log("evento",data.data);
+    }).then((response) => response.json());
+
+    Promise.all([fetchPuestos, fetchEvento])
+      .then(([puestosData, eventoData]) => {
+        setCarritos(puestosData.data);
+        setFilteredCarritos(puestosData.data);
+        setEvento(eventoData.data);
+        setLoanding(true);
       })
-      .catch((error) => console.log("No existen eventos."));
-  },[idEvento]);
+      .catch((error) => {
+        console.log("Error al cargar datos.", error);
+        setLoanding(true);
+      });
+  }, [user, idEvento]);
 
   // Filtrar carritos cuando cambien los filtros
   useEffect(() => {
@@ -122,15 +123,36 @@ const ListadoPuestosUser = () => {
       flexDirection: "column",
       boxSizing: "border-box",
     },
+    contentRow: {
+      display: "flex",
+      gap: "20px",
+      alignItems: "flex-start",
+    },
+    leftCol: {
+      width: "70%",
+      boxSizing: "border-box",
+    },
+    rightColInner: {
+      width: "30%",
+      boxSizing: "border-box",
+      display: "flex",
+      flexDirection: "column",
+      gap: "12px",
+      alignItems: "center",
+    },
     header: {
       display: "flex",
-      justifyContent: "center",
+      justifyContent: "flex-start",
       color: Colors.Naranja,
+      paddingLeft: "16px",
     },
     title: {
       paddingTop: "10px",
       fontSize: "32px",
       fontWeight: "bold",
+      margin: 0,
+      width: "98%",
+      textAlign: "left",
     },
     separator: {
       color: Colors.Naranja,
@@ -144,8 +166,7 @@ const ListadoPuestosUser = () => {
       alignItems: "center",
       justifyContent: "center",
       height: "100%",
-      width: "92.9%",
-      marginLeft: "30px",
+      width: "100%",
       overflowY: "auto",
       overflowX: "hidden",
     },
@@ -155,7 +176,7 @@ const ListadoPuestosUser = () => {
       display: "flex",
       flexWrap: "wrap",
 
-      justifyContent: "space-between",
+      justifyContent: "center",
       gap: "10px",
       boxSizing: "border-box",
       overflowY: "scroll",
@@ -173,25 +194,29 @@ const ListadoPuestosUser = () => {
       height: "80%",
       width: "80%",
     },
-    filtro: {
-      width: "15%",
-      position: "absolute",
-      top: "230px",
-      right: "2%",
+    rightCol: {
+      width: "20%",
+      padding: "20px",
+      boxSizing: "border-box",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "12px",
+    },
+    buscadorBox: {
+      width: "98%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
-      height: "fit-content",
+      padding: "8px 16px",
       boxSizing: "border-box",
     },
-    buscador: {
-      width: "15%",
-      position: "absolute",
-      top: "90px",
-      right: "2%",
+    filtroBox: {
+      width: "98%",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "10px",
-      height: "fit-content",
+      padding: "10px",
       boxSizing: "border-box",
+      marginTop: "10px",
     },
   };
 
@@ -200,46 +225,55 @@ const ListadoPuestosUser = () => {
       <div style={styles.sidebar}>
         <Sidebar tipoUsuario={user?.tipoUsuario} />
       </div>
-      <div style={styles.buscador}>
-        <BuscadorPuestosConsumidor setNombre={setNombre} />
-      </div>
-      <div style={styles.filtro}>
-        <FiltersPuestosConsumidor
-          setEstrella={setEstrella}
-          setTiempo={setTiempo}
-        />
-      </div>
       <div style={styles.mainContent}>
         <div style={styles.header}>
           <h1 style={styles.title}>{ `Puestos de ${evento.nombre}` || "Puestos"} </h1>
         </div>
         <hr style={styles.separator} />
-        <div>
-          <Breadcrumb items={breadcrumbItems} />
-        </div>
-        <div style={styles.eventsContainer}>
-          <div style={styles.eventsWrapper}>
-            {Array.isArray(filteredCarritos) && filteredCarritos.length > 0 ? (
-              rows.length > 0 &&
-              rows.map((row, rowIndex) => (
-                <div key={rowIndex} style={{ width: "95%" }}>
-                  {row.map((carrito, index) => (
-                    <div
-                      key={index}
-                      style={{ marginBottom: "10px", width: "100%" }}
-                    >
-                      {carrito !== null ? (
-                        <PuestoUser carrito={carrito} selectedDay={selectedDay} evento={evento} />
-                      ) : null}
+        <div style={styles.contentRow}>
+          <div style={styles.leftCol}>
+            <div>
+              <Breadcrumb items={breadcrumbItems} />
+            </div>
+            <div style={styles.eventsContainer}>
+              <div style={styles.eventsWrapper}>
+                {!loanding ? (
+                  <LoandingComponent />
+                ) : Array.isArray(filteredCarritos) && filteredCarritos.length > 0 ? (
+                  rows.length > 0 &&
+                  rows.map((row, rowIndex) => (
+                    <div key={rowIndex} style={{ width: "100%" }}>
+                      {row.map((carrito, index) => (
+                        <div
+                          key={index}
+                          style={{ marginBottom: "10px", width: "100%" }}
+                        >
+                          {carrito !== null ? (
+                            <PuestoUser carrito={carrito} selectedDay={selectedDay} evento={evento} />
+                          ) : null}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              ))
-            ) : (
-              <h2 style={styles.noEventsMessage}>
-                No tienes ningún puesto en este momento.
-              </h2>
-            )}
+                  ))
+                ) : (
+                    <h2 style={styles.noEventsMessage}>
+                      No tienes ningún puesto en este momento.
+                    </h2>
+                  )}
+              </div>
+            </div>
+          </div>
+
+          <div style={styles.rightColInner}>
+            <div style={styles.buscadorBox}>
+              <BuscadorPuestosConsumidor setNombre={setNombre} />
+            </div>
+            <div style={styles.filtroBox}>
+              <FiltersPuestosConsumidor
+                setEstrella={setEstrella}
+                setTiempo={setTiempo}
+              />
+            </div>
           </div>
         </div>
       </div>
