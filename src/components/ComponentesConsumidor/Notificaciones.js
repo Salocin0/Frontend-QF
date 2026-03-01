@@ -6,12 +6,14 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import CardNotificaciones from "./CardNotificaicones";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import { CircularProgress } from "@mui/material";
 
 const Notificaciones = () => {
   const Colors = useDynamicColors();
   const { user } = useContext(UserContext);
   const [notificaciones, setNotificaciones] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const recargarComponente = () => {
     setRecargar((prevRecargar) => prevRecargar + 1);
@@ -19,6 +21,7 @@ const Notificaciones = () => {
 
   useEffect(() => {
     const fetchNotificaciones = async () => {
+      setIsLoading(true);
       try {
         const response = await fetch(
           `${process.env?.REACT_APP_BACK_URL}notificaciones/web`,
@@ -35,6 +38,8 @@ const Notificaciones = () => {
         console.log(responseJson);
       } catch (error) {
         console.error("Error fetching notificaciones:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchNotificaciones();
@@ -72,6 +77,20 @@ const Notificaciones = () => {
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
+    loadingContainer: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      minHeight: "400px",
+      gap: "20px",
+      marginTop: "40px",
+    },
+    loadingText: {
+      fontSize: "16px",
+      color: Colors.Blanco,
+      fontWeight: "bold",
+    },
   };
 
   const breadcrumbItems = [
@@ -96,7 +115,12 @@ const Notificaciones = () => {
             style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
           />
         </div>
-        {notificaciones.length > 0 ? (
+        {isLoading ? (
+          <div style={styles.loadingContainer}>
+            <CircularProgress style={{ color: Colors.Naranja }} size={50} />
+            <div style={styles.loadingText}>Cargando notificaciones...</div>
+          </div>
+        ) : notificaciones.length > 0 ? (
           notificaciones.map((notificacion) => (
             <CardNotificaciones
               key={notificacion.id}

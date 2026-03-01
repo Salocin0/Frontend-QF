@@ -289,9 +289,14 @@ const AsociacionesEPC = () => {
                             </div>
                           )}
                           <p style={styles.estadoText}>
-                            {asociacion.estado === "PendienteDeAceptacion"
-                              ? "Pendiente de Aceptacion"
-                              : asociacion.estado}
+                            {(() => {
+                              const formatEstado = (s) =>
+                                s ? s.replace(/([A-Z])/g, " $1").trim() : "";
+                              if (asociacion.estado === "PendienteDeAceptacion") {
+                                return "Pendiente de Aceptacion";
+                              }
+                              return formatEstado(asociacion.estado);
+                            })()}
                           </p>
                         </div>
                       </div>

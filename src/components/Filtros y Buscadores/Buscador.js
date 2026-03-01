@@ -19,7 +19,7 @@ const Buscador = ({
       padding: "10px",
       borderRadius: "8px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      flexDirection: botonBuscar ? "column" : "row",
+      flexDirection: "row",
       backgroundColor: Colors.GrisAzuladoClaro,
       alignItems: "center",
       border: `1px solid ${Colors.Naranja}`,

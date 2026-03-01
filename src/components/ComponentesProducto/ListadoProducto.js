@@ -8,6 +8,7 @@ import { useContext } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import { useLocation } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import { FaEyeSlash, FaPlus } from "react-icons/fa";
 
 const ListadoProducto = () => {
@@ -15,10 +16,11 @@ const ListadoProducto = () => {
   const { user } = useContext(UserContext);
   const [productos, setProductos] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const [busqueda, setBusqueda] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const Colors = useDynamicColors();
   const location = useLocation();
   const carrito = location.state;
-  console.log(carrito);
 
   const recargarComponente = () => {
     setRecargar((prev) => prev + 1);
@@ -30,13 +32,15 @@ const ListadoProducto = () => {
       headers.append("ConsumidorId", user.consumidorId);
       headers.append("puestoId", id);
 
+      setIsLoading(true);
       fetch(`${process.env?.REACT_APP_BACK_URL}producto`, {
         method: "GET",
         headers: headers,
       })
         .then((response) => response.json())
         .then((data) => setProductos(data.data))
-        .catch((error) => console.log("No existen carritos.", error));
+        .catch((error) => console.log("No existen carritos.", error))
+        .finally(() => setIsLoading(false));
     }
   }, [user, recargar, id]);
 
@@ -92,19 +96,47 @@ const ListadoProducto = () => {
     },
     contentContainer: {
       display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      flexDirection: "row",
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
       paddingTop: "1rem",
       width: "80%",
       marginLeft: "20%",
       paddingBottom: "50px",
+      gap: "20px",
     },
-    gridContainer: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-      gap: "1rem",
-      width: "Calc(100% - 40px)",
+    cardsContainer: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      width: "70%",
+      gap: "10px",
+      paddingRight: "20px",
+    },
+    sidebarContainer: {
+      width: "30%",
+      minWidth: "260px",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      border: `1px solid ${Colors.Naranja}`,
+      borderRadius: "8px",
+      padding: "20px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "10px",
+    },
+    sidebarButton: {
+      backgroundColor: Colors.Verde,
+      color: Colors.BlancoEnBlanco,
+      fontSize: "1rem",
+      textDecoration: "none",
+      padding: "10px",
+      borderRadius: "5px",
+      cursor: "pointer",
+      textAlign: "center",
+    },
+    noProductsMessage: {
+      fontSize: "1.5rem",
+      color: Colors.Naranja,
     },
     noProductsMessage: {
       fontSize: "1.5rem",
@@ -149,28 +181,57 @@ const ListadoProducto = () => {
               style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
             />
           </div>
-          <div style={styles.addButtonContainer}>
-            <Link to={`/registrar-productos/${id}`} style={styles.addButton}>
-              <FaPlus /> Agregar Producto
-            </Link>
-          </div>
           <div style={styles.contentContainer}>
-            {Array.isArray(productos) && productos.length > 0 ? (
-              <div style={styles.gridContainer}>
-                {productos.map((producto, index) => (
-                  <Producto
-                    key={index}
-                    producto={producto}
-                    idpuesto={id}
-                    recargar={recargarComponente}
-                  />
-                ))}
-              </div>
-            ) : (
-              <h2 style={styles.noProductsMessage}>
-                No tienes ningún producto asociado a este carrito.
-              </h2>
-            )}
+            <div style={styles.sidebarContainer}>
+              <input
+                type="text"
+                placeholder="Buscar productos..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                style={{
+                  padding: "8px",
+                  borderRadius: "4px",
+                  border: `1px solid ${Colors.Gris}`,
+                  width: "100%",
+                }}
+              />
+              <Link
+                to={`/registrar-productos/${id}`}
+                style={styles.sidebarButton}
+              >
+                <FaPlus style={{ marginRight: "6px" }} />
+                Agregar Producto
+              </Link>
+            </div>
+            <div style={styles.cardsContainer}>
+              {isLoading ? (
+                <LoandingComponent />
+              ) : Array.isArray(productos) &&
+                productos.filter((p) =>
+                  JSON.stringify(p)
+                    .toLowerCase()
+                    .includes(busqueda.toLowerCase())
+                ).length > 0 ? (
+                productos
+                  .filter((p) =>
+                    JSON.stringify(p)
+                      .toLowerCase()
+                      .includes(busqueda.toLowerCase())
+                  )
+                  .map((producto, index) => (
+                    <Producto
+                      key={index}
+                      producto={producto}
+                      idpuesto={id}
+                      recargar={recargarComponente}
+                    />
+                  ))
+              ) : (
+                <h2 style={styles.noProductsMessage}>
+                  No tienes ningún producto asociado a este carrito.
+                </h2>
+              )}
+            </div>
           </div>
         </div>
       </div>

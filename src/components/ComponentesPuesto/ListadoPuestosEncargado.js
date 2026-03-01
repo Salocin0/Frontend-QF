@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState, useMemo } from "react";
+import { CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Footer from "../ComponentesGenerales/Footer";
@@ -16,6 +17,7 @@ const ListadoPuestosEncargado = () => {
   const [carritosOriginales, setCarritosOriginales] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [filtrosAplicados, setFiltrosAplicados] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const navigate = useNavigate();
@@ -61,19 +63,23 @@ const ListadoPuestosEncargado = () => {
       flexDirection: "row",
       alignItems: "flex-start",
       padding: "0",
-      gap: "10px",
+      gap: "20px",
     },
     cardsContainer: {
       flex: 1,
       display: "flex",
       flexDirection: "column",
-      width: "100%",
+      width: "70%",
+      minWidth: "60%",
     },
     filtersContainer: {
       width: "30%",
+      minWidth: "260px",
       borderRadius: "8px",
-      paddingRight: "20px",
+      padding: "20px",
       top: "20px",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      border: `1px solid ${Colors.Naranja}`,
     },
     headerContainer: {
       display: "flex",
@@ -94,9 +100,11 @@ const ListadoPuestosEncargado = () => {
     },
     rowContainer: {
       display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "center",
+      flexDirection: "column",
+      justifyContent: "flex-start",
       width: "100%",
+      gap: "10px",
+      padding: "5px 0",
     },
     gridContainer: {
       textAlign: "center",
@@ -141,7 +149,7 @@ const ListadoPuestosEncargado = () => {
     searchFilterContainer: {
       display: "flex",
       flexDirection: "column",
-      gap: "0px",
+      gap: "20px",
     },
   };
 
@@ -151,6 +159,7 @@ const ListadoPuestosEncargado = () => {
       headers.append("ConsumidorId", user?.id);
       headers.append("Content-Type", "application/json");
 
+      setIsLoading(true);
       fetch(`${process.env?.REACT_APP_BACK_URL}puesto/creados`, {
         method: "GET",
         headers: headers,
@@ -172,7 +181,9 @@ const ListadoPuestosEncargado = () => {
           }
           setRows(generatedRows);
         })
-        .catch((error) => console.log("No existen carritos."));
+        .catch((error) => console.log("No existen carritos."))
+        .finally(() => setIsLoading(false));
+
     }
   }, [actualizar, user]);
 
@@ -233,9 +244,6 @@ const ListadoPuestosEncargado = () => {
       <div style={styles.mainContent}>
         <div style={styles.headerContainer}>
           <h1 style={styles.sectionTitle}>Mis Puestos</h1>
-          <button onClick={agregarNuevo} style={styles.agregarButton}>
-            Agregar Puesto
-          </button>
         </div>
         <hr style={styles.divider} />
         <div style={styles.contentContainer}>
@@ -246,7 +254,20 @@ const ListadoPuestosEncargado = () => {
                 style={{ width: "Calc(100% - 20px)", marginLeft: "20px" }}
               />
             </div>
-            {Array.isArray(carritos) && carritos.length > 0 ? (
+            {isLoading ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  padding: "2rem",
+                }}
+              >
+                <CircularProgress
+                  style={{ color: Colors.Naranja }}
+                  size={40}
+                />
+              </div>
+            ) : Array.isArray(carritos) && carritos.length > 0 ? (
               <>
                 {rows.length > 0 &&
                   rows.map((row, rowIndex) => (
@@ -296,6 +317,19 @@ const ListadoPuestosEncargado = () => {
                 titulo="FILTRAR PUESTOS"
               />
             </div>
+            <button
+              onClick={agregarNuevo}
+              style={{
+                ...styles.agregarButton,
+                position: "relative",
+                top: "auto",
+                right: "auto",
+                marginTop: "1rem",
+                width: "100%",
+              }}
+            >
+              Agregar Puesto
+            </button>
           </div>
         </div>
         <Footer />

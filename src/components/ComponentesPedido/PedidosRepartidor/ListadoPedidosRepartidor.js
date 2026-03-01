@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { CircularProgress } from "@mui/material";
 import Sidebar from "../../ComponentesGenerales/Sidebar";
 import PedidoRepartidor from "./PedidoRepartidor";
 import { useContext } from "react";
@@ -10,6 +11,7 @@ const ListadoPedidosRepartidor = () => {
   const [rows, setRows] = useState([]);
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
 
@@ -22,6 +24,7 @@ const ListadoPedidosRepartidor = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 
+      setIsLoading(true);
       fetch(`${process.env?.REACT_APP_BACK_URL}pedido/repartidor`, {
         method: "GET",
         headers: headers,
@@ -42,7 +45,8 @@ const ListadoPedidosRepartidor = () => {
           }
           setRows(generatedRows);
         })
-        .catch((error) => console.log("No existen pedidos.", error));
+        .catch((error) => console.log("No existen pedidos.", error))
+        .finally(() => setIsLoading(false));
     }
   }, [user, recargar]);
 
@@ -122,7 +126,11 @@ const ListadoPedidosRepartidor = () => {
         </div>
         <div style={styles.centerContent}>
           <div style={styles.listContainer}>
-            {Array.isArray(pedidos) && pedidos.length > 0 ? (
+            {isLoading ? (
+              <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
+                <CircularProgress style={{ color: Colors.Naranja }} />
+              </div>
+            ) : Array.isArray(pedidos) && pedidos.length > 0 ? (
               rows.length > 0 &&
               rows.map((row, rowIndex) => (
                 <div key={rowIndex}>

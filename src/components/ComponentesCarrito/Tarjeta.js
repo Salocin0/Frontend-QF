@@ -1,10 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaMinus, FaPlus, FaShoppingCart, FaArrowRight, FaCheckCircle } from "react-icons/fa";
 
 const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   console.log(productos);
@@ -12,20 +12,44 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const [isOpen, setIsOpen] = useState(false);
+  const [productosLocal, setProductosLocal] = useState(productos);
+
+  useEffect(() => {
+    setProductosLocal(productos);
+  }, [productos]);
  
   const quitarDelCarrito = (producto) => {
+    // Guardar estado anterior para revertir si hay error
+    const estadoAnterior = productosLocal;
+    
+    // Actualizar estado local inmediatamente
+    const productoIndex = productosLocal.findIndex(p => p.producto.id === producto.producto.id);
+    if (productoIndex === -1 || productosLocal[productoIndex].cantidad <= 0) return;
+    
+    const productoOriginal = productosLocal[productoIndex];
+    const nuevosCantidad = productoOriginal.cantidad - 1;
+    
+    const productosActualizados = [...productosLocal];
+    productosActualizados[productoIndex] = {
+      ...productoOriginal,
+      cantidad: nuevosCantidad,
+    };
+    setProductosLocal(productosActualizados);
+    toast.success(`-1 ${producto.producto.nombre}`);
+
+    // Sincronizar con el servidor en background
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
     headers.append("Content-Type", "application/json")
 
-    const body ={
-      fecha:productos[0].fecha,
-      eventoId:productos[0].eventoId,
-      cantidad:1
+    const body = {
+      fecha: productosLocal[0].fecha,
+      eventoId: productosLocal[0].eventoId,
+      cantidad: 1
     }
 
     fetch(
-      `${process.env?.REACT_APP_BACK_URL}carrito/removeToCart/${productos[0].productoId}`,
+      `${process.env?.REACT_APP_BACK_URL}carrito/removeToCart/${productosLocal[0].productoId}`,
       {
         method: "PUT",
         headers: headers,
@@ -34,50 +58,35 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        toast.success(`-1 ${productos[0].producto.nombre}`);
-        recargarComponente();
+        // Éxito silencioso
       })
-      .catch((error) => console.log("error.", error));
+      .catch((error) => {
+        console.log("Error al quitar del carrito:", error);
+        // Revertir cambio local en caso de error
+        setProductosLocal(estadoAnterior);
+        toast.error(`Error al quitar ${producto.producto.nombre}`);
+      });
   };
 
   const eliminarDelCarrito = (producto) => {
+    // Actualizar estado local inmediatamente
+    const productoIndex = productosLocal.findIndex(p => p.producto.id === producto.producto.id);
+    if (productoIndex === -1) return;
+    
+    const productosActualizados = productosLocal.filter((_, idx) => idx !== productoIndex);
+    setProductosLocal(productosActualizados);
+    toast.success(`${producto.producto.nombre} eliminado`);
+
+    // Sincronizar con el servidor en background
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
     headers.append("Content-Type", "application/json")
-    const body ={
-      fecha:productos[0].fecha,
-      eventoId:productos[0].eventoId,
-      cantidad:1
+    const body = {
+      fecha: productosLocal[0]?.fecha
     }
 
     fetch(
-      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductToCart/${productos[0].productoId}`,
-      {
-        method: "PUT",
-        headers: headers,
-        body: JSON.stringify(body)
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        toast.success(`${productos[0].producto.nombre} eliminado`);
-        recargarComponente();
-      })
-      .catch((error) => console.log("error.", error));
-  };
-
-  const agregarAlCarrito = (producto) => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", user.consumidorId);
-    headers.append("Content-Type", "application/json")
-    const body ={
-      fecha:productos[0].fecha,
-      eventoId:productos[0].eventoId,
-      cantidad:1
-    }
-
-    fetch(
-      `${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${productos[0].productoId}`,
+      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductToCart/${productosLocal[0]?.producto?.puestoId}`,
       {
         method: "PUT",
         headers: headers,
@@ -86,32 +95,91 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        toast.success(`+1 ${productos[0].producto.nombre}`);
+        // Éxito silencioso pero recargamos para sincronizar totalmente
         recargarComponente();
       })
-      .catch((error) => console.log("error.", error));
+      .catch((error) => {
+        console.log("Error al eliminar del carrito:", error);
+        // Revertir cambio local en caso de error
+        setProductosLocal(productos);
+        toast.error(`Error al eliminar ${producto.producto.nombre}`);
+      });
+  };
+
+  const agregarAlCarrito = (producto) => {
+    // Guardar estado anterior para revertir si hay error
+    const estadoAnterior = productosLocal;
+    
+    // Actualizar estado local inmediatamente
+    const productoIndex = productosLocal.findIndex(p => p.producto.id === producto.producto.id);
+    if (productoIndex === -1) return;
+    
+    const productoOriginal = productosLocal[productoIndex];
+    const nuevosCantidad = productoOriginal.cantidad + 1;
+    
+    const productosActualizados = [...productosLocal];
+    productosActualizados[productoIndex] = {
+      ...productoOriginal,
+      cantidad: nuevosCantidad,
+    };
+    setProductosLocal(productosActualizados);
+    toast.success(`+1 ${producto.producto.nombre}`);
+
+    // Sincronizar con el servidor en background
+    const headers = new Headers();
+    headers.append("ConsumidorId", user.consumidorId);
+    headers.append("Content-Type", "application/json")
+    const body = {
+      fecha: productosLocal[0].fecha,
+      eventoId: productosLocal[0].eventoId,
+      cantidad: 1
+    }
+
+    fetch(
+      `${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${productosLocal[0].productoId}`,
+      {
+        method: "PUT",
+        headers: headers,
+        body: JSON.stringify(body),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        // Éxito silencioso
+      })
+      .catch((error) => {
+        console.log("Error al agregar al carrito:", error);
+        // Revertir cambio local en caso de error
+        setProductosLocal(estadoAnterior);
+        toast.error(`Error al agregar ${producto.producto.nombre}`);
+      });
   };
 
   const handleCloseCompra = () => {
     setIsOpen(false);
+    // Limpiar carrito inmediatamente para mejor UX
+    eliminarPedido();
+    recargarComponente();
     
+    // Registrar pedido en background SIN bloquear la UI
     const headers = new Headers();
     headers.append("consumidorid", user.consumidorId);
 
     const detalles = {
-        detalles: productos.map((producto) => ({
+        detalles: productosLocal.map((producto) => ({
             cantidad: producto.cantidad,
             productoId: producto.producto.id,
             precio: producto.producto.precio,
             aderezos: producto.producto.aderezos,
         })),
         consumidorId: user.consumidorId,
-        total: calcularTotal(productos)*1.15,
-        puestoId: productos[0].producto.puestoId,
-        eventoId: productos[0].evento.id,
-        precompra: productos[0]?.fecha,
+        total: calcularTotal(productosLocal)*1.15,
+        puestoId: productosLocal[0].producto.puestoId,
+        eventoId: productosLocal[0].evento.id,
+        precompra: productosLocal[0]?.fecha,
     };
 
+    // Enviar en background sin await
     fetch(`${process.env?.REACT_APP_BACK_URL}pedido`, {
         method: "POST",
         headers: {
@@ -123,10 +191,9 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
         .then((response) => response.json())
         .then((data) => {
             toast.success("Pedido registrado");
-            eliminarPedido();
-            recargarComponente();
+            console.log("Pedido guardado en servidor:", data);
         })
-        .catch((error) => console.log("Error al registrar pedido:", error));
+        .catch((error) => console.error("Error al registrar pedido en servidor:", error));
 };
 
   const registrarPedido = () => {
@@ -137,9 +204,9 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
     headers.append("Content-Type", "application/json")
-    const datos = {fecha:productos[0]?.fecha}
+    const datos = {fecha:productosLocal[0]?.fecha}
     fetch(
-      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductsToCart/${productos[0]?.producto?.puestoId}`,
+      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductsToCart/${productosLocal[0]?.producto?.puestoId}`,
       {
         method: "PUT",
         headers: headers,
@@ -154,8 +221,8 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   };
 
   const llevarPuesto = () => {
-    console.log(productos[0].eventoId);
-    navigate(`/productos-puesto/${productos[0].producto.puestoId}`, { state: { eventoid:productos[0].eventoId||1,selectedDay:productos[0]?.fecha } });
+    console.log(productosLocal[0].eventoId);
+    navigate(`/productos-puesto/${productosLocal[0].producto.puestoId}`, { state: { eventoid:productosLocal[0].eventoId||1,selectedDay:productosLocal[0]?.fecha } });
   };
 
   const calcularTotal = (productos) => {
@@ -167,126 +234,226 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
 
   const styles = {
     card: {
-      padding: "12px",
-      border: `1px solid ${Colors.Naranja}`,
-      borderRadius: "8px",
+      padding: "20px",
+      border: `2px solid ${Colors.Naranja}`,
+      borderRadius: "12px",
       backgroundColor: Colors.GrisAzuladoClaro,
-      margin: "10px auto",
-      width: "98%",
+      margin: "15px auto",
+      width: "calc(100% - 40px)",
       position: "relative",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
+      display: "flex",
+      flexDirection: "column",
+    },
+    cardHeader: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "20px",
+      paddingBottom: "15px",
+      borderBottom: `2px solid ${Colors.Naranja}`,
     },
     cardTitle: {
+      fontSize: "22px",
+      fontWeight: "bold",
+      color: Colors.Naranja,
+      margin: 0,
+    },
+    preventaText: {
+      fontSize: "13px",
+      color: Colors.Negro,
+      display: "inline-flex",
+      alignItems: "center",
+      padding: "6px 12px",
+      borderRadius: "25px",
+      backgroundColor: Colors.Naranja,
+      fontWeight: "bold",
+      whiteSpace: "nowrap",
+    },
+    contentWrapper: {
+      display: "flex",
+      gap: "20px",
+    },
+    leftSection: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: "15px",
+      maxHeight: "500px",
+      overflowY: "auto",
+      paddingRight: "10px",
+    },
+    productsContainer: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "15px",
+    },
+    productCard: {
+      display: "flex",
+      gap: "15px",
+      padding: "15px",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      borderRadius: "10px",
+      alignItems: "center",
+      transition: "all 0.3s ease",
+      border: `1px solid ${Colors.Naranja}33`,
+    },
+    productImage: {
+      width: "100px",
+      height: "100px",
+      borderRadius: "8px",
+      objectFit: "cover",
+      border: `2px solid ${Colors.Naranja}`,
+      backgroundColor: Colors.Blanco,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: "40px",
+      color: Colors.Naranja,
+      flexShrink: 0,
+    },
+    productInfo: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: "8px",
+    },
+    productName: {
+      fontSize: "16px",
+      fontWeight: "bold",
+      color: Colors.Blanco,
+    },
+    productPrice: {
       fontSize: "18px",
       fontWeight: "bold",
       color: Colors.Naranja,
-      paddingBottom: "8px",
     },
-    table: {
-      width: "100%",
-      marginBottom: "16px",
-      borderCollapse: "collapse",
+    productControls: {
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      justifyContent: "flex-end",
+      flexShrink: 0,
     },
-    tableHeader: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      textAlign: "center",
-      color: Colors.Naranja,
+    quantityControl: {
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      backgroundColor: Colors.Naranja,
+      borderRadius: "8px",
+      padding: "5px 10px",
     },
-    tableData: {
-      textAlign: "center",
-      color: Colors.Negro,
-    },
-    tableActions: {
-      textAlign: "center",
-    },
-    tableExit: {
-      textAlign: "end",
-      width:"25px"
-    },
-    button: {
-      padding: "6px 12px",
-      fontSize: "14px",
-      borderRadius: "10px",
-      margin: "2px",
-      cursor: "pointer",
+    quantityButton: {
+      backgroundColor: "transparent",
       border: "none",
+      color: Colors.Negro,
+      cursor: "pointer",
+      fontSize: "14px",
+      fontWeight: "bold",
+      padding: "2px 6px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      transition: "all 0.2s ease",
     },
-    successButton: {
-      backgroundColor: Colors.Verde,
+    quantity: {
       color: Colors.Negro,
       fontWeight: "bold",
-      padding: "5px 10px",
-    },
-    dangerButton: {
-      backgroundColor: Colors.Rojo,
-      color: Colors.Negro,
-      fontWeight: "bold",
-      padding: "5px 10px",
+      minWidth: "30px",
+      textAlign: "center",
     },
     deleteButton: {
-      color: Colors.Negro,
-      backgroundColor: Colors.GrisAzuladoClaro,
-      fontWeight: "bold",
-      fontSize: "20px",
-      margin: "0px 10px",
-    },
-    infoButton: {
-      backgroundColor: Colors.Info,
-      color: Colors.Negro,
-      fontWeight: "bold",
-      padding: "10px 15px",
-      alignItems: "center",
-      justifyContent: "left",
-      flexDirection: "row",
-    },
-    cancelButton: {
-      marginLeft: "20px",
-      alignItems: "center",
-      justifyContent: "left",
-      flexDirection: "row",
-      padding: "10px 15px"
-    },
-    purchaseButton: {
-      marginLeft: "20px",
-      alignItems: "center",
-      justifyContent: "left",
-      flexDirection: "row",
-      padding: "10px 15px"
-    },
-    totalProducto: {
-      textAlign: "right",
-      fontWeight: "bold",
+      backgroundColor: Colors.Rojo,
       color: Colors.Blanco,
-      fontSize: "20px",
-    },
-    comisiones: {
-      textAlign: "right",
+      border: "none",
+      borderRadius: "6px",
+      padding: "8px 10px",
+      cursor: "pointer",
+      fontSize: "14px",
       fontWeight: "bold",
+      display: "flex",
+      alignItems: "center",
+      gap: "6px",
+      transition: "all 0.2s ease",
+    },
+    rightSection: {
+      width: "320px",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      borderRadius: "10px",
+      padding: "20px",
+      borderLeft: `4px solid ${Colors.Naranja}`,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
+    },
+    summaryRow: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "12px",
+      fontSize: "14px",
+    },
+    summaryLabel: {
       color: Colors.Blanco,
-      fontSize: "20px",
-    },
-    total: {
-      textAlign: "right",
       fontWeight: "bold",
-      color: Colors.Naranja,
-      fontSize: "28px",
     },
-    divider: {
+    summaryValue: {
       color: Colors.Naranja,
-      margin: "16px 0",
+      fontWeight: "bold",
+    },
+    totalRow: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: "15px",
+      paddingTop: "15px",
+      borderTop: `2px solid ${Colors.Naranja}`,
+      fontSize: "22px",
+    },
+    totalLabel: {
+      color: Colors.Blanco,
+      fontWeight: "bold",
+    },
+    totalAmount: {
+      color: Colors.Naranja,
+      fontWeight: "bold",
     },
     actionButtons: {
-      textAlign: "right",
-    },
-    preventaText: {
-      fontSize: "16px",
-      color: Colors.Blanco,
       display: "flex",
-      position: "absolute",
-      top: "10px",
-      right: "15px",
-      padding: "5px 10px",
-      borderRadius: "5px",
-      backgroundColor: Colors.Naranja,
+      gap: "8px",
+      flexDirection: "column",
+      marginTop: "15px",
+    },
+    button: {
+      padding: "10px 16px",
+      fontSize: "13px",
+      borderRadius: "8px",
+      border: "none",
+      fontWeight: "bold",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "8px",
+      transition: "all 0.2s ease",
+      width: "100%",
+    },
+    continueBtn: {
+      backgroundColor: Colors.Info,
+      color: Colors.Negro,
+    },
+    deleteBtn: {
+      backgroundColor: Colors.Rojo,
+      color: Colors.Blanco,
+      fontSize: "12px",
+      padding: "8px 12px",
+    },
+    buyBtn: {
+      backgroundColor: Colors.Verde,
+      color: Colors.Negro,
+      fontSize: "15px",
+      padding: "12px 16px",
+      order: -1,
     },
   };
 
@@ -295,97 +462,134 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   };
 
   const obtenerTextoPreventa = () => {
-    const fechaPreventa = productos[0]?.fecha;
+    const fechaPreventa = productosLocal[0]?.fecha;
     return fechaPreventa
       ? `Preventa para ${new Date(fechaPreventa).toLocaleDateString("es")}`
       : "Compra inmediata";
   };
 
   return (
-    <div key={productos?.puestoId} style={styles.card}>
-      <h3 style={styles.cardTitle}>
-        Puesto {productos[0]?.producto?.puesto?.nombreCarro} -{" "}
-        {productos[0]?.evento?.nombre}
-      </h3>
-      <span style={styles.preventaText}>{obtenerTextoPreventa()}</span>
-      <table style={styles.table}>
-        <thead>
-          <tr style={styles.tableHeader}>
-            <th style={styles.tableData}>Nombre</th>
-            <th style={styles.tableData}>Precio</th>
-            <th style={styles.tableData}>Cantidad</th>
-            <th style={styles.tableData}>Acciones</th>
-            <th style={styles.tableData}></th>
-          </tr>
-        </thead>
-        <tbody>
-          {productos?.map((item, index) => (
-            <tr key={index}>
-              <td style={styles.tableData}>{item.producto.nombre}</td>
-              <td style={styles.tableData}>${item.producto.precio}</td>
-              <td style={styles.tableData}>{item.cantidad}</td>
-              <td style={styles.tableActions}>
-                <button
-                  style={{ ...styles.button, ...styles.dangerButton }}
-                  onClick={() => quitarDelCarrito(item)}
-                >
-                  -1
-                </button>
-                <button
-                  style={{ ...styles.button, ...styles.successButton }}
-                  onClick={() => agregarAlCarrito(item)}
-                >
-                  +1
-                </button>
-              </td>
-              <td style={styles.tableExit}>
-                <button
-                  style={{ ...styles.button, ...styles.deleteButton }}
-                  onClick={() => eliminarDelCarrito(item)}
-                >
-                  <span><FaTrash /></span>
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <h2 style={styles.totalProducto}>Total Productos: ${calcularTotal(productos)}</h2>
-      <h2 style={styles.comisiones}>Comision Servicio: ${(calcularTotal(productos)*0.15).toFixed(2)}</h2>
-      <h2 style={styles.total}>Total: ${(calcularTotal(productos)*1.15).toFixed(2)}</h2>
-      <hr style={styles.divider} />
-      <div style={styles.actionButtons}>
-        <button
-          style={{ ...styles.button, ...styles.infoButton }}
-          onClick={() => llevarPuesto()}
-        >
-          Seguir agregando
-        </button>
-        <button
-          style={{
-            ...styles.button,
-            ...styles.dangerButton,
-            ...styles.cancelButton,
-          }}
-          onClick={() => eliminarPedido()}
-        >
-          Eliminar
-        </button>
-        <button
-          style={{
-            ...styles.button,
-            ...styles.successButton,
-            ...styles.purchaseButton,
-          }}
-          onClick={() => registrarPedido()}
-        >
-          Comprar
-        </button>
+    <div key={productosLocal?.puestoId} style={styles.card}>
+      <div style={styles.cardHeader}>
+        <h3 style={styles.cardTitle}>
+          {productosLocal[0]?.producto?.puesto?.nombreCarro} - {productosLocal[0]?.evento?.nombre}
+        </h3>
+        <span style={styles.preventaText}>
+          {obtenerTextoPreventa()}
+        </span>
       </div>
+
+      <div style={styles.contentWrapper}>
+        {/* Sección izquierda: Productos */}
+        <div style={styles.leftSection}>
+          <div style={styles.productsContainer}>
+            {productosLocal?.map((item, index) => (
+              <div key={index} style={styles.productCard}>
+                {/* Imagen del producto */}
+                <div style={styles.productImage}>
+                  {item.producto.img ? (
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "6px",
+                        backgroundImage: `url(${item.producto.img})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    />
+                  ) : (
+                    <div style={{ fontSize: "30px", color: Colors.Naranja }}>—</div>
+                  )}
+                </div>
+
+                {/* Información del producto */}
+                <div style={styles.productInfo}>
+                  <div style={styles.productName}>
+                    {item.producto.nombre}
+                  </div>
+                  <div style={styles.productPrice}>
+                    ${item.producto.precio} c/u
+                  </div>
+                </div>
+
+                {/* Controles */}
+                <div style={styles.productControls}>
+                  <div style={styles.quantityControl}>
+                    <button
+                      style={styles.quantityButton}
+                      onClick={() => quitarDelCarrito(item)}
+                      title="Disminuir cantidad"
+                    >
+                      <FaMinus />
+                    </button>
+                    <span style={styles.quantity}>{item.cantidad}</span>
+                    <button
+                      style={styles.quantityButton}
+                      onClick={() => agregarAlCarrito(item)}
+                      title="Aumentar cantidad"
+                    >
+                      <FaPlus />
+                    </button>
+                  </div>
+                  <button
+                    style={styles.deleteButton}
+                    onClick={() => eliminarDelCarrito(item)}
+                    title="Eliminar del carrito"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Sección derecha: Resumen y botones */}
+        <div style={styles.rightSection}>
+          <div>
+            <div style={styles.summaryRow}>
+              <span style={styles.summaryLabel}>Subtotal:</span>
+              <span style={styles.summaryValue}>${calcularTotal(productosLocal)?.toFixed(2)}</span>
+            </div>
+            <div style={styles.summaryRow}>
+              <span style={styles.summaryLabel}>Comisión (15%):</span>
+              <span style={styles.summaryValue}>${(calcularTotal(productosLocal) * 0.15)?.toFixed(2)}</span>
+            </div>
+            <div style={styles.totalRow}>
+              <span style={styles.totalLabel}>Total:</span>
+              <span style={styles.totalAmount}>${(calcularTotal(productosLocal) * 1.15)?.toFixed(2)}</span>
+            </div>
+          </div>
+
+          {/* Botones de acción */}
+          <div style={styles.actionButtons}>
+            <button
+              style={{ ...styles.button, ...styles.buyBtn }}
+              onClick={() => registrarPedido()}
+            >
+              <FaCheckCircle /> Comprar
+            </button>
+            <button
+              style={{ ...styles.button, ...styles.continueBtn }}
+              onClick={() => llevarPuesto()}
+            >
+              <FaArrowRight /> Seguir agregando
+            </button>
+            <button
+              style={{ ...styles.button, ...styles.deleteBtn }}
+              onClick={() => eliminarPedido()}
+            >
+              <FaTrash /> Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+
       <DialogWithPaymentSheet
         isOpen={isOpen}
         onClose={handleCloseDialog}
-        amount={calcularTotal(productos)*1.15}
+        amount={calcularTotal(productosLocal) * 1.15}
         handleCloseCompra={handleCloseCompra}
       />
     </div>

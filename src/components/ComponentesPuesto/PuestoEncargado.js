@@ -3,6 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/puestoLogoDefault.jpg";
+import {
+  FaIdBadge,
+  FaPhone,
+  FaCalendarPlus,
+  FaPlus,
+  FaClipboardList,
+  FaInfoCircle,
+  FaToggleOff,
+  FaToggleOn,
+} from "react-icons/fa";
 
 const PuestoEncargado = ({ carrito, actualizarListado }) => {
   const navigate = useNavigate();
@@ -11,6 +21,11 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
   const [isDeshabilitado, setIsDeshabilitado] = useState(
     carrito.estado === "Deshabilitado"
   );
+
+  const formatEstado = (str) => {
+    if (!str) return "";
+    return str.replace(/([A-Z])/g, " $1").trim();
+  };
   const [actualizar, setActualizar] = useState(0);
 
   useEffect(() => {
@@ -78,15 +93,14 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
   const styles = {
     container: {
       width: "Calc(100% - 20px)",
-      margin: "0.5rem 20px",
-      marginTop: "0px",
-      marginRight: "0px",
-      padding: "1rem",
+      margin: "5px 20px",
+      padding: "0.75rem",
+      paddingRight: "10px",
       border: `1px solid ${Colors.Naranja}`,
       borderRadius: "8px",
       backgroundColor: Colors.GrisAzuladoClaro,
       boxSizing: "border-box",
-      
+
     },
     cardBody: {
       display: "flex",
@@ -111,12 +125,12 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
     },
     detailsContainer: {
       display: "flex",
-      width: "80%",
+      width: "60%",
       flexDirection: "column",
-      justifyContent: "space-between", // Cambiado a space-between
-      alignItems: "center",
+      justifyContent: "flex-start",
+      alignItems: "flex-start",
       padding: "0 1rem",
-      flexWrap: "wrap", // Permite que los botones pasen a otra línea si es necesario
+      gap: "6px",
     },
     title: {
       fontSize: "1.5rem",
@@ -137,12 +151,13 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       minWidth: "100%",
     },
     button: {
-      padding: "0.5rem 1rem",
+      padding: "0.4rem 0.8rem",
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",
       fontWeight: "bold",
       flex: "1 1 0",
+      fontSize: "0.9rem",
     },
     successButton: {
       backgroundColor: Colors.Verde,
@@ -187,18 +202,21 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
           <div style={styles.detailsContainer}>
             <h5 style={styles.title}>{carrito.nombreCarro}</h5>
             <p style={styles.description}>
-              Id de Puesto: {carrito.numeroCarro}
+              <FaIdBadge style={{marginRight:"6px"}} /> {carrito.numeroCarro}
             </p>
-            <p style={styles.description}>Teléfono: {carrito.telefonoCarro}</p>
-            <p style={styles.estado}>{carrito.estado}</p>
+            <p style={styles.description}>
+              <FaPhone style={{marginRight:"6px"}} /> {carrito.telefonoCarro}
+            </p>
           </div>
+          <span style={styles.estado}>{formatEstado(carrito.estado)}</span>
         </div>
         <div style={styles.buttonsContainer}>
-          {isCreado && (
+            {isCreado && (
             <button
               style={{ ...styles.button, ...styles.successButton }}
               onClick={suscribirPuesto}
             >
+              <FaCalendarPlus style={{ marginRight: "6px" }} />
               Suscribir Puesto a Evento
             </button>
           )}
@@ -207,6 +225,7 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
               style={{ ...styles.button, ...styles.successButton }}
               onClick={habilitarPuesto}
             >
+              <FaToggleOn style={{ marginRight: "6px" }} />
               Habilitar Puesto
             </button>
           )}
@@ -214,22 +233,29 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
             style={{ ...styles.button, ...styles.successButton }}
             onClick={agregarProducto}
           >
+            <FaPlus style={{ marginRight: "6px" }} />
             Agregar Productos
           </button>
           <button
             style={{ ...styles.button, ...styles.primaryButton }}
             onClick={pedidosEnCurso}
           >
+            <FaClipboardList style={{ marginRight: "6px" }} />
             Pedidos en curso
           </button>
-          <button style={{ ...styles.button, ...styles.primaryButton }} onClick={infoPuesto}>
-            info Puesto
+          <button
+            style={{ ...styles.button, ...styles.primaryButton }}
+            onClick={infoPuesto}
+          >
+            <FaInfoCircle style={{ marginRight: "6px" }} />
+            Info Puesto
           </button>
           {isCreado && (
             <button
               style={{ ...styles.button, ...styles.dangerButton }}
               onClick={deshabilitarPuesto}
             >
+              <FaToggleOff style={{ marginRight: "6px" }} />
               Deshabilitar Puesto
             </button>
           )}

@@ -5,12 +5,14 @@ import Sidebar from "../ComponentesGenerales/Sidebar";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 
 const AsociarPuestoAEvento = () => {
   const { puestoId } = useParams();
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const Colors = useDynamicColors();
 
   const recargarComponente = () => {
@@ -22,6 +24,7 @@ const AsociarPuestoAEvento = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 
+      setIsLoading(true);
       fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/EnPreparacion`, {
         method: "GET",
         headers: headers,
@@ -30,7 +33,8 @@ const AsociarPuestoAEvento = () => {
         .then((data) => {
           setEventos(data.data);
         })
-        .catch((error) => console.log("No existen carritos.", error));
+        .catch((error) => console.log("No existen carritos.", error))
+        .finally(() => setIsLoading(false));
 
 
     }
@@ -108,7 +112,9 @@ const AsociarPuestoAEvento = () => {
         </div>
         <div style={styles.eventsContainer}>
           <div style={styles.eventsList}>
-            {Array.isArray(eventos) && eventos.length > 0 ? (
+            {isLoading ? (
+              <LoandingComponent />
+            ) : Array.isArray(eventos) && eventos.length > 0 ? (
               <div>
                 {eventos.map((evento, index) => (
                   <div key={index}>

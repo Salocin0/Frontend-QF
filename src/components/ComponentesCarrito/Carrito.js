@@ -5,11 +5,13 @@ import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import { CircularProgress } from "@mui/material";
 
 const Carrito = () => {
   const [carrito, setCarrito] = useState(null);
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const Colors = useDynamicColors();
 
   const recargarComponente = () => {
@@ -18,6 +20,7 @@ const Carrito = () => {
 
   useEffect(() => {
     if (user) {
+      setIsLoading(true);
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 
@@ -33,7 +36,8 @@ const Carrito = () => {
             setCarrito(null);
           }
         })
-        .catch((error) => console.log("No existen carritos.", error));
+        .catch((error) => console.log("No existen carritos.", error))
+        .finally(() => setIsLoading(false));
     }
   }, [user, recargar]);
 
@@ -74,7 +78,8 @@ const Carrito = () => {
     mainContent: {
       width: "80%",
       marginLeft: "20%",
-      paddingRight: "20%", // Para mantener la consistencia con las otras vistas
+      paddingLeft: "20px",
+      paddingRight: "20px",
       height: "100%",
       marginBottom: "5rem",
     },
@@ -100,6 +105,20 @@ const Carrito = () => {
       width: "100%",
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
+    loadingContainer: {
+      height: "30rem",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      gap: "20px",
+    },
+    loadingText: {
+      fontSize: "16px",
+      color: Colors.Blanco,
+      fontWeight: "bold",
     },
   };
 
@@ -127,7 +146,12 @@ const Carrito = () => {
 
         <div style={styles.productContainer}>
           <div style={styles.productList}>
-            {Object.keys(productosAgrupados).length > 0 ? (
+            {isLoading ? (
+              <div style={styles.loadingContainer}>
+                <CircularProgress style={{ color: Colors.Naranja }} size={50} />
+                <div style={styles.loadingText}>Cargando carrito...</div>
+              </div>
+            ) : Object.keys(productosAgrupados).length > 0 ? (
               Object.entries(productosAgrupados).map(([eventoId, puestos]) =>
                 Object.entries(puestos).map(([puestoId, grupos]) =>
                   Object.entries(grupos).map(([fechaKey, productos], index) => (

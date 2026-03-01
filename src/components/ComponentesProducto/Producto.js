@@ -1,5 +1,4 @@
 import { default as React, useEffect } from "react";
-import { Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useContext } from "react";
@@ -39,7 +38,7 @@ const Producto = ({ producto, idpuesto, recargar }) => {
       flexDirection: "column",
       width: "100%",
       margin: "0 auto",
-      marginBottom: "20px",
+      marginBottom: "10px",
       height: "100%",
     },
     card: {
@@ -88,9 +87,20 @@ const Producto = ({ producto, idpuesto, recargar }) => {
       fontWeight: "bold",
       color: Colors.Naranja,
     },
-    dropdownContainer: {
+    actionsContainer: {
       display: "flex",
-      justifyContent: "flex-end",
+      justifyContent: "space-between",
+      marginTop: "10px",
+    },
+    actionButton: {
+      flex: "1 1 0",
+      padding: "0.4rem 0.8rem",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      fontSize: "0.9rem",
+      color: Colors.BlancoEnBlanco,
     },
   };
 
@@ -108,20 +118,30 @@ const Producto = ({ producto, idpuesto, recargar }) => {
 
           <div style={styles.priceRow}>
             <h4 style={styles.priceText}>$ {producto?.precio}</h4>
-            <div style={styles.dropdownContainer}>
-              <Dropdown>
-                <Dropdown.Toggle variant="danger" />
-                <Dropdown.Menu>
-                  <Dropdown.Item as={Link} to={`/producto/${producto?.id}`}>
-                    Actualizar Producto
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item onClick={handleDelete}>
-                    Deshabilitar Producto
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
+          </div>
+          <div style={styles.actionsContainer}>
+            <Link
+              to={`/producto/${producto?.id}`}
+              style={{
+                ...styles.actionButton,
+                backgroundColor: Colors.Azul,
+                marginRight: "5px",
+                textAlign: "center",
+                textDecoration: "none",
+              }}
+            >
+              Actualizar
+            </Link>
+            <button
+              onClick={handleDelete}
+              style={{
+                ...styles.actionButton,
+                backgroundColor: Colors.Rojo,
+                marginLeft: "5px",
+              }}
+            >
+              Deshabilitar
+            </button>
           </div>
         </div>
       </div>

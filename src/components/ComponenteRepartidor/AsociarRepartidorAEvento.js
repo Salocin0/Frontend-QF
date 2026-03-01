@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
+import { CircularProgress } from "@mui/material";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import "./../sass/main.css";
 import EventoRepartidor from "./EventoRepartidor";
@@ -11,6 +12,7 @@ const AsociarRepartidorAEvento = () => {
   const {user} = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const Colors = useDynamicColors();
 
 
@@ -23,6 +25,7 @@ const AsociarRepartidorAEvento = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 
+      setIsLoading(true);
       fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/EnPreparacion`, {
         method: "GET",
         headers: headers,
@@ -31,7 +34,8 @@ const AsociarRepartidorAEvento = () => {
         .then((data) => {
           setEventos(data.data);
         })
-        .catch((error) => console.log("No existen carritos.", error));
+        .catch((error) => console.log("No existen carritos.", error))
+        .finally(() => setIsLoading(false));
 
 
     }
@@ -107,7 +111,11 @@ const AsociarRepartidorAEvento = () => {
                 </div>
         <div style={styles.eventsContainer}>
           <div style={styles.eventsList}>
-            {Array.isArray(eventos) && eventos.length > 0 ? (
+            {isLoading ? (
+              <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
+                <CircularProgress style={{ color: Colors.Naranja }} />
+              </div>
+            ) : Array.isArray(eventos) && eventos.length > 0 ? (
               <div>
                 {eventos.map((evento, index) => (
                   <div key={index}>

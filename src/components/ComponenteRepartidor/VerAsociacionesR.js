@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
@@ -13,6 +14,7 @@ const AsociacionesR = () => {
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
   const [asociaciones, setAsociaciones] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const Colors = useDynamicColors();
 
   useEffect(() => {
@@ -20,6 +22,7 @@ const AsociacionesR = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 
+      setIsLoading(true);
       fetch(
         `${process.env?.REACT_APP_BACK_URL}asociacion/buscarR/${user.consumidorId}`,
         {
@@ -33,7 +36,8 @@ const AsociacionesR = () => {
           setAsociaciones(data.data.asociaciones);
           console.log(data.data.asociaciones);
         })
-        .catch((error) => console.log("No existen eventos.", error));
+        .catch((error) => console.log("No existen eventos.", error))
+        .finally(() => setIsLoading(false));
     }
   }, [user]);
 
@@ -163,7 +167,11 @@ const AsociacionesR = () => {
               />
             </div>
             <div style={styles.noEventosContainer}>
-              {eventos.length > 0 ? (
+              {isLoading ? (
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
+                  <CircularProgress style={{ color: Colors.Naranja }} />
+                </div>
+              ) : eventos.length > 0 ? (
                 <>
                   {eventos.map((evento, index) => {
                     const asociacion = asociaciones.find(

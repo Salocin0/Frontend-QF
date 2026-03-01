@@ -165,6 +165,11 @@ const EventoUser = ({ evento }) => {
     },
   };
 
+  const formatEstado = (str) => {
+    if (!str) return "";
+    return str.replace(/([A-Z])/g, " $1").trim();
+  };
+
   const handleCardClick = () => {
     if (evento.estado === "Finalizado") {
       toast.error("El evento ha finalizado.");
@@ -198,7 +203,7 @@ const EventoUser = ({ evento }) => {
                       ? ""
                       : evento.estado === "Confirmado"
                       ? "Empieza pronto"
-                      : evento.estado}
+                      : formatEstado(evento.estado)}
                   </p>
                 </div>
               )}

@@ -1,21 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import { toast } from "react-toastify";
-import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay } from "react-icons/fa";
+import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay, FaHourglassStart, FaCheckCircle, FaTruck, FaBox, FaBan } from "react-icons/fa";
 
 const Pedido = ({ pedido,recargar }) => {
   const Colors = useDynamicColors();
   const [opinion, setOpinion] = useState("");
   const [repartidorRating, setRepartidorRating] = useState(1);
   const [puestoRating, setPuestoRating] = useState(1);
+  const [estadoLocal, setEstadoLocal] = useState(pedido.estado);
+
+  // sync when parent reloads
+  useEffect(() => {
+    setEstadoLocal(pedido.estado);
+  }, [pedido.estado]);
 
   const [modalValoracionVisible, setModalValoracionVisible] = useState(false);
   const [modalCancelarVisible, setModalCancelarVisible] = useState(false);
   const [modalDetalleVisible, setModalDetalleVisible] = useState(false);
+  const [modalMapaVisible, setModalMapaVisible] = useState(false);
 
   const traducirEstado = (estado) => {
     return estado.replace(/([a-z])([A-Z])/g, "$1 $2");
+  };
+
+  const getIconoEstado = (estado) => {
+    const iconos = {
+      Pendiente: <FaHourglassStart />,
+      Aceptado: <FaCheckCircle />,
+      EnPreparacion: <FaBox />,
+      EnCamino: <FaTruck />,
+      Entregado: <FaCheckCircle />,
+      Cancelado: <FaBan />,
+      Precomprado: <FaCheckCircle />,
+    };
+    return iconos[estado] || <FaHourglassStart />;
   };
 
   const coloresPorEstado = {
@@ -29,7 +49,9 @@ const Pedido = ({ pedido,recargar }) => {
   };
 
   const handleCancelarPedido = async () => {
-    await submitCancelar(pedido.id)
+    // optimistic update
+    setEstadoLocal("Cancelado");
+    await submitCancelar(pedido.id);
     setModalCancelarVisible(false);
   };
 
@@ -39,12 +61,15 @@ const Pedido = ({ pedido,recargar }) => {
       toast.error(`Pedido Programado para ${new Date(pedido.fechaPreCompra).toLocaleDateString("es")}. no se puede solicitar`)
     }else{
       toast.success("Pedido Solicitado")
+      // optimistic transition to aceptado
+      setEstadoLocal("Aceptado");
       submitAceptar(pedido.id)
     }
   //if pedido.fecha
   }
 
   const submitAceptar = async (idPedido) => {
+    // optimistic already applied before call
     const url = `${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${idPedido}/aceptar`;
     try {
       const response = await fetch(url, {
@@ -55,12 +80,14 @@ const Pedido = ({ pedido,recargar }) => {
       });
 
       if (!response.ok) {
-        console.log(response)
+        console.log(response);
+        setEstadoLocal(pedido.estado); // revert if server fail
       }
       setModalValoracionVisible(false);
       recargar();
     } catch (error) {
       console.error("Error al cancelar el pedido:", error);
+      setEstadoLocal(pedido.estado);
     }
   };
 
@@ -84,6 +111,7 @@ const Pedido = ({ pedido,recargar }) => {
       recargar();
     } catch (error) {
       console.error("Error al cancelar el pedido:", error);
+      setEstadoLocal(pedido.estado);
     }
   };
 
@@ -134,10 +162,10 @@ const Pedido = ({ pedido,recargar }) => {
 
   const mostrarBotonInfo = true;
   const mostrarBotonDanger =
-    pedido.estado === "Pendiente" || pedido.estado === "Aceptado";
-  const mostrarBotonMapa = pedido.estado === "EnCamino";
-  const mostrarBotonValorar = pedido.estado === "Entregado";
-  const mostrarBotonSolicitar = pedido.estado === "Precomprado";
+    estadoLocal === "Pendiente" || estadoLocal === "Aceptado";
+  const mostrarBotonMapa = estadoLocal === "EnCamino";
+  const mostrarBotonValorar = estadoLocal === "Entregado";
+  const mostrarBotonSolicitar = estadoLocal === "Precomprado";
 
   const styles = {
     container: {
@@ -179,7 +207,7 @@ const Pedido = ({ pedido,recargar }) => {
       fontSize: "16px",
       color: Colors.BlancoEnBlanco,
       fontWeight: "bold",
-      backgroundColor: coloresPorEstado[pedido.estado],
+      backgroundColor: coloresPorEstado[estadoLocal],
       borderRadius: "10px",
       padding: "5px 10px",
       width: "150px",
@@ -260,7 +288,10 @@ const Pedido = ({ pedido,recargar }) => {
     },
     dialogContainer: {
       display:
-        modalValoracionVisible || modalCancelarVisible || modalDetalleVisible
+        modalValoracionVisible ||
+        modalCancelarVisible ||
+        modalDetalleVisible ||
+        modalMapaVisible
           ? "flex"
           : "none",
       position: "fixed",
@@ -292,8 +323,122 @@ const Pedido = ({ pedido,recargar }) => {
       marginBottom: "1rem",
       color: Colors.Naranja,
     },
+    // valoración dialog styles
+    ratingContainer: {
+      marginBottom: "1rem",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      textAlign: "left",
+    },
+    ratingLabel: {
+      color: Colors.Naranja,
+      fontWeight: "bold",
+      marginBottom: "4px",
+    },
+    ratingSelect: {
+      width: "100%",
+      padding: "8px",
+      borderRadius: "4px",
+      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: Colors.GrisAzuladoClaro,
+      color: Colors.Negro,
+      marginBottom: "12px",
+    },
+    codigoInput: {
+      width: "100%",
+      padding: "8px",
+      borderRadius: "4px",
+      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: Colors.GrisAzuladoClaro,
+      color: Colors.Negro,
+      marginBottom: "1rem",
+    },
+    textareaContainer: {
+      marginBottom: "1rem",
+      width: "100%",
+    },
+    textareaLabel: {
+      color: Colors.Naranja,
+      fontWeight: "bold",
+      marginBottom: "4px",
+      display: "block",
+    },
+    textarea: {
+      width: "100%",
+      padding: "8px",
+      borderRadius: "4px",
+      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: Colors.GrisAzuladoClaro,
+      color: Colors.Negro,
+      resize: "vertical",
+    },
     tableCell: {
       color: Colors.Negro,
+      padding: "12px 8px",
+      borderBottom: `1px solid ${Colors.Naranja}33`,
+      textAlign: "center",
+      fontSize: "15px",
+    },
+    tableHeaderCell: {
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      color: Colors.Negro,
+      padding: "12px 8px",
+      fontWeight: "bold",
+      textAlign: "center",
+      fontSize: "14px",
+      borderBottom: `2px solid ${Colors.Naranja}`,
+    },
+    tableBody: {
+      backgroundColor: Colors.Blanco,
+      borderRadius: "0 0 6px 6px",
+      overflow: "hidden",
+    },
+    detailsTable: {
+      width: "100%",
+      borderCollapse: "collapse",
+      marginBottom: "1.5rem",
+    },
+    tableRow: {
+      backgroundColor: Colors.modoOscuroActivo ? Colors.GrisClaro : Colors.GrisAzuladoOscuro,
+      color: Colors.modoOscuroActivo ? Colors.Blanco : Colors.Negro,
+    },
+    tableRowAlternate: {
+      backgroundColor: Colors.modoOscuroActivo ? Colors.GrisClaroPeroNoTanClaro : Colors.GrisAzuladoOscuro + "44",
+      color: Colors.modoOscuroActivo ? Colors.Blanco : Colors.Negro,
+    },
+    totalContainer: {
+      backgroundColor: Colors.Naranja,
+      padding: "20px",
+      borderRadius: "8px",
+      marginTop: "1rem",
+      color: Colors.Blanco,
+    },
+    infoSection: {
+      backgroundColor: Colors.GrisAzuladoOscuro,
+      padding: "16px",
+      borderRadius: "8px",
+      marginBottom: "1.5rem",
+      border: `1px solid ${Colors.Naranja}33`,
+    },
+    infoRow: {
+      display: "flex",
+      alignItems: "center",
+      marginBottom: "10px",
+      gap: "10px",
+    },
+    infoLabel: {
+      color: Colors.Naranja,
+      fontWeight: "bold",
+      minWidth: "100px",
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+      fontSize: "14px",
+    },
+    infoValue: {
+      color: Colors.Negro,
+      fontSize: "15px",
     },
     dialogButtons: {
       display: "flex",
@@ -355,7 +500,7 @@ const Pedido = ({ pedido,recargar }) => {
                 </h5>
               )}
 
-              <h5 style={styles.price}>${pedido.total}</h5>
+              <h5 style={styles.price}>${pedido.total.toFixed(2)}</h5>
               <p style={styles.cardEstado}>{traducirEstado(pedido.estado)}</p>
             </div>
           </div>
@@ -378,7 +523,7 @@ const Pedido = ({ pedido,recargar }) => {
               </button>
             )}
             {mostrarBotonMapa && (
-              <button style={styles.buttonMap} disabled>
+              <button style={styles.buttonMap} onClick={() => setModalMapaVisible(true)}>
                 <span><FaMapMarkedAlt /></span> Ver Mapa
               </button>
             )}
@@ -402,8 +547,24 @@ const Pedido = ({ pedido,recargar }) => {
         <div style={styles.dialogContainer}>
           <div style={styles.dialogContent}>
             <h2 style={styles.dialogTitle}>
-              ¿Estás seguro de que quieres cancelar el pedido?
+              Cancelar Pedido
             </h2>
+            <div style={styles.infoSection}>
+              <div style={styles.infoRow}>
+                <div style={styles.infoLabel}>
+                  <FaStore /> Puesto:
+                </div>
+                <div style={styles.infoValue}>{pedido.puesto.nombreCarro}</div>
+              </div>
+              <div style={styles.infoRow}>
+                <div style={styles.infoLabel}>
+                  <FaCalendarAlt /> Fecha:
+                </div>
+                <div style={styles.infoValue}>
+                  {new Date(pedido.fecha).toLocaleDateString("es")}
+                </div>
+              </div>
+            </div>
             <p style={styles.tableCell}>Esta acción no podrá deshacerse.</p>
             <div style={styles.dialogButtons}>
               <button
@@ -422,12 +583,69 @@ const Pedido = ({ pedido,recargar }) => {
           </div>
         </div>
       )}
+
+      {modalMapaVisible && (
+        <div style={styles.dialogContainer}>
+          <div style={styles.dialogContent}>
+            <h2 style={styles.dialogTitle}>
+              Ubicación del Punto de Encuentro
+            </h2>
+            <div style={styles.infoSection}>
+              <div style={styles.infoRow}>
+                <div style={styles.infoLabel}>
+                  <FaMapMarkedAlt /> Punto:
+                </div>
+                <div style={styles.infoValue}>{pedido?.puntoEncuentro?.nombre}</div>
+              </div>
+            </div>
+            <div style={{width: "100%", height: "300px", marginBottom: "1rem"}}>
+              <iframe
+                title="mapa-punto"
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                style={{border:0}}
+                src={
+                  pedido?.puntoEncuentro?.latitud && pedido?.puntoEncuentro?.longitud
+                    ? `https://www.google.com/maps?q=${pedido.puntoEncuentro.latitud},${pedido.puntoEncuentro.longitud}&z=15&output=embed`
+                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pedido?.puntoEncuentro?.nombre || "")}`
+                }
+                allowFullScreen
+              ></iframe>
+            </div>
+            <div style={styles.dialogButtons}>
+              <button
+                style={{ ...styles.dialogButton, ...styles.confirmButton }}
+                onClick={() => setModalMapaVisible(false)}
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {modalValoracionVisible && (
         <div style={styles.dialogContainer}>
           <div style={styles.dialogContent}>
             <h2 style={styles.dialogTitle}>
-              Valora nuestro servicio para mejorar
+              Valoración del Pedido
             </h2>
+            <div style={styles.infoSection}>
+              <div style={styles.infoRow}>
+                <div style={styles.infoLabel}>
+                  <FaStore /> Puesto:
+                </div>
+                <div style={styles.infoValue}>{pedido.puesto.nombreCarro}</div>
+              </div>
+              <div style={styles.infoRow}>
+                <div style={styles.infoLabel}>
+                  <FaCalendarAlt /> Fecha:
+                </div>
+                <div style={styles.infoValue}>
+                  {new Date(pedido.fecha).toLocaleDateString("es", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+                </div>
+              </div>
+            </div>
 
             {/* Selector para calificar el puesto */}
             <div style={styles.ratingContainer}>
@@ -495,32 +713,74 @@ const Pedido = ({ pedido,recargar }) => {
       {modalDetalleVisible && (
         <div style={styles.dialogContainer}>
           <div style={styles.dialogContent}>
-            <h2 style={styles.dialogTitle}>Detalle del Pedido</h2>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr>
-                  <th style={styles.dialogText}>Producto</th>
-                  <th style={styles.dialogText}>Cantidad</th>
-                  <th style={styles.dialogText}>Precio Unitario</th>
-                  <th style={styles.dialogText}>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pedido?.detalles?.map((detalle, index) => (
-                  <tr key={index}>
-                    <td style={styles.tableCell}>{detalle.producto.nombre}</td>
-                    <td style={styles.tableCell}>{detalle.cantidad}</td>
-                    <td style={styles.tableCell}>${detalle.producto.precio}</td>
-                    <td style={styles.tableCell}>
-                      ${detalle.cantidad * detalle.producto.precio}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div style={styles.totalContainer}>
-              <h3 style={styles.totalText}>Total: ${pedido?.total}</h3>
+            <h2 style={styles.dialogTitle}>Detalle del Pedido #{pedido?.id}</h2>
+            
+            {/* Sección de Información */}
+            <div style={styles.infoSection}>
+              <div style={styles.infoRow}>
+                <div style={styles.infoLabel}>
+                  <FaStore /> Puesto:
+                </div>
+                <div style={styles.infoValue}>{pedido.puesto.nombreCarro}</div>
+              </div>
+              <div style={styles.infoRow}>
+                <div style={styles.infoLabel}>
+                  <FaCalendarAlt /> Fecha:
+                </div>
+                <div style={styles.infoValue}>
+                  {new Date(pedido.fecha).toLocaleDateString("es", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+                </div>
+              </div>
+              <div style={styles.infoRow}>
+                <div style={styles.infoLabel}>
+                  {getIconoEstado(estadoLocal)} Estado:
+                </div>
+                <div style={{...styles.infoValue, color: Colors.Naranja, fontWeight: "bold"}}>
+                  {traducirEstado(estadoLocal)}
+                </div>
+              </div>
             </div>
+
+            {/* Tabla de Productos */}
+            <div style={{overflowX: "auto"}}>
+              <table style={styles.detailsTable}>
+                <thead>
+                  <tr>
+                    <th style={styles.tableHeaderCell}>Producto</th>
+                    <th style={styles.tableHeaderCell}>Cantidad</th>
+                    <th style={styles.tableHeaderCell}>Precio Unit.</th>
+                    <th style={styles.tableHeaderCell}>Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pedido?.detalles?.map((detalle, index) => (
+                    <tr key={index} style={index % 2 === 0 ? styles.tableRow : styles.tableRowAlternate}>
+                      <td style={styles.tableCell}>{detalle.producto.nombre}</td>
+                      <td style={styles.tableCell}>
+                        <span style={{backgroundColor: Colors.Naranja, color: Colors.Blanco, padding: "4px 8px", borderRadius: "4px", fontWeight: "bold"}}>
+                          {detalle.cantidad}
+                        </span>
+                      </td>
+                      <td style={styles.tableCell}>${Number(detalle.producto.precio).toFixed(2)}</td>
+                      <td style={{...styles.tableCell, fontWeight: "bold", color: Colors.Naranja}}>
+                        ${(detalle.cantidad * detalle.producto.precio).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Total */}
+            <div style={styles.totalContainer}>
+              <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                <span style={{fontSize: "18px", fontWeight: "bold"}}>Total a Pagar:</span>
+                <span style={{fontSize: "28px", fontWeight: "bold"}}>
+                  ${pedido?.total?.toFixed(2)}
+                </span>
+              </div>
+            </div>
+
             <div style={styles.dialogButtons}>
               <button
                 style={{ ...styles.dialogButton, ...styles.confirmButton }}
