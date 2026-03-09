@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import GraficaTortaProductos from "../GraficaTortaProductos";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../../UseDinamicColors";
+import { CircularProgress } from "@mui/material";
 
 const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const [productos, setProductos] = useState([]);
@@ -62,14 +63,6 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     }
   }, []);
 
-  if (isLoading) {
-    return <div>Cargando...</div>;
-  }
-
-  if (error) {
-    return <div>Error al cargar los productos. Por favor, intenta nuevamente.</div>;
-  }
-
   const styles = {
     torta: {
       borderRadius: "10px",
@@ -87,18 +80,38 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       backgroundSize: "cover",
       marginBottom: "20px",
       position: "relative",
-      border: "2px solid white",
+      border: `2px solid ${Colors.Naranja}`,
        overflow: "hidden"
     },
     tablaTexto: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
     }
   };
 
+  if (isLoading) {
+    return (
+      <div style={styles.topProductos}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px", width: "100%" }}>
+          <CircularProgress style={{ color: Colors.Naranja }} />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={styles.topProductos}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px", width: "100%", color: Colors.Naranja }}>
+          Error al cargar los productos. Por favor, intenta nuevamente.
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.topProductos}>
-      <h2>Top Productos</h2>
-      <hr />
+      <h2 style={{ color: Colors.Naranja, margin: 0, padding: 0 }}>Top Productos</h2>
+      <hr style={{ color: Colors.Naranja, borderColor: Colors.Naranja }} />
       <div>
         <table id="miTabla" className="w-100">
           <thead>

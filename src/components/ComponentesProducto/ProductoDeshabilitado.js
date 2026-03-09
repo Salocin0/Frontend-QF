@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Dropdown } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import imgDefault from "../img/productoDefecto.png";
 import useDynamicColors from "../../UseDinamicColors";
@@ -36,22 +36,24 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
   const styles = {
     cardLink: {
       display: "flex",
-      flexDirection: "column",
+      flexDirection: "row",
       width: "100%",
       margin: "0 auto",
       marginBottom: "20px",
-      height: "100%",
+      height: "150px",
     },
     card: {
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
       borderRadius: "8px",
       overflow: "hidden",
       backgroundColor: Colors.GrisAzuladoClaro,
+      display: "flex",
       width: "100%",
+      height: "100%",
     },
     cardImgTop: {
-      width: "100%",
-      height: "250px",
+      width: "30%",
+      height: "100%",
       overflow: "hidden",
       resizeMode: "cover",
       backgroundColor: Colors.BlancoEnBlanco,
@@ -61,6 +63,8 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
       padding: "16px",
       display: "flex",
       flexDirection: "column",
+      justifyContent: "space-between",
+      width: "70%",
     },
     cardTitle: {
       fontSize: "1.25rem",
@@ -88,9 +92,27 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
       fontWeight: "bold",
       color: Colors.Naranja,
     },
-    dropdownContainer: {
+    actionsContainer: {
       display: "flex",
       justifyContent: "flex-end",
+      gap: "5px",
+    },
+    actionButton: {
+      padding: "0.4rem 0.8rem",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      fontWeight: "bold",
+      fontSize: "0.9rem",
+      color: Colors.BlancoEnBlanco,
+    },
+    editButton: {
+      backgroundColor: Colors.Azul,
+      marginRight: "5px",
+    },
+    enableButton: {
+      backgroundColor: Colors.Verde,
+      marginLeft: "5px",
     },
   };
 
@@ -108,19 +130,27 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
 
           <div style={styles.priceRow}>
             <h4 style={styles.priceText}>$ {producto?.precio}</h4>
-            <div style={styles.dropdownContainer}>
-              <Dropdown>
-                <Dropdown.Toggle variant="danger" />
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={habilitarNuevamente}>
-                    Habilitar Producto Nuevamente
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item onClick={eliminarPermanente}>
-                    Eliminar Producto Definitivamente
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+            <div style={styles.actionsContainer}>
+              <Link
+                to={`/producto/${producto?.id}`}
+                style={{
+                  ...styles.actionButton,
+                  ...styles.editButton,
+                  textDecoration: "none",
+                  textAlign: "center",
+                }}
+              >
+                Editar
+              </Link>
+              <button
+                onClick={habilitarNuevamente}
+                style={{
+                  ...styles.actionButton,
+                  ...styles.enableButton,
+                }}
+              >
+                Habilitar
+              </button>
             </div>
           </div>
         </div>

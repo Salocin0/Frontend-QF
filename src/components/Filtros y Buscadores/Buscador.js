@@ -5,7 +5,8 @@ const Buscador = ({
   placeholder = "Buscar...", 
   onBuscar, 
   botonBuscar = true,
-  delay = 300 
+  delay = 300,
+  style = {}
 }) => {
   const Colors = useDynamicColors();
   const [searchText, setSearchText] = useState("");
@@ -26,6 +27,7 @@ const Buscador = ({
     },
     input: {
       flex: 1,
+      minWidth: 0,
       padding: "10px",
       border: `1px solid ${Colors.Gris}`,
       borderRadius: "4px",
@@ -42,7 +44,7 @@ const Buscador = ({
       cursor: "pointer",
       fontSize: "16px",
       transition: "background-color 0.3s",
-      width: botonBuscar ? "100%" : "auto",
+      width: "auto",
     },
   };
 
@@ -66,7 +68,7 @@ const Buscador = ({
   };
 
   return (
-    <div style={styles.container}>
+    <div style={{...styles.container, ...style}}>
       <input
         type="text"
         placeholder={placeholder}

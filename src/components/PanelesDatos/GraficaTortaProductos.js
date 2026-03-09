@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import useDynamicColors from "../../UseDinamicColors";
-import { FaChartPie } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const GraficaTortaProductos = ({ height, productos }) => {
   const [chartData, setChartData] = useState([]);
-  const [decalEnabled, setDecalEnabled] = useState(false); // Estado para activar/desactivar decal
+  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decal
   const Colors = useDynamicColors();
 
   useEffect(() => {
@@ -37,6 +37,9 @@ const GraficaTortaProductos = ({ height, productos }) => {
     legend: {
       top: "7%",
       left: "center",
+      textStyle: {
+        color: Colors.Naranja,
+      }
     },
     series: [
       {
@@ -51,6 +54,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
         label: {
           show: true,
           fontSize: "10px",
+          color: Colors.Naranja,
         },
         labelLine: {
           show: true,
@@ -58,7 +62,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
         data: chartData.map((item, index) => ({
           ...item,
           itemStyle: {
-            decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null,
+            decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : undefined,
           },
         })),
       },
@@ -76,14 +80,14 @@ const GraficaTortaProductos = ({ height, productos }) => {
           border: "none",
           cursor: "pointer",
           fontSize: "18px",
-          color: Colors.BlancoEnBlanco,
+          color: Colors.Naranja,
           position: "absolute",
           top: "-5px",
           right: "0px",
           zIndex: 900,
         }}
       >
-        <span><FaChartPie /></span>
+        <span>{decalEnabled ? <FaEye /> : <FaEyeSlash />}</span>
       </button>
       <ReactECharts option={option} theme="dark" style={{ height: "100%", width: "100%" }} />
     </div>

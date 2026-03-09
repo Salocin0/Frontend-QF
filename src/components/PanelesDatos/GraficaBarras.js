@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
 import useDynamicColors from "../../UseDinamicColors";
-import { FaChartBar } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { CircularProgress } from "@mui/material";
 
 const GraficaBarras = ({ eventId }) => {
   const [chartData, setChartData] = useState(null); // Estado para los datos de la gráfica
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado para errores
-  const [decalEnabled, setDecalEnabled] = useState(false); // Estado para activar/desactivar decal
+  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decal
   const Colors = useDynamicColors();
 
   useEffect(() => {
@@ -59,25 +60,28 @@ const GraficaBarras = ({ eventId }) => {
         });
 
         let index = 0;
+        const patterns = [
+          { symbol: "circle" },
+          { symbol: "rect" },
+          { symbol: "triangle" },
+          { symbol: "diamond" },
+          { symbol: "line" },
+        ];
         puestosMap.forEach((data, puesto) => {
-          const patterns = [
-            { symbol: "circle" },
-            { symbol: "rect" },
-            { symbol: "triangle" },
-            { symbol: "diamond" },
-            { symbol: "line" },
-          ];
           const pattern = patterns[index % patterns.length];
 
           seriesData.push({
             name: puesto,
             type: "bar",
             stack: "total",
-            label: { show: true },
+            label: { 
+              show: true,
+              color: Colors.Naranja,
+            },
             emphasis: { focus: "series" },
             data,
             itemStyle: {
-              decal: decalEnabled ? { symbol: pattern.symbol } : null, // Condicional para mostrar/ocultar decal
+              decal: decalEnabled ? { symbol: pattern.symbol } : null,
             },
           });
 
@@ -85,28 +89,8 @@ const GraficaBarras = ({ eventId }) => {
         });
 
         setChartData({
-          tooltip: {
-            trigger: "axis",
-            axisPointer: { type: "shadow" },
-          },
-          backgroundColor: Colors.GrisAzuladoClaro,
-          title: {
-            text: "Recaudacion por Puesto y Dia",
-            subtext: "Total Recaudado por cada Puesto en cada Dia",
-            top: "3%",
-            left: "center",
-          },
-          legend: { top: "20%" },
-          grid: {
-            left: "3%",
-            right: "4%",
-            bottom: "3%",
-            top: "30%",
-            containLabel: true,
-          },
-          yAxis: { type: "value" },
-          xAxis: { type: "category", data: xAxisData },
-          series: seriesData,
+          xAxisData,
+          seriesData,
         });
 
         setLoading(false);
@@ -120,26 +104,112 @@ const GraficaBarras = ({ eventId }) => {
     if (eventId) {
       fetchData();
     }
-  }, [eventId, decalEnabled, Colors.GrisAzuladoClaro]); // Dependencia decalEnabled y color para actualizar el gráfico
+  }, [eventId]);
 
-  const toggleDecal = () => {
-    setDecalEnabled(!decalEnabled);
-  };
+  // Separate useEffect for chart update when decal changes
+  useEffect(() => {
+    if (!chartData) return;
 
-  if (loading) return <div>Cargando...</div>;
+    const patterns = [
+      { symbol: "circle" },
+      { symbol: "rect" },
+      { symbol: "triangle" },
+      { symbol: "diamond" },
+      { symbol: "line" },
+    ];
+
+    const updatedSeries = chartData.seriesData.map((series, index) => ({
+      ...series,
+      label: {
+        show: true,
+        color: Colors.Naranja,
+      },
+      itemStyle: {
+        decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null,
+      },
+    }));
+
+    setChartData((prev) => ({
+      ...prev,
+      seriesData: updatedSeries,
+    }));
+  }, [decalEnabled]);
+
+  if (loading) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+      <CircularProgress style={{ color: Colors.Naranja }} />
+    </div>
+  );
   if (error) return <div>Error: {error}</div>;
+
+  const option = chartData ? {
+    tooltip: {
+      trigger: "axis",
+      axisPointer: { type: "shadow" },
+    },
+    backgroundColor: Colors.GrisAzuladoClaro,
+    title: {
+      text: "Recaudacion por Puesto y Dia",
+      subtext: "Total Recaudado por cada Puesto en cada Dia",
+      top: "3%",
+      left: "center",
+      textStyle: {
+        color: Colors.Naranja,
+      },
+      subtextStyle: {
+        color: Colors.Naranja,
+      },
+    },
+    legend: {
+      top: "20%",
+      textStyle: {
+        color: Colors.Naranja,
+      },
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      top: "30%",
+      containLabel: true,
+    },
+    yAxis: {
+      type: "value",
+      axisLabel: {
+        color: Colors.Naranja,
+      },
+      axisLine: {
+        lineStyle: {
+          color: Colors.Naranja,
+        },
+      },
+    },
+    xAxis: {
+      type: "category",
+      data: chartData.xAxisData,
+      axisLabel: {
+        color: Colors.Naranja,
+      },
+      axisLine: {
+        lineStyle: {
+          color: Colors.Naranja,
+        },
+      },
+    },
+    series: chartData.seriesData,
+  } : null;
 
   return (
     <div className="h-100 w-100" style={{position:"relative"}}>
-      {chartData ? (
+      {option ? (
         <>
           <ReactECharts
-            option={chartData}
+            option={option}
             theme="dark"
             className="h-100 w-100"
           />
           <button
-            onClick={toggleDecal}
+            onClick={() => setDecalEnabled(!decalEnabled)}
             style={{
               backgroundColor: Colors.GrisAzuladoOscuro,
               padding: "3px 10px",
@@ -147,14 +217,14 @@ const GraficaBarras = ({ eventId }) => {
               border: "none",
               cursor: "pointer",
               fontSize: "18px",
-              color: Colors.BlancoEnBlanco,
+              color: Colors.Naranja,
               position: "absolute",
               top: "20px",
               right: "20px",
               zIndex:"900"
             }}
           >
-            <span><FaChartBar /></span>
+            {decalEnabled ? <FaEye /> : <FaEyeSlash />}
           </button>
         </>
       ) : (

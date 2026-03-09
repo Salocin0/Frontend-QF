@@ -69,13 +69,22 @@ const Evento = ({ evento,recargar }) => {
       .catch((error) => console.error("Error:", error));
   };
 
+  const eventoImg =
+    evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
+      ? evento.img
+      : imgdefault;
+
   return (
     <div className="cardlink">
       <div className="card shadow-sm">
         <img
-          src={`${evento?.img || imgdefault}`}
+          src={eventoImg}
           className="cardimgtop"
           alt="Thumbnail"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = imgdefault;
+          }}
         />
         <div className="card-body">
           <div className="d-flex justify-content-between align-items-center">

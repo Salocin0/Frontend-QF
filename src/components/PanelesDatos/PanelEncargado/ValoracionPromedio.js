@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../../UseDinamicColors";
+import { CircularProgress } from "@mui/material";
 
 const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const [valoracion, setValoracion] = useState(null);
@@ -16,17 +17,17 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       borderRadius: 20,
       backgroundColor: Colors.GrisAzuladoClaro, 
       alignItems: "center",
-      border: "2px solid white",
+      border: `2px solid ${Colors.Naranja}`,
       position: "relative",
     },
     loadingText: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
       textAlign: "center",
       margin:0,
       padding:0
     },
     errorText: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
       textAlign: "center",
       margin:0,
       padding:0
@@ -41,13 +42,13 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       padding:0
     },
     valoracionText: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
       margin:0,
       padding:0,
       fontSize: "2rem",
     },
     strongText: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
       margin:0,
       padding:0,
       fontWeight: "bold",
@@ -89,7 +90,9 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   if (loading) {
     return (
       <div style={styles.div2Encargado}>
-        <p style={styles.loadingText}>Cargando...</p>
+        <div style={styles.contentContainer}>
+          <CircularProgress style={{ color: Colors.Naranja }} />
+        </div>
       </div>
     );
   }

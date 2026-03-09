@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import useDynamicColors from "../../../UseDinamicColors";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
+import { CircularProgress } from "@mui/material";
 
 const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const [totalRecaudado, setTotalRecaudado] = useState(null);
@@ -49,7 +50,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       marginTop: "20px",
       borderRadius: "20px",
       alignItems: "center",
-      border: "2px solid white",
+      border: `2px solid ${Colors.Naranja}`,
       background: Colors.GrisAzuladoClaro,
       marginLeft: "20px",
     },
@@ -61,7 +62,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       width: "100%",
     },
     loadingText: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
       fontSize: "1.5rem",
       margin: 0,
       padding: 0,
@@ -74,7 +75,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       width: "100%",
     },
     errorText: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
       fontSize: "1.5rem",
       margin: 0,
       padding: 0,
@@ -88,13 +89,13 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       flexDirection: "column",
     },
     resultText: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
       fontSize: "2rem",
       margin: 0,
       padding: 0,
     },
     label: {
-      color: Colors.Blanco,
+      color: Colors.Naranja,
       margin: 0,
       padding: 0,
     },
@@ -104,7 +105,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     <div style={styles.container}>
       {isLoading ? (
         <div style={styles.loadingContainer}>
-          <p style={styles.loadingText}>Cargando datos...</p>
+          <CircularProgress style={{ color: Colors.Naranja }} />
         </div>
       ) : error ? (
         <div style={styles.errorContainer}>

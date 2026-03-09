@@ -35,7 +35,7 @@ const Breadcrumb = ({ items, style }) => {
     },
     breadcrumbDivider: {
       content: "'>'",
-      margin: '0 8px',
+      margin: '0 10px',
       color: Colors.Negro,
     },
   };
@@ -70,7 +70,7 @@ const Breadcrumb = ({ items, style }) => {
                 <a href={item.url} style={styles.breadcrumbItemLink}>
                   {item.title}
                 </a>
-                <span style={styles.breadcrumbDivider}> {'>'} </span>
+                <span style={styles.breadcrumbDivider}>{'>'}</span>
               </>
             )}
           </li>

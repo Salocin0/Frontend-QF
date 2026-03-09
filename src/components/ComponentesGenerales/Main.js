@@ -22,6 +22,7 @@ import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
 import RegistrarEvento2 from "../ComponentesEventos/RegistrarEvento2";
 import RegistrarEvento3 from "../ComponentesEventos/RegistrarEvento3";
 import RegistrarEvento4 from "../ComponentesEventos/RegistrarEvento4";
+import RegistrarEvento5 from "../ComponentesEventos/RegistrarEvento5";
 import VerSolicitudesEvento from "../ComponentesEventos/VerSolicitudes";
 import LandingPage from "../ComponentesLandingPage/LandingPage";
 import CambiarContraseña from "../ComponentesLogin/CambiarContraseña";
@@ -63,6 +64,7 @@ const importsToCheck = {
   Carrito, ConsultarUsuarioPrueba, Notificaciones, AdquirirNuevoRolEPC, AsociacionesEPC,
   ConsultarEvento, EventoPrueba, ListadoEventosUsers, ListadoEventosProductor, RegistrarEvento,
   RegistrarEvento2, RegistrarEvento3, RegistrarEvento4, VerSolicitudesEvento, LandingPage,
+  RegistrarEvento5,
   CambiarContraseña, HabilitarUsuario, Login, RecuperarContraseña, ValidarEmail, ValidarUsuario,
   ListadoPedidos, ListadoPedidosEncargado, ListadoPedidosRepartidor, ConsultarProducto,
   ListadoProducto, ListadoProductoDeshabilitado, ListadoProductoUser, RegistrarProductos,
@@ -122,6 +124,7 @@ const Main = () => {
         <Route path="/registrar-evento2" element={<SafeRoute component={RegistrarEvento2} name="RegistrarEvento2" />} />
         <Route path="/registrar-evento3" element={<SafeRoute component={RegistrarEvento3} name="RegistrarEvento3" />} />
         <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<SafeRoute component={RegistrarEvento4} name="RegistrarEvento4" />} />
+        <Route path="/registrar-evento5/:eventoId/:diferenciaDiasEvento" element={<SafeRoute component={RegistrarEvento5} name="RegistrarEvento5" />} />
         <Route path="/grafica-productor" element={<SafeRoute component={PanelProductor} name="PanelProductor" />} />
         <Route path="/grafica-encargado" element={<SafeRoute component={PanelEncargado} name="PanelEncargado" />} />
         <Route path="/tipo-compra/:id" element={<SafeRoute component={Preventa} name="Preventa" />} />

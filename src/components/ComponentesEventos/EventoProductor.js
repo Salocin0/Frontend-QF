@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/logoevento.webp";
+import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 
 const EventoProductor = ({ evento, recargarComponente }) => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   const [, setIsProcesoDeCreacion2] = useState(false);
   const [, setIsProcesoDeCreacion3] = useState(false);
   const [recargar, setRecargar] = useState(0);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
   console.log(evento);
 
   const handleRecargar = () => {
@@ -56,6 +59,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         break;
       case "EnPreparacion3":
         setIsProcesoDeCreacion3(true);
+        setIsEnPreparacion(true);
         break;
       case "Finalizado":
         setIsFinalizado(true);
@@ -71,6 +75,15 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   }, [evento, recargar]);
 
   const confirmarEvento = () => {
+    setPendingAction({
+      type: 'confirmar',
+      message: '¿Estás seguro de que deseas confirmar este evento?',
+      title: 'Confirmar Evento'
+    });
+    setConfirmOpen(true);
+  };
+
+  const executeConfirmarEvento = () => {
     fetch(
       `${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/confirmarEvento`,
       {
@@ -88,6 +101,15 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   };
 
   const iniciarEvento = () => {
+    setPendingAction({
+      type: 'iniciar',
+      message: '¿Estás seguro de que deseas iniciar este evento?',
+      title: 'Iniciar Evento'
+    });
+    setConfirmOpen(true);
+  };
+
+  const executeIniciarEvento = () => {
     fetch(
       `${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/iniciarEvento`,
       {
@@ -99,10 +121,19 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         toast.success("Evento iniciado con éxito");
         handleRecargar();
       })
-      .catch((error) => toast.error("Error al confirmar evento"));
+      .catch((error) => toast.error("Error al iniciar evento"));
   };
 
   const finalizarEvento = () => {
+    setPendingAction({
+      type: 'finalizar',
+      message: '¿Estás seguro de que deseas finalizar este evento? Esta acción no se puede deshacer.',
+      title: 'Finalizar Evento'
+    });
+    setConfirmOpen(true);
+  };
+
+  const executeFinalizarEvento = () => {
     fetch(
       `${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/finalizarEvento`,
       {
@@ -114,7 +145,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         toast.success("Evento finalizado con éxito");
         handleRecargar();
       })
-      .catch((error) => toast.error("Error al confirmar evento"));
+      .catch((error) => toast.error("Error al finalizar evento"));
   };
 
   const cancelarEvento = () => {
@@ -163,6 +194,39 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   };*/
 
   const pausarEvento = () => {
+    setPendingAction({
+      type: 'pausar',
+      message: '¿Estás seguro de que deseas pausar este evento?',
+      title: 'Pausar Evento'
+    });
+    setConfirmOpen(true);
+  };
+
+  const continuarEvento = () => {
+    setPendingAction({
+      type: 'continuar',
+      message: '¿Estás seguro de que deseas continuar este evento?',
+      title: 'Continuar Evento'
+    });
+    setConfirmOpen(true);
+  };
+
+  const executeContinuarEvento = () => {
+    fetch(
+      `${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/continuarEvento`,
+      {
+        method: "POST",
+      }
+    )
+      .then((response) => response.json())
+      .then(() => {
+        toast.success("Evento continuado con éxito");
+        handleRecargar();
+      })
+      .catch(() => toast.error("Error al continuar evento"));
+  };
+
+  const executePausarEvento = () => {
     fetch(
       `${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/pausarEvento`,
       {
@@ -174,11 +238,43 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         toast.success("Evento Pausado con éxito");
         handleRecargar();
       })
-      .catch((error) => toast.error("Error al confirmar evento"));
+      .catch((error) => toast.error("Error al pausar evento"));
   };
 
   const verSolicitudes = () => {
     navigate(`/ver-solicitudes-evento/${evento.id}`);
+  };
+
+  const handleConfirm = () => {
+    if (!pendingAction) return;
+    
+    switch (pendingAction.type) {
+      case 'confirmar':
+        executeConfirmarEvento();
+        break;
+      case 'iniciar':
+        executeIniciarEvento();
+        break;
+      case 'pausar':
+        executePausarEvento();
+        break;
+      case 'finalizar':
+        executeFinalizarEvento();
+        break;
+      case 'continuar':
+        executeContinuarEvento();
+        break;
+      default:
+        break;
+    }
+    
+    setConfirmOpen(false);
+    setPendingAction(null);
+  };
+
+  const handleCancel = () => {
+    setConfirmOpen(false);
+    setPendingAction(null);
   };
 
   const styles = {
@@ -298,7 +394,11 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       <div style={{ ...styles.card }}>
         <div style={styles.imageContainer}>
           <img
-            src={evento.img || imgDefault}
+            src={
+              evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
+                ? evento.img
+                : imgDefault
+            }
             alt="Logo del Evento"
             style={styles.img}
             onError={(e) => {
@@ -337,6 +437,11 @@ const EventoProductor = ({ evento, recargarComponente }) => {
           </button>
         )}
         {isPausado && (
+          <button style={styles.successButton} onClick={continuarEvento}>
+            Continuar Evento
+          </button>
+        )}
+        {isPausado && (
           <button style={styles.dangerButton} onClick={cancelarEvento}>
             Cancelar Evento
           </button>
@@ -362,6 +467,14 @@ const EventoProductor = ({ evento, recargarComponente }) => {
           </button>
         )}
       </div>
+      
+      <ConfirmDialog
+        open={confirmOpen}
+        title={pendingAction?.title || 'Confirmar Acción'}
+        message={pendingAction?.message || '¿Estás seguro de que deseas realizar esta acción?'}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
     </div>
   );
 };

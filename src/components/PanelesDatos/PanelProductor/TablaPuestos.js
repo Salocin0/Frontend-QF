@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useDynamicColors from '../../../UseDinamicColors';
+import { CircularProgress } from '@mui/material';
 
 const EstadisticasTable = ({ id }) => {
   const [data, setData] = useState([]);
@@ -29,12 +30,16 @@ const EstadisticasTable = ({ id }) => {
     if(id) fetchEstadisticas();
   }, [id]);
 
-  if (loading) return <p>Cargando datos...</p>;
+  if (loading) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
+      <CircularProgress style={{ color: Colors.Naranja }} />
+    </div>
+  );
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
-      <h2>Recaudado por Puesto</h2>
+      <h2 style={{ color: Colors.Naranja }}>Recaudado por Puesto</h2>
       <table
         style={{
           width: '100%',
@@ -46,17 +51,17 @@ const EstadisticasTable = ({ id }) => {
       >
         <thead>
           <tr>
-            <th style={{ textAlign: 'center', borderBottom: '1px solid #fff' }}>Nombre</th>
+            <th style={{ textAlign: 'center', borderBottom: `1px solid ${Colors.Naranja}` }}>Nombre</th>
             <th
               style={{
                 textAlign: 'center',
-                borderBottom: '1px solid #fff',
+                borderBottom: `1px solid ${Colors.Naranja}`,
                 width: '80px',
               }}
             >
               Pedidos
             </th>
-            <th style={{ textAlign: 'center', borderBottom: '1px solid #fff',width: '120px'}}>Total</th>
+            <th style={{ textAlign: 'center', borderBottom: `1px solid ${Colors.Naranja}`,width: '120px'}}>Total</th>
           </tr>
         </thead>
         <tbody>

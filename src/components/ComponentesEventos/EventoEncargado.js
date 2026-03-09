@@ -199,7 +199,11 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
           <div style={styles.row}>
             <div style={styles.colMd3}>
               <img
-                src={evento.img || imgDefault}
+                src={
+                  evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
+                    ? evento.img
+                    : imgDefault
+                }
                 alt="Logo del Evento"
                 style={styles.imgFluid}
                 onError={(e) => {

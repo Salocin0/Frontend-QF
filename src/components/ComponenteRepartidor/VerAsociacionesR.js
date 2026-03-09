@@ -184,7 +184,11 @@ const AsociacionesR = () => {
                         >
                           <div style={styles.cardBody}>
                             <img
-                              src={evento.img || imgDefault}
+                              src={
+                                evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
+                                  ? evento.img
+                                  : imgDefault
+                              }
                               alt="Logo del Evento"
                               style={styles.cardImage}
                               onError={(e) => {

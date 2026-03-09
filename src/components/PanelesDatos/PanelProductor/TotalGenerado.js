@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useDynamicColors from "../../../UseDinamicColors";
+import { CircularProgress } from "@mui/material";
 
 const TotalQuickFood = ({ eventId }) => {
   const [totalRecaudado, setTotalRecaudado] = useState(null); // Estado para almacenar el total recaudado
@@ -34,7 +35,6 @@ const TotalQuickFood = ({ eventId }) => {
       marginTop: "20px",
       borderRadius: "20px",
       backgroundColor: Colors.GrisAzuladoClaro,
-      marginLeft: "10px",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -43,17 +43,17 @@ const TotalQuickFood = ({ eventId }) => {
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
       backgroundPosition: "70% 25%",
-      border: "2px solid white",
+      border: `2px solid ${Colors.Naranja}`,
       position: "relative",
       
     },
     heading: {
-      color: "white",
+      color: Colors.Naranja,
       margin: "0",
       fontSize: "2rem",
     },
     paragraph: {
-      color: "white",
+      color: Colors.Naranja,
       fontWeight: "bold",
       margin: "0",
       fontSize: "1rem",
@@ -61,7 +61,11 @@ const TotalQuickFood = ({ eventId }) => {
   };
 
   if (loading) {
-    return <div style={styles.container}>Cargando...</div>;
+    return (
+      <div style={styles.container}>
+        <CircularProgress style={{ color: Colors.Naranja }} />
+      </div>
+    );
   }
 
   if (error) {

@@ -4,8 +4,10 @@ import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from '@d
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from "react-toastify";
 import useDynamicColors from '../../UseDinamicColors';
+import PedidoDetalleDialog from './PedidoDetalleDialog';
 import { UserContext } from '../ComponentesGenerales/UserContext';
 import { useContext } from 'react';
+import { FaEye } from 'react-icons/fa';
 
 const initialData = {
   tasks: {},
@@ -48,8 +50,11 @@ const KanbanBoard = ({id}) => {
   const [data, setData] = useState(initialData);
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
-  const [confirmPopup, setConfirmPopup] = useState(null);
+  // const [confirmPopup, setConfirmPopup] = useState(null); // removed confirmation
   const [showCancelledColumn] = useState(true);
+  const [allowedColumns, setAllowedColumns] = useState(null);
+  const [infoDialog, setInfoDialog] = useState({open:false, task:null});
+  const [detailData, setDetailData] = useState(null); // fetched order details
   const Colors = useDynamicColors();
 
   const recargarComponente = () => {
@@ -71,12 +76,21 @@ const KanbanBoard = ({id}) => {
           console.log(id);
           const newTasks = {};
           pedidos.forEach((pedido) => {
+            // construct consumer name if available
+            let consumerName = '';
+            if (pedido.Consumidor) {
+              consumerName = `${pedido.Consumidor.nombre || ''} ${pedido.Consumidor.apellido || ''}`.trim();
+              if (pedido.Consumidor.usuario && pedido.Consumidor.usuario.usuario) {
+                consumerName = pedido.Consumidor.usuario.usuario;
+              }
+            }
             newTasks[`task-${pedido.id}`] = {
               id: `task-${pedido.id}`,
               content: `Pedido ID: ${pedido.id}`,
               fecha: pedido.fecha,
               total: pedido.total,
               estado: pedido.estado,
+              consumerName,
             };
           });
 
@@ -148,6 +162,15 @@ const KanbanBoard = ({id}) => {
 
 
 
+  const allowedMovesMap = {
+    'Pendiente': ['column-1','column-2','column-3','column-5','column-6'],
+    'Aceptado': ['column-2','column-3','column-4','column-5','column-6'],
+    'EnPreparacion': ['column-3','column-4','column-5','column-6'],
+    'EnCamino': ['column-4','column-5','column-6'],
+    'Entregado': ['column-5'],
+    'Cancelado': ['column-6'],
+  };
+
   const getStatusColor = (estado) => {
     switch (estado) {
       case 'Pendiente':
@@ -212,49 +235,66 @@ const KanbanBoard = ({id}) => {
   const sensors = useSensors(useSensor(PointerSensor));
 
   const SortableItem = ({task}) => {
+    // expose drag start to compute allowed columns
+    const handleDragStartInternal = () => {
+      const estado = task.estado;
+      // forward moves
+      const forward = allowedMovesMap[estado] || [];
+      // compute backward allowed: all states whose forward list includes this estado
+      const backward = Object.keys(allowedMovesMap).filter(s => allowedMovesMap[s].includes(estado));
+      const allowed = Array.from(new Set([...forward, ...backward]));
+      setAllowedColumns(allowed);
+    };
     const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id});
+    const statusColor = getStatusColor(task.estado);
     const style = {
       transform: CSS.Transform.toString(transform),
       transition,
       userSelect: 'none',
       padding: '8px',
       margin: '0 0 8px 0',
-      minHeight: '100px',
+      minHeight: '120px',
       backgroundColor: Colors.GrisAzuladoClaro,
       color: '#F7B813',
-      border: '1px solid #F7B813',
+      border: `1px solid ${statusColor}`,
       borderRadius: '4px',
       display: 'flex',
       flexDirection: 'column',
       position: 'relative',
     };
-
+    const formatDate = (fecha) => {
+      const d = new Date(fecha);
+      const dd = String(d.getDate()).padStart(2,'0');
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const yy = String(d.getFullYear()).slice(-2);
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mi = String(d.getMinutes()).padStart(2,'0');
+      return `${dd}/${mm}/${yy} ${hh}:${mi}`;
+    };
     return (
-      <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ fontSize: '1.5em', fontWeight: 'bold' }}>#{task.id.replace('task-', '')}</div>
-          <button
-            onClick={() => handleDelete(task.id)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#F7B813',
-              fontSize: '20px',
-              cursor: 'pointer',
-              marginTop: '-30px',
-            }}
-          >
-            &times;
-          </button>
+      <div ref={setNodeRef} {...attributes} {...listeners} style={style} onDragStart={handleDragStartInternal} onMouseDown={handleDragStartInternal} onMouseUp={()=>setAllowedColumns(null)}>
+        {/* header empty, no close button anymore */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         </div>
-        <div style={{ marginTop: '4px', marginBottom: '8px' }}>
-          <div>{new Date(task.fecha).toLocaleDateString()} {new Date(task.fecha).toLocaleTimeString("es")}</div>
+        {(task.consumerName || task.consumidorId) && (
+          <div style={{ fontSize: '0.9em', marginTop: '4px' }}>
+            Consumidor: {task.consumerName || task.consumidorId}
+          </div>
+        )}
+        <div style={{ marginTop: '4px', marginBottom: '4px', fontSize:'0.9em' }}>
+          {formatDate(task.fecha)}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
-          <div style={{ fontWeight: 'bold', fontSize: '1.5em' }}>${Number(task.total).toFixed(2)}</div>
-          <div style={{ backgroundColor: getStatusColor(task.estado), color: 'black', padding: '10px 4px', fontSize: '10px', fontWeight: 'bold', borderRadius: '10px', margin:0 }}>
-            {task.estado}
-          </div>
+          <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>${Number(task.total).toFixed(2)}</div>
+          <button
+            onClick={(e) => { e.stopPropagation(); setInfoDialog({open:true, task}); }}
+            onMouseDown={(e)=>e.stopPropagation()}
+            onPointerDown={(e)=>{ e.stopPropagation(); e.preventDefault(); }}
+            onTouchStart={(e)=>{ e.stopPropagation(); }}
+            style={{ background:'transparent', border:'none', color:'#F7B813', cursor:'pointer', fontSize:'18px', padding:'0' }}
+          >
+            <FaEye />
+          </button>
         </div>
       </div>
     );
@@ -278,7 +318,7 @@ const KanbanBoard = ({id}) => {
     if (id === 'column-3') column.title = 'En Prep.';
 
     return (
-      <div key={column.id} style={{ flex: 1, margin: '8px' }}>
+      <div key={column.id} style={{ flex: 1, margin: '8px', opacity: allowedColumns && !allowedColumns.includes(column.id) ? 0.4 : 1 }}>
         <h3 style={{ textAlign: 'center', color: '#FFF', backgroundColor: headerColors[column.id], padding: '8px', borderRadius: '4px' }}>{column.title}</h3>
         <div ref={setNodeRef} style={{ background: '#333', padding: '8px', height: '90%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           <SortableContext items={column.taskIds} strategy={rectSortingStrategy}>
@@ -289,6 +329,16 @@ const KanbanBoard = ({id}) => {
         </div>
       </div>
     );
+  };
+
+  const handleDragStart = (event) => {
+    const { active } = event;
+    if (!active) return;
+    const task = data.tasks[active.id];
+    if (task) {
+      const estado = task.estado;
+      setAllowedColumns(allowedMovesMap[estado] || []);
+    }
   };
 
   const handleDragEnd = (event) => {
@@ -309,7 +359,17 @@ const KanbanBoard = ({id}) => {
     // If dropped on empty column, overId may be column id
     if (!destColumnId && data.columns[overId]) destColumnId = overId;
 
-    if (!sourceColumnId || !destColumnId) return;
+    if (!sourceColumnId || !destColumnId) {
+      setAllowedColumns(null);
+      return;
+    }
+
+    // disallow move if destination not permitted
+    if (allowedColumns && !allowedColumns.includes(destColumnId)) {
+      toast.error('Movimiento no permitido en ese estado');
+      setAllowedColumns(null);
+      return;
+    }
 
     if (sourceColumnId === destColumnId) {
       const items = Array.from(data.columns[sourceColumnId].taskIds);
@@ -337,11 +397,7 @@ const KanbanBoard = ({id}) => {
     const destTaskIds = Array.from(data.columns[destColumnId].taskIds);
     destTaskIds.push(activeId);
 
-    setConfirmPopup({
-      taskId: activeId,
-      fromColumn: sourceColumnId,
-      toColumn: destColumnId,
-      onConfirm: () => {
+        // immediately update state without confirmation
         const newState = {
           ...data,
           columns: {
@@ -358,49 +414,40 @@ const KanbanBoard = ({id}) => {
         };
         setData(newState);
         updatePedidoState(activeId, destColumnId);
-        setConfirmPopup(null);
-      },
-      onCancel: () => setConfirmPopup(null),
-    });
+        setAllowedColumns(null);
   };
+  useEffect(() => {
+    if (infoDialog.open && infoDialog.task) {
+      const pedidoId = infoDialog.task.id.replace('task-','');
+      fetch(`${process.env.REACT_APP_BACK_URL}pedido/${pedidoId}`)
+        .then(res => res.json())
+        .then(res => {
+          console.log('pedido detail response', res);
+          if (res && res.data) {
+            setDetailData(res.data);
+          }
+        })
+        .catch(err => console.error('Error fetching pedido details', err));
+    } else {
+      setDetailData(null);
+    }
+  }, [infoDialog]);
 
   return (
-    <div style={{ display: 'flex', height: '70vh', margin: 0, padding: 0 }}>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <div style={{ display: 'flex', height: '70vh', margin: 0, padding: 0, overflowX: 'hidden' }}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragCancel={() => setAllowedColumns(null)} onDragEnd={handleDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];
           return <Column key={columnId} column={column} />;
         })}
       </DndContext>
 
-      {confirmPopup && (
-        <div style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          padding: '20px',
-          backgroundColor: '#FFF',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-          border: '2px solid #000',
-          borderRadius: '4px',
-          zIndex: 1000,
-          textAlign: 'center',
-          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
-          color: '#000',
-        }}>
-          <h4 style={{ margin: 0, color: '#000' }}>Confirmar Movimiento</h4>
-          <p style={{ margin: '10px 0', color: '#000' }}>
-            ¿Mover pedido #{confirmPopup.taskId.replace('task-', '')} al estado "{data.columns[confirmPopup.toColumn].title}"?
-          </p>
-          <button onClick={confirmPopup.onConfirm} style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: '#28A745', color: '#FFF', border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 4px 8px rgba(0,0,0,0.2)' }}>
-            Confirmar
-          </button>
-          <button onClick={confirmPopup.onCancel} style={{ padding: '10px 20px', backgroundColor: '#DC3545', color: '#FFF', border: 'none', borderRadius: '4px', cursor: 'pointer', boxShadow: '0 4px 8px rgba(0,0,0,0.2)' }}>
-            Cancelar
-          </button>
-        </div>
-      )}
+      {/* confirmation popup removed - moves now apply immediately */}
+      <PedidoDetalleDialog
+        infoDialog={infoDialog}
+        detailData={detailData}
+        onClose={() => setInfoDialog({ open: false, task: null })}
+      />
     </div>
   );
 };

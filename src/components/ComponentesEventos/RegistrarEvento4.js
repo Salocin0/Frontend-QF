@@ -9,8 +9,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const RegistrarEvento4 = () => {
+  const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const { diferenciaDiasEvento } = useParams();
   const navigate = useNavigate();
   const [horasPorDia, setHorasPorDia] = useState([]);
@@ -18,7 +20,7 @@ const RegistrarEvento4 = () => {
   const [eventoId, setEventoId] = useState(null);
   const [tienePreventa, setTienePreventa] = useState(false);
   const location = useLocation();
-  const [mostrarCartel, setMostrarCartel] = useState(false); // Estado para mostrar el cartel
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
 
@@ -80,11 +82,25 @@ const RegistrarEvento4 = () => {
   useEffect(() => {
     if (location.state && location.state.eventoId) {
       setEventoId(location.state.eventoId);
+      localStorage.setItem(EVENTO_CREACION_ID_KEY, String(location.state.eventoId));
+      return;
+    }
+
+    const storedEventoId = localStorage.getItem(EVENTO_CREACION_ID_KEY);
+    if (storedEventoId) {
+      setEventoId(storedEventoId);
     }
   }, [location.state]);
 
   const handleSiguienteClick = async (e) => {
     e.preventDefault();
+
+    if (isSubmitting) return;
+    if (!eventoId) {
+      toast.error("No se encontró el borrador del evento. Volvé al paso 1.");
+      navigate("/registrar-evento2");
+      return;
+    }
 
     const datosHoras = horasPorDia.map((hora) => ({
       dia: hora.dia,
@@ -99,6 +115,8 @@ const RegistrarEvento4 = () => {
     };
 
     try {
+      setIsSubmitting(true);
+
       const updateResponse = await fetch(
         `${process.env.REACT_APP_BACK_URL}evento/preparacion/${eventoId}`,
         {
@@ -114,16 +132,15 @@ const RegistrarEvento4 = () => {
       const updateData = await updateResponse.json();
 
       if (updateResponse.ok) {
-        setMostrarCartel(true); // Mostrar el cartel
-        setTimeout(() => {
-          navigate(`/listado-eventos-productor`);
-        }, 3000); // Espera 5 segundos antes de redirigir
+        navigate(`/registrar-evento5/${eventoId}/${diferenciaDiasEvento}`);
       } else {
         toast.error(updateData.message || "Error al registrar el evento");
       }
     } catch (error) {
       console.error("Error al registrar el evento:", error);
       toast.error("Error al registrar el evento");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -190,24 +207,17 @@ const RegistrarEvento4 = () => {
       padding: "0.75rem",
       fontSize: "1rem",
       fontWeight: "bold",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "10px",
     },
     buttonSecondary: {
       backgroundColor: Colors.GrisOscuro,
     },
-    cartelExito: {
-      position: "fixed",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      backgroundColor: Colors.Verde,
-      color: Colors.Blanco,
-      padding: "1.5rem",
-      borderRadius: "8px",
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      textAlign: "center",
-      zIndex: 1050,
-      maxWidth: "400px",
-      width: "100%",
+    buttonDisabled: {
+      opacity: 0.7,
+      cursor: "not-allowed",
     },
     tituloSeccion: {
       display: "flex",
@@ -240,7 +250,7 @@ const RegistrarEvento4 = () => {
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Eventos", url: "/listado-eventos-productor" },
-    { title: "Crear un Evento (3/3)", url: "registrar-evento4" },
+    { title: "Crear un Evento (3/4)", url: "registrar-evento4" },
   ];
 
   return (
@@ -302,33 +312,35 @@ const RegistrarEvento4 = () => {
               <div style={styles.buttonContainer}>
                 <button
                   type="button"
-                  style={{ ...styles.button, ...styles.buttonSecondary }}
+                  style={{
+                    ...styles.button,
+                    ...styles.buttonSecondary,
+                    ...(isSubmitting ? styles.buttonDisabled : {}),
+                  }}
                   onClick={handleVolver}
+                  disabled={isSubmitting}
                 >
                   Volver
                 </button>
                 <button
                   type="button"
-                  style={styles.button}
+                  style={{
+                    ...styles.button,
+                    ...(isSubmitting ? styles.buttonDisabled : {}),
+                  }}
                   onClick={handleSiguienteClick}
+                  disabled={isSubmitting}
                 >
-                  Finalizar Registro
+                  {isSubmitting && (
+                    <CircularProgress size={18} style={{ color: Colors.Blanco }} />
+                  )}
+                  {isSubmitting ? "Guardando..." : "Siguiente"}
                 </button>
               </div>
             </form>
           </div>
         </div>
       </div>
-
-      {mostrarCartel && (
-        <div style={styles.cartelExito}>
-          <h5>¡Registro Exitoso!</h5>
-          <p>
-            El registro fue exitoso. Ahora dirígete a la app móvil para
-            finalizar el registro de tu evento.
-          </p>
-        </div>
-      )}
       <Footer />
     </div>
   );

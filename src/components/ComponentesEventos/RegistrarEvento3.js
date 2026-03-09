@@ -7,8 +7,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
 import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const RegistrarEvento3 = () => {
+  const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const location = useLocation();
   const evento = location.state || {}; // Recuperar los datos del evento
   const { user } = useContext(UserContext);
@@ -54,6 +56,7 @@ const RegistrarEvento3 = () => {
   const [eventoId, setEventoId] = useState(null);
   const [errorMensaje, setErrorMensaje] = useState("");
   const [eventoData, setEventoData] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [nuevaColumna, setNuevaColumna] = useState({
     // Definir nuevaColumna
     titulo: "",
@@ -107,6 +110,13 @@ const RegistrarEvento3 = () => {
   useEffect(() => {
     if (location.state && location.state.eventoId) {
       setEventoId(location.state.eventoId);
+      localStorage.setItem(EVENTO_CREACION_ID_KEY, String(location.state.eventoId));
+      return;
+    }
+
+    const storedEventoId = localStorage.getItem(EVENTO_CREACION_ID_KEY);
+    if (storedEventoId) {
+      setEventoId(storedEventoId);
     }
   }, [location.state]);
 
@@ -167,6 +177,13 @@ const RegistrarEvento3 = () => {
   const handleSiguienteClick = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+    if (!eventoId) {
+      toast.error("No se encontró el borrador del evento. Volvé al paso 1.");
+      navigate("/registrar-evento2");
+      return;
+    }
+
     const now = new Date();
     const inicioEvento = new Date(fechaHoraInicioEvento);
     const finEvento = new Date(fechaHoraFinEvento);
@@ -220,6 +237,8 @@ const RegistrarEvento3 = () => {
     localStorage.setItem("eventoDatos", JSON.stringify(eventoDatos));
 
     try {
+      setIsSubmitting(true);
+
       const updateResponse = await fetch(
         `${process.env.REACT_APP_BACK_URL}evento/preparacion/${eventoId}`,
         {
@@ -245,7 +264,13 @@ const RegistrarEvento3 = () => {
     } catch (error) {
       console.error("Error al actualizar el evento:", error);
       toast.error("Error al actualizar el evento");
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleVolver = () => {
+    navigate(`/registrar-evento2`, { state: { eventoId } });
   };
 
   const handleOptionClickPreventa = (option) => {
@@ -359,6 +384,30 @@ const RegistrarEvento3 = () => {
       fontSize: "1rem",
       fontWeight: "bold",
       backgroundColor: Colors.Verde,
+      color: "#fff",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "10px",
+    },
+    submitButtonDisabled: {
+      opacity: 0.7,
+      cursor: "not-allowed",
+    },
+    buttonsRow: {
+      display: "flex",
+      gap: "10px",
+      marginTop: "10px",
+    },
+    secondaryButton: {
+      width: "40%",
+      padding: "0.75rem",
+      fontSize: "1rem",
+      fontWeight: "bold",
+      backgroundColor: Colors.GrisOscuro,
       color: "#fff",
       border: "none",
       borderRadius: "4px",
@@ -597,13 +646,31 @@ const RegistrarEvento3 = () => {
               </div>
 
               <div style={styles.formGroup}>
-                <button
-                  type="submit"
-                  style={styles.submitButton}
-                  onClick={handleSiguienteClick}
-                >
-                  Siguiente
-                </button>
+                <div style={styles.buttonsRow}>
+                  <button
+                    type="button"
+                    style={styles.secondaryButton}
+                    onClick={handleVolver}
+                    disabled={isSubmitting}
+                  >
+                    Volver
+                  </button>
+                  <button
+                    type="button"
+                    style={{
+                      ...styles.submitButton,
+                      width: "60%",
+                      ...(isSubmitting ? styles.submitButtonDisabled : {}),
+                    }}
+                    onClick={handleSiguienteClick}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting && (
+                      <CircularProgress size={18} style={{ color: Colors.Blanco }} />
+                    )}
+                    {isSubmitting ? "Guardando..." : "Siguiente"}
+                  </button>
+                </div>
               </div>
             </form>
           </div>

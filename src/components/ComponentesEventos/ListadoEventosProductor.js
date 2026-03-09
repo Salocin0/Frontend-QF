@@ -8,10 +8,16 @@ import Footer from "../ComponentesGenerales/Footer";
 import useDinamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import Buscador from "../Filtros y Buscadores/Buscador";
+import Filtros from "../Filtros y Buscadores/Filtros";
+import { CircularProgress } from "@mui/material";
 
 const ListadoEventosProductor = () => {
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterState, setFilterState] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
   const Colors = useDinamicColors();
   const navigate = useNavigate();
@@ -35,6 +41,7 @@ const ListadoEventosProductor = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 
+      setIsLoading(true);
       fetch(`${process.env?.REACT_APP_BACK_URL}evento/all`, {
         method: "GET",
         headers: headers,
@@ -50,7 +57,8 @@ const ListadoEventosProductor = () => {
 
           setEventos(eventosProcesados);
         })
-        .catch((error) => console.log("No existen eventos.", error));
+        .catch((error) => console.log("No existen eventos.", error))
+        .finally(() => setIsLoading(false));
     }
   }, [user, recargar]);
 
@@ -58,43 +66,99 @@ const ListadoEventosProductor = () => {
     navigate(`/registrar-evento2`);
   };
 
+  // helper group for estados
+  const estadoGroup = {
+    nombre: 'estado',
+    opciones: Array.from(new Set(eventos.map((e) => e.estado))).map((estado) => ({
+      valor: estado,
+      etiqueta: estado ? estado.replace(/([A-Z])/g, ' $1').trim() : estado,
+    })),
+  };
+
+  // compute filtered list
+  const filteredEventos = eventos.filter((evento) => {
+    const matchesSearch = searchTerm
+      ? evento.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
+    const matchesState = filterState
+      ? evento.estado === filterState
+      : true;
+    return matchesSearch && matchesState;
+  });
+
   const styles = {
-    mainFormEventos: {
+    row: {
+      margin: 0,
       display: "flex",
-      margin: "0",
+      flexDirection: "row",
       backgroundColor: Colors.GrisAzuladoOscuro,
-      flexDirection: "column",
-      overflow: "hidden",
       height: "100vh",
-      overflowY: "scroll",
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
+      overflow: "hidden",
+      width: "100%",
     },
-    content: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "80%",
+    colContent: {
       marginLeft: "20%",
-      paddingBottom: "20px",
+      width: "calc(100% - 20%)",
+      height: "100%",
+      overflowY: "auto",
+      msOverflowStyle: "none",
+      scrollbarWidth: "none",
+      WebkitScrollbar: { display: "none" },
     },
     container: {
-      paddingTop: "0px",
-      paddingBottom: "40px",
+      paddingBottom: "60px",
+      paddingLeft: "20px",
+      paddingRight: "20px",
       width: "100%",
-      marginLeft: "20px",
-      marginRight: "20px",
+      flexDirection: "column",
     },
-    tituloSeccion: {
+    sectionTitle: {
       display: "flex",
       justifyContent: "center",
-      marginTop: "20px",
-      fontSize: "24px",
-      marginLeft: "20%",
-      color: Colors.Blanco,
-    },
-    hr: {
+      marginBottom: "1rem",
+      paddingTop: "2rem",
+      width: "100%",
       color: Colors.Naranja,
+    },
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "0px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
+    filtersContainer: {
+      width: "320px",
+      minWidth: "320px",
+      alignSelf: "flex-start",
+      height: "auto",
+      borderRadius: "8px",
+      padding: "20px",
+      paddingTop: "10px",
+      marginLeft: "20px",
+      marginRight: "20px",
+      marginTop: "0",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      border: `1px solid ${Colors.Naranja}`,
+    },
+    searchFilterContainer: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+      flex: "none",
+      maxWidth: "100%",
+      marginTop: "0",
+      width: "100%",
+    },
+    agregarEventoButton: {
+      backgroundColor: Colors.Verde,
+      color: "white",
+      padding: "15px 20px",
+      borderRadius: "10px",
+      border: "none",
+      cursor: "pointer",
+      width: "100%",
+      fontSize: "16px",
+      fontWeight: "bold",
+      marginTop: "20px",
     },
     contenedorGrid: {
       textAlign: "center",
@@ -117,26 +181,6 @@ const ListadoEventosProductor = () => {
       transition: "background-color 0.3s",
       display: "inline-block",
     },
-    agregarEventoButton: {
-      backgroundColor: Colors.Verde,
-      color: "white",
-      padding: "10px 20px",
-      borderRadius: "5px",
-      border: "none",
-      cursor: "pointer",
-      position: "fixed",
-      bottom: "70px",
-      right: "20px",
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      zIndex: 1000,
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-      margin: "0",
-      padding: "0",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
   };
 
   const breadcrumbItems = [
@@ -145,52 +189,79 @@ const ListadoEventosProductor = () => {
   ];
 
   return (
-    <div style={styles.mainFormEventos}>
-      <div style={styles.sidebar}>
+    <div>
+      <div style={styles.row}>
         <Sidebar tipoUsuario={user?.tipoUsuario} />
-      </div>
-      <div style={styles.tituloSeccion}>
-        <h1>Eventos</h1>
-      </div>
-      <hr style={styles.hr} />
-      <div style={styles.breadcrumbWrapper}>
-        <Breadcrumb
-          items={breadcrumbItems}
-          style={{ width: "Calc(80% - 40px)", marginLeft: "Calc(20% + 20px)" }}
-        />
-      </div>
-      <div style={styles.content}>
-        <div style={styles.container}>
-          {Array.isArray(eventos) && eventos.length > 0 ? (
-            eventos.map((evento, index) => (
-              <EventoProductor
-                key={index}
-                evento={evento}
-                recargarComponente={recargarComponente}
-              />
-            ))
-          ) : (
-            <div style={styles.contenedorGrid}>
-              <div style={styles.tituloSeccion}>
-                <h2>Eventos</h2>
+        <div style={styles.colContent}>
+          <div style={styles.sectionTitle}>
+            <h1>Eventos</h1>
+          </div>
+          <hr style={{ color: Colors.Naranja }} />
+          {/* main content with sidebar filters */}
+          <div style={{ display: 'flex', width: 'calc(100% - 40px)', alignItems: 'flex-start', marginRight: '20px' }}>
+            <div style={{ flex: '0 0 calc(70% - 0px)', width: 'calc(70% - 0px)' }}>
+              <div style={styles.breadcrumbWrapper}>
+                <Breadcrumb
+                  items={breadcrumbItems}
+                  style={{
+                    width: "Calc(100% - 40px)",
+                    marginLeft: "Calc(20px)",
+                  }}
+                />
               </div>
-              <div style={styles.descripcion}>
-                <p>
-                  Con Quickfood, crea tu evento para hacerlo mejor. Descubre
-                  nuestras increíbles características y ofrece una experiencia
-                  única a tus consumidores.
-                </p>
+              <div style={styles.container}>
+                {isLoading || !user ? (
+                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
+                    <CircularProgress style={{ color: Colors.Naranja }} />
+                  </div>
+                ) : filteredEventos.length > 0 ? (
+                  filteredEventos.map((evento, index) => (
+                    <EventoProductor
+                      key={index}
+                      evento={evento}
+                      recargarComponente={recargarComponente}
+                    />
+                  ))
+                ) : (
+                  <div style={styles.contenedorGrid}>
+                    <div style={{ fontSize: "1.5rem", color: Colors.Naranja }}>
+                      <h2>Eventos</h2>
+                    </div>
+                    <div style={styles.descripcion}>
+                      <p>
+                        Con Quickfood, crea tu evento para hacerlo mejor. Descubre
+                        nuestras increíbles características y ofrece una experiencia
+                        única a tus consumidores.
+                      </p>
+                    </div>
+                    <Link to={`/registrar-evento`} style={styles.linkAgregarEvento}>
+                      Crear Evento
+                    </Link>
+                  </div>
+                )}
               </div>
-              <Link to={`/registrar-evento`} style={styles.linkAgregarEvento}>
-                Crear Evento
-              </Link>
             </div>
-          )}
+            {/* sidebar */}
+            <div style={{ ...styles.filtersContainer, flex: '0 0 calc(30% - 0px)', width: 'calc(30% - 0px)', paddingTop: "10px" }}>
+              <div style={{ ...styles.searchFilterContainer, marginTop: '10px' }}>
+                <Buscador
+                  placeholder="Buscar eventos..."
+                  onBuscar={setSearchTerm}
+                  style={{ display: 'flex', width: '100%' }}
+                />
+                <Filtros
+                  gruposFiltros={[estadoGroup]}
+                  onFiltrar={(f) => setFilterState(f.estado || '')}
+                  titulo="ESTADOS"
+                />
+                <button onClick={agregarNuevo} style={styles.agregarEventoButton}>
+                  Agregar Evento
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <button onClick={agregarNuevo} style={styles.agregarEventoButton}>
-        Agregar Evento
-      </button>
       <Footer />
     </div>
   );

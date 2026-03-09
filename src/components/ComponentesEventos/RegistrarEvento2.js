@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../ComponentesGenerales/Sidebar";
@@ -9,8 +9,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const RegistrarEvento2 = () => {
+  const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const [nombre, setNombre] = useState("");
   const [imagenEvento, setImagenEvento] = useState(null);
   const [croquis, setCroquis] = useState(null);
@@ -27,10 +29,50 @@ const RegistrarEvento2 = () => {
   const [selectedOptionEvento, setSelectedOptionEvento] = useState(null);
   const [selectedOptionPago, setSelectedOptionPago] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
+  const [suggestionResults, setSuggestionResults] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const Colors = useDynamicColors();
+  const geocodeDebounceRef = useRef(null);
+
+  const fetchNominatim = async (query, limit = 5) => {
+    if (!query || query.trim().length < 3) return [];
+
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&countrycodes=ar&limit=${limit}&q=${encodeURIComponent(
+        query
+      )}`,
+      {
+        headers: {
+          "Accept-Language": "es",
+        },
+      }
+    );
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    if (!Array.isArray(data)) return [];
+
+    return data.map((item) => ({
+      formatted: item.display_name,
+      components: {
+        state: item.address?.state || item.address?.province || "",
+        city:
+          item.address?.city ||
+          item.address?.town ||
+          item.address?.village ||
+          item.address?.municipality ||
+          "",
+      },
+      geometry: {
+        lat: item.lat ? parseFloat(item.lat) : null,
+        lng: item.lon ? parseFloat(item.lon) : null,
+      },
+    }));
+  };
 
   const handleImagenEventoChange = (e) => {
     const file = e.target.files[0];
@@ -51,6 +93,8 @@ const RegistrarEvento2 = () => {
   const handleSiguienteClick = async (e) => {
     e.preventDefault();
 
+    if (isSubmitting) return;
+
     // Validaciones
     if (!nombre.trim()) {
       toast.error("El nombre no puede estar vacío");
@@ -68,71 +112,89 @@ const RegistrarEvento2 = () => {
     }
 
     try {
-      // Obtener geolocalización
-      const response = await fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${ubicacion}&key=d429bb29929940e38622b06b1ad6c59b`
-      );
-      const data = await response.json();
+      setIsSubmitting(true);
 
-      if (data.results.length > 0) {
-        const result = data.results[0];
-        const addressComponents = result.components;
+      // Para mejorar tiempo de guardado, reutilizamos resultados ya obtenidos del autocomplete.
+      const normalizedUbicacion = ubicacion.trim().toLowerCase();
+      const result =
+        suggestionResults.find(
+          (item) => item?.formatted?.trim().toLowerCase() === normalizedUbicacion
+        ) ||
+        suggestionResults.find((item) =>
+          item?.formatted?.toLowerCase().includes(normalizedUbicacion)
+        ) ||
+        null;
+      const addressComponents = result?.components || {};
 
-        const prov = addressComponents.state;
-        const loc =
-          addressComponents.city ||
-          addressComponents.town ||
-          addressComponents.village;
+      const prov = addressComponents.state;
+      const loc =
+        addressComponents.city ||
+        addressComponents.town ||
+        addressComponents.village;
 
-        const lat = result.geometry.lat;
-        const lng = result.geometry.lng;
+      const lat = result?.geometry?.lat ?? null;
+      const lng = result?.geometry?.lng ?? null;
 
-        setProvincia(prov || "");
-        setLocalidad(loc || "");
+      setProvincia(prov || "");
+      setLocalidad(loc || "");
 
-        // Crear objeto evento parcial para guardar en la BD
-        const eventoParcial = {
-          nombre,
-          descripcion,
-          imagenEvento,
-          ubicacion,
-          localidad: loc || selectedLocalidad,
-          provincia: prov || selectedProvince,
-          tipoEvento,
-          tipoPago,
-          estado: "EnPreparacion1",
-          latitud: lat,
-          longitud: lng,
-        };
+      // Crear objeto evento parcial para guardar en la BD
+      const eventoParcial = {
+        nombre,
+        descripcion,
+        imagenEvento,
+        ubicacion,
+        localidad: loc || selectedLocalidad || localidad,
+        provincia: prov || selectedProvince || provincia,
+        tipoEvento,
+        tipoPago,
+        estado: "EnPreparacion1",
+        latitud: lat,
+        longitud: lng,
+        consumidorId: user?.consumidorId || user?.consumidoreId || user?.id,
+        productorId: user?.productorId || user?.productoreId,
+      };
 
-        // Guardar el progreso en la base de datos
-        const saveResponse = await fetch(
-          `${process.env?.REACT_APP_BACK_URL}evento`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${user?.token}`,
-            },
-            body: JSON.stringify(eventoParcial),
-          }
-        );
+      const existingEventoId = localStorage.getItem(EVENTO_CREACION_ID_KEY);
+      const endpoint = existingEventoId
+        ? `${process.env?.REACT_APP_BACK_URL}evento/preparacion/${existingEventoId}`
+        : `${process.env?.REACT_APP_BACK_URL}evento`;
+      const method = existingEventoId ? "PUT" : "POST";
 
-        const saveData = await saveResponse.json();
+      // Crear una sola vez y luego actualizar por id en cada paso.
+      const saveResponse = await fetch(endpoint, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+          ConsumidorId: String(user?.consumidorId || user?.consumidoreId || ""),
+        },
+        body: JSON.stringify(eventoParcial),
+      });
 
-        if (saveData.code === 200) {
-          toast.success("Evento guardado correctamente");
-          const eventoId = saveData.data.eventoId; // Obtén el ID del evento de la respuesta
-          navigate("/registrar-evento3", { state: { eventoId } }); // Pasa el ID a la siguiente página
-        } else {
-          toast.error("Error al guardar el evento");
+      const saveData = await saveResponse.json().catch(() => ({}));
+
+      if (saveResponse.ok) {
+        toast.success("Evento guardado correctamente");
+        const eventoId = existingEventoId || saveData?.data?.eventoId || saveData?.data?.id;
+        if (eventoId) {
+          localStorage.setItem(EVENTO_CREACION_ID_KEY, String(eventoId));
         }
+        navigate("/registrar-evento3", { state: { eventoId } });
       } else {
-        toast.error("No se pudo obtener información de la ubicación.");
+        toast.error(saveData?.msg || "Error al guardar el evento");
       }
     } catch (error) {
       console.error("Error al guardar el progreso:", error);
-      toast.error("Error al guardar el evento");
+      const isNetworkError =
+        error?.name === "TypeError" && String(error?.message || "").toLowerCase().includes("failed to fetch");
+      if (isNetworkError) {
+        toast.error("No se pudo conectar con el backend. Verificá que el servidor esté corriendo en puerto 8000.");
+      } else {
+        toast.error("Error al guardar el evento");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -166,31 +228,89 @@ const RegistrarEvento2 = () => {
     const value = e.target.value;
     setUbicacion(value);
 
+    if (geocodeDebounceRef.current) {
+      clearTimeout(geocodeDebounceRef.current);
+    }
+
     if (value.length > 2) {
-      fetch(
-        `https://api.opencagedata.com/geocode/v1/json?q=${value}&key=d429bb29929940e38622b06b1ad6c59b`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.results) {
-            setSuggestions(data.results.map((result) => result.formatted));
+      geocodeDebounceRef.current = setTimeout(() => {
+        fetchNominatim(value, 6)
+        .then((results) => {
+          if (results && results.length > 0) {
+            setSuggestionResults(results);
+            setSuggestions(results.map((result) => result.formatted));
             setShowSuggestions(true);
+            return;
           }
+
+          setSuggestionResults([]);
+          setSuggestions([]);
+          setShowSuggestions(false);
         })
-        .catch((error) => {
-          console.error(error);
+        .catch(() => {
+          setSuggestionResults([]);
+          setSuggestions([]);
+          setShowSuggestions(false);
         });
+      }, 450);
     } else {
+      setSuggestionResults([]);
       setSuggestions([]);
       setShowSuggestions(false);
     }
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setUbicacion(suggestion);
+    setUbicacion(suggestion.formatted);
+    setSuggestionResults([suggestion]);
     setSuggestions([]);
     setShowSuggestions(false);
   };
+
+  const handleVolver = () => {
+    navigate("/listado-eventos-productor");
+  };
+
+  useEffect(() => {
+    const storedEventoId = localStorage.getItem(EVENTO_CREACION_ID_KEY);
+    if (!storedEventoId) return;
+
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/${storedEventoId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user?.token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const ev = data?.data;
+        if (!ev) return;
+        setNombre(ev.nombre || "");
+        setDescripcion(ev.descripcion || "");
+        setUbicacion(ev.ubicacion || "");
+        setLocalidad(ev.localidad || "");
+        setProvincia(ev.provincia || "");
+        setTipoEvento(ev.tipoEvento || "");
+        setTipoPago(ev.tipoPago || "");
+        setSelectedOptionEvento(ev.tipoEvento || null);
+        setSelectedOptionPago(ev.tipoPago || null);
+        setImagenEvento(ev.img || null);
+        setCroquis(ev.croquis || null);
+      })
+      .catch(() => {
+        // Si falla la carga de borrador, no bloqueamos el formulario.
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (geocodeDebounceRef.current) {
+        clearTimeout(geocodeDebounceRef.current);
+      }
+    };
+  }, []);
 
   const styles = {
     containerFluid: {
@@ -302,6 +422,30 @@ const RegistrarEvento2 = () => {
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: "10px",
+    },
+    btnPrimaryDisabled: {
+      opacity: 0.7,
+      cursor: "not-allowed",
+    },
+    buttonsRow: {
+      display: "flex",
+      gap: "10px",
+      marginTop: "10px",
+    },
+    btnSecondary: {
+      width: "40%",
+      padding: "0.8rem",
+      fontSize: "1rem",
+      color: Colors.Blanco,
+      backgroundColor: Colors.GrisOscuro,
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      fontWeight: "bold",
     },
     title: {
       fontSize: "1.25rem",
@@ -469,13 +613,13 @@ const RegistrarEvento2 = () => {
                   />
                   {showSuggestions && (
                     <ul style={styles.suggestionsList}>
-                      {suggestions.map((suggestion, index) => (
+                      {suggestionResults.map((suggestion, index) => (
                         <li
                           key={index}
                           style={styles.suggestionItem}
                           onClick={() => handleSuggestionClick(suggestion)}
                         >
-                          {suggestion}
+                          {suggestion.formatted}
                         </li>
                       ))}
                     </ul>
@@ -499,13 +643,31 @@ const RegistrarEvento2 = () => {
                 </div>
               </div>
 
-              <button
-                type="button"
-                style={styles.btnPrimary}
-                onClick={handleSiguienteClick}
-              >
-                Siguiente
-              </button>
+              <div style={styles.buttonsRow}>
+                <button
+                  type="button"
+                  style={styles.btnSecondary}
+                  onClick={handleVolver}
+                  disabled={isSubmitting}
+                >
+                  Volver
+                </button>
+                <button
+                  type="button"
+                  style={{
+                    ...styles.btnPrimary,
+                    width: "60%",
+                    ...(isSubmitting ? styles.btnPrimaryDisabled : {}),
+                  }}
+                  onClick={handleSiguienteClick}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting && (
+                    <CircularProgress size={18} style={{ color: Colors.Blanco }} />
+                  )}
+                  {isSubmitting ? "Guardando..." : "Siguiente"}
+                </button>
+              </div>
             </form>
           </div>
         </div>

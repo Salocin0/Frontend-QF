@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import useDynamicColors from "../../UseDinamicColors";
-import { FaChartPie } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { CircularProgress } from "@mui/material";
 
 const GraficaTorta = ({ id }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [decalEnabled, setDecalEnabled] = useState(false); // Estado para activar/desactivar decal
+  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decal
   const Colors = useDynamicColors();
 
   useEffect(() => {
@@ -31,7 +32,11 @@ const GraficaTorta = ({ id }) => {
     if (id) fetchEstadisticas();
   }, [id]);
 
-  if (loading) return <p>Cargando datos...</p>;
+  if (loading) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "30vh" }}>
+      <CircularProgress style={{ color: Colors.Naranja }} />
+    </div>
+  );
   if (error) return <p>Error: {error}</p>;
 
   const formattedData = data.map((item) => ({
@@ -60,9 +65,18 @@ const GraficaTorta = ({ id }) => {
       subtext: "Porcentaje de lo recaudado en el evento por cada puesto",
       top: "3%",
       left: "center",
+      textStyle: {
+        color: Colors.Naranja,
+      },
+      subtextStyle: {
+        color: Colors.Naranja,
+      },
     },
     legend: {
       show: false,
+      textStyle: {
+        color: Colors.Naranja,
+      },
     },
     series: [
       {
@@ -71,6 +85,14 @@ const GraficaTorta = ({ id }) => {
         type: "pie",
         radius: ["30%", "60%"], // Ajusta el tamaño del gráfico (más pequeño o más grande)
         center: ["50%", "50%"], // Ajusta la posición del gráfico dentro del contenedor
+        label: {
+          color: Colors.Naranja,
+        },
+        labelLine: {
+          lineStyle: {
+            color: Colors.Naranja,
+          },
+        },
         data: formattedData.map((item, index) => ({
           ...item,
           itemStyle: {
@@ -106,14 +128,14 @@ const GraficaTorta = ({ id }) => {
                     border: "none",
                     cursor: "pointer",
                     fontSize: "18px",
-                    color: Colors.BlancoEnBlanco,
+                    color: Colors.Naranja,
                     position: "absolute",
                     top: "20px",
                     right: "5px",
                     zIndex:"900"
                   }}
                 >
-                  <span><FaChartPie /></span>
+                  {decalEnabled ? <FaEye /> : <FaEyeSlash />}
                 </button>
       <ReactECharts
         option={option}

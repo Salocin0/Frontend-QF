@@ -122,6 +122,7 @@ const ListadoPedidosEncargado = () => {
       backgroundColor: Colors.GrisAzuladoOscuro,
       height: "100vh",
       overflowY: "auto",
+      overflowX: "hidden",
       msOverflowStyle: "none",
       scrollbarWidth: "none",
       WebkitScrollbar: { display: "none" },

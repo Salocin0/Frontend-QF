@@ -5,9 +5,16 @@ import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import imgDefault from "../img/productoDefecto.png";
 import useDynamicColors from "../../UseDinamicColors";
-const Producto = ({ producto, idpuesto, recargar }) => {
+const Producto = ({
+  producto,
+  idpuesto,
+  recargar,
+  isDisabled = false,
+  onEnable,
+}) => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
+
   const handleDelete = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
@@ -30,27 +37,45 @@ const Producto = ({ producto, idpuesto, recargar }) => {
       .catch((error) => console.error("Error:", error));
   };
 
+  const habilitarNuevamente = () => {
+    if (onEnable) {
+      onEnable();
+    } else {
+      fetch(`${process.env?.REACT_APP_BACK_URL}producto/${producto.id}/habilitar`, {
+        method: "PUT",
+      })
+        .then((response) => response.json())
+        .then(() => {
+          toast.success("Producto habilitado nuevamente con éxito");
+          recargar();
+        })
+        .catch(() => toast.error("Error al habilitar el producto"));
+    }
+  };
+
   useEffect(() => {}, []);
 
   const styles = {
     cardLink: {
       display: "flex",
-      flexDirection: "column",
+      flexDirection: "row",
       width: "100%",
       margin: "0 auto",
       marginBottom: "10px",
-      height: "100%",
+      height: "auto",
     },
     card: {
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
       borderRadius: "8px",
       overflow: "hidden",
       backgroundColor: Colors.GrisAzuladoClaro,
+      display: "flex",
       width: "100%",
+      /* height auto to fit content */
     },
     cardImgTop: {
-      width: "100%",
-      height: "250px",
+      width: "30%",
+      height: "100%",
       overflow: "hidden",
       resizeMode: "cover",
       backgroundColor: Colors.BlancoEnBlanco,
@@ -60,6 +85,8 @@ const Producto = ({ producto, idpuesto, recargar }) => {
       padding: "16px",
       display: "flex",
       flexDirection: "column",
+      justifyContent: "space-between",
+      width: "70%",
     },
     cardTitle: {
       fontSize: "1.25rem",
@@ -72,9 +99,9 @@ const Producto = ({ producto, idpuesto, recargar }) => {
       fontSize: "1rem",
       textAlign: "center",
       marginBottom: "8px",
-      height: "100px",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
+      /* allow more space for description if needed */
+      height: "auto",
+      overflow: "visible",
       color: Colors.BlancoEnBlanco,
     },
     priceRow: {
@@ -102,6 +129,15 @@ const Producto = ({ producto, idpuesto, recargar }) => {
       fontSize: "0.9rem",
       color: Colors.BlancoEnBlanco,
     },
+    enableButton: {
+      backgroundColor: Colors.Verde,
+    },
+    primaryButton: {
+      backgroundColor: Colors.Azul,
+    },
+    dangerButton: {
+      backgroundColor: Colors.Rojo,
+    },
   };
 
   return (
@@ -120,28 +156,57 @@ const Producto = ({ producto, idpuesto, recargar }) => {
             <h4 style={styles.priceText}>$ {producto?.precio}</h4>
           </div>
           <div style={styles.actionsContainer}>
-            <Link
-              to={`/producto/${producto?.id}`}
-              style={{
-                ...styles.actionButton,
-                backgroundColor: Colors.Azul,
-                marginRight: "5px",
-                textAlign: "center",
-                textDecoration: "none",
-              }}
-            >
-              Actualizar
-            </Link>
-            <button
-              onClick={handleDelete}
-              style={{
-                ...styles.actionButton,
-                backgroundColor: Colors.Rojo,
-                marginLeft: "5px",
-              }}
-            >
-              Deshabilitar
-            </button>
+            {isDisabled ? (
+              <>
+                <Link
+                  to={`/producto/${producto?.id}`}
+                  style={{
+                    ...styles.actionButton,
+                    ...styles.primaryButton,
+                    marginRight: "5px",
+                    textAlign: "center",
+                    textDecoration: "none",
+                  }}
+                >
+                  Editar
+                </Link>
+                <button
+                  onClick={habilitarNuevamente}
+                  style={{
+                    ...styles.actionButton,
+                    ...styles.enableButton,
+                    marginLeft: "5px",
+                  }}
+                >
+                  Habilitar
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to={`/producto/${producto?.id}`}
+                  style={{
+                    ...styles.actionButton,
+                    ...styles.primaryButton,
+                    marginRight: "5px",
+                    textAlign: "center",
+                    textDecoration: "none",
+                  }}
+                >
+                  Editar
+                </Link>
+                <button
+                  onClick={handleDelete}
+                  style={{
+                    ...styles.actionButton,
+                    ...styles.dangerButton,
+                    marginLeft: "5px",
+                  }}
+                >
+                  Deshabilitar
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

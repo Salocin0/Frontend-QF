@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
 import useDynamicColors from "../../UseDinamicColors";
-import { FaChartBar } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { CircularProgress } from "@mui/material";
 
 const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   const [chartData, setChartData] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [decalEnabled, setDecalEnabled] = useState(false); // Estado para los decals
+  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para los decals
+  const [categorias, setCategorias] = useState([]); // Guardar categorías en estado
+  const [groupedData, setGroupedData] = useState({}); // Guardar datos agrupados en estado
+  const [puestos, setPuestos] = useState([]); // Guardar puestos en estado
   const Colors = useDynamicColors();
 
   useEffect(() => {
@@ -38,7 +42,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
           return;
         }
 
-        const groupedData = {};
+        const groupedDataTemp = {};
         const puestosSet = new Set();
 
         data.data.forEach((item) => {
@@ -46,39 +50,19 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
           const puesto = item.nombrepuesto || "Desconocido"; // Nombre del puesto
           puestosSet.add(puesto);
 
-          if (!groupedData[dia]) {
-            groupedData[dia] = {};
+          if (!groupedDataTemp[dia]) {
+            groupedDataTemp[dia] = {};
           }
 
-          groupedData[dia][puesto] = (groupedData[dia][puesto] || 0) + parseFloat(item.totalrecaudado);
+          groupedDataTemp[dia][puesto] = (groupedDataTemp[dia][puesto] || 0) + parseFloat(item.totalrecaudado);
         });
 
-        const categorias = Object.keys(groupedData); // Fechas
-        const puestos = Array.from(puestosSet); // Lista de nombres de puestos
+        const categoriasTemp = Object.keys(groupedDataTemp); // Fechas
+        const puestosTemp = Array.from(puestosSet); // Lista de nombres de puestos
 
-        const patterns = ["circle", "rect", "triangle", "diamond", "line"];
-
-        const series = puestos.map((puesto, index) => ({
-          name: puesto,
-          type: "bar",
-          stack: puestoId === "Todos" ? "total" : undefined,
-          data: categorias.map((dia) => groupedData[dia][puesto] || 0),
-          emphasis: { focus: "series" },
-          itemStyle: {
-            decal: decalEnabled ? { symbol: patterns[index % patterns.length] } : null,
-          },
-        }));
-
-        setChartData({
-          tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
-          title: { text: "Recaudación por Día", left: "center", top: "1%" },
-          legend: { data: puestos, top: 30 },
-          xAxis: { type: "category", data: categorias },
-          yAxis: { type: "value" },
-          series,
-          backgroundColor: Colors.GrisAzuladoClaro,
-        });
-
+        setCategorias(categoriasTemp);
+        setGroupedData(groupedDataTemp);
+        setPuestos(puestosTemp);
         setLoading(false);
       } catch (err) {
         console.error("Error al obtener los datos:", err);
@@ -88,18 +72,72 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
     };
 
     fetchData();
-  }, [eventId, puestoId, decalEnabled, Colors.GrisAzuladoClaro]); // Se ejecuta también cuando cambia decalEnabled o color
+  }, [eventId, puestoId]); // Solo depende de eventId y puestoId
+
+  // Segundo useEffect para actualizar chartData cuando decalEnabled cambia
+  useEffect(() => {
+    if (categorias.length === 0 || puestos.length === 0) return;
+
+    const patterns = ["circle", "rect", "triangle", "diamond", "line"];
+
+    const series = puestos.map((puesto, index) => ({
+      name: puesto,
+      type: "bar",
+      stack: puestoId === "Todos" ? "total" : undefined,
+      data: categorias.map((dia) => groupedData[dia][puesto] || 0),
+      emphasis: { focus: "series" },
+      itemStyle: {
+        decal: decalEnabled ? { symbol: patterns[index % patterns.length] } : undefined,
+      },
+    }));
+
+    setChartData({
+      tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+      title: { 
+        text: "Recaudación por Día", 
+        left: "center", 
+        top: "1%",
+        textStyle: { color: Colors.Naranja }
+      },
+      legend: { 
+        data: puestos, 
+        top: 30,
+        textStyle: { color: Colors.Naranja }
+      },
+      xAxis: { 
+        type: "category", 
+        data: categorias,
+        axisLabel: { color: Colors.Naranja },
+        axisLine: { lineStyle: { color: Colors.Naranja } }
+      },
+      yAxis: { 
+        type: "value",
+        axisLabel: { color: Colors.Naranja },
+        axisLine: { lineStyle: { color: Colors.Naranja } },
+        splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
+      },
+      series,
+      backgroundColor: Colors.GrisAzuladoClaro,
+    });
+  }, [decalEnabled, categorias, groupedData, puestos, puestoId, Colors.GrisAzuladoClaro]);
 
   const onChartClick = (params) => {
     setSelectedDay(params.name);
   };
 
-  if (loading) return <div>Cargando...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
+      <CircularProgress style={{ color: Colors.Naranja }} />
+    </div>
+  );
+  if (error) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", color: Colors.Naranja }}>
+      Error: {error}
+    </div>
+  );
 
   return (
     <div style={{ position: "relative", height: "100%", width: "100%" }}>
-      {/* Botón para activar/desactivar los decals */}
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
@@ -109,14 +147,14 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
           border: "none",
           cursor: "pointer",
           fontSize: "18px",
-          color: Colors.BlancoEnBlanco,
+          color: Colors.Naranja,
           position: "absolute",
           top: "10px",
           right: "10px",
           zIndex: 900,
         }}
       >
-        <span><FaChartBar /></span>
+        <span>{decalEnabled ? <FaEye /> : <FaEyeSlash />}</span>
       </button>
 
       {/* Renderiza la gráfica de barras o la gráfica de líneas según el estado */}
@@ -190,11 +228,30 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
         setChartData({
           backgroundColor: Colors.GrisAzuladoClaro,
           tooltip: { trigger: "axis", axisPointer: { type: "cross" } },
-          title: { text: `Detalle de Ventas - ${selectedDay}`, left: "center",top : "1%" },
-          xAxis: { type: "category", data: xAxisData },
-          yAxis: { type: "value" },
+          title: { 
+            text: `Detalle de Ventas - ${selectedDay}`, 
+            left: "center",
+            top : "1%",
+            textStyle: { color: Colors.Naranja }
+          },
+          xAxis: { 
+            type: "category", 
+            data: xAxisData,
+            axisLabel: { color: Colors.Naranja },
+            axisLine: { lineStyle: { color: Colors.Naranja } }
+          },
+          yAxis: { 
+            type: "value",
+            axisLabel: { color: Colors.Naranja },
+            axisLine: { lineStyle: { color: Colors.Naranja } },
+            splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
+          },
           grid: { bottom: 100 },
-          legend: { data: Object.keys(seriesData), bottom: 0 },
+          legend: { 
+            data: Object.keys(seriesData), 
+            bottom: 0,
+            textStyle: { color: Colors.Naranja }
+          },
           series: Object.keys(seriesData).map((key) => ({
             name: key,
             type: "line",
@@ -207,8 +264,16 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
       .finally(() => setLoading(false));
   }, [selectedDay, idevento, idpuesto, Colors.GrisAzuladoClaro]);
 
-  if (loading) return <p>Cargando datos...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
+      <CircularProgress style={{ color: Colors.Naranja }} />
+    </div>
+  );
+  if (error) return (
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", color: Colors.Naranja }}>
+      Error: {error}
+    </div>
+  );
 
   return (
     <div style={{ position: "relative" }} className="h-100 w-100">
@@ -219,7 +284,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
           top: "20px",
           left: "20px",
           padding: "5px 10px",
-          backgroundColor: "#4CAF50",
+          backgroundColor: Colors.Naranja,
           color: "white",
           border: "none",
           borderRadius: "5px",

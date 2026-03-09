@@ -6,6 +6,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import CircularProgress from "@mui/material/CircularProgress";
+import Buscador from "../Filtros y Buscadores/Buscador";
+import Filtros from "../Filtros y Buscadores/Filtros";
+import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 
 const VerSolicitudesEvento = () => {
   const { evento } = useParams();
@@ -14,12 +18,20 @@ const VerSolicitudesEvento = () => {
   const { user } = useContext(UserContext);
   const Colors = useDynamicColors();
   const [recargar, setRecargar] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterState, setFilterState] = useState('');
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+  const [infoDialogOpen, setInfoDialogOpen] = useState(false);
+  const [selectedAsociacion, setSelectedAsociacion] = useState(null);
 
   const recargarComponente = () => {
     setRecargar((prev) => prev + 1);
   };
 
   useEffect(() => {
+    setLoading(true);
     fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento}`)
       .then((response) => {
         if (!response.ok) {
@@ -33,8 +45,11 @@ const VerSolicitudesEvento = () => {
       })
       .catch((error) => {
         console.error("Error al obtener las asociaciones:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  }, [asociaciones.length, evento, recargar]);
+  }, [evento, recargar]);
 
   useEffect(() => {
     fetch(`${process.env?.REACT_APP_BACK_URL}evento/${evento}`)
@@ -54,8 +69,18 @@ const VerSolicitudesEvento = () => {
   }, [evento, eventos.length, recargar]);
 
   const aceptarSolicitud = (asociacionId) => {
+    setPendingAction({
+      type: 'aceptar',
+      message: '¿Estás seguro de que deseas aceptar esta solicitud?',
+      title: 'Aceptar Solicitud',
+      asociacionId: asociacionId
+    });
+    setConfirmOpen(true);
+  };
+
+  const executeAceptarSolicitud = () => {
     fetch(
-      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionId}/aceptar`,
+      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${pendingAction.asociacionId}/aceptar`,
       {
         method: "POST",
       }
@@ -64,7 +89,7 @@ const VerSolicitudesEvento = () => {
       .then(() => {
         toast.success("Asociacion Aceptada con éxito");
       })
-      .catch((error) => toast.error("Error al Asociar Puesto"))
+      .catch((error) => toast.error("Error al Aceptar Solicitud"))
       .finally(() => {
         recargarComponente();
       });
@@ -82,16 +107,25 @@ const VerSolicitudesEvento = () => {
       .then(() => {
         toast.success("Asociacion Rechazada con éxito");
       })
-      .catch((error) => toast.error("Error al Asociar Puesto"))
+      .catch((error) => toast.error("Error al Rechazar Solicitud"))
       .finally(() => {
         recargarComponente();
       });
   };
 
   const cancelarSolicitud = (asociacionId) => {
-    console.log(asociacionId);
+    setPendingAction({
+      type: 'cancelar',
+      message: '¿Estás seguro de que deseas cancelar esta solicitud?',
+      title: 'Cancelar Solicitud',
+      asociacionId: asociacionId
+    });
+    setConfirmOpen(true);
+  };
+
+  const executeCancelarSolicitud = () => {
     fetch(
-      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionId}/cancelar`,
+      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${pendingAction.asociacionId}/cancelar`,
       {
         method: "POST",
       }
@@ -100,48 +134,106 @@ const VerSolicitudesEvento = () => {
       .then(() => {
         toast.success("Asociacion Cancelada con éxito");
       })
-      .catch((error) => toast.error("Error al Cancelar Puesto"))
+      .catch((error) => toast.error("Error al Cancelar Solicitud"))
       .finally(() => {
         recargarComponente();
       });
   };
 
+  // helper group for estados - incluir todos los estados posibles
+  const allPossibleEstados = [
+    { valor: 'PendienteDeAceptacion', etiqueta: 'Pendiente de Aceptacion' },
+    { valor: 'ConObservacion', etiqueta: 'Con Observacion' },
+    { valor: 'Aceptada', etiqueta: 'Aceptada' },
+    { valor: 'Rechazada', etiqueta: 'Rechazada' },
+    { valor: 'Cancelada', etiqueta: 'Cancelada' },
+  ];
+
+  const estadoGroup = {
+    nombre: 'estado',
+    opciones: allPossibleEstados,
+  };
+
+  // compute filtered list
+  const filteredAsociaciones = asociaciones.filter((asociacion) => {
+    const matchesSearch = searchTerm
+      ? (asociacion?.puesto?.nombreCarro?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+         asociacion?.repartidor?.nombre?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+         asociacion?.repartidor?.apellido?.toLowerCase().includes(searchTerm.toLowerCase()))
+      : true;
+    const matchesState = filterState
+      ? asociacion.estado === filterState
+      : true;
+    return matchesSearch && matchesState;
+  });
+
   const styles = {
-    mainFormEventos: {
+    row: {
       margin: 0,
+      display: "flex",
+      flexDirection: "row",
       backgroundColor: Colors.GrisAzuladoOscuro,
+      height: "100vh",
+      overflow: "hidden",
       width: "100%",
-      overflow: "hidden", // Oculta la barra de scroll
     },
-    contentContainer: {
-      paddingTop: "2rem",
-      paddingBottom: "4rem",
-      height: "100vh", // Ocupar toda la altura de la ventana
-      width: "100%",
+    colContent: {
       marginLeft: "20%",
-      overflowY: "scroll", // Permite el scroll vertical
-      scrollbarWidth: "none", // Oculta la barra de scroll en Firefox
-      msOverflowStyle: "none", // Oculta la barra en IE y Edge
+      width: "calc(100% - 20%)",
+      height: "100%",
+      overflowY: "auto",
+      msOverflowStyle: "none",
+      scrollbarWidth: "none",
+      WebkitScrollbar: { display: "none" },
     },
-    // Estilo para navegadores basados en WebKit (Chrome, Safari, Edge moderno)
-    "@global": {
-      "*::-webkit-scrollbar": {
-        display: "none", // Oculta la barra de scroll
-      },
+    container: {
+      paddingBottom: "60px",
+      marginLeft: "20px",
+      marginRight: "20px",
+      width: "calc(100% - 40px)",
+      flexDirection: "column",
     },
-    tituloSeccion: {
-      textAlign: "center",
-      marginBottom: "1.5rem",
-      color: Colors.Blanco,
+    sectionTitle: {
+      display: "flex",
+      justifyContent: "center",
+      marginBottom: "1rem",
+      paddingTop: "2rem",
       width: "100%",
+      color: Colors.Naranja,
     },
     hrStyle: {
       color: Colors.Naranja,
     },
-    card: {
-      marginBottom: "1rem",
+    breadcrumbWrapper: {
+      width: "Calc(100%)",
+      paddingTop: "0px",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    },
+    filtersContainer: {
+      width: "320px",
+      minWidth: "320px",
+      alignSelf: "flex-start",
+      height: "auto",
+      borderRadius: "8px",
+      padding: "20px",
+      paddingTop: "10px",
       marginLeft: "20px",
       marginRight: "20px",
+      marginTop: "0",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      border: `1px solid ${Colors.Naranja}`,
+    },
+    searchFilterContainer: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+      flex: "none",
+      maxWidth: "100%",
+      marginTop: "0",
+      width: "100%",
+    },
+    card: {
+      marginBottom: "1rem",
       position: "relative",
     },
     cardBody: {
@@ -190,17 +282,79 @@ const VerSolicitudesEvento = () => {
     },
     contenedorGrid: {
       textAlign: "center",
+      padding: "40px 20px",
+      margin: "40px",
+    },
+    descripcion: {
+      marginBottom: "20px",
+      fontSize: "18px",
     },
     linkAgregarEvento: {
       textDecoration: "none",
+      backgroundColor: Colors.Naranja,
+      padding: "10px 20px",
+      color: Colors.Blanco,
+      borderRadius: "5px",
+      fontWeight: "bold",
+      fontSize: "18px",
+      transition: "background-color 0.3s",
+      display: "inline-block",
     },
-    breadcrumbWrapper: {
-      width: "100%",
-      margin: "0",
-      padding: "0",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    infoCard: {
+      backgroundColor: Colors.GrisAzuladoClaro,
+      borderRadius: "10px",
+      border: `1px solid ${Colors.Naranja}`,
+      padding: "20px",
+      marginTop: "20px",
     },
+    infoRow: {
+      display: "flex",
+      marginBottom: "10px",
+      alignItems: "center",
+    },
+    infoLabel: {
+      color: Colors.Naranja,
+      fontWeight: "bold",
+      minWidth: "150px",
+      fontSize: "1rem",
+    },
+    infoValue: {
+      color: Colors.Blanco,
+      fontSize: "1rem",
+    },
+  };
+
+  const handleConfirm = () => {
+    if (!pendingAction) return;
+    
+    switch (pendingAction.type) {
+      case 'aceptar':
+        executeAceptarSolicitud();
+        break;
+      case 'cancelar':
+        executeCancelarSolicitud();
+        break;
+      default:
+        break;
+    }
+    
+    setConfirmOpen(false);
+    setPendingAction(null);
+  };
+
+  const handleCancelConfirm = () => {
+    setConfirmOpen(false);
+    setPendingAction(null);
+  };
+
+  const handleOpenInfo = (asociacion) => {
+    setSelectedAsociacion(asociacion);
+    setInfoDialogOpen(true);
+  };
+
+  const handleCloseInfo = () => {
+    setInfoDialogOpen(false);
+    setSelectedAsociacion(null);
   };
 
   const breadcrumbItems = [
@@ -210,17 +364,17 @@ const VerSolicitudesEvento = () => {
   ];
 
   return (
-    <div className="row" style={styles.mainFormEventos}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
-
-      <div className="d-flex align-items-center justify-content-center">
-        <div style={styles.contentContainer}>
-          {asociaciones.length > 0 ? (
-            <>
-              <div style={styles.tituloSeccion}>
-                <h1>Mis Solicitudes para {eventos.nombre}</h1>
-              </div>
-              <hr style={styles.hrStyle} />
+    <div>
+      <div style={styles.row}>
+        <Sidebar tipoUsuario={user?.tipoUsuario} />
+        <div style={styles.colContent}>
+          <div style={styles.sectionTitle}>
+            <h1>Mis Solicitudes para {eventos.nombre}</h1>
+          </div>
+          <hr style={styles.hrStyle} />
+          {/* main content with sidebar filters */}
+          <div style={{ display: 'flex', width: 'calc(100% - 40px)', alignItems: 'flex-start', marginRight: '20px' }}>
+            <div style={{ flex: '0 0 calc(70% - 0px)', width: 'calc(70% - 0px)' }}>
               <div style={styles.breadcrumbWrapper}>
                 <Breadcrumb
                   items={breadcrumbItems}
@@ -230,7 +384,13 @@ const VerSolicitudesEvento = () => {
                   }}
                 />
               </div>
-              {asociaciones.map((asociacion, index) => (
+              <div style={styles.container}>
+                {loading ? (
+                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
+                    <CircularProgress style={{ color: Colors.Naranja }} />
+                  </div>
+                ) : filteredAsociaciones.length > 0 ? (
+                  filteredAsociaciones.map((asociacion, index) => (
                 <div style={styles.card} key={index}>
                   <div style={styles.cardEstadoProductor}>
                     {asociacion?.estado === "PendienteDeAceptacion"
@@ -248,21 +408,17 @@ const VerSolicitudesEvento = () => {
                               ", " +
                               asociacion?.repartidor?.apellido}
                         </h5>
-                        <p style={styles.cardDescripcion}>
-                          {asociacion?.puesto?.id
-                            ? `ID de Carro: ${asociacion?.puesto?.id}`
-                            : `ID de Repartidor: ${asociacion?.repartidor?.id}`}
-                        </p>
                         <p style={styles.cardText}>
+                          <strong>Teléfono:</strong>{" "}
                           {asociacion?.puesto?.telefonoCarro
-                            ? `Teléfono de Carro: ${asociacion?.puesto?.telefonoCarro}`
-                            : `Teléfono de Repartidor: ${asociacion?.repartidor?.telefono}`}
+                            ? asociacion?.puesto?.telefonoCarro
+                            : asociacion?.repartidor?.telefono}
                         </p>
-                        <p style={styles.cardText}>
-                          {asociacion?.puesto?.id
-                            ? `${asociacion?.puesto?.tipoNegocio}`
-                            : ``}
-                        </p>
+                        {asociacion?.puesto?.tipoNegocio && (
+                          <p style={styles.cardText}>
+                            <strong>Tipo de Negocio:</strong> {asociacion?.puesto?.tipoNegocio}
+                          </p>
+                        )}
                       </div>
 
                       <div className="col-md-12" style={styles.buttonContainer}>
@@ -300,7 +456,7 @@ const VerSolicitudesEvento = () => {
                         <button
                           className="btn btn-secondary"
                           style={styles.button}
-                          disabled
+                          onClick={() => handleOpenInfo(asociacion)}
                         >
                           Info
                         </button>
@@ -308,30 +464,146 @@ const VerSolicitudesEvento = () => {
                     </div>
                   </div>
                 </div>
-              ))}
-            </>
-          ) : (
-            <div style={styles.contenedorGrid}>
-              <div style={styles.tituloSeccion}>
-                <h2>Solicitudes</h2>
+              ))
+                ) : (
+                  <div style={{ textAlign: "center", padding: "40px 20px", margin: "40px" }}>
+                    <div style={{ fontSize: "1.5rem", color: Colors.Naranja }}>
+                      <h2 style={{ color: Colors.Naranja }}>Solicitudes</h2>
+                    </div>
+                    <div style={{ marginBottom: "20px", fontSize: "18px" }}>
+                      <p style={{ color: "#FFFFFF", margin: "0" }}>
+                        Este evento no tiene solicitudes pendientes. Invita a tus
+                        puestos favoritos a unirse.
+                      </p>
+                    </div>
+                    <Link
+                      to={`/inicio`}
+                      style={styles.linkAgregarEvento}
+                    >
+                      Enviar Invitación
+                    </Link>
+                  </div>
+                )}
               </div>
-              <div>
-                <p>
-                  Este evento no tiene solicitudes pendientes. Invita a tus
-                  puestos favoritos a unirse.
-                </p>
-              </div>
-              <Link
-                to={`/inicio`}
-                style={styles.linkAgregarEvento}
-                className="LinkAgregarEvento"
-              >
-                Enviar Invitación
-              </Link>
             </div>
-          )}
+            {/* sidebar */}
+            <div style={{ ...styles.filtersContainer, flex: '0 0 calc(30% - 0px)', width: 'calc(30% - 0px)', paddingTop: "10px" }}>
+              <div style={{ ...styles.searchFilterContainer, marginTop: '10px' }}>
+                <Buscador
+                  placeholder="Buscar por nombre..."
+                  onBuscar={setSearchTerm}
+                  style={{ display: 'flex', width: '100%' }}
+                />
+                <Filtros
+                  gruposFiltros={[estadoGroup]}
+                  onFiltrar={(filters) => setFilterState(filters.estado || '')}
+                  style={{ display: 'flex', width: '100%' }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Dialog de Confirmación */}
+      <ConfirmDialog
+        open={confirmOpen}
+        title={pendingAction?.title || 'Confirmar Acción'}
+        message={pendingAction?.message || '¿Estás seguro de que deseas realizar esta acción?'}
+        onConfirm={handleConfirm}
+        onCancel={handleCancelConfirm}
+      />
+
+      {/* Dialog de Información */}
+      {selectedAsociacion && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: infoDialogOpen ? 'flex' : 'none',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+        }}>
+          <div style={{
+            backgroundColor: Colors.GrisAzuladoClaro,
+            borderRadius: '10px',
+            border: `2px solid ${Colors.Naranja}`,
+            padding: '30px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto',
+          }}>
+            <h2 style={{ color: Colors.Naranja, marginBottom: '20px', textAlign: 'center' }}>Detalles de la Solicitud</h2>
+            
+            <div style={styles.infoRow}>
+              <span style={styles.infoLabel}>Nombre:</span>
+              <span style={styles.infoValue}>
+                {selectedAsociacion?.puesto?.nombreCarro ||
+                  `${selectedAsociacion?.repartidor?.nombre} ${selectedAsociacion?.repartidor?.apellido}`}
+              </span>
+            </div>
+
+            <div style={styles.infoRow}>
+              <span style={styles.infoLabel}>Estado:</span>
+              <span style={styles.infoValue}>
+                {selectedAsociacion?.estado === 'PendienteDeAceptacion'
+                  ? 'Pendiente de Aceptación'
+                  : selectedAsociacion?.estado === 'ConObservacion'
+                  ? 'Con Observación'
+                  : selectedAsociacion?.estado}
+              </span>
+            </div>
+
+            {selectedAsociacion?.puesto && (
+              <>
+                <h3 style={{ color: Colors.Naranja, marginTop: '20px', fontSize: '1.1rem' }}>Información del Puesto</h3>
+                <div style={styles.infoRow}>
+                  <span style={styles.infoLabel}>Teléfono:</span>
+                  <span style={styles.infoValue}>{selectedAsociacion?.puesto?.telefonoCarro}</span>
+                </div>
+                <div style={styles.infoRow}>
+                  <span style={styles.infoLabel}>Tipo de Negocio:</span>
+                  <span style={styles.infoValue}>{selectedAsociacion?.puesto?.tipoNegocio}</span>
+                </div>
+              </>
+            )}
+
+            {selectedAsociacion?.repartidor && (
+              <>
+                <h3 style={{ color: Colors.Naranja, marginTop: '20px', fontSize: '1.1rem' }}>Información del Repartidor</h3>
+                <div style={styles.infoRow}>
+                  <span style={styles.infoLabel}>Teléfono:</span>
+                  <span style={styles.infoValue}>{selectedAsociacion?.repartidor?.telefono}</span>
+                </div>
+              </>
+            )}
+
+            <div style={{ display: 'flex', gap: '10px', marginTop: '30px', justifyContent: 'center' }}>
+              <button
+                onClick={handleCloseInfo}
+                style={{
+                  backgroundColor: Colors.Naranja,
+                  color: Colors.Blanco,
+                  border: 'none',
+                  padding: '10px 20px',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: 'bold',
+                }}
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );

@@ -64,6 +64,8 @@ const ListadoPuestosEncargado = () => {
       alignItems: "flex-start",
       padding: "0",
       gap: "20px",
+      paddingLeft: "20px",
+      paddingRight: "20px",
     },
     cardsContainer: {
       flex: 1,

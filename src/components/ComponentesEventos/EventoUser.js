@@ -185,7 +185,11 @@ const EventoUser = ({ evento }) => {
           <div style={styles.cardBody}>
             <div style={styles.imageContainer}>
               <img
-                src={evento.img || logoevento}
+                src={
+                  evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
+                    ? evento.img
+                    : logoevento
+                }
                 alt="Logo del Evento"
                 style={styles.img}
                 onError={(e) => {

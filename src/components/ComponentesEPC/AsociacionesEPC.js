@@ -8,12 +8,29 @@ import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/logoevento.webp";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
+import Buscador from "../Filtros y Buscadores/Buscador";
+import Filtros from "../Filtros y Buscadores/Filtros";
+import { CircularProgress } from "@mui/material";
 
 const AsociacionesEPC = () => {
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
   const [, setIsPendienteDeAceptacion] = useState(false);
   const [asociaciones, setAsociaciones] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterState, setFilterState] = useState('');
+  // helper grupo for estados
+  const estadoGroup = {
+    nombre: 'estado',
+    opciones: Array.from(new Set(asociaciones.map((a) => a.estado))).map((e) => ({
+      valor: e,
+      etiqueta: e ? e.replace(/([A-Z])/g, ' $1').trim() : e,
+    })),
+  };
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [toCancelId, setToCancelId] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const Colors = useDynamicColors();
 
   useEffect(() => {
@@ -21,6 +38,7 @@ const AsociacionesEPC = () => {
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 
+      setIsLoading(true);
       fetch(
         `${process.env?.REACT_APP_BACK_URL}asociacion/buscar/${user.consumidorId}`,
         {
@@ -34,7 +52,8 @@ const AsociacionesEPC = () => {
           setAsociaciones(data.data.asociaciones);
           console.log(data.data.asociaciones);
         })
-        .catch((error) => console.log("No existen eventos.", error));
+        .catch((error) => console.log("No existen eventos.", error))
+        .finally(() => setIsLoading(false));
     }
   }, [user]);
 
@@ -52,23 +71,47 @@ const AsociacionesEPC = () => {
   }, [asociaciones]);
 
   const cancelarAsociacion = (asociacionID) => {
+    // open confirmation dialog
+    setToCancelId(asociacionID);
+    setConfirmOpen(true);
+  };
+
+  const doCancel = () => {
+    if (!toCancelId) return;
     fetch(
-      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionID}/cancelar`,
+      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${toCancelId}/cancelar`,
       {
         method: "POST",
       }
-    ).then((response) => {
-      if (response.ok) {
-        toast.success("Asociacion Cancelada correctamente");
-        window.location.reload();
-      } else {
-        response.json().then((errorData) => {
-          const errorMessage = errorData.message || "Ha ocurrido un error";
-          toast.error(errorMessage);
-        });
-      }
-    });
+    )
+      .then((response) => {
+        if (response.ok) {
+          toast.success("Asociacion Cancelada correctamente");
+          window.location.reload();
+        } else {
+          response.json().then((errorData) => {
+            const errorMessage = errorData.message || "Ha ocurrido un error";
+            toast.error(errorMessage);
+          });
+        }
+      })
+      .finally(() => {
+        setConfirmOpen(false);
+        setToCancelId(null);
+      });
   };
+
+  // compute filtered list
+  const filteredEventos = eventos.filter((evento) => {
+    const asociacion = asociaciones.find((a) => a.eventoId === evento.id);
+    const matchesSearch = searchTerm
+      ? evento.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
+    const matchesState = filterState
+      ? asociacion && asociacion.estado === filterState
+      : true;
+    return matchesSearch && matchesState;
+  });
 
   const styles = {
     row: {
@@ -82,7 +125,7 @@ const AsociacionesEPC = () => {
     },
     colContent: {
       marginLeft: "20%",
-      width: "100%",
+      width: "calc(100% - 20%)",
       height: "100%", // Asegura que el contenedor de contenido ocupe toda la altura disponible
       overflowY: "auto", // Permite el desplazamiento solo si es necesario
       msOverflowStyle: "none", // IE and Edge
@@ -91,6 +134,8 @@ const AsociacionesEPC = () => {
     },
     container: {
       paddingBottom: "60px",
+      paddingLeft: "20px",
+      paddingRight: "20px",
       width: "100%",
       flexDirection: "column", // Asegura que el contenido esté alineado de arriba hacia abajo
     },
@@ -107,8 +152,8 @@ const AsociacionesEPC = () => {
       borderRadius: "10px",
       marginBottom: "1rem",
       backgroundColor: Colors.GrisAzuladoClaro,
-      marginLeft: "20px",
-      marginRight: "20px",
+      marginLeft: "0px",
+      marginRight: "0px",
       display: "flex",
       flexDirection: "Column",
       position: "relative",
@@ -214,6 +259,29 @@ const AsociacionesEPC = () => {
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
+    filtersContainer: {
+      width: "320px",
+      minWidth: "320px",
+      alignSelf: "flex-start",
+      height: "auto",
+      borderRadius: "8px",
+      padding: "20px",
+      paddingTop: "10px",
+      marginLeft: "20px",
+      marginRight: "20px",
+      marginTop: "0",
+      backgroundColor: Colors.GrisAzuladoClaro,
+      border: `1px solid ${Colors.Naranja}`,
+    },
+    searchFilterContainer: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+      flex: "none",
+      maxWidth: "100%",
+      marginTop: "0",
+      width: "100%",
+    },
   };
 
   const breadcrumbItems = [
@@ -230,20 +298,26 @@ const AsociacionesEPC = () => {
             <h1>Mis Asociaciones</h1>
           </div>
           <hr style={{ color: Colors.Naranja }} />
-          <div style={styles.breadcrumbWrapper}>
-            <Breadcrumb
-              items={breadcrumbItems}
-              style={{
-                width: "Calc(100% - 40px)",
-                marginLeft: "Calc(20px)",
-              }}
-            />
-          </div>
-          <div style={styles.container}>
-            <div>
-              {eventos.length > 0 ? (
+          {/* main content with sidebar filters */}
+          <div style={{ display: 'flex', width: 'calc(100% - 40px)', alignItems: 'flex-start', marginRight: '20px' }}>
+            <div style={{ flex: '0 0 calc(70% - 0px)', width: 'calc(70% - 0px)' }}>
+            <div style={styles.breadcrumbWrapper}>
+              <Breadcrumb
+                items={breadcrumbItems}
+                style={{
+                  width: "Calc(100% - 40px)",
+                  marginLeft: "Calc(20px)",
+                }}
+              />
+            </div>
+          <div style={{...styles.container}}>
+              {isLoading ? (
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
+                  <CircularProgress style={{ color: Colors.Naranja }} />
+                </div>
+              ) : filteredEventos.length > 0 ? (
                 <div style={styles.rowInner}>
-                  {eventos.map((evento, index) => {
+                  {filteredEventos.map((evento, index) => {
                     const asociacion = asociaciones.find(
                       (asoc) => asoc.eventoId === evento.id
                     );
@@ -252,7 +326,11 @@ const AsociacionesEPC = () => {
                         <div style={styles.cardBody}>
                           <div style={styles.imgContainer}>
                             <img
-                              src={evento.img || imgDefault}
+                              src={
+                                evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
+                                  ? evento.img
+                                  : imgDefault
+                              }
                               alt="Logo del Evento"
                               style={styles.img}
                               onError={(e) => {
@@ -323,10 +401,33 @@ const AsociacionesEPC = () => {
                   </Link>
                 </div>
               )}
+          </div>
+            </div>
+            {/* sidebar */}
+            <div style={{...styles.filtersContainer, flex:'0 0 calc(30% - 0px)', width: 'calc(30% - 0px)',paddingTop:"10px"}}>
+              <div style={{...styles.searchFilterContainer, marginTop: '10px'}}>
+                <Buscador
+                  placeholder="Buscar eventos..."
+                  onBuscar={setSearchTerm}
+                  style={{ display: 'flex', width: '100%' }}
+                />
+                <Filtros
+                  gruposFiltros={[estadoGroup]}
+                  onFiltrar={(f) => setFilterState(f.estado || '')}
+                  titulo="ESTADOS"
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <ConfirmDialog
+        open={confirmOpen}
+        title="Confirmar cancelación"
+        message="¿Está seguro que desea cancelar esta asociación?"
+        onConfirm={doCancel}
+        onCancel={() => setConfirmOpen(false)}
+      />
       <Footer />
     </div>
   );

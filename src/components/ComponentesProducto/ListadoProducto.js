@@ -9,7 +9,7 @@ import useDynamicColors from "../../UseDinamicColors";
 import { useLocation } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
-import { FaEyeSlash, FaPlus } from "react-icons/fa";
+import { FaEyeSlash, FaPlus, FaSearch } from "react-icons/fa";
 
 const ListadoProducto = () => {
   const { id } = useParams();
@@ -51,14 +51,20 @@ const ListadoProducto = () => {
       backgroundColor: Colors.GrisAzuladoOscuro,
       minHeight: "100vh",
     },
+    mainContent: {
+      display: "flex",
+      flexDirection: "column",
+      flexGrow: 1,
+      marginLeft: "20%",
+    },
     header: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       marginBottom: "1rem",
       color: Colors.Naranja,
-      marginLeft: "20%",
-      width: "80%",
+      paddingLeft: "20px",
+      paddingRight: "20px",
     },
     pageTitle: {
       paddingTop: "1rem",
@@ -100,16 +106,15 @@ const ListadoProducto = () => {
       alignItems: "flex-start",
       justifyContent: "flex-start",
       paddingTop: "1rem",
-      width: "80%",
-      marginLeft: "20%",
       paddingBottom: "50px",
       gap: "20px",
+      paddingLeft: "20px",
+      paddingRight: "20px",
     },
     cardsContainer: {
       flex: 1,
       display: "flex",
       flexDirection: "column",
-      width: "70%",
       gap: "10px",
       paddingRight: "20px",
     },
@@ -143,10 +148,13 @@ const ListadoProducto = () => {
       color: Colors.Naranja,
     },
     breadcrumbWrapper: {
-      marginLeft: "20%",
-      width: "Calc(80%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      margin: "0px auto 10px 0px",
+      backgroundColor: "rgb(43, 43, 43)",
+      width: "calc(100% - 0px)",
+      padding: "8px 16px",
+      borderRadius: "10px",
+      border: "1px solid rgb(197, 161, 69)",
+      /* no top padding beyond specified, and remain flushed */
     },
   };
 
@@ -160,7 +168,7 @@ const ListadoProducto = () => {
     <div>
       <div style={styles.mainContainer}>
         <Sidebar tipoUsuario={user?.tipoUsuario} />
-        <div>
+        <div style={styles.mainContent}>
           <div style={styles.header}>
             <h1 style={styles.pageTitle}>
               {carrito?.nombreCarro
@@ -175,35 +183,23 @@ const ListadoProducto = () => {
             </Link>
           </div>
           <hr style={styles.divider} />
-          <div style={styles.breadcrumbWrapper}>
-            <Breadcrumb
-              items={breadcrumbItems}
-              style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
-            />
-          </div>
           <div style={styles.contentContainer}>
-            <div style={styles.sidebarContainer}>
-              <input
-                type="text"
-                placeholder="Buscar productos..."
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-                style={{
-                  padding: "8px",
-                  borderRadius: "4px",
-                  border: `1px solid ${Colors.Gris}`,
-                  width: "100%",
-                }}
-              />
-              <Link
-                to={`/registrar-productos/${id}`}
-                style={styles.sidebarButton}
-              >
-                <FaPlus style={{ marginRight: "6px" }} />
-                Agregar Producto
-              </Link>
-            </div>
+            {/* product list left, search/sidebar right */}
             <div style={styles.cardsContainer}>
+              {/* breadcrumb now inside cards area */}
+              <div style={styles.breadcrumbWrapper}>
+                <Breadcrumb
+                  items={breadcrumbItems}
+                  style={{
+                    width: "100%",
+                    margin: "0",
+                    padding: "0",
+                    backgroundColor: "transparent",
+                    border: "none",
+                    /* ensure child has no extra gap */
+                  }}
+                />
+              </div>
               {isLoading ? (
                 <LoandingComponent />
               ) : Array.isArray(productos) &&
@@ -231,6 +227,46 @@ const ListadoProducto = () => {
                   No tienes ningún producto asociado a este carrito.
                 </h2>
               )}
+            </div>
+            <div style={styles.sidebarContainer}>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <input
+                  type="text"
+                  placeholder="Buscar productos..."
+                  value={busqueda}
+                  onChange={(e) => setBusqueda(e.target.value)}
+                  style={{
+                    flex: 1,
+                    padding: "8px",
+                    borderRadius: "4px",
+                    border: `1px solid ${Colors.Gris}`,
+                  }}
+                />
+                <button
+                  onClick={() => { /* filtering already automatic */ }}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "4px",
+                    border: "none",
+                    backgroundColor: Colors.Verde,
+                    color: Colors.BlancoEnBlanco,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "4px",
+                  }}
+                >
+                  <FaSearch />
+                  Buscar
+                </button>
+              </div>
+              <Link
+                to={`/registrar-productos/${id}`}
+                style={styles.sidebarButton}
+              >
+                <FaPlus style={{ marginRight: "6px" }} />
+                Agregar Producto
+              </Link>
             </div>
           </div>
         </div>

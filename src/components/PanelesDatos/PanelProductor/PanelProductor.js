@@ -86,6 +86,7 @@ const PanelProductor = () => {
       height: "70vh",
       backgroundColor: Colors.GrisAzuladoOscuro,
       marginLeft: "20%",
+      width: "80%",
     },
     graficaContainer: {
       display: "grid",
@@ -100,7 +101,9 @@ const PanelProductor = () => {
         "grafica grafica grafica grafica toppuestos toppuestos toppuestos"
         "grafica grafica grafica grafica toppuestos toppuestos toppuestos"
       `,
-      margin : "0 10px",
+      width: "100%",
+      paddingLeft: "20px",
+      paddingRight: "20px",
     },
     div2: {
       gridArea: "div2",
@@ -110,7 +113,7 @@ const PanelProductor = () => {
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
       backgroundPosition: "100% 25%",
-      border: "2px solid white",
+      border: `2px solid ${Colors.Naranja}`,
       position: "relative",
       display: "flex",
       flexDirection: "column",
@@ -124,8 +127,7 @@ const PanelProductor = () => {
       gridArea: "grafica",
       borderRadius: "20px",
       marginBottom: "20px",
-      marginLeft: "10px",
-      border: "2px solid white",
+      border: `2px solid ${Colors.Naranja}`,
       overflow: "hidden",
     },
     toppuestos: {
@@ -134,8 +136,7 @@ const PanelProductor = () => {
       borderRadius: "20px",
       background: Colors.GrisAzuladoClaro,
       marginBottom: "20px",
-      marginRight: "10px",
-      border: "2px solid white",
+      border: `2px solid ${Colors.Naranja}`,
     },
     footer: {
       marginTop: "auto",
