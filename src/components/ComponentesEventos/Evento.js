@@ -96,7 +96,7 @@ const Evento = ({ evento,recargar }) => {
               </div>
               
               <div>
-                <h6 className={`card-text`}>{`${evento.localidad} - ${evento.provincia}`}</h6>
+                <h6 className={`card-text`}>{`${evento.ubicacion}, ${evento.localidad}, ${evento.provincia}`}</h6>
               </div>
               <div>
                 <h6 className={`card-text`}>{format(new Date(evento.fechaInicio), "dd/MM/yyyy")}</h6>

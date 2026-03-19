@@ -214,7 +214,7 @@ const EventoUser = ({ evento }) => {
               <p style={styles.title}>{evento.nombre}</p>
               <p style={styles.descripcion}>{evento.descripcion}</p>
               <p style={styles.text}>
-                {evento.ubicacion} - {evento.localidad}, {evento.provincia}
+                {evento.ubicacion}, {evento.localidad}, {evento.provincia}
               </p>
               <p style={styles.distance}>A 1km de distancia</p>
 

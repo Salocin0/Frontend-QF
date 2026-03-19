@@ -220,9 +220,29 @@ const RegistrarEvento5 = () => {
     );
   };
 
-  const handleMapPick = ({ lat, lng }) => {
+  const handleMapPick = async ({ lat, lng }) => {
     setLatitud(lat.toFixed(6));
     setLongitud(lng.toFixed(6));
+
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+      );
+      const data = await response.json();
+      if (data && data.address) {
+        const { road, house_number, city, town, village, state } = data.address;
+        const street = road ? (house_number ? `${road} ${house_number}` : road) : "";
+        const locality = city || town || village || "";
+        const province = state || "";
+
+        const cleanAddress = [street, locality, province].filter(Boolean).join(", ");
+        if (cleanAddress) {
+          setNombre(cleanAddress);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching address:", error);
+    }
   };
 
   const handleSave = async () => {
