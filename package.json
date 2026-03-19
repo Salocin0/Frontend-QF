@@ -50,7 +50,7 @@
   },
   "scripts": {
     "dev": "react-scripts start",
-    "start": "serve -s build",
+    "start": "serve -s build -l $PORT",
     "build": "cross-env CI=false react-scripts build --no-warnings",
     "build:win": "set \"CI=false\" && react-scripts build --no-warnings",
     "serve": "serve -s build",
