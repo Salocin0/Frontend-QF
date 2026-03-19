@@ -66,10 +66,17 @@ const ListadoEventosProductor = () => {
     navigate(`/registrar-evento2`);
   };
 
+  const normalizarEstadoFiltro = (estado) => {
+    if (!estado) return estado;
+    return estado.startsWith("EnPreparacion") ? "EnPreparacion" : estado;
+  };
+
   // helper group for estados
   const estadoGroup = {
     nombre: 'estado',
-    opciones: Array.from(new Set(eventos.map((e) => e.estado))).map((estado) => ({
+    opciones: Array.from(
+      new Set(eventos.map((e) => normalizarEstadoFiltro(e.estado)))
+    ).map((estado) => ({
       valor: estado,
       etiqueta: estado ? estado.replace(/([A-Z])/g, ' $1').trim() : estado,
     })),
@@ -81,7 +88,7 @@ const ListadoEventosProductor = () => {
       ? evento.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
     const matchesState = filterState
-      ? evento.estado === filterState
+      ? normalizarEstadoFiltro(evento.estado) === filterState
       : true;
     return matchesSearch && matchesState;
   });
