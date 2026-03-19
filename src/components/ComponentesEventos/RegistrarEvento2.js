@@ -483,7 +483,7 @@ const RegistrarEvento2 = () => {
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Eventos", url: "/listado-eventos-productor" },
-    { title: "Crear un Evento (1/3)", url: "registrar-evento2" },
+    { title: "Crear un Evento (1/4)", url: "registrar-evento2" },
   ];
 
   return (

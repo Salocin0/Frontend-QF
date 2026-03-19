@@ -1,11 +1,49 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import L from "leaflet";
+import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
 import Sidebar from "../ComponentesGenerales/Sidebar";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import useDynamicColors from "../../UseDinamicColors";
 import CircularProgress from "@mui/material/CircularProgress";
+import "leaflet/dist/leaflet.css";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
+
+const toNumber = (value) => {
+  const parsed = Number(String(value ?? "").replace(",", "."));
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+const MapClickHandler = ({ onPick }) => {
+  useMapEvents({
+    click: (event) => {
+      onPick(event.latlng);
+    },
+  });
+
+  return null;
+};
+
+const RecenterMap = ({ center }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(center, map.getZoom(), { animate: true });
+  }, [center, map]);
+
+  return null;
+};
 
 const RegistrarEvento5 = () => {
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
@@ -180,6 +218,11 @@ const RegistrarEvento5 = () => {
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
+  };
+
+  const handleMapPick = ({ lat, lng }) => {
+    setLatitud(lat.toFixed(6));
+    setLongitud(lng.toFixed(6));
   };
 
   const handleSave = async () => {
@@ -382,6 +425,36 @@ const RegistrarEvento5 = () => {
       justifyContent: "flex-end",
       gap: "10px",
       marginTop: "10px",
+      flexWrap: "wrap",
+    },
+    mapHint: {
+      fontSize: "0.9rem",
+      color: "rgba(255,255,255,0.85)",
+      marginTop: "4px",
+      marginBottom: "8px",
+    },
+    mapContainer: {
+      width: "100%",
+      height: "260px",
+      borderRadius: "10px",
+      overflow: "hidden",
+      border: `1px solid ${Colors.Naranja}`,
+      marginTop: "8px",
+      marginBottom: "8px",
+    },
+    map: {
+      width: "100%",
+      height: "100%",
+    },
+    mobileHint: {
+      marginTop: "14px",
+      marginBottom: "0",
+      padding: "10px 12px",
+      borderRadius: "8px",
+      border: `1px dashed ${Colors.Naranja}`,
+      color: Colors.Blanco,
+      backgroundColor: "rgba(0,0,0,0.18)",
+      fontSize: "0.95rem",
     },
     suggestions: {
       listStyle: "none",
@@ -431,6 +504,13 @@ const RegistrarEvento5 = () => {
     { title: "Mis Eventos", url: "/listado-eventos-productor" },
     { title: "Crear un Evento (4/4)", url: `/registrar-evento5/${effectiveEventoId}` },
   ];
+
+  const latitudParsed = toNumber(latitud);
+  const longitudParsed = toNumber(longitud);
+  const mapCenter =
+    latitudParsed !== null && longitudParsed !== null
+      ? [latitudParsed, longitudParsed]
+      : [-34.603722, -58.381592];
 
   return (
     <div style={styles.containerFluid}>
@@ -518,6 +598,11 @@ const RegistrarEvento5 = () => {
                 {isFinishing ? "Finalizando..." : "Finalizar Registro"}
               </button>
             </div>
+
+            <p style={styles.mobileHint}>
+              Recomendacion: para finalizar esta configuracion con mayor comodidad,
+              te sugerimos hacerlo desde el telefono.
+            </p>
           </div>
         </div>
       </div>
@@ -570,6 +655,21 @@ const RegistrarEvento5 = () => {
                 value={longitud}
                 onChange={(e) => setLongitud(e.target.value)}
               />
+            </div>
+
+            <p style={styles.mapHint}>Marca el punto exacto haciendo click en el mapa.</p>
+            <div style={styles.mapContainer}>
+              <MapContainer center={mapCenter} zoom={14} style={styles.map} scrollWheelZoom>
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                />
+                <RecenterMap center={mapCenter} />
+                <MapClickHandler onPick={handleMapPick} />
+                {latitudParsed !== null && longitudParsed !== null && (
+                  <Marker position={[latitudParsed, longitudParsed]} />
+                )}
+              </MapContainer>
             </div>
 
             <div style={styles.rowButtons}>
