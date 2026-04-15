@@ -111,7 +111,7 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario }) => 
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
       .then((response) => response.json())
       .then((data) => {
-        setProvincias(data.provincias);
+        setProvincias(data.provincias.sort((a, b) => a.nombre.localeCompare(b.nombre)));
       })
       .catch((error) => {
         console.error(error);
@@ -309,11 +309,11 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario }) => 
                       required
                     >
                       <option value="" disabled>Selecciona tu provincia</option>
-                      {provincias.map((prov) => (
-                        <option key={prov.nombre} value={prov.nombre}>
-                          {prov.nombre}
-                        </option>
-                      ))}
+                       {provincias.map((prov) => (
+                         <option key={prov.id} value={prov.nombre}>
+                           {prov.nombre}
+                         </option>
+                       ))}
                     </select>
                   </div>
                   <div style={styles.formGroup}>
@@ -328,11 +328,11 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario }) => 
                       required
                     >
                       <option value="" disabled>Selecciona tu localidad</option>
-                      {localidades.map((loc) => (
-                        <option key={loc.nombre} value={loc.nombre}>
-                          {loc.nombre}
-                        </option>
-                      ))}
+                       {localidades.map((loc, index) => (
+                         <option key={loc.id} value={loc.nombre}>
+                           {loc.nombre}
+                         </option>
+                       ))}
                     </select>
                   </div>
                   <div style={styles.formGroup}>

@@ -18,7 +18,7 @@ const HabilitarUsuario = () => {
   };
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/user/habilitar`, {
+    fetch(`${process.env.REACT_APP_BACK_URL}user/habilitar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
@@ -37,7 +37,7 @@ const HabilitarUsuario = () => {
   }, [id]);
 
   const handleEnviarCodigo = () => {
-    fetch(`http://127.0.0.1:8000/user/habilitar/`, {
+    fetch(`${process.env.REACT_APP_BACK_URL}user/habilitar/`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, email: emailcompleto }),

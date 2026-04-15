@@ -416,8 +416,8 @@ const UserProfileForm = ({
           <option value={localidad} disabled>
             {localidad}
           </option>
-          {filteredLocalidades.map((loc) => (
-            <option key={loc.nombre} value={loc.nombre}>
+          {filteredLocalidades.map((loc, index) => (
+            <option key={`${loc.nombre}-${index}`} value={loc.nombre}>
               {loc.nombre}
             </option>
           ))}

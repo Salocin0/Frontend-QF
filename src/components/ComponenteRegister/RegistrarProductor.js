@@ -173,7 +173,7 @@ const RegistroProductor = () => {
       },
     };
     console.log(JSON.stringify(json_consumidor));
-    fetch("http://127.0.0.1:8000/user/", {
+    fetch(`${process.env.REACT_APP_BACK_URL}user/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(json_consumidor),
@@ -302,8 +302,8 @@ const RegistroProductor = () => {
                     <option value="" disabled>
                       Seleccione una localidad
                     </option>
-                    {filteredLocalidades.map((loc) => (
-                      <option key={loc.nombre} value={loc.nombre}>
+                    {filteredLocalidades.map((loc, index) => (
+                      <option key={`${loc.nombre}-${index}`} value={loc.nombre}>
                         {loc.nombre}
                       </option>
                     ))}

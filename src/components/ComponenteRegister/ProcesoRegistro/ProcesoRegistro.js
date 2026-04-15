@@ -90,7 +90,7 @@ const ProcesoRegistro = () => {
       console.log(JSON.stringify(datosRegistro));
       console.log(datosRegistro.tokenWeb);
 
-      fetch("http://127.0.0.1:8000/user/", {
+      fetch(`${process.env.REACT_APP_BACK_URL}user/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -37,9 +37,10 @@ const ListadoEventosUsers = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setEventos(data.data);
-          setFilteredEventos(data.data);
-          generateRows(data.data);
+          const eventosData = Array.isArray(data.data) ? data.data : [];
+          setEventos(eventosData);
+          setFilteredEventos(eventosData);
+          generateRows(eventosData);
           return fetch(
             `${process.env?.REACT_APP_BACK_URL}evento/enEstado/Confirmado`,
             {
@@ -50,8 +51,9 @@ const ListadoEventosUsers = () => {
         })
         .then((response) => response.json())
         .then((confirmadoData) => {
+          const confirmadoEventos = Array.isArray(confirmadoData.data) ? confirmadoData.data : [];
           setEventos((prev) => {
-            const allEventos = [...prev, ...confirmadoData.data];
+            const allEventos = [...prev, ...confirmadoEventos];
             generateRows(allEventos);
             return allEventos;
           });
@@ -65,10 +67,11 @@ const ListadoEventosUsers = () => {
   }, [user]);
 
   const generateRows = (eventosList) => {
-    const totalEventos = Math.ceil(eventosList.length / 4) * 4;
+    const list = Array.isArray(eventosList) ? eventosList : [];
+    const totalEventos = Math.ceil(list.length / 4) * 4;
     const eventosConNulos = [
-      ...eventosList,
-      ...Array(totalEventos - eventosList.length).fill(null),
+      ...list,
+      ...Array(totalEventos - list.length).fill(null),
     ];
 
     const generatedRows = [];
@@ -184,21 +187,19 @@ const ListadoEventosUsers = () => {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      justifyContent: "center",
       height: "100%",
       width: "100%",
       overflowY: "auto",
       overflowX: "hidden",
     },
     eventsWrapper: {
-      height: "100%",
+      minHeight: "100%",
       width: "100%",
       display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "center",
+      flexDirection: "column",
       gap: "10px",
       boxSizing: "border-box",
-      overflowY: "scroll",
+      overflowY: "auto",
       overflowX: "hidden",
       scrollbarWidth: "none",
       msOverflowStyle: "none",

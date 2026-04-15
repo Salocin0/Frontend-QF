@@ -420,8 +420,8 @@ const ConsultarEvento = () => {
                     <option value="" disabled>
                       Seleccione una localidad
                     </option>
-                    {localidades.map((loc) => (
-                      <option key={loc.nombre} value={loc.nombre}>
+                    {localidades.map((loc, index) => (
+                      <option key={`${loc.nombre}-${index}`} value={loc.nombre}>
                         {loc.nombre}
                       </option>
                     ))}

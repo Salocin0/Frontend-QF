@@ -7,6 +7,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import usedynamicColors from "../../UseDinamicColors";
 import Tabs from "./PedidosRepartidor/Tabs";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import Footer from "../ComponentesGenerales/Footer";
 
 const ListadoPedidos = () => {
   const [loanding, setLoanding] = useState(false);
@@ -95,7 +96,7 @@ const ListadoPedidos = () => {
     contentCol: {
       padding: 0,
       margin: 0,
-      marginLeft: "Calc(20% - 10px)",
+      marginLeft: "20%",
     },
     tituloSeccion: {
       display: "flex",
@@ -130,9 +131,12 @@ const ListadoPedidos = () => {
       msOverflowStyle: "none",
     },
     breadcrumbWrapper: {
-      width: "100%",
+      width: "Calc(100% - 20px)",
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      marginLeft: "10px",
+      display: "flex",
+      justifyContent: "center",
     },
   };
 
@@ -152,10 +156,7 @@ const ListadoPedidos = () => {
         </div>
         <hr style={styles.divider} />
         <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "Calc(100% - 50px)" }}
-          />
+          <Breadcrumb items={breadcrumbItems} />
         </div>
 
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -182,6 +183,8 @@ const ListadoPedidos = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

@@ -71,23 +71,23 @@ const ComoFunciona = () => {
           <div style={styles.itemsContainer}>
             <div style={styles.item}>
               <span className="circleicon" style={styles.icon}><FaCalendarAlt /></span>
-              <p style={styles.text}>Selecciona el evento en el que deseas realizar tu pedido</p>
+              <p style={styles.text}>Seleccioná el evento en el que deseas realizar tu pedido.</p>
             </div>
 
             <div style={styles.item}>
               <span className="circleicon" style={styles.icon}><FaStore /></span>
-              <p style={styles.text}>Selecciona el puesto al cual quieres hacer el pedido</p>
+              <p style={styles.text}>Elegí el puesto de comida de tu preferencia.</p>
             </div>
 
             <div style={styles.item}>
               <span className="circleicon" style={styles.icon}><FaShoppingCart /></span>
-              <p style={styles.text}>Realiza la compra de tu pedido</p>
+              <p style={styles.text}>Realizá tu pedido de forma rápida y sencilla.</p>
             </div>
 
             <div style={styles.item}>
               <span className="circleicon" style={styles.icon}><FaMapMarkedAlt /></span>
               <p style={styles.text}>
-                Recibe el pedido en cualquier parte del evento
+                Recibilo en cualquier parte del evento, sin filas ni demoras.
               </p>
             </div>
           </div>

@@ -13,7 +13,7 @@ const ValidarUsuario = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/user/habilitarUsuario/${id}/${codigo}`, {
+    fetch(`${process.env.REACT_APP_BACK_URL}user/habilitarUsuario/${id}/${codigo}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })

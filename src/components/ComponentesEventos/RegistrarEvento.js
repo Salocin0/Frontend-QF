@@ -249,7 +249,7 @@ const RegistrarEvento = () => {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
       .then((response) => response.json())
       .then((data) => {
-        setProvincias(data.provincias);
+        setProvincias(data.provincias.sort((a, b) => a.nombre.localeCompare(b.nombre)));
       })
       .catch((error) => {
         console.error(error);
@@ -447,8 +447,8 @@ const RegistrarEvento = () => {
                           <option value="" disabled>
                             Seleccione una localidad
                           </option>
-                          {localidades.map((loc) => (
-                            <option key={loc.nombre} value={loc.nombre}>
+                          {localidades.map((loc, index) => (
+                            <option key={`${loc.nombre}-${index}`} value={loc.nombre}>
                               {loc.nombre}
                             </option>
                           ))}

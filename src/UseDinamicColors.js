@@ -4,9 +4,13 @@ const useDynamicColors = () => {
   const [modoOscuroActivo, setModoOscuroActivo] = useState(false);
 
   useEffect(() => {
-    const modoOscuro = localStorage.getItem("modoOscuroActivo") === "true";
-    setModoOscuroActivo(modoOscuro);
-  }, [modoOscuroActivo]); // Escucha los cambios en el modo oscuro
+    const modoOscuro = localStorage.getItem("modoOscuroActivo");
+    if (modoOscuro === null) {
+      setModoOscuroActivo(true);
+    } else {
+      setModoOscuroActivo(modoOscuro === "true");
+    }
+  }, []);
 
   const Colors = {
     modoOscuroActivo,

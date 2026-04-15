@@ -22,7 +22,7 @@ const RecuperarContraseña = () => {
       correoElectronico: email,
     };
 
-    fetch("http://127.0.0.1:8000/user/recuperarcontrasenia", {
+    fetch(`${process.env.REACT_APP_BACK_URL}user/recuperarcontrasenia`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(json_recuperarEmail),
@@ -65,6 +65,7 @@ const RecuperarContraseña = () => {
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
       color: Colors.Negro,
+      fontSize: "1.2rem",
     },
     input: {
       width: "100%",
@@ -102,7 +103,7 @@ const RecuperarContraseña = () => {
   return (
     <>
       <section style={styles.container}>
-        <div style={{ maxWidth: "400px", width: "100%" }}>
+        <div style={{ maxWidth: "500px", width: "100%" }}>
           <div style={styles.card}>
             <div style={styles.cardBody}>
               <h1 style={styles.title}>Recuperar Contraseña</h1>

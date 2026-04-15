@@ -7,13 +7,12 @@ const Tabs = ({ activeTab, setActiveTab }) => {
     tabsWrapper: {
       display: "flex",
       justifyContent: "center",
-      marginBottom: "1rem",
+      margin: "0 auto 1rem",
       backgroundColor: Colors.GrisAzuladoClaro,
-      width: "Calc(100% - 50px)",
-      marginLeft: "30px",
+      width: "calc(100% - 50px)",
       borderRadius: "10px",
       border: `1px solid ${Colors.Naranja}`,
-      padding:"10px",
+      padding: "10px",
     },
     tab: {
       padding: "0.5rem 1rem",
