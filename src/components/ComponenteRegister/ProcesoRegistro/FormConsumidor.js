@@ -4,7 +4,7 @@ import Footer from "../../ComponentesGenerales/Footer";
 import "../placeholder.css"
 import useDynamicColors from "../../../UseDinamicColors";
 
-const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario }) => {
+const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isRegistering }) => {
   const Colors = useDynamicColors();
   const [provincias, setProvincias] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
@@ -359,8 +359,9 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario }) => 
                     <button
                       type="submit"
                       style={tipoUsuario === "consumidor" ? styles.finishButton : styles.nextButton}
+                      disabled={isRegistering}
                     >
-                      {tipoUsuario === "consumidor" ? "Finalizar" : "Siguiente"}
+                      {tipoUsuario === "consumidor" ? (isRegistering ? "⏳ Finalizando..." : "Finalizar") : "Siguiente"}
                     </button>
                   </div>
                 </form>

@@ -17,6 +17,7 @@ const ProcesoRegistro = () => {
   const [encargadoData, setEncargadoData] = useState({});
   const [productorData, setProductorData] = useState({});
   const [registrar, setRegistrar] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
   const navigate = useNavigate();
 
   const handleFinalizar = () => {
@@ -55,6 +56,7 @@ const ProcesoRegistro = () => {
 
   useEffect(() => {
     if (registrar) {
+      setIsRegistering(true);
       const datosRegistro = {
         correoElectronico: userData.email,
         contraseña: userData.password,
@@ -105,7 +107,8 @@ const ProcesoRegistro = () => {
           }
         })
         .then((data) => {
-          if (data.status === "sucess") {
+          setIsRegistering(false);
+          if (data.status === "success" || data.status === "sucess") {
             toast.success("Registro exitoso");
             toast.info("Se envio un email de validacion a su correo");
             navigate(`/login`);
@@ -114,6 +117,7 @@ const ProcesoRegistro = () => {
           }
         })
         .catch((error) => {
+          setIsRegistering(false);
           console.error("Error en la solicitud:", error);
           toast.error("Error al registrar. Por favor, vuelva a intentar.");
           //toast.success("Registro exitoso");
@@ -141,6 +145,7 @@ const ProcesoRegistro = () => {
           backStep={backStep}
           tipoUsuario={tipoUsuario}
           handleRegistro={handleConsumidor}
+          isRegistering={isRegistering}
         />
       );
     case 3:
