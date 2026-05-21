@@ -1,5 +1,23 @@
 # Plan Responsive — QuickFood Frontend
 
+> **Rama:** `feature/responsive` (desde `prod`)
+>
+> **CONSTRAINT IMPORTANTE:** Este plan SOLO modifica la **distribución y layout** de los componentes en cada breakpoint. **NO se tocan:**
+> - ❌ Colores (paleta, variables CSS, temas)
+> - ❌ Tipografía (familia, tamaños de fuente, pesos)
+> - ❌ Espaciado interno de componentes (padding, margins internos)
+> - ❌ Borders, border-radius, sombras
+> - ❌ Animaciones y transiciones
+> - ❌ Iconos y assets visuales
+>
+> **SÍ se modifica:**
+> - ✅ Cantidad de columnas por breakpoint (grid layout)
+> - ✅ Dirección del flex (row → column en mobile)
+> - ✅ Visibilidad de elementos (ocultar sidebar en mobile, etc.)
+> - ✅ Widths/max-widths de contenedores principales
+> - ✅ Posicionamiento (fixed → relative, sticky → static)
+> - ✅ Wrapping de elementos
+
 ## Convenciones de Breakpoints
 
 | Dispositivo | Ancho | Breakpoint SCSS |
@@ -19,13 +37,14 @@
 
 ## Reglas Generales para TODOS los Componentes
 
-1. **Reemplazar inline styles fijos** (`width: "80%"`, `height: "550px"`) por clases SCSS con media queries
-2. **Usar `useBreakpoint`** para renderizado condicional (mostrar/ocultar elementos según dispositivo)
-3. **Wrapping con `PageLayout`** en todas las vistas internas (las que tengan sidebar)
-4. **Grids responsivos**: en mobile siempre 1 columna, tablet 2 columnas, web 3+ columnas
-5. **Tablas** en mobile → convertir a cards/listas
-6. **Formularios** en mobile → campos full-width, labels arriba del input
-7. **Imágenes** → siempre `max-width: 100%`, `object-fit: cover`
+1. **NO tocar colores, tipografía, espaciado interno, borders, sombras ni animaciones**
+2. **Reemplazar widths/heights fijos en contenedores principales** por porcentajes o clamp()
+3. **Usar `useBreakpoint`** para renderizado condicional (mostrar/ocultar sidebar, cambiar layout)
+4. **Wrapping con `PageLayout`** en todas las vistas internas (las que tengan sidebar)
+5. **Grids responsivos**: en mobile siempre 1 columna, tablet 2 columnas, web 3+ columnas
+6. **Tablas** en mobile → convertir a cards/listas (manteniendo mismos colores y estilos)
+7. **Formularios** en mobile → campos full-width, misma apariencia visual
+8. **Imágenes** → siempre `max-width: 100%`, `object-fit: cover` (sin cambiar filtros ni efectos)
 
 ---
 
