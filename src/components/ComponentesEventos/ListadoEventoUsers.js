@@ -7,8 +7,10 @@ import Footer from "../ComponentesGenerales/Footer";
 import FiltersEventosConsumidor from "../Filtros y Buscadores/filtersEventosConsumidor";
 import Buscador from "../Filtros y Buscadores/BuscadorEventosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import useBreakpoint from "../../useBreakpoint";
 
 const ListadoEventosUsers = () => {
+  const { isMobile, isTablet } = useBreakpoint();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [eventos, setEventos] = useState([]);
@@ -111,7 +113,7 @@ const ListadoEventosUsers = () => {
 
   const styles = {
     mainContent: {
-      width: "80%",
+      width: isMobile ? "100%" : "80%",
       height: "100%",
       padding: 0,
       display: "flex",
@@ -132,22 +134,24 @@ const ListadoEventosUsers = () => {
     },
     contentRow: {
       display: "flex",
+      flexDirection: isMobile ? "column" : "row",
       gap: "20px",
-      alignItems: "flex-start",
-      height: "100%",
-      overflow: "hidden",
+      alignItems: isMobile ? "stretch" : "flex-start",
+      height: isMobile ? "auto" : "100%",
+      overflow: isMobile ? "visible" : "hidden",
     },
     leftCol: {
-      width: "70%",
+      width: isMobile ? "100%" : isTablet ? "65%" : "70%",
       boxSizing: "border-box",
     },
     rightColInner: {
-      width: "30%",
+      width: isMobile ? "100%" : isTablet ? "35%" : "30%",
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
       gap: "12px",
       alignItems: "center",
+      order: isMobile ? -1 : 0,
     },
     header: {
       display: "flex",

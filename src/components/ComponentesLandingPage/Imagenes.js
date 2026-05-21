@@ -1,7 +1,9 @@
 ﻿import React from "react";
 import Carrousel from "./Carrousel";
+import useBreakpoint from "../../useBreakpoint";
 
 const Imagenes = () => {
+  const { isMobile } = useBreakpoint();
 
   const styles = {
     container: {
@@ -18,17 +20,21 @@ const Imagenes = () => {
     },
     contentRow: {
       display: "flex",
+      flexDirection: isMobile ? "column" : "row",
       alignItems: "center",
       width: "100%",
       maxWidth: "1200px",
       justifyContent: "space-between",
+      padding: isMobile ? "0 1rem" : "0",
     },
     colLg8: {
-      flex: 2,
-      paddingRight: "1rem",
+      flex: isMobile ? "none" : 2,
+      width: isMobile ? "100%" : "auto",
+      paddingRight: isMobile ? "0" : "1rem",
     },
     colLg4: {
-      flex: 1,
+      flex: isMobile ? "none" : 1,
+      width: isMobile ? "100%" : "auto",
     },
     descripcion: {
       textAlign: "center",

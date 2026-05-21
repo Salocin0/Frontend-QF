@@ -5,10 +5,12 @@ import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useLogin from "../Hooks/UseLogin";
 import { FaUser } from "react-icons/fa";
+import useBreakpoint from "../../useBreakpoint";
 
 const Login = () => {
   const { updateUser } = useContext(UserContext);
   const { email, password, setTokenWeb, handleEmailChange, handlePasswordChange, handleLogin } = useLogin();
+  const { isMobile } = useBreakpoint();
 
   // Debug: verificar que las importaciones existen
   console.log('Debug imports - PasswordToggle:', PasswordToggle);
@@ -60,8 +62,8 @@ const Login = () => {
     },
     containerStyle: {
       maxWidth: "400px",
-      width: "100%",
-      padding: "2rem",
+      width: isMobile ? "calc(100% - 32px)" : "100%",
+      padding: isMobile ? "1.5rem" : "2rem",
       borderRadius: "8px",
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
       backgroundColor: "var(--qf-bg-main)",

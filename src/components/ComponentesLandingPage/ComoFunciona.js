@@ -3,8 +3,11 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./../sass/main.scss";
 import img from "./../img/comida-rapida-casera.jpg";
 import { FaCalendarAlt, FaStore, FaShoppingCart, FaMapMarkedAlt } from 'react-icons/fa'
+import useBreakpoint from "../../useBreakpoint";
 
 const ComoFunciona = () => {
+  const { isMobile } = useBreakpoint();
+
   const styles = {
     comofunciona: {
       height: "100%",
@@ -14,10 +17,11 @@ const ComoFunciona = () => {
       height: "100%",
       marginLeft: "0",
       marginRight: "0",
+      flexDirection: isMobile ? "column-reverse" : "row",
     },
     colLg6Text: {
-      paddingLeft: "3rem",
-      paddingRight: "3rem",
+      paddingLeft: isMobile ? "1rem" : "3rem",
+      paddingRight: isMobile ? "1rem" : "3rem",
     },
     title: {
       textAlign: "center",
@@ -27,7 +31,7 @@ const ComoFunciona = () => {
     itemsContainer: {
       display: "flex",
       flexDirection: "column",
-      width: "66.6667%",
+      width: isMobile ? "100%" : "66.6667%",
       margin: "0 auto",
     },
     item: {

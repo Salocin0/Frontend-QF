@@ -5,8 +5,10 @@ import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { CircularProgress } from "@mui/material";
+import useBreakpoint from "../../useBreakpoint";
 
 const Carrito = () => {
+  const { isMobile } = useBreakpoint();
   const [carrito, setCarrito] = useState(null);
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
@@ -63,10 +65,10 @@ const Carrito = () => {
 
   const styles = {
     mainContent: {
-      width: "80%",
-      marginLeft: "20%",
-      paddingLeft: "20px",
-      paddingRight: "20px",
+      width: isMobile ? "100%" : "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      paddingLeft: isMobile ? "12px" : "20px",
+      paddingRight: isMobile ? "12px" : "20px",
       height: "100%",
       marginBottom: "5rem",
     },
