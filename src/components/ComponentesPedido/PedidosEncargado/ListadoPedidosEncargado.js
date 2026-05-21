@@ -7,8 +7,10 @@ import Footer from "../../ComponentesGenerales/Footer.js";
 import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb.js";
+import useBreakpoint from "../../../useBreakpoint";
 
 const ListadoPedidosEncargado = () => {
+  const { isMobile } = useBreakpoint();
   const { user } = useContext(UserContext);
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
@@ -116,8 +118,8 @@ const ListadoPedidosEncargado = () => {
       color: "var(--qf-naranja)",
     },
     colContent: {
-      marginLeft: "20%",
-      width: "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      width: isMobile ? "100%" : "80%",
       height: "100%",
       display: "flex",
       justifyContent: "center",

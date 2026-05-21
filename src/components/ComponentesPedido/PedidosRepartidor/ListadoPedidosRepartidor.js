@@ -5,8 +5,10 @@ import PedidoRepartidor from "./PedidoRepartidor";
 import { useContext } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
+import useBreakpoint from "../../../useBreakpoint";
 
 const ListadoPedidosRepartidor = () => {
+  const { isMobile } = useBreakpoint();
   const [rows, setRows] = useState([]);
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
@@ -54,7 +56,7 @@ const ListadoPedidosRepartidor = () => {
       flexDirection: "column",
       width: "100%",
       height: "100%",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
 
     },
     titleSection: {

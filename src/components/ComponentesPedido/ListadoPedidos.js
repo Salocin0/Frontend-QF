@@ -7,8 +7,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import Tabs from "./PedidosRepartidor/Tabs";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Footer from "../ComponentesGenerales/Footer";
+import useBreakpoint from "../../useBreakpoint";
 
 const ListadoPedidos = () => {
+  const { isMobile } = useBreakpoint();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [pedidos, setPedidos] = useState([]);
@@ -84,7 +86,7 @@ const ListadoPedidos = () => {
     contentCol: {
       padding: 0,
       margin: 0,
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     tituloSeccion: {
       display: "flex",

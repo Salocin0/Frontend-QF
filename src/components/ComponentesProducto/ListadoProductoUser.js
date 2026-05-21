@@ -11,8 +11,10 @@ import BuscadorProductoConsumidor from "../Filtros y Buscadores/BuscadorProducto
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useLocation } from "react-router-dom";
+import useBreakpoint from "../../useBreakpoint";
 
 const ListadoProductoUser = () => {
+  const { isMobile, isTablet } = useBreakpoint();
   const { id } = useParams();
   const [loanding, setLoanding] = useState(false);
   const [productos, setProductos] = useState([]);
@@ -80,26 +82,28 @@ const ListadoProductoUser = () => {
 
   const styles = {
     mainContent: {
-      width: "80%",
+      width: isMobile ? "100%" : "80%",
       padding: "0",
       boxSizing: "border-box",
     },
     contentRow: {
       display: "flex",
+      flexDirection: isMobile ? "column" : "row",
       gap: "20px",
-      alignItems: "flex-start",
+      alignItems: isMobile ? "stretch" : "flex-start",
     },
     leftCol: {
-      width: "70%",
+      width: isMobile ? "100%" : isTablet ? "65%" : "70%",
       boxSizing: "border-box",
     },
     rightColInner: {
-      width: "30%",
+      width: isMobile ? "100%" : isTablet ? "35%" : "30%",
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
       gap: "12px",
-      alignItems: "flex-start",
+      alignItems: isMobile ? "stretch" : "flex-start",
+      order: isMobile ? -1 : 0,
     },
     buscadorBox: {
       width: "98%",

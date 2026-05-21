@@ -9,8 +9,10 @@ import FiltersPuestosConsumidor from "../Filtros y Buscadores/filtersPuestosCons
 import BuscadorPuestosConsumidor from "../Filtros y Buscadores/BuscadorPuestosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useLocation } from "react-router-dom";
+import useBreakpoint from "../../useBreakpoint";
 
 const ListadoPuestosUser = () => {
+  const { isMobile, isTablet } = useBreakpoint();
   const { idEvento } = useParams();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
@@ -102,7 +104,7 @@ const ListadoPuestosUser = () => {
 
   const styles = {
     mainContent: {
-      width: "80%",
+      width: isMobile ? "100%" : "80%",
       height: "100%",
       padding: 0,
       display: "flex",
@@ -111,20 +113,22 @@ const ListadoPuestosUser = () => {
     },
     contentRow: {
       display: "flex",
+      flexDirection: isMobile ? "column" : "row",
       gap: "20px",
-      alignItems: "flex-start",
+      alignItems: isMobile ? "stretch" : "flex-start",
     },
     leftCol: {
-      width: "70%",
+      width: isMobile ? "100%" : isTablet ? "65%" : "70%",
       boxSizing: "border-box",
     },
     rightColInner: {
-      width: "30%",
+      width: isMobile ? "100%" : isTablet ? "35%" : "30%",
       boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
       gap: "12px",
       alignItems: "center",
+      order: isMobile ? -1 : 0,
     },
     header: {
       display: "flex",

@@ -9,8 +9,10 @@ import { useLocation } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import { FaEyeSlash, FaPlus, FaSearch } from "react-icons/fa";
+import useBreakpoint from "../../useBreakpoint";
 
 const ListadoProducto = () => {
+  const { isMobile } = useBreakpoint();
   const { id } = useParams();
   const { user } = useContext(UserContext);
   const [productos, setProductos] = useState([]);
@@ -47,7 +49,7 @@ const ListadoProducto = () => {
       display: "flex",
       flexDirection: "column",
       flexGrow: 1,
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     header: {
       display: "flex",

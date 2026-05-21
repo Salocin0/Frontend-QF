@@ -9,8 +9,10 @@ import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Buscador from "../Filtros y Buscadores/Buscador";
 import Filtros from "../Filtros y Buscadores/Filtros";
+import useBreakpoint from "../../useBreakpoint";
 
 const ListadoPuestosEncargado = () => {
+  const { isMobile } = useBreakpoint();
   const [rows, setRows] = useState([]);
   const [carritos, setCarritos] = useState([]);
   const [carritosOriginales, setCarritosOriginales] = useState([]);
@@ -47,12 +49,12 @@ const ListadoPuestosEncargado = () => {
       display: "flex",
       flexDirection: "column",
       flexGrow: 1,
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     contentContainer: {
       display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-start",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "stretch" : "flex-start",
       padding: "0",
       gap: "20px",
       paddingLeft: "20px",
@@ -62,17 +64,18 @@ const ListadoPuestosEncargado = () => {
       flex: 1,
       display: "flex",
       flexDirection: "column",
-      width: "70%",
-      minWidth: "60%",
+      width: isMobile ? "100%" : "70%",
+      minWidth: isMobile ? "auto" : "60%",
     },
     filtersContainer: {
-      width: "30%",
-      minWidth: "260px",
+      width: isMobile ? "100%" : "30%",
+      minWidth: isMobile ? "auto" : "260px",
       borderRadius: "8px",
       padding: "20px",
       top: "20px",
       backgroundColor: "var(--qf-bg-secondary)",
       border: `1px solid var(--qf-naranja)`,
+      order: isMobile ? -1 : 0,
     },
     headerContainer: {
       display: "flex",

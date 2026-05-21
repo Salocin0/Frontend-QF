@@ -6,8 +6,10 @@ import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import useBreakpoint from "../../useBreakpoint";
 
 const ConsultarProducto = () => {
+  const { isMobile } = useBreakpoint();
   const { id } = useParams();
   const { user } = useContext(UserContext);
   const [producto, setProducto] = useState();
@@ -77,8 +79,8 @@ const ConsultarProducto = () => {
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
-      width: "80%",
-      marginLeft: "20%",
+      width: isMobile ? "100%" : "80%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     card: {
       backgroundColor: "var(--qf-bg-secondary)",
