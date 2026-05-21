@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+﻿import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -16,7 +15,6 @@ const VerSolicitudesEvento = () => {
   const [eventos, setEventos] = useState([]);
   const [asociaciones, setAsociaciones] = useState([]);
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
   const [recargar, setRecargar] = useState(0);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -168,15 +166,6 @@ const VerSolicitudesEvento = () => {
   });
 
   const styles = {
-    row: {
-      margin: 0,
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-      overflow: "hidden",
-      width: "100%",
-    },
     colContent: {
       marginLeft: "20%",
       width: "calc(100% - 20%)",
@@ -199,10 +188,10 @@ const VerSolicitudesEvento = () => {
       marginBottom: "1rem",
       paddingTop: "2rem",
       width: "100%",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     hrStyle: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     breadcrumbWrapper: {
       width: "Calc(100%)",
@@ -220,8 +209,8 @@ const VerSolicitudesEvento = () => {
       marginLeft: "20px",
       marginRight: "20px",
       marginTop: "0",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
     },
     searchFilterContainer: {
       display: "flex",
@@ -239,36 +228,36 @@ const VerSolicitudesEvento = () => {
     cardBody: {
       display: "flex",
       flexDirection: "column",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       width: "100%",
       paddingBottom: "20px",
     },
     cardTitle: {
       fontSize: "2rem",
       fontWeight: "bold",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     cardDescripcion: {
       fontSize: "1rem",
       marginBottom: "0.5rem",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       width: "100%",
       margin: "0 auto",
     },
     cardText: {
       fontSize: "1rem",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       margin: "0 auto",
     },
     cardEstadoProductor: {
       fontSize: "1rem",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       position: "absolute",
       top: "20px",
       right: "20px",
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       padding: "5px 10px",
       borderRadius: "5px",
     },
@@ -291,9 +280,9 @@ const VerSolicitudesEvento = () => {
     },
     linkAgregarEvento: {
       textDecoration: "none",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "10px 20px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       borderRadius: "5px",
       fontWeight: "bold",
       fontSize: "18px",
@@ -301,9 +290,9 @@ const VerSolicitudesEvento = () => {
       display: "inline-block",
     },
     infoCard: {
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       padding: "20px",
       marginTop: "20px",
     },
@@ -313,13 +302,13 @@ const VerSolicitudesEvento = () => {
       alignItems: "center",
     },
     infoLabel: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       minWidth: "150px",
       fontSize: "1rem",
     },
     infoValue: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontSize: "1rem",
     },
   };
@@ -364,10 +353,8 @@ const VerSolicitudesEvento = () => {
   ];
 
   return (
-    <div>
-      <div style={styles.row}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-        <div style={styles.colContent}>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+      <div style={styles.colContent}>
           <div style={styles.sectionTitle}>
             <h1>Mis Solicitudes para {eventos.nombre}</h1>
           </div>
@@ -387,7 +374,7 @@ const VerSolicitudesEvento = () => {
               <div style={styles.container}>
                 {loading ? (
                   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
-                    <CircularProgress style={{ color: Colors.Naranja }} />
+                    <CircularProgress style={{ color: "var(--qf-naranja)" }} />
                   </div>
                 ) : filteredAsociaciones.length > 0 ? (
                   filteredAsociaciones.map((asociacion, index) => (
@@ -467,8 +454,8 @@ const VerSolicitudesEvento = () => {
               ))
                 ) : (
                   <div style={{ textAlign: "center", padding: "40px 20px", margin: "40px" }}>
-                    <div style={{ fontSize: "1.5rem", color: Colors.Naranja }}>
-                      <h2 style={{ color: Colors.Naranja }}>Solicitudes</h2>
+                    <div style={{ fontSize: "1.5rem", color: "var(--qf-naranja)" }}>
+                      <h2 style={{ color: "var(--qf-naranja)" }}>Solicitudes</h2>
                     </div>
                     <div style={{ marginBottom: "20px", fontSize: "18px" }}>
                       <p style={{ color: "#FFFFFF", margin: "0" }}>
@@ -503,8 +490,6 @@ const VerSolicitudesEvento = () => {
             </div>
           </div>
         </div>
-      </div>
-
       {/* Dialog de Confirmación */}
       <ConfirmDialog
         open={confirmOpen}
@@ -529,16 +514,16 @@ const VerSolicitudesEvento = () => {
           zIndex: 1000,
         }}>
           <div style={{
-            backgroundColor: Colors.GrisAzuladoClaro,
+            backgroundColor: "var(--qf-bg-secondary)",
             borderRadius: '10px',
-            border: `2px solid ${Colors.Naranja}`,
+            border: `2px solid var(--qf-naranja)`,
             padding: '30px',
             maxWidth: '500px',
             width: '90%',
             maxHeight: '80vh',
             overflowY: 'auto',
           }}>
-            <h2 style={{ color: Colors.Naranja, marginBottom: '20px', textAlign: 'center' }}>Detalles de la Solicitud</h2>
+            <h2 style={{ color: "var(--qf-naranja)", marginBottom: '20px', textAlign: 'center' }}>Detalles de la Solicitud</h2>
             
             <div style={styles.infoRow}>
               <span style={styles.infoLabel}>Nombre:</span>
@@ -561,7 +546,7 @@ const VerSolicitudesEvento = () => {
 
             {selectedAsociacion?.puesto && (
               <>
-                <h3 style={{ color: Colors.Naranja, marginTop: '20px', fontSize: '1.1rem' }}>Información del Puesto</h3>
+                <h3 style={{ color: "var(--qf-naranja)", marginTop: '20px', fontSize: '1.1rem' }}>Información del Puesto</h3>
                 <div style={styles.infoRow}>
                   <span style={styles.infoLabel}>Teléfono:</span>
                   <span style={styles.infoValue}>{selectedAsociacion?.puesto?.telefonoCarro}</span>
@@ -575,7 +560,7 @@ const VerSolicitudesEvento = () => {
 
             {selectedAsociacion?.repartidor && (
               <>
-                <h3 style={{ color: Colors.Naranja, marginTop: '20px', fontSize: '1.1rem' }}>Información del Repartidor</h3>
+                <h3 style={{ color: "var(--qf-naranja)", marginTop: '20px', fontSize: '1.1rem' }}>Información del Repartidor</h3>
                 <div style={styles.infoRow}>
                   <span style={styles.infoLabel}>Teléfono:</span>
                   <span style={styles.infoValue}>{selectedAsociacion?.repartidor?.telefono}</span>
@@ -587,8 +572,8 @@ const VerSolicitudesEvento = () => {
               <button
                 onClick={handleCloseInfo}
                 style={{
-                  backgroundColor: Colors.Naranja,
-                  color: Colors.Blanco,
+                  backgroundColor: "var(--qf-naranja)",
+                  color: "var(--qf-text-primary)",
                   border: 'none',
                   padding: '10px 20px',
                   borderRadius: '5px',
@@ -605,7 +590,7 @@ const VerSolicitudesEvento = () => {
       )}
 
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

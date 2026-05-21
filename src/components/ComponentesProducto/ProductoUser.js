@@ -1,10 +1,8 @@
-import { default as React } from "react";
+﻿import { default as React } from "react";
 import { toast } from "react-toastify";
 import productoDefecto from "./../img/productoDefecto.png";
-import useDynamicColors from "../../UseDinamicColors";
 
 const ProductoUser = ({ producto, user, selectedDay, evento }) => {
-  const Colors = useDynamicColors();
   const [isHovered, setIsHovered] = React.useState(false);
 
   const handleAddtocart = () => {
@@ -37,9 +35,9 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
       width: "98%",
       minHeight: "120px",
       overflow: "hidden",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       margin: "0 auto 14px auto",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       transition: "all 0.25s ease",
       display: "flex",
       flexDirection: "row",
@@ -84,12 +82,12 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
       fontSize: "18px",
       fontWeight: "700",
       margin: 0,
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       letterSpacing: "0.3px",
     },
     description: {
       fontSize: "13px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       opacity: 0.8,
       margin: "0",
       lineHeight: "1.2",
@@ -100,7 +98,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
     },
     aderezos: {
       fontSize: "12px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "600",
       fontStyle: "italic",
       margin: "0",
@@ -113,9 +111,9 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
       marginTop: "0",
     },
     button: {
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       border: "none",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       padding: "10px 25px",
       borderRadius: "8px",
       cursor: "pointer",
@@ -128,13 +126,13 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
     price: {
       fontSize: "28px",
       fontWeight: "bold",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       margin: 0,
     },
     priceSymbol: {
       fontSize: "18px",
       marginRight: "4px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
   };
 
@@ -175,7 +173,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
             style={{
               ...styles.button,
               transform: isHovered ? "scale(1.05)" : "scale(1)",
-              backgroundColor: isHovered ? "#38a169" : Colors.Verde // Ajuste ligero de color en hover
+              backgroundColor: isHovered ? "#38a169" : "var(--qf-green)" // Ajuste ligero de color en hover
             }} 
             onClick={handleAddtocart}
           >

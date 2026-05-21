@@ -1,11 +1,9 @@
-import imgDefault from "./../img/puestoLogoDefault.jpg";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import imgDefault from "./../img/puestoLogoDefault.jpg";
 import { useNavigate } from "react-router-dom";
 import { useEffect,useState } from "react";
 import { FaClock, FaStar } from "react-icons/fa";
 
 const PuestoUser = ({ carrito, selectedDay, evento }) => {
-  const Color = useDynamicColors();
   const navigate = useNavigate();
   const [estrellas, setEstrellas] = useState(0);
   const [tiempoEntrega, setTiempoEntrega] = useState(0);
@@ -33,13 +31,13 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
       textDecoration: "none",
     },
     card: {
-      border: `1px solid ${Color.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       width: "98%",
-      backgroundColor: Color.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       marginBottom: "16px",
       margin: "0 auto 16px auto",
-      color: Color.Negro,
+      color: "var(--qf-text-white)",
       transition: "transform 0.2s ease-in-out",
       cursor: "pointer",
       display: "flex",
@@ -87,17 +85,17 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
     title: {
       fontSize: "24px",
       fontWeight: "bold",
-      color: Color.Naranja,
+      color: "var(--qf-naranja)",
       marginBottom: "10px",
     },
     descripcion: {
       fontSize: "18px",
-      color: Color.Negro,
+      color: "var(--qf-text-white)",
       marginBottom: "10px",
     },
     text: {
       fontSize: "16px",
-      color: Color.Gris,
+      color: "var(--qf-text-muted)",
       marginBottom: "5px",
     },
     estadoContainer: {
@@ -109,7 +107,7 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
     },
     iconText: {
       fontSize: "16px",
-      color: Color.Negro,
+      color: "var(--qf-text-white)",
     },
   };
 

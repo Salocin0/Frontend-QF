@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
-import useDynamicColors from "../../UseDinamicColors";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 
@@ -13,9 +12,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   const [decalEnabled, setDecalEnabled] = useState(true); // Estado para los decals
   const [categorias, setCategorias] = useState([]); // Guardar categorías en estado
   const [groupedData, setGroupedData] = useState({}); // Guardar datos agrupados en estado
-  const [puestos, setPuestos] = useState([]); // Guardar puestos en estado
-  const Colors = useDynamicColors();
-
+  const [puestos, setPuestos] = useState([]); // Guardar puestos en estadon
   useEffect(() => {
     console.log("Evento seleccionado:", eventId, "Puesto seleccionado:", puestoId);
 
@@ -97,29 +94,29 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
         text: "Recaudación por Día", 
         left: "center", 
         top: "1%",
-        textStyle: { color: Colors.Naranja }
+        textStyle: { color: "var(--qf-naranja)" }
       },
       legend: { 
         data: puestos, 
         top: 30,
-        textStyle: { color: Colors.Naranja }
+        textStyle: { color: "var(--qf-naranja)" }
       },
       xAxis: { 
         type: "category", 
         data: categorias,
-        axisLabel: { color: Colors.Naranja },
-        axisLine: { lineStyle: { color: Colors.Naranja } }
+        axisLabel: { color: "var(--qf-naranja)" },
+        axisLine: { lineStyle: { color: "var(--qf-naranja)" } }
       },
       yAxis: { 
         type: "value",
-        axisLabel: { color: Colors.Naranja },
-        axisLine: { lineStyle: { color: Colors.Naranja } },
+        axisLabel: { color: "var(--qf-naranja)" },
+        axisLine: { lineStyle: { color: "var(--qf-naranja)" } },
         splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
       },
       series,
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
     });
-  }, [decalEnabled, categorias, groupedData, puestos, puestoId, Colors.GrisAzuladoClaro]);
+  }, [decalEnabled, categorias, groupedData, puestos, puestoId]);
 
   const onChartClick = (params) => {
     setSelectedDay(params.name);
@@ -127,11 +124,11 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
 
   if (loading) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
-      <CircularProgress style={{ color: Colors.Naranja }} />
+      <CircularProgress style={{ color: "var(--qf-naranja)" }} />
     </div>
   );
   if (error) return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", color: Colors.Naranja }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", color: "var(--qf-naranja)" }}>
       Error: {error}
     </div>
   );
@@ -141,13 +138,13 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
-          backgroundColor: Colors.GrisAzuladoOscuro,
+          backgroundColor: "var(--qf-bg-main)",
           padding: "3px 10px",
           borderRadius: "10px",
           border: "none",
           cursor: "pointer",
           fontSize: "18px",
-          color: Colors.Naranja,
+          color: "var(--qf-naranja)",
           position: "absolute",
           top: "10px",
           right: "10px",
@@ -184,7 +181,6 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const Colors = useDynamicColors();
 
   const formatFecha = (fecha) => {
     const [day, month, year] = fecha.split("/");
@@ -226,31 +222,31 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
         });
 
         setChartData({
-          backgroundColor: Colors.GrisAzuladoClaro,
+          backgroundColor: "var(--qf-bg-secondary)",
           tooltip: { trigger: "axis", axisPointer: { type: "cross" } },
           title: { 
             text: `Detalle de Ventas - ${selectedDay}`, 
             left: "center",
             top : "1%",
-            textStyle: { color: Colors.Naranja }
+            textStyle: { color: "var(--qf-naranja)" }
           },
           xAxis: { 
             type: "category", 
             data: xAxisData,
-            axisLabel: { color: Colors.Naranja },
-            axisLine: { lineStyle: { color: Colors.Naranja } }
+            axisLabel: { color: "var(--qf-naranja)" },
+            axisLine: { lineStyle: { color: "var(--qf-naranja)" } }
           },
           yAxis: { 
             type: "value",
-            axisLabel: { color: Colors.Naranja },
-            axisLine: { lineStyle: { color: Colors.Naranja } },
+            axisLabel: { color: "var(--qf-naranja)" },
+            axisLine: { lineStyle: { color: "var(--qf-naranja)" } },
             splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
           },
           grid: { bottom: 100 },
           legend: { 
             data: Object.keys(seriesData), 
             bottom: 0,
-            textStyle: { color: Colors.Naranja }
+            textStyle: { color: "var(--qf-naranja)" }
           },
           series: Object.keys(seriesData).map((key) => ({
             name: key,
@@ -262,15 +258,15 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [selectedDay, idevento, idpuesto, Colors.GrisAzuladoClaro]);
+  }, [selectedDay, idevento, idpuesto]);
 
   if (loading) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
-      <CircularProgress style={{ color: Colors.Naranja }} />
+      <CircularProgress style={{ color: "var(--qf-naranja)" }} />
     </div>
   );
   if (error) return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", color: Colors.Naranja }}>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%", color: "var(--qf-naranja)" }}>
       Error: {error}
     </div>
   );
@@ -284,7 +280,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
           top: "20px",
           left: "20px",
           padding: "5px 10px",
-          backgroundColor: Colors.Naranja,
+          backgroundColor: "var(--qf-naranja)",
           color: "white",
           border: "none",
           borderRadius: "5px",

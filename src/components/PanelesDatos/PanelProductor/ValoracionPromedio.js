@@ -1,25 +1,23 @@
-import React, { useState, useEffect } from "react";
-import useDynamicColors from "../../../UseDinamicColors";
+﻿import React, { useState, useEffect } from "react";
 import { CircularProgress } from "@mui/material";
 
 const ValoracionPromedio = ({ eventoId }) => {
   const [promedio, setPromedio] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const Colors = useDynamicColors();
 
   const styles = {
     promedio: {
       fontWeight: "bold",
       textAlign: "center",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin: "0",
       fontSize: "2rem",
     },
     texto: {
         fontWeight: "bold",
         margin: "0",
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
         fontSize: "1rem",
     },
   };
@@ -48,7 +46,7 @@ const ValoracionPromedio = ({ eventoId }) => {
   if (loading) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <CircularProgress style={{ color: Colors.Naranja }} />
+        <CircularProgress style={{ color: "var(--qf-naranja)" }} />
       </div>
     );
   }

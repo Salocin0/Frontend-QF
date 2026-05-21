@@ -1,10 +1,9 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+﻿import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { useNavigate } from "react-router-dom";
-import useDynamicColors from "../../UseDinamicColors";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const AdquirirNuevoRolEPC = () => {
@@ -13,7 +12,6 @@ const AdquirirNuevoRolEPC = () => {
   const [condicionIva, setCondicionIva] = useState("");
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const handleCuitChange = (e) => setCuit(e.target.value);
   const handleRazonSocialChange = (e) => setRazonSocial(e.target.value);
@@ -49,14 +47,6 @@ const AdquirirNuevoRolEPC = () => {
   };
 
   const styles = {
-    container: {
-      display: "flex",
-      background: Colors.GrisAzuladoOscuro,
-      minHeight: "100vh",
-    },
-    sidebar: {
-      flex: "0 0 20%",
-    },
     main: {
       flex: "1",
       display: "flex",
@@ -69,13 +59,13 @@ const AdquirirNuevoRolEPC = () => {
       padding: "20px",
       borderRadius: "10px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
     },
     title: {
       fontSize: "1.25rem",
       fontWeight: "bold",
       marginBottom: "20px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     formGroup: {
       marginBottom: "15px",
@@ -85,7 +75,7 @@ const AdquirirNuevoRolEPC = () => {
 
       display: "block",
       fontSize: "0.875rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     input: {
       width: "100%",
@@ -104,8 +94,8 @@ const AdquirirNuevoRolEPC = () => {
       width: "100%",
       padding: "10px",
       fontSize: "1rem",
-      color: Colors.Negro,
-      backgroundColor: Colors.Verde,
+      color: "var(--qf-text-white)",
+      backgroundColor: "var(--qf-green)",
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",
@@ -113,10 +103,7 @@ const AdquirirNuevoRolEPC = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.main}>
         <div style={styles.formCard}>
           <h1 style={styles.title}>
@@ -172,14 +159,14 @@ const AdquirirNuevoRolEPC = () => {
             <button type="submit" style={styles.button}>
               Solicitar Nuevo Rol - Encargado Puesto de Comida
             </button>
-            <button type="submit" onClick={() => navigate("/inicio")} style={{...styles.button, backgroundColor: Colors.Azul,marginTop:"10px"}}>
+            <button type="submit" onClick={() => navigate("/inicio")} style={{...styles.button, backgroundColor: "var(--qf-blue)",marginTop:"10px"}}>
               Volver
             </button>
           </form>
         </div>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

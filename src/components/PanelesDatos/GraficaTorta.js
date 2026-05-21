@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
-import useDynamicColors from "../../UseDinamicColors";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 
@@ -8,9 +7,7 @@ const GraficaTorta = ({ id }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decal
-  const Colors = useDynamicColors();
-
+  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decaln
   useEffect(() => {
     const fetchEstadisticas = async () => {
       try {
@@ -34,7 +31,7 @@ const GraficaTorta = ({ id }) => {
 
   if (loading) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "30vh" }}>
-      <CircularProgress style={{ color: Colors.Naranja }} />
+      <CircularProgress style={{ color: "var(--qf-naranja)" }} />
     </div>
   );
   if (error) return <p>Error: {error}</p>;
@@ -59,23 +56,23 @@ const GraficaTorta = ({ id }) => {
       trigger: "item",
       formatter: "{a} <br/>{b}: {c} ({d}%)",
     },
-    backgroundColor: Colors.GrisAzuladoClaro,
+    backgroundColor: "var(--qf-bg-secondary)",
     title: {
       text: "Porcentaje de Recaudación por Puesto",
       subtext: "Porcentaje de lo recaudado en el evento por cada puesto",
       top: "3%",
       left: "center",
       textStyle: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
       subtextStyle: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
     },
     legend: {
       show: false,
       textStyle: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
     },
     series: [
@@ -86,11 +83,11 @@ const GraficaTorta = ({ id }) => {
         radius: ["30%", "60%"], // Ajusta el tamaño del gráfico (más pequeño o más grande)
         center: ["50%", "50%"], // Ajusta la posición del gráfico dentro del contenedor
         label: {
-          color: Colors.Naranja,
+          color: "var(--qf-naranja)",
         },
         labelLine: {
           lineStyle: {
-            color: Colors.Naranja,
+            color: "var(--qf-naranja)",
           },
         },
         data: formattedData.map((item, index) => ({
@@ -122,13 +119,13 @@ const GraficaTorta = ({ id }) => {
       <button
                   onClick={() => setDecalEnabled((prev) => !prev)}
                   style={{
-                    backgroundColor: Colors.GrisAzuladoOscuro,
+                    backgroundColor: "var(--qf-bg-main)",
                     padding: "3px 10px",
                     borderRadius:"10px",
                     border: "none",
                     cursor: "pointer",
                     fontSize: "18px",
-                    color: Colors.Naranja,
+                    color: "var(--qf-naranja)",
                     position: "absolute",
                     top: "20px",
                     right: "5px",

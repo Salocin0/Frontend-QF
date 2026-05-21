@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import React from "react";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import "./../sass/main.scss";
 import imgdefault from "./img/villa maria.png";
 
@@ -15,11 +15,7 @@ const EventoPrueba = ({ session }) => {
     };
 
     return (
-        <div className="container-fluid">
-            <div className="row formEvento">
-                <div className="col-md-3 p-0">
-                    <Sidebar tipoUsuario={session?.tipoUsuario} />
-                </div>
+        <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
                 <div className="col-md-7">
                     <div className="card" style={{ width: "100%" }}>
                         <div className="card-body">
@@ -48,18 +44,12 @@ const EventoPrueba = ({ session }) => {
                                     <button className="btn btn-secondary me-2">Editar Evento</button>
                                     <button className="btn btn-danger me-2">Cancelar Evento</button>
 
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
-
-
-
-
             </div>
+          </div>
         </div>
+      </div>
+        </PageLayout>
     );
 };
 

@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Footer from "../../ComponentesGenerales/Footer";
 import "../placeholder.css"
-import useDynamicColors from "../../../UseDinamicColors";
 
 const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isRegistering }) => {
-  const Colors = useDynamicColors();
   const [provincias, setProvincias] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [localidades, setLocalidades] = useState([]);
@@ -171,10 +169,10 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
     },
     card: {
       borderRadius: "8px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardHeader: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "1rem",
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
@@ -182,7 +180,7 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
     headerText: {
       fontSize: "1.5rem",
       textAlign: "center",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     cardBody: {
       padding: "20px",
@@ -193,7 +191,7 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
     label: {
       display: "block",
       fontWeight: "bold",
-      color:  Colors.Negro,
+      color:  "var(--qf-text-white)",
       margin:"0",
       fontSize: "1rem",
     },
@@ -201,7 +199,7 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
       width: "100%",
       padding: "4px",
       borderRadius: "4px",
-      border: `1px solid ${Colors.Gris}`,
+      border: `1px solid var(--qf-text-muted)`,
     },
     buttonContainer: {
       display: "flex",
@@ -209,24 +207,24 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
     },
     backButton: {
       padding: "8px 12px",
-      backgroundColor: Colors.Azul,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
     },
     nextButton: {
       padding: "8px 12px",
-      backgroundColor: Colors.Azul,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
     },
     finishButton: {
       padding: "8px 12px",
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",

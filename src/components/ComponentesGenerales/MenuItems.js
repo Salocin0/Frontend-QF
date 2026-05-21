@@ -1,6 +1,6 @@
 import React from "react";
 import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser, FaMoon } from "react-icons/fa";
-import useDynamicColors from "../../UseDinamicColors";
+import useTheme from "../../useTheme";
 
 const MenuItems = ({
   isResponsable,
@@ -8,13 +8,7 @@ const MenuItems = ({
   isRepartidor,
   togglePanel,
 }) => {
-  const Colors = useDynamicColors();
-
-  const toggleTheme = () => {
-    const newMode = !Colors.modoOscuroActivo;
-    localStorage.setItem("modoOscuroActivo", newMode);
-    window.location.reload();
-  };
+  const { toggleTheme } = useTheme();
 
    const handleBotonChat = () => {
     togglePanel();

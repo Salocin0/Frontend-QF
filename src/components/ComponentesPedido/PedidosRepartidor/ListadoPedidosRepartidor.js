@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
-import Sidebar from "../../ComponentesGenerales/Sidebar";
+import PageLayout from "../../ComponentesGenerales/PageLayout";
 import PedidoRepartidor from "./PedidoRepartidor";
 import { useContext } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../../UseDinamicColors";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
 
 const ListadoPedidosRepartidor = () => {
@@ -13,7 +12,6 @@ const ListadoPedidosRepartidor = () => {
   const [recargar, setRecargar] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const recargarComponente = () => {
     setRecargar((prevRecargar) => prevRecargar + 1);
@@ -51,13 +49,6 @@ const ListadoPedidosRepartidor = () => {
   }, [user, recargar]);
 
   const styles = {
-    container: {
-      display: "flex",
-      flexDirection: "row",
-      margin: 0,
-      height: "100vh",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-    },
     content: {
       display: "flex",
       flexDirection: "column",
@@ -73,10 +64,10 @@ const ListadoPedidosRepartidor = () => {
     },
     titleText: {
       paddingTop: "0.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     separator: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     centerContent: {
       display: "flex",
@@ -92,7 +83,7 @@ const ListadoPedidosRepartidor = () => {
       marginBottom: "20px",
     },
     noPedidosText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
     },
     breadcrumbWrapper: {
@@ -108,8 +99,7 @@ const ListadoPedidosRepartidor = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.content}>
         <div style={styles.titleSection}>
           <h1 style={styles.titleText}>Pedidos asignados</h1>
@@ -128,7 +118,7 @@ const ListadoPedidosRepartidor = () => {
           <div style={styles.listContainer}>
             {isLoading ? (
               <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-                <CircularProgress style={{ color: Colors.Naranja }} />
+                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
               </div>
             ) : Array.isArray(pedidos) && pedidos.length > 0 ? (
               rows.length > 0 &&
@@ -152,7 +142,7 @@ const ListadoPedidosRepartidor = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

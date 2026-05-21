@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PasswordToggle from "../ComponenteRegister/PasswordToggle";
-import useDynamicColors from "../../UseDinamicColors";
 import { Link } from "react-router-dom";
 
 const CambiarContraseña = () => {
-  const Colors = useDynamicColors();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { codigo } = useParams();
@@ -69,22 +67,22 @@ const CambiarContraseña = () => {
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
       maxWidth: "600px",
       width: "100%",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardBody: {
       textAlign: "center",
     },
     title: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "1rem",
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     label: {
       display: "block",
       marginBottom: "0.5rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       fontSize: "0.9rem",
       textAlign: "left",
       margin: "0px",
@@ -97,7 +95,7 @@ const CambiarContraseña = () => {
       width: "100%",
       padding: "0.5rem",
       borderRadius: "5px",
-      border: `1px solid ${Colors.Gris}`,
+      border: `1px solid var(--qf-text-muted)`,
     },
     buttonContainer: {
       display: "flex",
@@ -106,15 +104,15 @@ const CambiarContraseña = () => {
       marginTop: "1rem",
     },
     buttonBack: {
-      backgroundColor: Colors.GrisOscuro,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-text-secondary)",
+      color: "var(--qf-blanco-puro)",
       padding: "0.5rem 1rem",
       cursor: "pointer",
       borderRadius: "5px",
     },
     buttonSubmit: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.5rem 1rem",
       cursor: "pointer",

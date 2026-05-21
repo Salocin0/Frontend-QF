@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+﻿import React, { useState, useEffect, useContext, useRef } from "react";
 import GraficaTortaProductos from "../GraficaTortaProductos";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../../UseDinamicColors";
 import { CircularProgress } from "@mui/material";
 
 const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
@@ -10,9 +9,7 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
   const graficoRef = useRef(null);
-  const [graficoHeight, setGraficoHeight] = useState(300); // Altura inicial
-  const Colors = useDynamicColors();
-
+  const [graficoHeight, setGraficoHeight] = useState(300); // Altura inicialn
   useEffect(() => {
     const fetchTopProductos = async () => {
       try {
@@ -76,15 +73,15 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       marginTop: "20px",
       marginRight: "20px",
       borderRadius: "20px",
-      background: Colors.GrisAzuladoClaro,
+      background: "var(--qf-bg-secondary)",
       backgroundSize: "cover",
       marginBottom: "20px",
       position: "relative",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
        overflow: "hidden"
     },
     tablaTexto: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     }
   };
 
@@ -92,7 +89,7 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     return (
       <div style={styles.topProductos}>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px", width: "100%" }}>
-          <CircularProgress style={{ color: Colors.Naranja }} />
+          <CircularProgress style={{ color: "var(--qf-naranja)" }} />
         </div>
       </div>
     );
@@ -101,7 +98,7 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   if (error) {
     return (
       <div style={styles.topProductos}>
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px", width: "100%", color: Colors.Naranja }}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px", width: "100%", color: "var(--qf-naranja)" }}>
           Error al cargar los productos. Por favor, intenta nuevamente.
         </div>
       </div>
@@ -110,8 +107,8 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
 
   return (
     <div style={styles.topProductos}>
-      <h2 style={{ color: Colors.Naranja, margin: 0, padding: 0 }}>Top Productos</h2>
-      <hr style={{ color: Colors.Naranja, borderColor: Colors.Naranja }} />
+      <h2 style={{ color: "var(--qf-naranja)", margin: 0, padding: 0 }}>Top Productos</h2>
+      <hr style={{ color: "var(--qf-naranja)", borderColor: "var(--qf-naranja)" }} />
       <div>
         <table id="miTabla" className="w-100">
           <thead>

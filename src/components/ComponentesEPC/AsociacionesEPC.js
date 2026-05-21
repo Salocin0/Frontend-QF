@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
-import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/logoevento.webp";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
@@ -31,7 +30,6 @@ const AsociacionesEPC = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [toCancelId, setToCancelId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const Colors = useDynamicColors();
 
   useEffect(() => {
     if (user) {
@@ -114,15 +112,6 @@ const AsociacionesEPC = () => {
   });
 
   const styles = {
-    row: {
-      margin: 0,
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh", // Asegura que el contenedor ocupe el 100% de la altura de la pantalla
-      overflow: "hidden", // Oculta la barra de desplazamiento en el contenedor principal
-      width: "100%",
-    },
     colContent: {
       marginLeft: "20%",
       width: "calc(100% - 20%)",
@@ -145,13 +134,13 @@ const AsociacionesEPC = () => {
       marginBottom: "1rem",
       paddingTop: "2rem",
       width: "100%",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     card: {
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       marginBottom: "1rem",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       marginLeft: "0px",
       marginRight: "0px",
       display: "flex",
@@ -192,16 +181,16 @@ const AsociacionesEPC = () => {
       fontSize: "2rem",
       fontWeight: "bold",
       marginBottom: "0.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
       width: "100%",
     },
     description: {
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       width: "100%",
     },
     locationText: {
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       width: "100%",
     },
     actionContainer: {
@@ -217,8 +206,8 @@ const AsociacionesEPC = () => {
       padding: "10px",
     },
     button: {
-      backgroundColor: Colors.Rojo,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-blanco-puro)",
       padding: "0.5rem 1rem",
       border: "none",
       cursor: "pointer",
@@ -227,8 +216,8 @@ const AsociacionesEPC = () => {
     },
     estadoText: {
       fontWeight: "bold",
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       borderRadius: "10px",
       padding: "5px 10px",
       marginLeft: "1rem",
@@ -244,13 +233,13 @@ const AsociacionesEPC = () => {
     },
     noAsociacionesTitle: {
       fontSize: "1.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     noAsociacionesDescription: {
       textAlign: "center",
     },
     linkAgregarEvento: {
-      color: Colors.Azul,
+      color: "var(--qf-blue)",
       textDecoration: "none",
       fontWeight: "bold",
     },
@@ -270,8 +259,8 @@ const AsociacionesEPC = () => {
       marginLeft: "20px",
       marginRight: "20px",
       marginTop: "0",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
     },
     searchFilterContainer: {
       display: "flex",
@@ -290,14 +279,12 @@ const AsociacionesEPC = () => {
   ];
 
   return (
-    <div>
-      <div style={styles.row}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-        <div style={styles.colContent}>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+      <div style={styles.colContent}>
           <div style={styles.sectionTitle}>
             <h1>Mis Asociaciones</h1>
           </div>
-          <hr style={{ color: Colors.Naranja }} />
+          <hr style={{ color: "var(--qf-naranja)" }} />
           {/* main content with sidebar filters */}
           <div style={{ display: 'flex', width: 'calc(100% - 40px)', alignItems: 'flex-start', marginRight: '20px' }}>
             <div style={{ flex: '0 0 calc(70% - 0px)', width: 'calc(70% - 0px)' }}>
@@ -313,7 +300,7 @@ const AsociacionesEPC = () => {
           <div style={{...styles.container}}>
               {isLoading ? (
                 <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-                  <CircularProgress style={{ color: Colors.Naranja }} />
+                  <CircularProgress style={{ color: "var(--qf-naranja)" }} />
                 </div>
               ) : filteredEventos.length > 0 ? (
                 <div style={styles.rowInner}>
@@ -353,7 +340,7 @@ const AsociacionesEPC = () => {
                         <div style={styles.actionContainer}>
                           {asociacion.estado === "PendienteDeAceptacion" && (
                             <div style={{ width: "100%" }}>
-                              <hr style={{ color: Colors.Naranja }} />
+                              <hr style={{ color: "var(--qf-naranja)" }} />
                               <div style={styles.buttonContainer}>
                                 <button
                                   style={styles.button}
@@ -419,7 +406,6 @@ const AsociacionesEPC = () => {
               </div>
             </div>
           </div>
-        </div>
       </div>
       <ConfirmDialog
         open={confirmOpen}
@@ -429,7 +415,7 @@ const AsociacionesEPC = () => {
         onCancel={() => setConfirmOpen(false)}
       />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

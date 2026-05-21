@@ -1,15 +1,13 @@
-import React, { useContext, useState, useEffect } from "react";
+﻿import React, { useContext, useState, useEffect } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
-import useDynamicColors from "../../UseDinamicColors";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { FaCreditCard, FaTimes, FaLock } from "react-icons/fa";
 
 const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecret, amount }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const Colors = useDynamicColors();
   const { user } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isElementReady, setIsElementReady] = useState(false);
@@ -95,17 +93,17 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
 
   const cardStyle = {
     base: {
-      color: Colors.Blanco,
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      color: "var(--qf-text-primary)",
+      backgroundColor: "var(--qf-bg-main)",
       fontSize: "16px",
       fontFamily: "Arial, sans-serif",
       "::placeholder": {
-        color: Colors.Blanco + "80",
+        color: "var(--qf-text-primary)" + "80",
       },
     },
     invalid: {
-      color: Colors.Rojo,
-      iconColor: Colors.Rojo,
+      color: "var(--qf-rojo)",
+      iconColor: "var(--qf-rojo)",
     },
   };
 
@@ -116,21 +114,21 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
       width: "100%",
       maxWidth: "450px",
       padding: "2rem",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
       borderRadius: "12px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
     },
     header: {
       textAlign: "center",
       marginBottom: "2rem",
       paddingBottom: "1rem",
-      borderBottom: `2px solid ${Colors.Naranja}`,
+      borderBottom: `2px solid var(--qf-naranja)`,
     },
     title: {
       fontSize: "24px",
       fontWeight: "bold",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin: "0 0 0.5rem 0",
       display: "flex",
       alignItems: "center",
@@ -142,18 +140,18 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
     },
     subtitle: {
       fontSize: "14px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       gap: "6px",
     },
     summarySection: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       borderRadius: "8px",
       padding: "1.5rem",
       marginBottom: "2rem",
-      border: `1px solid ${Colors.Naranja}33`,
+      border: `1px solid var(--qf-naranja)33`,
     },
     summaryRow: {
       display: "flex",
@@ -163,11 +161,11 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
       fontSize: "14px",
     },
     summaryLabel: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
     },
     summaryValue: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
     },
     totalRow: {
@@ -176,32 +174,32 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
       alignItems: "center",
       marginTop: "12px",
       paddingTop: "12px",
-      borderTop: `1px solid ${Colors.Naranja}`,
+      borderTop: `1px solid var(--qf-naranja)`,
       fontSize: "18px",
     },
     totalLabel: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
     },
     totalAmount: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontSize: "22px",
       fontWeight: "bold",
     },
     userInfo: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       borderRadius: "8px",
       padding: "1rem",
       marginBottom: "2rem",
-      border: `1px solid ${Colors.Naranja}33`,
+      border: `1px solid var(--qf-naranja)33`,
       fontSize: "13px",
     },
     userLabel: {
-      color: Colors.Blanco + "88",
+      color: "var(--qf-text-primary)" + "88",
       marginBottom: "4px",
     },
     userName: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
       marginBottom: "8px",
     },
@@ -210,11 +208,11 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
     },
     cardElement: {
       padding: "12px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "8px",
       marginBottom: "1.5rem",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
     },
     buttonGroup: {
       display: "flex",
@@ -224,8 +222,8 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
     payButton: {
       width: "100%",
       padding: "12px",
-      backgroundColor: Colors.Verde,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-white)",
       fontSize: "16px",
       fontWeight: "bold",
       border: "none",
@@ -239,15 +237,15 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
       marginBottom: "10px",
     },
     payButtonDisabled: {
-      backgroundColor: Colors.Blanco + "33",
+      backgroundColor: "var(--qf-text-primary)" + "33",
       cursor: "not-allowed",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     cancelButton: {
       width: "100%",
       padding: "12px",
-      backgroundColor: Colors.Rojo,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-text-primary)",
       fontSize: "14px",
       fontWeight: "bold",
       border: "none",
@@ -263,7 +261,7 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
       textAlign: "center",
       marginTop: "1rem",
       fontSize: "12px",
-      color: Colors.Blanco + "88",
+      color: "var(--qf-text-primary)" + "88",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -293,7 +291,7 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
     },
     loadingText: {
       fontSize: "16px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
       textAlign: "center",
     },
@@ -363,13 +361,13 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
         {/* Mostrar errores de tarjeta */}
         {cardError && (
           <div style={{
-            color: Colors.Rojo,
+            color: "var(--qf-rojo)",
             fontSize: "13px",
             marginBottom: "12px",
             padding: "8px",
-            backgroundColor: Colors.Rojo + "22",
+            backgroundColor: "var(--qf-rojo)" + "22",
             borderRadius: "4px",
-            border: `1px solid ${Colors.Rojo}`,
+            border: `1px solid var(--qf-rojo)`,
           }}>
             {cardError}
           </div>
@@ -412,7 +410,7 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: Colors.Negro + "dd",
+          backgroundColor: "var(--qf-text-white)" + "dd",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -421,10 +419,10 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
           zIndex: 9999,
           backdropFilter: "blur(2px)",
         }}>
-          <CircularProgress style={{ color: Colors.Naranja }} size={50} />
+          <CircularProgress style={{ color: "var(--qf-naranja)" }} size={50} />
           <div style={{
             marginTop: "16px",
-            color: Colors.Blanco,
+            color: "var(--qf-text-primary)",
             fontSize: "16px",
             fontWeight: "500",
           }}>
@@ -432,7 +430,7 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
           </div>
           <div style={{
             fontSize: "13px",
-            color: Colors.Blanco + "cc",
+            color: "var(--qf-text-primary)" + "cc",
             marginTop: "8px",
             textAlign: "center",
             maxWidth: "80%",

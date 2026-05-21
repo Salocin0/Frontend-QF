@@ -1,12 +1,10 @@
-import React from "react";
+﻿import React from "react";
 import { useNavigate } from "react-router-dom";
 import logoevento from "./../img/logoevento.webp";
-import useDynamicColors from "../../UseDinamicColors";
 import { toast } from "react-toastify";
 
 const EventoUser = ({ evento }) => {
   const navigate = useNavigate();
-  const Color = useDynamicColors();
   const calcularTiempoRestante = (fecha) => {
     const ahora = new Date();
     const diferencia = fecha - ahora;
@@ -63,13 +61,13 @@ const EventoUser = ({ evento }) => {
       padding: "0",
     },
     card: {
-      border: `1px solid ${Color.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "8px",
       width: "98%",
       minHeight: "110px",
-      backgroundColor: Color.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       margin: "0 auto 14px auto",
-      color: Color.Blanco,
+      color: "var(--qf-text-primary)",
       padding: "8px 16px",
       transition: "transform 0.2s ease-in-out",
       cursor: "pointer",
@@ -112,29 +110,29 @@ const EventoUser = ({ evento }) => {
     title: {
       fontSize: "24px",
       fontWeight: "bold",
-      color: Color.Naranja,
+      color: "var(--qf-naranja)",
       marginBottom: "10px",
     },
     descripcion: {
       fontSize: "18px",
-      color: Color.Gris,
+      color: "var(--qf-text-muted)",
       marginBottom: "10px",
     },
     text: {
       fontSize: "16px",
-      color: Color.Gris,
+      color: "var(--qf-text-muted)",
       marginBottom: "5px",
     },
     distance: {
       fontSize: "16px",
       fontWeight: "bold",
-      color: Color.Verde,
+      color: "var(--qf-green)",
       marginBottom: "5px",
     },
     estado: {
       fontSize: "16px",
-      backgroundColor: Color.Verde,
-      color: Color.Negro,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-white)",
       borderRadius: "5px",
       padding: "5px 5px",
       fontWeight: "bold",
@@ -144,7 +142,7 @@ const EventoUser = ({ evento }) => {
     },
     fecha: {
       fontSize: "16px",
-      color: Color.Gris,
+      color: "var(--qf-text-muted)",
     },
     estadoContainer: {
       display: "flex",
@@ -155,11 +153,11 @@ const EventoUser = ({ evento }) => {
     },
     preventa: {
       fontSize: "16px",
-      color: Color.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
       padding: "5px 10px",
       borderRadius: "5px",
-      backgroundColor: Color.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       display: "flex",
       justifyContent: "center",
     },

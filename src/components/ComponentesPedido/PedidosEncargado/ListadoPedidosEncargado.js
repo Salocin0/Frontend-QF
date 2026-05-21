@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+﻿import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import KanbanBoard from "../../ComponentesEPC/KanbanBoard.js";
-import Sidebar from "../../ComponentesGenerales/Sidebar.js";
+import PageLayout from "../../ComponentesGenerales/PageLayout";
 import { UserContext } from "../../ComponentesGenerales/UserContext.js";
-import useDynamicColors from "../../../UseDinamicColors.js";
 import Footer from "../../ComponentesGenerales/Footer.js";
 import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -13,7 +12,6 @@ const ListadoPedidosEncargado = () => {
   const { user } = useContext(UserContext);
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
-  const Colors = useDynamicColors();
   const { id } = useParams();
   const location = useLocation();
   const carrito = location.state;
@@ -115,17 +113,7 @@ const ListadoPedidosEncargado = () => {
       justifyContent: "center",
       paddingTop: "1rem",
       fontSize: "2rem",
-      color: Colors.Naranja,
-    },
-    row: {
-      margin: 0,
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-      overflowY: "auto",
-      overflowX: "hidden",
-      msOverflowStyle: "none",
-      scrollbarWidth: "none",
-      WebkitScrollbar: { display: "none" },
+      color: "var(--qf-naranja)",
     },
     colContent: {
       marginLeft: "20%",
@@ -143,7 +131,7 @@ const ListadoPedidosEncargado = () => {
     },
     tituloSeccionNegativo: {
       fontSize: "2rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
     },
     breadcrumbWrapper: {
@@ -159,13 +147,12 @@ const ListadoPedidosEncargado = () => {
   ];
 
   return (
-    <div style={styles.row}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.colContent}>
         <div style={styles.tituloSeccion}>
           <h1>Pedidos {carrito?.nombreCarro}</h1>
         </div>
-        <hr style={{ color: Colors.Naranja }} />
+        <hr style={{ color: "var(--qf-naranja)" }} />
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
@@ -189,7 +176,7 @@ const ListadoPedidosEncargado = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+﻿import React, { useState, useEffect, useContext } from "react";
 import RenderizarTarjeta from "./Tarjeta";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { CircularProgress } from "@mui/material";
 
@@ -12,7 +11,6 @@ const Carrito = () => {
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const Colors = useDynamicColors();
 
   const recargarComponente = () => {
     setRecargar((prevRecargar) => prevRecargar + 1);
@@ -64,17 +62,6 @@ const Carrito = () => {
   const productosAgrupados = agruparProductos();
 
   const styles = {
-    container: {
-      display: "flex",
-      flexDirection: "column",
-      height: "100%",
-      width: "100%",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      minHeight: "100vh",
-    },
-    sidebar: {
-      width: "20%",
-    },
     mainContent: {
       width: "80%",
       marginLeft: "20%",
@@ -87,11 +74,11 @@ const Carrito = () => {
       display: "flex",
       justifyContent: "center",
       marginBottom: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     separator: {
       border: "none",
-      borderTop: `1px solid ${Colors.Naranja}`,
+      borderTop: `1px solid var(--qf-naranja)`,
     },
     productContainer: {
       display: "flex",
@@ -112,12 +99,12 @@ const Carrito = () => {
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       gap: "20px",
     },
     loadingText: {
       fontSize: "16px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
     },
   };
@@ -128,10 +115,7 @@ const Carrito = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.mainContent}>
         <div style={styles.titleSection}>
           <h1>Carrito</h1>
@@ -148,7 +132,7 @@ const Carrito = () => {
           <div style={styles.productList}>
             {isLoading ? (
               <div style={styles.loadingContainer}>
-                <CircularProgress style={{ color: Colors.Naranja }} size={50} />
+                <CircularProgress style={{ color: "var(--qf-naranja)" }} size={50} />
                 <div style={styles.loadingText}>Cargando carrito...</div>
               </div>
             ) : Object.keys(productosAgrupados).length > 0 ? (
@@ -170,8 +154,8 @@ const Carrito = () => {
                 )
               )
             ) : (
-              <div style={{height: "30rem", display: "flex", justifyContent: "center", alignItems: "center",backgroundColor: Colors.GrisAzuladoOscuro}}>
-                <h2 style={{ color: Colors.Naranja, textAlign: "center",  }}>
+              <div style={{height: "30rem", display: "flex", justifyContent: "center", alignItems: "center",backgroundColor: "var(--qf-bg-main)"}}>
+                <h2 style={{ color: "var(--qf-naranja)", textAlign: "center",  }}>
                   No hay productos en el carrito
                 </h2>
               </div>
@@ -180,7 +164,7 @@ const Carrito = () => {
         </div>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

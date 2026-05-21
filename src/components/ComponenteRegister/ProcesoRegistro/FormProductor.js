@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { toast } from "react-toastify";
 import "../placeholder.css"
-import useDynamicColors from "../../../UseDinamicColors";
 
 const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
-  const Colors = useDynamicColors();  
   const [productorData, setProductorData] = useState({
     cuit: "",
     razonSocial: "",
@@ -63,10 +61,10 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
       maxWidth: "600px",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardHeader: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "1.5rem",
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
@@ -85,14 +83,14 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
       fontWeight: "bold",
       marginBottom: "0.5rem",
       margin:"0px",
-      color: Colors.Negro
+      color: "var(--qf-text-white)"
     },
     input: {
       width: "100%",
       padding: "0.75rem",
       fontSize: "1rem",
       borderRadius: "4px",
-      border: `1px solid ${Colors.Gris}`,
+      border: `1px solid var(--qf-text-muted)`,
     },
     buttonContainer: {
       display: "flex",
@@ -101,16 +99,16 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
     },
     backButton: {
       padding: "0.5rem 1rem",
-      backgroundColor: Colors.Azul,
-      border: `1px solid ${Colors.Gris}`,
+      backgroundColor: "var(--qf-blue)",
+      border: `1px solid var(--qf-text-muted)`,
       borderRadius: "4px",
       cursor: "pointer",
-      color: Colors.BlancoEnBlanco
+      color: "var(--qf-blanco-puro)"
     },
     nextButton: {
       padding: "0.5rem 1rem",
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",

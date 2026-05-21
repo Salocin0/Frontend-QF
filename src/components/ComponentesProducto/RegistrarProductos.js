@@ -1,12 +1,11 @@
-import React, { useContext, useState } from "react";
+﻿import React, { useContext, useState } from "react";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useParams } from "react-router-dom";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const RegistrarProductos = () => {
@@ -19,7 +18,6 @@ const RegistrarProductos = () => {
   const { id } = useParams();
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  const Colors = useDynamicColors();
 
 
   function tieneLetras(cadena) {
@@ -97,7 +95,7 @@ const RegistrarProductos = () => {
   const styles = {
     mainFormEventos: {
       padding: "0",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       display: "flex",
       justifyContent: "center",
       
@@ -106,22 +104,22 @@ const RegistrarProductos = () => {
       padding: "20px",
       borderRadius: "10px",
       flexDirection: "column",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       marginLeft: "20%",
       width: "Calc(80% - 40px)",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       height: "100%",
     },
     formTitle: {
       fontSize: "1.25rem",
       fontWeight: "bold",
       marginBottom: "0.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
     },
     formLabel: {
       margin: "0rem",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
     formControl: {
       width: "100%",
@@ -151,8 +149,8 @@ const RegistrarProductos = () => {
       marginBottom: "0.25rem",
     },
     submitButton: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       padding: "0.5rem 1rem",
       fontSize: "1rem",
       fontWeight: "bold",
@@ -173,19 +171,15 @@ const RegistrarProductos = () => {
       marginLeft: "20%",
       width: "80%",
       padding: "20px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-    },
-    fondo: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      paddingBottom: "80px"
+      backgroundColor: "var(--qf-bg-main)",
     },
     divider: {
-      borderColor: Colors.Naranja,
+      borderColor: "var(--qf-naranja)",
       width: "100%",
       margin: "10px 0",
     },
     title: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       textAlign: "center",
     },
@@ -205,7 +199,7 @@ const RegistrarProductos = () => {
   ];
 
   return (
-    <div style={styles.fondo}>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div>
         <div style={styles.header}>
           <h1 style={styles.title}>Crear Producto Nuevo</h1>
@@ -219,7 +213,6 @@ const RegistrarProductos = () => {
         </div>
       </div>
 
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
       <div style={styles.mainFormEventos}>
         <div style={styles.cardBody}>
           <h1 style={styles.formTitle}>Registrar Producto</h1>
@@ -319,7 +312,7 @@ const RegistrarProductos = () => {
         </div>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

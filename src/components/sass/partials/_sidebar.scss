@@ -3,13 +3,14 @@
 .sidebar {
   font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans","Liberation Sans",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
   height: 100vh;
-  position: sticky;
-  top: 0;
-  width: $ancho-sidebar;
-  background:black;
-
-  border-right: 1px solid white;
+  width: 100%;
+  background: var(--qf-sidebar-bg, #000000);
+  border-right: var(--qf-sidebar-border, none);
   box-shadow: 30px 0 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .especial {
@@ -53,26 +54,26 @@
 
 .ventana-emergente {
   position: fixed;
-  left: $ancho-sidebar;
+  left: var(--qf-sidebar-width, 250px);
   margin-top: 75px;
   width: auto;
   height: auto;
-  background-color: black;
-  box-shadow: 5px 5px 10px $color-amarillo-QF;
-  border-right: 2px solid $color-amarillo-QF;
-  border-top: 2px solid $color-amarillo-QF;
-  border-bottom: 2px solid $color-amarillo-QF;
+  background-color: var(--qf-sidebar-bg, #000000);
+  box-shadow: 5px 5px 10px var(--qf-naranja);
+  border-right: 2px solid var(--qf-naranja);
+  border-top: 2px solid var(--qf-naranja);
+  border-bottom: 2px solid var(--qf-naranja);
   z-index: 9999;
   overflow: auto; 
 }
 
 .notificacion {
   width: 270px;
-  background-color:black; 
+  background-color: var(--qf-sidebar-bg, #000000); 
   color: white;
   padding: 2px;
   margin: 0px 7px 0px 5px;
-  border-bottom: 1px solid $color-amarillo-QF;
+  border-bottom: 1px solid var(--qf-naranja);
 }
 
 .fecha {
@@ -99,15 +100,15 @@
   margin-bottom: 10px;
   font-weight: bold;
   width: 100%;
-  color: $gris-letra-sidebar;
+  color: var(--qf-sidebar-muted, #888B9A);
 }
 
 .divicionnav {
-  color: $color-amarillo-QF;
+  color: var(--qf-naranja);
 }
 
 .navitem:hover {
-  background-color: $color-amarillo-QF;
+  background-color: var(--qf-naranja);
 }
 
 .nav {
@@ -116,14 +117,14 @@
 
 .navlink span {
   font-size: 20px;
-  color: $color-amarillo-QF;
+  color: var(--qf-sidebar-icon, #c5a145);
   transition: color 0.3s;
 }
 
 .navitem i {
   font-size: 17px;
   margin: auto;
-  color: $color-amarillo-QF;
+  color: var(--qf-sidebar-icon, #c5a145);
   margin-left: 5px;
   margin-right: 15px;
   transition: color 0.3s;
@@ -155,11 +156,10 @@
 }
 
 .navlink {
-
   text-align: start;
   width: 100%;
   text-decoration: none;
-  color: $letra-sidebar;
+  color: var(--qf-sidebar-text, black);
 }
 
 #dropdown {
@@ -171,7 +171,7 @@
 .icono {
   font-size: 17px;
   margin: auto;
-  color: $color-amarillo-QF;
+  color: var(--qf-sidebar-icon, #c5a145);
   margin-right: 15px;
   transition: color 0.3s;
   margin-left: 5px;
@@ -183,11 +183,6 @@
 
 @media screen and (max-width: 576px) {
   .sidebar {
-    font-family: Arial, sans-serif;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-    width: $ancho-sidebar-reducido;
     background: #0F2027;
     background: -webkit-linear-gradient(to top, $color-gris-1-degrades-sidebar, $color-gris-2-degrades-sidebar, $color-gris-3-degrades-sidebar);
     background: linear-gradient(to top, $color-gris-1-degrades-sidebar, $color-gris-2-degrades-sidebar, $color-gris-3-degrades-sidebar);

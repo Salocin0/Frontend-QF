@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import useDynamicColors from "../../../UseDinamicColors";
+﻿import React, { useState } from "react";
 const FormRepartidor = ({ nextStep, backStep, handleRegistro }) => {
-  const Colors = useDynamicColors();
   const [repartidorData, setRepartidorData] = useState({
     confirmacionMayorDeEdad: false,
   });
@@ -41,10 +39,10 @@ const FormRepartidor = ({ nextStep, backStep, handleRegistro }) => {
       maxWidth: "600px",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     title: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "1.5rem",
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
@@ -57,7 +55,7 @@ const FormRepartidor = ({ nextStep, backStep, handleRegistro }) => {
     label: {
       marginLeft: "0.5rem",
       fontSize: "0.9rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     buttonContainer: {
       display: "flex",
@@ -66,16 +64,16 @@ const FormRepartidor = ({ nextStep, backStep, handleRegistro }) => {
     },
     backButton: {
       padding: "0.5rem 1rem",
-      backgroundColor:Colors.Azul,
-      border: `1px solid ${Colors.Gris}`,
+      backgroundColor:"var(--qf-blue)",
+      border: `1px solid var(--qf-text-muted)`,
       borderRadius: "4px",
       cursor: "pointer",
-      color: Colors.BlancoEnBlanco
+      color: "var(--qf-blanco-puro)"
     },
     nextButton: {
       padding: "0.5rem 1rem",
-      backgroundColor:Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor:"var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",

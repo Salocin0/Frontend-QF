@@ -1,11 +1,9 @@
-import React from "react";
+﻿import React from "react";
 import { Link } from "react-router-dom";
 import Logo from "../img/adaptive-icon.png";
-import useDynamicColors from "../../UseDinamicColors";
 import { FaUserPlus, FaSignInAlt } from "react-icons/fa";
 
 const Navbar = () => {
-  const Colors = useDynamicColors();
   const styles = {
     navbar: {
       display: "flex",
@@ -13,7 +11,7 @@ const Navbar = () => {
       alignItems: "center",
       justifyContent: "space-between",
       padding: "10px 20px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
     },
     logo: {
@@ -33,7 +31,7 @@ const Navbar = () => {
     togglerIcon: {
       width: "30px",
       height: "30px",
-      backgroundColor: Colors.GrisClaro,
+      backgroundColor: "var(--qf-bg-card)",
     },
     navbarCollapse: {
       display: "flex",
@@ -41,10 +39,10 @@ const Navbar = () => {
       flexDirection: "row",
     },
     navItemGray: {
-      color: Colors.Gris,
+      color: "var(--qf-text-muted)",
       cursor: "pointer",
       textDecoration: "none",
-      border: `2px solid ${Colors.Gris}`,
+      border: `2px solid var(--qf-text-muted)`,
       borderRadius: "10px",
       margin: "10px",
       display: "flex",
@@ -52,8 +50,8 @@ const Navbar = () => {
       padding: "5px 20px",
     },
     navItemYellow: {
-      backgroundColor: Colors.Naranja,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-naranja)",
+      color: "var(--qf-blanco-puro)",
       cursor: "pointer",
       textDecoration: "none",
       borderRadius: "10px",
@@ -63,7 +61,7 @@ const Navbar = () => {
       padding: "5px 20px",
     },
     themeButton: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontSize: "1.5rem",
       cursor: "pointer",
       backgroundColor: "transparent",

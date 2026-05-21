@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+﻿import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import EventoEncargado from "../ComponentesEventos/EventoEncargado";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 
@@ -13,7 +12,6 @@ const AsociarPuestoAEvento = () => {
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const Colors = useDynamicColors();
 
   const recargarComponente = () => {
     setRecargar(+1);
@@ -41,14 +39,6 @@ const AsociarPuestoAEvento = () => {
   }, [user, recargar]);
 
   const styles = {
-    container: {
-      display: "flex",
-      flexDirection: "column",
-      margin: 0,
-      padding: 0,
-      height: "100vh",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-    },
     mainContent: {
       width: "80%",
       padding: "0 2rem",
@@ -63,10 +53,10 @@ const AsociarPuestoAEvento = () => {
       paddingTop: "1rem",
       paddingBottom: "0.5rem",
       fontSize: "2rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     separator: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     eventsContainer: {
       display: "flex",
@@ -80,7 +70,7 @@ const AsociarPuestoAEvento = () => {
     },
     noEventsMessage: {
       fontSize: "1.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
     },
     breadcrumbWrapper: {
@@ -97,8 +87,7 @@ const AsociarPuestoAEvento = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.mainContent}>
         <div style={styles.titleContainer}>
           <h1 style={styles.title}>Asociate a un Evento</h1>
@@ -134,7 +123,7 @@ const AsociarPuestoAEvento = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

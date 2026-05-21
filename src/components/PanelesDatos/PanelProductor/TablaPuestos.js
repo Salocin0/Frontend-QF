@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import useDynamicColors from '../../../UseDinamicColors';
+﻿import React, { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 
 const EstadisticasTable = ({ id }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const Colors = useDynamicColors();
 
   useEffect(() => {
     const fetchEstadisticas = async () => {
@@ -32,36 +30,36 @@ const EstadisticasTable = ({ id }) => {
 
   if (loading) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px" }}>
-      <CircularProgress style={{ color: Colors.Naranja }} />
+      <CircularProgress style={{ color: "var(--qf-naranja)" }} />
     </div>
   );
   if (error) return <p>Error: {error}</p>;
 
   return (
     <div>
-      <h2 style={{ color: Colors.Naranja }}>Recaudado por Puesto</h2>
+      <h2 style={{ color: "var(--qf-naranja)" }}>Recaudado por Puesto</h2>
       <table
         style={{
           width: '100%',
           textAlign: 'left',
           borderCollapse: 'collapse',
           tableLayout: 'fixed',
-          color: Colors.BlancoEnBlanco
+          color: "var(--qf-blanco-puro)"
         }}
       >
         <thead>
           <tr>
-            <th style={{ textAlign: 'center', borderBottom: `1px solid ${Colors.Naranja}` }}>Nombre</th>
+            <th style={{ textAlign: 'center', borderBottom: `1px solid var(--qf-naranja)` }}>Nombre</th>
             <th
               style={{
                 textAlign: 'center',
-                borderBottom: `1px solid ${Colors.Naranja}`,
+                borderBottom: `1px solid var(--qf-naranja)`,
                 width: '80px',
               }}
             >
               Pedidos
             </th>
-            <th style={{ textAlign: 'center', borderBottom: `1px solid ${Colors.Naranja}`,width: '120px'}}>Total</th>
+            <th style={{ textAlign: 'center', borderBottom: `1px solid var(--qf-naranja)`,width: '120px'}}>Total</th>
           </tr>
         </thead>
         <tbody>

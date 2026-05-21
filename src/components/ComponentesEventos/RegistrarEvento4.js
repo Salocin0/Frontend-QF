@@ -1,12 +1,11 @@
-/* eslint-disable no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import "bootstrap/dist/css/bootstrap.min.css"; // Importar Bootstrap si no lo tienes
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import "./../sass/main.scss";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -22,7 +21,6 @@ const RegistrarEvento4 = () => {
   const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   useEffect(() => {
     const storedEvent = JSON.parse(localStorage.getItem("eventoDatos"));
@@ -149,12 +147,6 @@ const RegistrarEvento4 = () => {
   };
 
   const styles = {
-    containerFluid: {
-      width: "100%",
-      padding: "0",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      minHeight: "100vh",
-    },
     rowFormEvento: {
       display: "flex",
       flexWrap: "wrap",
@@ -168,12 +160,12 @@ const RegistrarEvento4 = () => {
       marginBottom: "70px",
     },
     formWrapper: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       padding: "2rem",
       width: "100%",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
       margin: "0 20px",
     },
@@ -190,7 +182,7 @@ const RegistrarEvento4 = () => {
       padding: "0.5rem",
       fontSize: "1rem",
       borderRadius: "10px",
-      color: Colors.NegroEnNegro,
+      color: "var(--qf-negro-puro)",
     },
     buttonContainer: {
       display: "flex",
@@ -198,8 +190,8 @@ const RegistrarEvento4 = () => {
       gap: "0.5rem",
     },
     button: {
-      backgroundColor: Colors.Azul,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-text-primary)",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
@@ -213,7 +205,7 @@ const RegistrarEvento4 = () => {
       gap: "10px",
     },
     buttonSecondary: {
-      backgroundColor: Colors.GrisOscuro,
+      backgroundColor: "var(--qf-text-secondary)",
     },
     buttonDisabled: {
       opacity: 0.7,
@@ -225,14 +217,14 @@ const RegistrarEvento4 = () => {
       marginTop: "20px",
       fontSize: "24px",
       marginLeft: "20%",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       width: "80%",
     },
     separator: {
       border: "none",
       marginBottom: "5px",
       marginTop: "0px",
-      borderTop: `1px solid ${Colors.Naranja}`,
+      borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
       marginLeft: "20%",
@@ -241,8 +233,8 @@ const RegistrarEvento4 = () => {
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     hr: {
-      color: Colors.Naranja,
-      border: `1px solid ${Colors.Naranja}`,
+      color: "var(--qf-naranja)",
+      border: `1px solid var(--qf-naranja)`,
       width: "100%",
     },
   };
@@ -254,9 +246,7 @@ const RegistrarEvento4 = () => {
   ];
 
   return (
-    <div style={styles.containerFluid}>
-      <div style={styles.rowFormEvento}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
         <div style={styles.tituloSeccion}>
           <h1 style={{ textAlign: "center" }}>Crear un Evento</h1>
         </div>
@@ -332,7 +322,7 @@ const RegistrarEvento4 = () => {
                   disabled={isSubmitting}
                 >
                   {isSubmitting && (
-                    <CircularProgress size={18} style={{ color: Colors.Blanco }} />
+                    <CircularProgress size={18} style={{ color: "var(--qf-text-primary)" }} />
                   )}
                   {isSubmitting ? "Guardando..." : "Siguiente"}
                 </button>
@@ -340,9 +330,8 @@ const RegistrarEvento4 = () => {
             </form>
           </div>
         </div>
-      </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

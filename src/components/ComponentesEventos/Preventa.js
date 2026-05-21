@@ -1,11 +1,10 @@
-import CardCompraInstantanea from "./CardCompraInstantanea";
+﻿import CardCompraInstantanea from "./CardCompraInstantanea";
 import CardPreCompra from "./CardPreCompra";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useParams } from "react-router-dom";
-import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify"; // Importa Toastify
 
@@ -13,7 +12,6 @@ const Preventa = () => {
   const [evento, setEvento] = useState([]);
   const { user } = useContext(UserContext);
   const { id } = useParams();
-  const Colors = useDynamicColors();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,23 +42,16 @@ const Preventa = () => {
   };
 
   const styles = {
-    fondo: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      margin: 0,
-      paddingTop: "20px",
-      height: "100vh",
-    },
   };
 
   return (
-    <div style={styles.fondo}>
-      <Sidebar tipoUsuario={user.tipoUsuario}/>
+    <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
       <div onClick={() => irACompraInstantanea()}>
         <CardCompraInstantanea evento={evento} />
       </div>
       <CardPreCompra evento={evento} />
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

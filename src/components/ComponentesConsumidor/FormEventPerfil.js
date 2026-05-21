@@ -1,5 +1,4 @@
-import Modal from "react-modal";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import Modal from "react-modal";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -12,7 +11,6 @@ const EventProducerForm = ({
   setMostrarContenidoProductor,
   isCuitValid,
 }) => {
-  const Colors = useDynamicColors();
   const [condicionIvaPE, setCondicionPE] = useState("");
   const [razonSocialPE, setRazonSocialPE] = useState("");
   const [isDisabledPE, setIsDisabledPE] = useState(true);
@@ -25,9 +23,9 @@ const EventProducerForm = ({
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       borderRadius: "8px",
       width: "100%",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       marginTop: "20px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
     },
     cardBody: {
       padding: "20px",
@@ -44,7 +42,7 @@ const EventProducerForm = ({
     },
     headerText: {
       fontWeight: "bold",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     label: {
       marginBottom: "5px",
@@ -57,8 +55,8 @@ const EventProducerForm = ({
       borderRadius: "5px",
       marginBottom: "16px",
       border: "none",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
     },
     buttonGroup: {
       display: "flex",
@@ -90,12 +88,12 @@ const EventProducerForm = ({
       maxWidth: "400px",
       padding: "20px",
       textAlign: "center",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-secondary)",
+      color: "var(--qf-text-primary)",
     },
-    dangerButton: { backgroundColor: Colors.Rojo, color: "white" },
-    successButton: { backgroundColor: Colors.Verde, color: "white" },
-    primaryButton: { backgroundColor: Colors.Azul, color: "white" },
+    dangerButton: { backgroundColor: "var(--qf-rojo)", color: "white" },
+    successButton: { backgroundColor: "var(--qf-green)", color: "white" },
+    primaryButton: { backgroundColor: "var(--qf-blue)", color: "white" },
   };
 
   const handleRazonSocialChangePE = (e) => {

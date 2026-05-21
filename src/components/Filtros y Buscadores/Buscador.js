@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import React, { useState, useEffect } from "react";
 
 const Buscador = ({ 
   placeholder = "Buscar...", 
@@ -8,7 +7,6 @@ const Buscador = ({
   delay = 300,
   style = {}
 }) => {
-  const Colors = useDynamicColors();
   const [searchText, setSearchText] = useState("");
 
   // Estilos consistentes con BuscadorEventosConsumidor
@@ -21,23 +19,23 @@ const Buscador = ({
       borderRadius: "8px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       flexDirection: "row",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       alignItems: "center",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
     },
     input: {
       flex: 1,
       minWidth: 0,
       padding: "10px",
-      border: `1px solid ${Colors.Gris}`,
+      border: `1px solid var(--qf-text-muted)`,
       borderRadius: "4px",
       fontSize: "16px",
       outline: "none",
     },
     button: {
       padding: "10px 15px",
-      backgroundColor: Colors.Verde,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
       border: "none",
       borderRadius: "4px",

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import "./../sass/main.scss";
 
@@ -340,12 +340,8 @@ const RegistrarEvento = () => {
   }, [session]);
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-2 p-0">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className={`col background`}>
+    <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
+      <div className={`col background`}>
           <div className="fondo">
             <div className="containerRegistrar d-flex justify-content-center align-items-center">
               <section
@@ -877,10 +873,9 @@ const RegistrarEvento = () => {
               </section>
             </div>
           </div>
-        </div>
       </div>
       <Footer className="footer" />
-    </div>
+    </PageLayout>
   );
 };
 

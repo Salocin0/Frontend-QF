@@ -1,11 +1,10 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+﻿import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import "./../sass/main.css";
 import EventoRepartidor from "./EventoRepartidor";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const AsociarRepartidorAEvento = () => {
@@ -13,7 +12,6 @@ const AsociarRepartidorAEvento = () => {
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const Colors = useDynamicColors();
 
 
   const recargarComponente = () => {
@@ -42,11 +40,6 @@ const AsociarRepartidorAEvento = () => {
   }, [user, recargar]);
 
   const styles = {
-    container: {
-      marginLeft: "0",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-    },
     contentCol: {
       marginLeft: "20%",
     },
@@ -56,13 +49,13 @@ const AsociarRepartidorAEvento = () => {
       fontWeight: "bold",
       fontSize: "1.5rem",
       textAlign: "center",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     titleText: {
       paddingTop: "0.5rem",
     },
     separator: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     noEvents: {
       color: "red",
@@ -93,8 +86,7 @@ const AsociarRepartidorAEvento = () => {
   ];
 
   return (
-    <div style={styles.container}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.contentCol}>
         <div style={styles.titleSection}>
           <h1 style={styles.titleText}>Asociate a un Evento</h1>
@@ -113,7 +105,7 @@ const AsociarRepartidorAEvento = () => {
           <div style={styles.eventsList}>
             {isLoading ? (
               <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-                <CircularProgress style={{ color: Colors.Naranja }} />
+                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
               </div>
             ) : Array.isArray(eventos) && eventos.length > 0 ? (
               <div>
@@ -134,7 +126,7 @@ const AsociarRepartidorAEvento = () => {
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

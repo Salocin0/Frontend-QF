@@ -1,12 +1,11 @@
-/* eslint-disable no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import "./../sass/main.scss";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -34,7 +33,6 @@ const RegistrarEvento2 = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  const Colors = useDynamicColors();
   const geocodeDebounceRef = useRef(null);
 
   const fetchNominatim = async (query, limit = 5) => {
@@ -313,14 +311,6 @@ const RegistrarEvento2 = () => {
   }, []);
 
   const styles = {
-    containerFluid: {
-      width: "100%",
-      padding: 0,
-      margin: 0,
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-      overflow: "hidden",
-    },
     rowFormEvento: {
       display: "flex",
       flexDirection: "column",
@@ -335,8 +325,8 @@ const RegistrarEvento2 = () => {
       marginLeft: "20%",
     },
     darkFormWrapper: {
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
       padding: "1rem",
       borderRadius: "10px",
       width: "100%",
@@ -350,7 +340,7 @@ const RegistrarEvento2 = () => {
     formLabel: {
       display: "block",
       fontSize: "1rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       margin: "0",
     },
     formInput: {
@@ -365,8 +355,8 @@ const RegistrarEvento2 = () => {
     },
     opcionesEvento: {
       padding: "0.5rem 1rem",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
       cursor: "pointer",
       borderRadius: "5px",
       textAlign: "center",
@@ -374,7 +364,7 @@ const RegistrarEvento2 = () => {
       marginRight: "0.5rem",
     },
     opcionesEventoSelected: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
     },
     optionContainerPago: {
       display: "flex",
@@ -382,8 +372,8 @@ const RegistrarEvento2 = () => {
     },
     opcionesPago: {
       padding: "0.5rem 1rem",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
       cursor: "pointer",
       borderRadius: "5px",
       textAlign: "center",
@@ -391,13 +381,13 @@ const RegistrarEvento2 = () => {
       marginRight: "0.5rem",
     },
     opcionesPagoSelected: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
     },
     suggestionsList: {
       listStyleType: "none",
       padding: 0,
       margin: 0,
-      backgroundColor: Colors.Blanco,
+      backgroundColor: "var(--qf-text-primary)",
       borderRadius: "5px",
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
       position: "absolute", // Para que las sugerencias estén sobre el formulario
@@ -411,14 +401,14 @@ const RegistrarEvento2 = () => {
       cursor: "pointer",
     },
     suggestionItemHover: {
-      backgroundColor: Colors.Blanco,
+      backgroundColor: "var(--qf-text-primary)",
     },
     btnPrimary: {
       width: "100%",
       padding: "0.8rem",
       fontSize: "1rem",
-      color: Colors.Blanco,
-      backgroundColor: Colors.Verde,
+      color: "var(--qf-text-primary)",
+      backgroundColor: "var(--qf-green)",
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",
@@ -440,8 +430,8 @@ const RegistrarEvento2 = () => {
       width: "40%",
       padding: "0.8rem",
       fontSize: "1rem",
-      color: Colors.Blanco,
-      backgroundColor: Colors.GrisOscuro,
+      color: "var(--qf-text-primary)",
+      backgroundColor: "var(--qf-text-secondary)",
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",
@@ -451,7 +441,7 @@ const RegistrarEvento2 = () => {
       fontSize: "1.25rem",
       fontWeight: "bold",
       marginBottom: "0.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     tituloSeccion: {
       display: "flex",
@@ -459,13 +449,13 @@ const RegistrarEvento2 = () => {
       marginTop: "20px",
       fontSize: "24px",
       marginLeft: "20%",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     separator: {
       border: "none",
       marginBottom: "5px",
       marginTop: "0px",
-      borderTop: `1px solid ${Colors.Naranja}`,
+      borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
       marginLeft: "20%",
@@ -474,8 +464,8 @@ const RegistrarEvento2 = () => {
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     hr: {
-      color: Colors.Naranja,
-      border: `1px solid ${Colors.Naranja}`,
+      color: "var(--qf-naranja)",
+      border: `1px solid var(--qf-naranja)`,
       width: "100%",
     },
   };
@@ -487,8 +477,7 @@ const RegistrarEvento2 = () => {
   ];
 
   return (
-    <div style={styles.containerFluid}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.rowFormEvento}>
         <div style={styles.tituloSeccion}>
           <h1>Crear un Evento</h1>
@@ -637,7 +626,7 @@ const RegistrarEvento2 = () => {
                     onChange={handleImagenEventoChange}
                     style={{
                       ...styles.formInput,
-                      backgroundColor: Colors.Blanco,
+                      backgroundColor: "var(--qf-text-primary)",
                     }}
                   />
                 </div>
@@ -663,7 +652,7 @@ const RegistrarEvento2 = () => {
                   disabled={isSubmitting}
                 >
                   {isSubmitting && (
-                    <CircularProgress size={18} style={{ color: Colors.Blanco }} />
+                    <CircularProgress size={18} style={{ color: "var(--qf-text-primary)" }} />
                   )}
                   {isSubmitting ? "Guardando..." : "Siguiente"}
                 </button>
@@ -673,7 +662,7 @@ const RegistrarEvento2 = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
-import useDynamicColors from "../../UseDinamicColors";
 
 const CardInicio = ({ data }) => {
-    const Colors = useDynamicColors();
   const styles = {
     card: {
       display: "flex",
@@ -11,7 +9,7 @@ const CardInicio = ({ data }) => {
       justifyContent: "center",
       textDecoration: "none",
       color: "black",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       border: "1px solid white",
       borderRadius: "10px",
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
@@ -24,8 +22,8 @@ const CardInicio = ({ data }) => {
       textDecoration: "none",
       color: "inherit",
       display: "flex",
-      flexDirection: "column", // Mantener el texto en columna
-      justifyContent: "space-between", // Espacio entre imagen y texto
+      flexDirection: "column",
+      justifyContent: "space-between",
       height: "100%",
     },
     imagen: {
@@ -43,19 +41,16 @@ const CardInicio = ({ data }) => {
     subtitle: {
       textAlign: "center",
       fontStyle: "italic",
-      color:"black",
+      color: "black",
       fontSize: "1rem",
     },
   };
 
-  const {  to, imgSrc, title, subtitle } = data;
+  const { to, imgSrc, title, subtitle } = data;
 
   const cardContent = (
-    <div
-      style={styles.card}
-    >
+    <div style={styles.card}>
       <img src={imgSrc} alt={title} style={styles.imagen} />
-
       <div>
         <h2 style={styles.title}>{title}</h2>
         <p style={styles.subtitle}>{subtitle}</p>

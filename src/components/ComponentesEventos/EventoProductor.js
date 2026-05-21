@@ -1,13 +1,11 @@
-import { default as React, useEffect, useState } from "react";
+﻿import { default as React, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/logoevento.webp";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 
 const EventoProductor = ({ evento, recargarComponente }) => {
   const navigate = useNavigate();
-  const Colors = useDynamicColors();
   const [isEnPreparacion, setIsEnPreparacion] = useState(false);
   const [isConfirmado, setIsConfirmado] = useState(false);
   const [isEnCurso, setIsEnCurso] = useState(false);
@@ -280,14 +278,14 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   const styles = {
     container: {
       width: "100%",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       position: "relative",
       borderRadius: "10px",
       padding: "20px",
       gap: "20px",
       marginBottom: "20px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
     },
     card: {
       display: "flex",
@@ -311,7 +309,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       width: "100%",
       marginRight: "150px",
     },
@@ -323,26 +321,26 @@ const EventoProductor = ({ evento, recargarComponente }) => {
     cardDescripcion: {
       fontSize: "16px",
       marginBottom: "10px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       textAlign: "center",
     },
     cardText: {
       fontSize: "14px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       textAlign: "center",
     },
     cardDistance: {
       fontSize: "14px",
       fontStyle: "italic",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       textAlign: "center",
     },
     cardEstadoProductor: {
       position: "absolute",
       top: "10px",
       right: "20px",
-      color: Colors.Blanco,
-      backgroundColor: Colors.Verde,
+      color: "var(--qf-text-primary)",
+      backgroundColor: "var(--qf-green)",
       padding: "5px 10px",
       borderRadius: "5px",
       fontSize: "14px",
@@ -356,7 +354,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       gap: "10px",
     },
     successButton: {
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       color: "white",
       border: "none",
       padding: "10px 20px",
@@ -364,7 +362,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       cursor: "pointer",
     },
     dangerButton: {
-      backgroundColor: Colors.Rojo,
+      backgroundColor: "var(--qf-rojo)",
       color: "white",
       border: "none",
       padding: "10px 20px",
@@ -372,7 +370,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       cursor: "pointer",
     },
     primaryButton: {
-      backgroundColor: Colors.Azul,
+      backgroundColor: "var(--qf-blue)",
       color: "white",
       border: "none",
       padding: "10px 20px",
@@ -380,7 +378,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       cursor: "pointer",
     },
     secondaryButton: {
-      backgroundColor: Colors.GrisClaroPeroNoTanClaro,
+      backgroundColor: "var(--qf-bg-neutral)",
       color: "white",
       border: "none",
       padding: "10px 20px",

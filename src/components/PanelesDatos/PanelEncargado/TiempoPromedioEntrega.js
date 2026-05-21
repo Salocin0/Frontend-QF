@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
+﻿import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../../UseDinamicColors";
 import { CircularProgress } from "@mui/material";
 
 const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
@@ -8,16 +7,15 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const styles = {
     div3Encargado: {
       gridArea: "div3",
       marginTop: "20px",
       borderRadius: "20px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       alignItems: "center",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
     },
     contentContainer: {
       display: "flex",
@@ -27,7 +25,7 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       height: "100%",
     },
     textWhite: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin: 0,
       padding: 0,
       fontWeight: "bold",
@@ -39,7 +37,7 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       fontSize: "2rem",
     },
     valoracionText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin:0,
       padding:0,
       fontSize: "2rem",
@@ -88,7 +86,7 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     return (
       <div style={styles.div3Encargado}>
         <div style={styles.contentContainer}>
-          <CircularProgress style={{ color: Colors.Naranja }} />
+          <CircularProgress style={{ color: "var(--qf-naranja)" }} />
         </div>
       </div>
     );

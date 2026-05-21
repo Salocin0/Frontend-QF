@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import "./../sass/main.scss";
 
 const ConsultarPuesto = () => {
@@ -143,10 +143,7 @@ const ConsultarPuesto = () => {
   }, []);
 
   return (
-    <div className={`d-flex background`}>
-      <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
       <div className={`flex-grow-1`}>
         <section
           className={`align-items-center justify-content-center col-6 offset-3 form mt-3 mb-5 rad`}
@@ -340,7 +337,7 @@ const ConsultarPuesto = () => {
         </section>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

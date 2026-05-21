@@ -1,21 +1,19 @@
-import React, { useState } from "react";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import React, { useState } from "react";
 
 const Filtros = ({ gruposFiltros = [], onFiltrar, titulo = "FILTROS" }) => {
   const [filtrosSeleccionados, setFiltrosSeleccionados] = useState({});
-  const Colors = useDynamicColors();
 
   const styles = {
     container: {
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       padding: "20px",
       borderRadius: "8px",
       marginBottom: "20px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       marginTop: "10px",
     },
     title: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontSize: "1.5rem",
       fontWeight: "bold",
       marginBottom: "15px",
@@ -24,7 +22,7 @@ const Filtros = ({ gruposFiltros = [], onFiltrar, titulo = "FILTROS" }) => {
     divider: {
       border: "none",
       height: "1px",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: "var(--qf-text-primary)",
       margin: "15px 0",
     },
     filterGroup: {
@@ -36,7 +34,7 @@ const Filtros = ({ gruposFiltros = [], onFiltrar, titulo = "FILTROS" }) => {
       gap: "8px",
       cursor: "pointer",
       margin: "8px 0",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontSize: "1rem",
     },
     checkbox: {

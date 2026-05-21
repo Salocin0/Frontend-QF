@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import Panel from './ChatPanel';
 import logoBot from '../bot-img.png';
-import useDynamicColors from '../../UseDinamicColors';
 
 const FloatingButton = () => {
-  const Colors = useDynamicColors();
   const styles = {
     button: {
       width: '200px',
@@ -16,12 +14,12 @@ const FloatingButton = () => {
       right: '20px',
       borderRadius: '50px',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       border: 'none',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
     buttonText: {
       flex: 1,
@@ -31,7 +29,7 @@ const FloatingButton = () => {
     botImage: {
       height: '100%',
       borderRadius: '50%',
-      border: `2px solid ${Colors.Negro}`,
+      border: `2px solid var(--qf-text-white)`,
     },
   };
   

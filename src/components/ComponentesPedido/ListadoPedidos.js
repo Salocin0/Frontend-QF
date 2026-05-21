@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+﻿import React, { useEffect, useState } from "react";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Pedido from "./Pedido";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import usedynamicColors from "../../UseDinamicColors";
 import Tabs from "./PedidosRepartidor/Tabs";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Footer from "../ComponentesGenerales/Footer";
@@ -15,7 +14,6 @@ const ListadoPedidos = () => {
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const { user } = useContext(UserContext);
-  const Colors = usedynamicColors();
   const [activeTab, setActiveTab] = useState("Todos");
   const [pedidosFiltrados, setPedidosFiltrados] = useState([]);
 
@@ -83,16 +81,6 @@ const ListadoPedidos = () => {
   }, [pedidosFiltrados]);
 
   const styles = {
-    mainFormEventos: {
-      margin: 0,
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      minHeight: "100vh",
-    },
-    sidebarCol: {
-      padding: 0,
-      margin: 0,
-      width: "20%",
-    },
     contentCol: {
       padding: 0,
       margin: 0,
@@ -105,13 +93,13 @@ const ListadoPedidos = () => {
     },
     tituloTexto: {
       paddingTop: "0.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     seccionNegativo: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     divider: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     contentWrapper: {
       display: "flex",
@@ -146,10 +134,7 @@ const ListadoPedidos = () => {
   ];
 
   return (
-    <div style={styles.mainFormEventos}>
-      <div style={styles.sidebarCol}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.contentCol}>
         <div style={styles.tituloSeccion}>
           <h1 style={styles.tituloTexto}>Pedidos</h1>
@@ -185,7 +170,7 @@ const ListadoPedidos = () => {
       </div>
 
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

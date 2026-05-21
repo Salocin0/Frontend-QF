@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+﻿import React, { useEffect, useState } from "react";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import CardNotificaciones from "./CardNotificaicones";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { CircularProgress } from "@mui/material";
 
 const Notificaciones = () => {
-  const Colors = useDynamicColors();
   const { user } = useContext(UserContext);
   const [notificaciones, setNotificaciones] = useState([]);
   const [recargar, setRecargar] = useState(0);
@@ -46,13 +44,6 @@ const Notificaciones = () => {
   }, [user.consumidorId, recargar]);
 
   const styles = {
-    container: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      width: "100%",
-      height: "100vh",
-      margin: "0",
-      overflow: "hidden", // Ocultar cualquier scroll en el contenedor principal
-    },
     content: {
       display: "flex",
       flexDirection: "column",
@@ -66,7 +57,7 @@ const Notificaciones = () => {
       msOverflowStyle: "none", // Ocultar barra de scroll en IE y Edge
     },
     hr: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       border: "1px solid",
       width: "100%",
     },
@@ -88,7 +79,7 @@ const Notificaciones = () => {
     },
     loadingText: {
       fontSize: "16px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
     },
   };
@@ -99,13 +90,12 @@ const Notificaciones = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <Sidebar tipoUsuario={user.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
       <div
         style={styles.content}
         className="custom-scroll" // Clase CSS opcional
       >
-        <h2 style={{ color: Colors.TextoClaro, marginTop: "20px" }}>
+        <h2 style={{ color: "var(--qf-text-primary)", marginTop: "20px" }}>
           Notificaciones
         </h2>
         <hr style={styles.hr} />
@@ -117,7 +107,7 @@ const Notificaciones = () => {
         </div>
         {isLoading ? (
           <div style={styles.loadingContainer}>
-            <CircularProgress style={{ color: Colors.Naranja }} size={50} />
+            <CircularProgress style={{ color: "var(--qf-naranja)" }} size={50} />
             <div style={styles.loadingText}>Cargando notificaciones...</div>
           </div>
         ) : notificaciones.length > 0 ? (
@@ -129,11 +119,11 @@ const Notificaciones = () => {
             />
           ))
         ) : (
-          <p style={{ color: Colors.Blanco }}>No hay notificaciones.</p>
+          <p style={{ color: "var(--qf-text-primary)" }}>No hay notificaciones.</p>
         )}
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

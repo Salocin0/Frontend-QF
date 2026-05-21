@@ -1,7 +1,6 @@
-import { default as React, useState, useEffect } from "react";
+﻿import { default as React, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/puestoLogoDefault.jpg";
 import {
   FaIdBadge,
@@ -16,7 +15,6 @@ import {
 
 const PuestoEncargado = ({ carrito, actualizarListado }) => {
   const navigate = useNavigate();
-  const Colors = useDynamicColors();
   const [isCreado, setIsCreado] = useState(carrito.estado === "Creado");
   const [isDeshabilitado, setIsDeshabilitado] = useState(
     carrito.estado === "Deshabilitado"
@@ -96,9 +94,9 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       margin: "5px 20px",
       padding: "0.75rem",
       paddingRight: "10px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "8px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       boxSizing: "border-box",
 
     },
@@ -136,11 +134,11 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       fontSize: "1.5rem",
       fontWeight: "bold",
       marginBottom: "0.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     description: {
       margin: "0.25rem 0",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     buttonsContainer: {
       marginTop: "1rem",
@@ -160,25 +158,25 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       fontSize: "0.9rem",
     },
     successButton: {
-      backgroundColor: Colors.Verde,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-primary)",
     },
     primaryButton: {
-      backgroundColor: Colors.Azul,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-text-primary)",
     },
     secondaryButton: {
-      backgroundColor: Colors.GrisOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-text-secondary)",
+      color: "var(--qf-text-primary)",
     },
     dangerButton: {
-      backgroundColor: Colors.Rojo,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-text-primary)",
     },
     estado: {
       fontSize: "20px",
-      color: Colors.BlancoEnBlanco,
-      backgroundColor: Colors.Verde,
+      color: "var(--qf-blanco-puro)",
+      backgroundColor: "var(--qf-green)",
       padding: "5px 10px",
       borderRadius: "5px",
       position: "absolute",

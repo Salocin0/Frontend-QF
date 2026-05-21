@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Producto from "./Producto";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
-import useDynamicColors from "../../UseDinamicColors";
 import { useLocation } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
@@ -18,7 +17,6 @@ const ListadoProducto = () => {
   const [recargar, setRecargar] = useState(0);
   const [busqueda, setBusqueda] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const Colors = useDynamicColors();
   const location = useLocation();
   const carrito = location.state;
 
@@ -45,12 +43,6 @@ const ListadoProducto = () => {
   }, [user, recargar, id]);
 
   const styles = {
-    mainContainer: {
-      display: "flex",
-      flexDirection: "column",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      minHeight: "100vh",
-    },
     mainContent: {
       display: "flex",
       flexDirection: "column",
@@ -62,27 +54,27 @@ const ListadoProducto = () => {
       justifyContent: "center",
       alignItems: "center",
       marginBottom: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       paddingLeft: "20px",
       paddingRight: "20px",
     },
     pageTitle: {
       paddingTop: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     disabledLink: {
       position: "absolute",
       top: "25px",
       right: "20px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       padding: "10px",
       borderRadius: "10px",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       fontWeight: "bold",
       cursor: "pointer",
     },
     divider: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       marginRight: "1rem",
     },
     addButtonContainer: {
@@ -92,8 +84,8 @@ const ListadoProducto = () => {
       zIndex: 10,
     },
     addButton: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       fontSize: "1.25rem",
       textDecoration: "none",
       padding: "10px 15px",
@@ -121,8 +113,8 @@ const ListadoProducto = () => {
     sidebarContainer: {
       width: "30%",
       minWidth: "260px",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "8px",
       padding: "20px",
       display: "flex",
@@ -130,8 +122,8 @@ const ListadoProducto = () => {
       gap: "10px",
     },
     sidebarButton: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       fontSize: "1rem",
       textDecoration: "none",
       padding: "10px",
@@ -141,11 +133,11 @@ const ListadoProducto = () => {
     },
     noProductsMessage: {
       fontSize: "1.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     noProductsMessage: {
       fontSize: "1.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     breadcrumbWrapper: {
       margin: "0px auto 10px 0px",
@@ -165,9 +157,7 @@ const ListadoProducto = () => {
   ];
 
   return (
-    <div>
-      <div style={styles.mainContainer}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
         <div style={styles.mainContent}>
           <div style={styles.header}>
             <h1 style={styles.pageTitle}>
@@ -239,7 +229,7 @@ const ListadoProducto = () => {
                     flex: 1,
                     padding: "8px",
                     borderRadius: "4px",
-                    border: `1px solid ${Colors.Gris}`,
+                    border: `1px solid var(--qf-text-muted)`,
                   }}
                 />
                 <button
@@ -248,8 +238,8 @@ const ListadoProducto = () => {
                     padding: "8px 12px",
                     borderRadius: "4px",
                     border: "none",
-                    backgroundColor: Colors.Verde,
-                    color: Colors.BlancoEnBlanco,
+                    backgroundColor: "var(--qf-green)",
+                    color: "var(--qf-blanco-puro)",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
@@ -270,9 +260,8 @@ const ListadoProducto = () => {
             </div>
           </div>
         </div>
-      </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

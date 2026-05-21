@@ -1,9 +1,7 @@
-import React from "react";
+﻿import React from "react";
 import Chatbot from "./ChatBot";
-import useDynamicColors from "../../UseDinamicColors";
 
 const Panel = ({ onClose, position, bottom,right,top,left,isLogin }) => {
-  const Colors = useDynamicColors();
   const styles = {
     panel: {
       position: "fixed",
@@ -11,8 +9,8 @@ const Panel = ({ onClose, position, bottom,right,top,left,isLogin }) => {
       right: isLogin ? "calc(80% - 400px)": 0,
       width: "400px",
       height: "auto",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      border: `2px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-main)",
+      border: `2px solid var(--qf-naranja)`,
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
       zIndex: 1000,
       boxSizing: "border-box",
@@ -25,7 +23,7 @@ const Panel = ({ onClose, position, bottom,right,top,left,isLogin }) => {
       background: "none",
       border: "none",
       fontSize: "30px",
-      color: Colors.Gris,
+      color: "var(--qf-text-muted)",
       cursor: "pointer",
     },
   };

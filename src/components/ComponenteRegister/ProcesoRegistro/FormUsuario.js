@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../../ComponentesGenerales/Footer";
-import useDynamicColors from "../../../UseDinamicColors.js";
 import PasswordToggle from "../PasswordToggle.jsx";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "../placeholder.css"
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
-  const Colors = useDynamicColors();
 
   const [userData, setUserData] = useState({
     username: "",
@@ -76,16 +74,16 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
       maxWidth: "600px",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardHeader: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "1.5rem",
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
     },
     title: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       margin: 0,
     },
     formGroup: {
@@ -96,14 +94,14 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
       fontWeight: "500",
       margin:"0",
       marginBottom: "0.5rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     input: {
       width: "100%",
       padding: "0.5rem",
-      border: `1px solid ${Colors.Gris}`,
+      border: `1px solid var(--qf-text-muted)`,
       borderRadius: "4px",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: "var(--qf-text-primary)",
     },
     inputGroup: {
       display: "flex",
@@ -112,8 +110,8 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     toggleButton: {
       marginLeft: "0.5rem",
       padding: "0.5rem 1rem",
-      border: `1px solid ${Colors.Gris}`,
-      backgroundColor: Colors.Blanco,
+      border: `1px solid var(--qf-text-muted)`,
+      backgroundColor: "var(--qf-text-primary)",
       borderRadius: "4px",
       cursor: "pointer",
     },
@@ -124,16 +122,16 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     },
     backButton: {
       padding: "0.5rem 1.5rem",
-      backgroundColor: Colors.Azul,
+      backgroundColor: "var(--qf-blue)",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
     nextButton: {
       padding: "0.5rem 1.5rem",
-      backgroundColor: Colors.Azul,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",

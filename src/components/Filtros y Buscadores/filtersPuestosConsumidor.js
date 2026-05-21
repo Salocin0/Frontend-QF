@@ -1,8 +1,6 @@
-import React from "react";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import React from "react";
 
 const FiltersPuestosConsumidor = ({ setEstrella, setTiempo }) => {
-  const Colors = useDynamicColors();
   const handleEstrellasChange = (value) => {
     setEstrella(value);
   };
@@ -16,7 +14,7 @@ const FiltersPuestosConsumidor = ({ setEstrella, setTiempo }) => {
       padding: "20px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       borderRadius: "10px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       width: "100%",
     },
     header: {
@@ -33,7 +31,7 @@ const FiltersPuestosConsumidor = ({ setEstrella, setTiempo }) => {
     divider: {
       border: "none",
       height: "1px",
-      backgroundColor: Colors.GrisClaro,
+      backgroundColor: "var(--qf-bg-card)",
       margin: "15px 0",
     },
     filterGroup: {

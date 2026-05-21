@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+﻿import React, { useEffect, useState, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,6 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentSheet from "./PaymentSheet";
 import { loadStripe } from "@stripe/stripe-js";
-import useDynamicColors from "../../UseDinamicColors";
 
 // Cargar stripe una sola vez (fuera del componente)
 const stripePromise = loadStripe(process.env?.REACT_APP_API_KEY_STRIPE);
@@ -21,7 +20,6 @@ const DialogWithPaymentSheet = ({
   const [paymentSheetData, setPaymentSheetData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const Colors = useDynamicColors();
 
   useEffect(() => {
     const fetchPaymentSheetData = async (amountToPay) => {
@@ -86,7 +84,7 @@ const DialogWithPaymentSheet = ({
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: Colors.GrisAzuladoOscuro,
+          backgroundColor: "var(--qf-bg-main)",
           borderRadius: "0px",
           padding: "20px",
           minHeight: "300px",
@@ -94,8 +92,8 @@ const DialogWithPaymentSheet = ({
       >
         {isLoading ? (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px" }}>
-            <CircularProgress style={{ color: Colors.Naranja }} />
-            <div style={{ color: Colors.Blanco, fontSize: "14px" }}>
+            <CircularProgress style={{ color: "var(--qf-naranja)" }} />
+            <div style={{ color: "var(--qf-text-primary)", fontSize: "14px" }}>
               Cargando formulario de pago...
             </div>
           </div>
@@ -107,18 +105,18 @@ const DialogWithPaymentSheet = ({
             gap: "20px",
             textAlign: "center"
           }}>
-            <div style={{ color: Colors.Rojo, fontSize: "16px", fontWeight: "bold" }}>
+            <div style={{ color: "var(--qf-rojo)", fontSize: "16px", fontWeight: "bold" }}>
               Error al cargar el formulario
             </div>
-            <div style={{ color: Colors.Blanco, fontSize: "14px" }}>
+            <div style={{ color: "var(--qf-text-primary)", fontSize: "14px" }}>
               {error}
             </div>
             <button
               onClick={handleClose}
               style={{
                 padding: "10px 20px",
-                backgroundColor: Colors.Naranja,
-                color: Colors.Negro,
+                backgroundColor: "var(--qf-naranja)",
+                color: "var(--qf-text-white)",
                 border: "none",
                 borderRadius: "6px",
                 cursor: "pointer",

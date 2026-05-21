@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const ConsultarUsuarioR = () => {
@@ -202,13 +202,9 @@ const ConsultarUsuarioR = () => {
   }, []);
 
   return (
-    <>
-      <div className="d-flex">
-        <div className="col-2">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
-        <div className="flex-grow-1 background">
-          <section className="align-items-center justify-content-center col-6 offset-3 form ">
+    <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
+      <div className="flex-grow-1 background">
+        <section className="align-items-center justify-content-center col-6 offset-3 form ">
             <div className="card shadow-lg  ">
               <div className="card-body p-3 formulario ">
                 <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
@@ -340,9 +336,8 @@ const ConsultarUsuarioR = () => {
             </div>
           </section>
           <Footer />
-        </div>
       </div>
-    </>
+    </PageLayout>
   );
 };
 

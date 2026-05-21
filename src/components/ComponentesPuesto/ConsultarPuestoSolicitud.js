@@ -1,10 +1,9 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+﻿import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import FormPuestoEditar from "./FormPuestoEditar";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Footer from "../ComponentesGenerales/Footer";
 
@@ -12,16 +11,10 @@ const ConsultarPuestoSolicitud = () => {
   const location = useLocation();
   const carrito = location.state;
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const styles = {
-    container: {
-      margin: 0,
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-    },
     hrStyle: {
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       padding: 0,
       margin: 0,
     },
@@ -33,7 +26,7 @@ const ConsultarPuestoSolicitud = () => {
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     tituloSeccion: {
       display: "flex",
@@ -41,7 +34,7 @@ const ConsultarPuestoSolicitud = () => {
       paddingTop: "1rem",
       paddingBottom: "1rem",
       fontSize: "2rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       marginLeft: "20%",
     },
     breadcrumbWrapper: {
@@ -57,7 +50,7 @@ const ConsultarPuestoSolicitud = () => {
   ];
 
   return (
-    <div style={styles.container}>
+    <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
       <div>
         <h1 style={styles.tituloSeccion}>
           Informacion Puesto {carrito?.nombreCarro}
@@ -73,12 +66,11 @@ const ConsultarPuestoSolicitud = () => {
           />
         </div>
       </div>
-      <Sidebar tipoUsuario={user.tipoUsuario} />
       <div style={styles.content}>
         <FormPuestoEditar carrito={carrito} />
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

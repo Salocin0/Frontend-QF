@@ -1,11 +1,10 @@
-/* eslint-disable no-unused-vars */
+﻿/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -14,7 +13,6 @@ const RegistrarEvento3 = () => {
   const location = useLocation();
   const evento = location.state || {}; // Recuperar los datos del evento
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   // Extraer datos del evento
   const {
@@ -299,17 +297,6 @@ const RegistrarEvento3 = () => {
   };
 
   const styles = {
-    containerFluid: {
-      width: "100%",
-      height: "100%",
-      minHeight: "100vh",
-      padding: "0",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-    },
-    row: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
     formCol: {
       height: "Calc(75% - 60px)",
       padding: 0,
@@ -326,8 +313,8 @@ const RegistrarEvento3 = () => {
       marginRight: "20px",
       marginBottom: "20px",
       width: "100%",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
     },
     formGroup: {
       marginBottom: "1rem",
@@ -337,14 +324,14 @@ const RegistrarEvento3 = () => {
       display: "block",
       marginBottom: "0",
       fontWeight: "bold",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     formInput: {
       width: "100%",
       padding: "0.5rem",
       fontSize: "1rem",
       borderRadius: "10px",
-      color: Colors.NegroEnNegro,
+      color: "var(--qf-negro-puro)",
     },
     optionContainerEvento: {
       display: "flex",
@@ -354,21 +341,21 @@ const RegistrarEvento3 = () => {
       padding: "0.5rem 1rem",
       borderRadius: "4px",
       cursor: "pointer",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
       textAlign: "center",
       flex: 1,
       margin: "0 0.5rem",
     },
     selected: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       color: "#fff",
     },
     disabledOption: {
       padding: "0.5rem 1rem",
       borderRadius: "4px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
       textAlign: "center",
       flex: 1,
       margin: "0 0.5rem",
@@ -383,7 +370,7 @@ const RegistrarEvento3 = () => {
       padding: "0.75rem",
       fontSize: "1rem",
       fontWeight: "bold",
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       color: "#fff",
       border: "none",
       borderRadius: "4px",
@@ -407,7 +394,7 @@ const RegistrarEvento3 = () => {
       padding: "0.75rem",
       fontSize: "1rem",
       fontWeight: "bold",
-      backgroundColor: Colors.GrisOscuro,
+      backgroundColor: "var(--qf-text-secondary)",
       color: "#fff",
       border: "none",
       borderRadius: "4px",
@@ -419,14 +406,14 @@ const RegistrarEvento3 = () => {
       marginTop: "20px",
       fontSize: "24px",
       marginLeft: "20%",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       width: "80%",
     },
     separator: {
       border: "none",
       marginBottom: "5px",
       marginTop: "0px",
-      borderTop: `1px solid ${Colors.Naranja}`,
+      borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
       marginLeft: "20%",
@@ -435,8 +422,8 @@ const RegistrarEvento3 = () => {
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     hr: {
-      color: Colors.Naranja,
-      border: `1px solid ${Colors.Naranja}`,
+      color: "var(--qf-naranja)",
+      border: `1px solid var(--qf-naranja)`,
       width: "100%",
     },
   };
@@ -448,11 +435,7 @@ const RegistrarEvento3 = () => {
   ];
 
   return (
-    <div style={styles.containerFluid}>
-      <div style={styles.row}>
-        <div style={styles.sidebarCol}>
-          <Sidebar tipoUsuario={user?.tipoUsuario} />
-        </div>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
         <div style={styles.tituloSeccion}>
           <h1 style={{ textAlign: "center" }}>Crear un Evento</h1>
         </div>
@@ -666,7 +649,7 @@ const RegistrarEvento3 = () => {
                     disabled={isSubmitting}
                   >
                     {isSubmitting && (
-                      <CircularProgress size={18} style={{ color: Colors.Blanco }} />
+                      <CircularProgress size={18} style={{ color: "var(--qf-text-primary)" }} />
                     )}
                     {isSubmitting ? "Guardando..." : "Siguiente"}
                   </button>
@@ -675,8 +658,7 @@ const RegistrarEvento3 = () => {
             </form>
           </div>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 };
 

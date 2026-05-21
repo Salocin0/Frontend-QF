@@ -1,6 +1,5 @@
-import React from "react";
+﻿import React from "react";
 import { useState, useContext, useEffect } from "react";
-import useDynamicColors from "../../UseDinamicColors";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -12,7 +11,6 @@ const UserProfileForm = ({
   mostrarBotonHabilitarDeNuevoPE,
   handleVolverAHabilitarPE,
 }) => {
-  const Colors = useDynamicColors();
   const [username, setUsername] = useState("");
   const [telefono, setTelefono] = useState("");
   const [nombre, setNombre] = useState("");
@@ -32,9 +30,9 @@ const UserProfileForm = ({
   const styles = {
     container: {
       padding: "1rem",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
     },
     row: {
       display: "flex",
@@ -47,8 +45,8 @@ const UserProfileForm = ({
       marginBottom: "1rem",
       border: "none",
       borderRadius: "5px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
     },
     select: {
       width: "100%",
@@ -56,8 +54,8 @@ const UserProfileForm = ({
       marginBottom: "1rem",
       border: "none",
       borderRadius: "5px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
     },
     button: {
       padding: "0.5rem 1rem",
@@ -66,12 +64,12 @@ const UserProfileForm = ({
       cursor: "pointer",
       marginRight: "0.5rem",
     },
-    dangerButton: { backgroundColor: Colors.Rojo, color: "white" },
-    successButton: { backgroundColor: Colors.Verde, color: "white" },
-    primaryButton: { backgroundColor: Colors.Azul, color: "white" },
+    dangerButton: { backgroundColor: "var(--qf-rojo)", color: "white" },
+    successButton: { backgroundColor: "var(--qf-green)", color: "white" },
+    primaryButton: { backgroundColor: "var(--qf-blue)", color: "white" },
     titulo: {
       fontWeight: "bold",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       marginBottom: "20px",
     },
     label: {

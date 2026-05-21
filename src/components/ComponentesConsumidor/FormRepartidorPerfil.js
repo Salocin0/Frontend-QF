@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+﻿import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Modal from "react-modal";
-import useDynamicColors from "../../UseDinamicColors";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const RepartidorComponent = ({
@@ -12,7 +11,6 @@ const RepartidorComponent = ({
   setMostrarContenidoRepartidor,
   setMostrarBotonHabilitarDeNuevoR
 }) => {
-  const Colors = useDynamicColors();
 
   const [, setEditModeR] = useState(false);
     const { user } = useContext(UserContext);
@@ -27,9 +25,9 @@ const RepartidorComponent = ({
       borderRadius: "8px",
       width: "100%",
       marginTop: "20px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       padding: "20px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
     },
     cardBody: {
       padding: "20px",
@@ -40,17 +38,17 @@ const RepartidorComponent = ({
     },
     headerTitle: {
       fontWeight: "bold",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     headerText: {
       fontWeight: "bold",
       fontSize: "20px",
       textAlign: "center",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
-    dangerButton: { backgroundColor: Colors.Rojo, color: "white" },
-    successButton: { backgroundColor: Colors.Verde, color: "white" },
-    primaryButton: { backgroundColor: Colors.Azul, color: "white" },
+    dangerButton: { backgroundColor: "var(--qf-rojo)", color: "white" },
+    successButton: { backgroundColor: "var(--qf-green)", color: "white" },
+    primaryButton: { backgroundColor: "var(--qf-blue)", color: "white" },
     button: {
       padding: "0.5rem 1rem",
       border: "none",
@@ -76,8 +74,8 @@ const RepartidorComponent = ({
         maxWidth: "400px",
         padding: "20px",
         textAlign: "center",
-        backgroundColor: Colors.GrisAzuladoClaro,
-        color: Colors.Blanco,
+        backgroundColor: "var(--qf-bg-secondary)",
+        color: "var(--qf-text-primary)",
       },
     },
   };

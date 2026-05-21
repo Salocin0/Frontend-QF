@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
-import useDynamicColors from "../../../UseDinamicColors";
+﻿import React, { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 
 const TotalQuickFood = ({ eventId }) => {
   const [totalRecaudado, setTotalRecaudado] = useState(null); // Estado para almacenar el total recaudado
   const [loading, setLoading] = useState(true); // Estado de carga
-  const [error, setError] = useState(null); // Estado para errores
-  const Colors = useDynamicColors();
-  console.log(eventId);
+  const [error, setError] = useState(null); // Estado para erroresn  console.log(eventId);
   useEffect(() => {
     const fetchTotalRecaudado = async () => {
       try {
@@ -34,7 +31,7 @@ const TotalQuickFood = ({ eventId }) => {
       gridArea: "div1",
       marginTop: "20px",
       borderRadius: "20px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
@@ -43,17 +40,17 @@ const TotalQuickFood = ({ eventId }) => {
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
       backgroundPosition: "70% 25%",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
       position: "relative",
       
     },
     heading: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin: "0",
       fontSize: "2rem",
     },
     paragraph: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       margin: "0",
       fontSize: "1rem",
@@ -63,7 +60,7 @@ const TotalQuickFood = ({ eventId }) => {
   if (loading) {
     return (
       <div style={styles.container}>
-        <CircularProgress style={{ color: Colors.Naranja }} />
+        <CircularProgress style={{ color: "var(--qf-naranja)" }} />
       </div>
     );
   }

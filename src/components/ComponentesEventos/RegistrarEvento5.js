@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+﻿import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import L from "leaflet";
 import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import useDynamicColors from "../../UseDinamicColors";
 import CircularProgress from "@mui/material/CircularProgress";
 import "leaflet/dist/leaflet.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
@@ -50,7 +49,6 @@ const RegistrarEvento5 = () => {
   const { eventoId, diferenciaDiasEvento } = useParams();
   const effectiveEventoId = eventoId || localStorage.getItem(EVENTO_CREACION_ID_KEY);
   const navigate = useNavigate();
-  const Colors = useDynamicColors();
 
   const [puntos, setPuntos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -333,16 +331,6 @@ const RegistrarEvento5 = () => {
   };
 
   const styles = {
-    containerFluid: {
-      width: "100%",
-      padding: "0",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      minHeight: "100vh",
-    },
-    row: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
     contentCol: {
       width: "calc(100% - 20%)",
       marginLeft: "20%",
@@ -352,7 +340,7 @@ const RegistrarEvento5 = () => {
       display: "flex",
       justifyContent: "center",
       marginTop: "20px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       width: "100%",
     },
     breadcrumbWrapper: {
@@ -362,11 +350,11 @@ const RegistrarEvento5 = () => {
     },
     panel: {
       margin: "20px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       padding: "20px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     topActions: {
       display: "flex",
@@ -377,8 +365,8 @@ const RegistrarEvento5 = () => {
       flexWrap: "wrap",
     },
     button: {
-      backgroundColor: Colors.Azul,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-text-primary)",
       border: "none",
       borderRadius: "6px",
       padding: "10px 14px",
@@ -389,25 +377,25 @@ const RegistrarEvento5 = () => {
       backgroundColor: "#6c757d",
     },
     greenButton: {
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
     },
     redButton: {
-      backgroundColor: Colors.Rojo,
+      backgroundColor: "var(--qf-rojo)",
     },
     table: {
       width: "100%",
       borderCollapse: "collapse",
     },
     th: {
-      borderBottom: `1px solid ${Colors.Naranja}`,
+      borderBottom: `1px solid var(--qf-naranja)`,
       padding: "10px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "left",
     },
     td: {
       borderBottom: `1px solid rgba(255,255,255,0.12)`,
       padding: "10px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     actionsCell: {
       display: "flex",
@@ -426,12 +414,12 @@ const RegistrarEvento5 = () => {
       zIndex: 1100,
     },
     modal: {
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       width: "min(680px, 92vw)",
       padding: "20px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     input: {
       width: "100%",
@@ -458,7 +446,7 @@ const RegistrarEvento5 = () => {
       height: "260px",
       borderRadius: "10px",
       overflow: "hidden",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       marginTop: "8px",
       marginBottom: "8px",
     },
@@ -471,8 +459,8 @@ const RegistrarEvento5 = () => {
       marginBottom: "0",
       padding: "10px 12px",
       borderRadius: "8px",
-      border: `1px dashed ${Colors.Naranja}`,
-      color: Colors.Blanco,
+      border: `1px dashed var(--qf-naranja)`,
+      color: "var(--qf-text-primary)",
       backgroundColor: "rgba(0,0,0,0.18)",
       fontSize: "0.95rem",
     },
@@ -484,7 +472,7 @@ const RegistrarEvento5 = () => {
       overflowY: "auto",
       border: "1px solid #999",
       borderRadius: "8px",
-      backgroundColor: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-blanco-puro)",
       color: "#111",
     },
     suggestionItem: {
@@ -506,11 +494,11 @@ const RegistrarEvento5 = () => {
       top: "50%",
       left: "50%",
       transform: "translate(-50%, -50%)",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-secondary)",
+      color: "var(--qf-text-primary)",
       padding: "2rem",
       borderRadius: "12px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       boxShadow: "0px 12px 30px rgba(0, 0, 0, 0.35)",
       textAlign: "center",
       zIndex: 1050,
@@ -533,14 +521,12 @@ const RegistrarEvento5 = () => {
       : [-34.603722, -58.381592];
 
   return (
-    <div style={styles.containerFluid}>
-      <div style={styles.row}>
-        <Sidebar />
-        <div style={styles.contentCol}>
+    <PageLayout sidebarProps={{}}>
+          <div style={styles.contentCol}>
           <div style={styles.titleWrap}>
             <h1>Crear un Evento</h1>
           </div>
-          <hr style={{ color: Colors.Naranja, border: `1px solid ${Colors.Naranja}` }} />
+          <hr style={{ color: "var(--qf-naranja)", border: `1px solid var(--qf-naranja)` }} />
 
           <div style={styles.breadcrumbWrapper}>
             <Breadcrumb
@@ -551,7 +537,7 @@ const RegistrarEvento5 = () => {
 
           <div style={styles.panel}>
             <div style={styles.topActions}>
-              <h3 style={{ color: Colors.Naranja, margin: 0 }}>Puntos de Encuentro</h3>
+              <h3 style={{ color: "var(--qf-naranja)", margin: 0 }}>Puntos de Encuentro</h3>
               <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
                 <button
                   style={styles.button}
@@ -567,10 +553,10 @@ const RegistrarEvento5 = () => {
 
             {loading ? (
               <div style={{ display: "flex", justifyContent: "center", padding: "30px" }}>
-                <CircularProgress style={{ color: Colors.Naranja }} />
+                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
               </div>
             ) : puntos.length === 0 ? (
-              <p style={{ color: Colors.Blanco }}>
+              <p style={{ color: "var(--qf-text-primary)" }}>
                 No hay puntos de encuentro cargados. Debes crear al menos uno para finalizar.
               </p>
             ) : (
@@ -614,7 +600,7 @@ const RegistrarEvento5 = () => {
                 onClick={handleFinish}
                 disabled={isFinishing}
               >
-                {isFinishing && <CircularProgress size={18} style={{ color: Colors.Blanco, marginRight: 8 }} />}
+                {isFinishing && <CircularProgress size={18} style={{ color: "var(--qf-text-primary)", marginRight: 8 }} />}
                 {isFinishing ? "Finalizando..." : "Finalizar Registro"}
               </button>
             </div>
@@ -623,14 +609,13 @@ const RegistrarEvento5 = () => {
               Recomendacion: para finalizar esta configuracion con mayor comodidad,
               te sugerimos hacerlo desde el telefono.
             </p>
-          </div>
         </div>
       </div>
 
       {showModal && (
         <div style={styles.modalOverlay}>
           <div style={styles.modal}>
-            <h4 style={{ color: Colors.Naranja, marginTop: 0 }}>
+            <h4 style={{ color: "var(--qf-naranja)", marginTop: 0 }}>
               {modalType === "create" ? "Crear Punto de Encuentro" : "Editar Punto de Encuentro"}
             </h4>
 
@@ -700,7 +685,7 @@ const RegistrarEvento5 = () => {
                 Cancelar
               </button>
               <button style={{ ...styles.button, ...styles.greenButton }} onClick={handleSave} disabled={isSaving}>
-                {isSaving && <CircularProgress size={16} style={{ color: Colors.Blanco, marginRight: 8 }} />}
+                {isSaving && <CircularProgress size={16} style={{ color: "var(--qf-text-primary)", marginRight: 8 }} />}
                 {isSaving ? "Guardando..." : "Guardar"}
               </button>
             </div>
@@ -712,10 +697,10 @@ const RegistrarEvento5 = () => {
         <>
           <div style={styles.successOverlay} />
           <div style={styles.successCard}>
-            <h5 style={{ color: Colors.Naranja, marginBottom: "0.75rem", fontWeight: "bold", fontSize: "1.5rem" }}>
+            <h5 style={{ color: "var(--qf-naranja)", marginBottom: "0.75rem", fontWeight: "bold", fontSize: "1.5rem" }}>
               ¡Registro Exitoso!
             </h5>
-            <p style={{ color: Colors.Blanco, margin: 0, lineHeight: "1.5", fontSize: "1rem" }}>
+            <p style={{ color: "var(--qf-text-primary)", margin: 0, lineHeight: "1.5", fontSize: "1rem" }}>
               El evento quedó creado y con puntos de encuentro configurados.
             </p>
           </div>
@@ -723,7 +708,7 @@ const RegistrarEvento5 = () => {
       )}
 
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

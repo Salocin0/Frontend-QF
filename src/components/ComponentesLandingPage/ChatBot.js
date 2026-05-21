@@ -1,36 +1,34 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+﻿import React, { useState, useRef, useEffect, useCallback } from "react";
 import userImageURL from "../user-img.png";
 import botImageURL from "../bot-img.png";
-import useDynamicColors from "../../UseDinamicColors";
 import "./../ComponenteRegister/placeholder.css";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const Chatbot = () => {
-  const Colors = useDynamicColors();
   const { user } = useContext(UserContext);
   const [messages, setMessages] = useState([]);
   console.log(user);
   const styles = {
     global: {
       fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
       borderRadius: "20px",
       margin: 0,
       padding: 0,
     },
     header: {
-      backgroundColor: Colors.GrisAzulado,
+      backgroundColor: "var(--qf-bg-dark)",
       textAlign: "center",
       padding: "20px 0",
-      borderBottom: `5px solid ${Colors.Naranja}`,
+      borderBottom: `5px solid var(--qf-naranja)`,
       borderRadius: "20px",
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
     },
     headerTitle: {
       margin: 0,
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontSize: "1.5em",
     },
     chatContainer: {
@@ -38,16 +36,16 @@ const Chatbot = () => {
       margin: "20px auto",
       padding: "10px",
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-      backgroundColor: Colors.GrisAzulado,
+      backgroundColor: "var(--qf-bg-dark)",
       borderRadius: "20px",
     },
     chatBox: {
       height: "250px",
       overflowY: "auto",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
       padding: "10px",
       marginBottom: "20px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       borderRadius: "15px",
     },
     chatMessage: {
@@ -61,7 +59,7 @@ const Chatbot = () => {
       padding: "15px",
       maxWidth: "70%",
       fontSize: "1em",
-      backgroundColor: Colors.GrisAzulado,
+      backgroundColor: "var(--qf-bg-dark)",
     },
     userImage: {
       width: "50px",
@@ -78,11 +76,11 @@ const Chatbot = () => {
       marginRight: "10px",
     },
     userMessageText: {
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       marginLeft: "15px",
     },
     botMessageText: {
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       marginRight: "15px",
     },
     chatInputContainer: {
@@ -93,15 +91,15 @@ const Chatbot = () => {
     chatInput: {
       flex: 1,
       padding: "10px",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
       borderRadius: "20px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-blanco-puro)",
       transition: "border 0.3s ease, box-shadow 0.3s ease",
     },
     sendBtn: {
       padding: "10px 20px",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       color: "white",
       border: "none",
       borderRadius: "20px",
@@ -111,25 +109,25 @@ const Chatbot = () => {
     footer: {
       textAlign: "center",
       padding: "15px 0",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       fontSize: "1em",
-      borderTop: `5px solid ${Colors.Naranja}`,
+      borderTop: `5px solid var(--qf-naranja)`,
       borderRadius: "20px",
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-      colors: Colors.BlancoEnBlanco,
+      colors: "var(--qf-blanco-puro)",
     },
     footerLink: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textDecoration: "none",
       cursor: "pointer",
     },
     footerLink2: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       textDecoration: "none",
       cursor: "pointer",
     },
     text: {
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
   };
   const MenssageLogin = `Puedes loguearte haciendo click aquí.`;

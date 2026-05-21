@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useContext } from "react";
+﻿import React, { useEffect, useState, useContext } from "react";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import PuestoUser from "./PuestoUser";
 import { useParams } from "react-router-dom";
-import useDynamicColors from "../../UseDinamicColors";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import FiltersPuestosConsumidor from "../Filtros y Buscadores/filtersPuestosConsumidor";
 import BuscadorPuestosConsumidor from "../Filtros y Buscadores/BuscadorPuestosConsumidor";
@@ -12,7 +11,6 @@ import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useLocation } from "react-router-dom";
 
 const ListadoPuestosUser = () => {
-  const Colors = useDynamicColors();
   const { idEvento } = useParams();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
@@ -103,18 +101,6 @@ const ListadoPuestosUser = () => {
   }, [filteredCarritos]);
 
   const styles = {
-    container: {
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "calc(100vh - 50px)",
-      overflow: "hidden",
-    },
-    sidebar: {
-      width: "20%",
-      padding: 0,
-      boxSizing: "border-box",
-    },
     mainContent: {
       width: "80%",
       height: "100%",
@@ -143,7 +129,7 @@ const ListadoPuestosUser = () => {
     header: {
       display: "flex",
       justifyContent: "flex-start",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       paddingLeft: "16px",
     },
     title: {
@@ -155,10 +141,10 @@ const ListadoPuestosUser = () => {
       textAlign: "left",
     },
     separator: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       border: "none",
       height: "2px",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
     },
     eventsContainer: {
       display: "flex",
@@ -186,7 +172,7 @@ const ListadoPuestosUser = () => {
     },
     noEventsMessage: {
       fontSize: "24px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
       display: "flex",
       justifyContent: "center",
@@ -205,14 +191,14 @@ const ListadoPuestosUser = () => {
     },
     buscadorBox: {
       width: "98%",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       padding: "8px 16px",
       boxSizing: "border-box",
     },
     filtroBox: {
       width: "98%",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       padding: "10px",
       boxSizing: "border-box",
@@ -221,10 +207,7 @@ const ListadoPuestosUser = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.mainContent}>
         <div style={styles.header}>
           <h1 style={styles.title}>{ `Puestos de ${evento.nombre}` || "Puestos"} </h1>
@@ -278,7 +261,7 @@ const ListadoPuestosUser = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

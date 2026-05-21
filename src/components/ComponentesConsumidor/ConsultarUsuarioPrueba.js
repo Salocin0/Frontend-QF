@@ -1,19 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+﻿import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import UserProfileForm from "./FormUserPerfil";
 import EventProducerForm from "./FormEventPerfil";
 import EncargadoPuesto from "./FormEncargadoPerfil";
 import RepartidorComponent from "./FormRepartidorPerfil";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import EstadisticasPerfil from "./estadisticasPerfil/EstadisticasPerfil";
 
 const ConsultarUsuario = () => {
   const [showModal, setShowModal] = useState(false);
-  const Colors = useDynamicColors();
   const { user, updateUser } = useContext(UserContext);
   const [mostrarContenidoProductor, setMostrarContenidoProductor] =
     useState(false);
@@ -271,11 +269,6 @@ const ConsultarUsuario = () => {
   };
 
   const styles = {
-    background: {
-      display: "flex",
-      flexDirection: "column",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-    },
     breadcrumbWrapper: {
       marginLeft: "20%",
       paddingTop: "10px",
@@ -295,10 +288,10 @@ const ConsultarUsuario = () => {
       top: "160px",
       right: "0",
       height: "Calc(100vh - 250px)",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
-      border: `1px solid ${Colors.Naranja}`,
-      color: Colors.Blanco,
+      border: `1px solid var(--qf-naranja)`,
+      color: "var(--qf-text-primary)",
       margin: "20px",
       marginLeft: "0px",
       padding: "20px",
@@ -309,7 +302,7 @@ const ConsultarUsuario = () => {
       marginTop: "15px",
       display: "flex",
       flexDirection: "column",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardBody: { paddingRight: "20px", marginBottom: "1.5rem" },
     formWrapper: { width: "100%" },
@@ -318,18 +311,18 @@ const ConsultarUsuario = () => {
       justifyContent: "center",
       marginLeft: "20%",
       marginBottom: "5px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     sectionTitleText: {
       paddingTop: "20px",
     },
     sectionTitleNegative: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
     },
     separator: {
       border: "none",
-      borderTop: `1px solid ${Colors.Naranja}`,
+      borderTop: `1px solid var(--qf-naranja)`,
     },
   };
   
@@ -339,8 +332,7 @@ const ConsultarUsuario = () => {
   ];
   
   return (
-    <div style={styles.background}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.titleSection}>
           <h1 style={styles.sectionTitleText}>Mi Perfil</h1>
         </div>
@@ -406,7 +398,7 @@ const ConsultarUsuario = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

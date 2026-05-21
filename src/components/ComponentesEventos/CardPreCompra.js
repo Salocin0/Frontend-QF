@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap"; // Utilizando Bootstrap para el modal
-import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt } from 'react-icons/fa';
 
 const CardPreCompra = ({ evento }) => {
   const [selectedDay, setSelectedDay] = useState(null); // Día seleccionado
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
-  const Colors = useDynamicColors();
   const navigate = useNavigate();
 
   // Obtener la fecha actual y establecerla al inicio del día (para evitar conflictos de horas)
@@ -43,28 +41,28 @@ const CardPreCompra = ({ evento }) => {
     card: {
       width: "calc(80% - 40px)",
       padding: "20px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "8px",
       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
       textAlign: "center",
       height: "55vh",
       marginLeft: "calc(20% + 20px)",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       position:"relative"
     },
     icon: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       marginBottom: "10px",
     },
     title: {
       fontSize: "24px",
       fontWeight: "bold",
       marginBottom: "10px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     description: {
       fontSize: "16px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       marginBottom: "20px",
     },
     dayGrid: {
@@ -76,23 +74,23 @@ const CardPreCompra = ({ evento }) => {
       padding: "10px",
       textAlign: "center",
       cursor: "pointer",
-      border: `1px solid ${Colors.Blanco}`,
+      border: `1px solid var(--qf-text-primary)`,
       borderRadius: "5px",
-      color: Colors.Blanco,
-      backgroundColor: Colors.GrisAzuladoClaro,
+      color: "var(--qf-text-primary)",
+      backgroundColor: "var(--qf-bg-secondary)",
     },
     disabledDay: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       cursor: "not-allowed",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     activeDay: {
-      backgroundColor: Colors.Naranja,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-naranja)",
+      color: "var(--qf-text-primary)",
     },
     button: {
-      backgroundColor: Colors.Naranja,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-naranja)",
+      color: "var(--qf-text-primary)",
       border: "none",
       padding: "10px 20px",
       borderRadius: "5px",
@@ -103,22 +101,22 @@ const CardPreCompra = ({ evento }) => {
       right: "calc(50% - 100px)",
     },
     modalHeader: {
-      backgroundColor: Colors.GrisAzuladoClaro,
-      color: Colors.Blanco,
-      borderBottom: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      color: "var(--qf-text-primary)",
+      borderBottom: `1px solid var(--qf-naranja)`,
     },
     modalBody: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
     },
     modalFooter: {
-      backgroundColor: Colors.GrisAzuladoClaro,
-      borderTop: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      borderTop: `1px solid var(--qf-naranja)`,
     },
     modalButton: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       border: "none",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
   };
 
@@ -185,14 +183,14 @@ const CardPreCompra = ({ evento }) => {
           <Button
             variant="secondary"
             onClick={handleReject}
-            style={{ ...styles.modalButton, backgroundColor: Colors.Rojo }}
+            style={{ ...styles.modalButton, backgroundColor: "var(--qf-rojo)" }}
           >
             Rechazar
           </Button>
           <Button
             variant="primary"
             onClick={handleAccept}
-            style={{ ...styles.modalButton, backgroundColor: Colors.Verde }}
+            style={{ ...styles.modalButton, backgroundColor: "var(--qf-green)" }}
           >
             Aceptar
           </Button>

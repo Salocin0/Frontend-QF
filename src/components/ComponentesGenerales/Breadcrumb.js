@@ -1,29 +1,33 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import useDynamicColors from '../../UseDinamicColors';
+import useBreakpoint from '../../useBreakpoint';
 
 const Breadcrumb = ({ items, style }) => {
-  const Colors = useDynamicColors();
-  let styles ={
+  const { isMobile } = useBreakpoint();
+
+  let styles = {
     breadcrumbContainer: {
-      margin: '8px auto',
-      backgroundColor: Colors.GrisAzuladoClaro,
-      width: '98%',
-      padding: '8px 16px',
+      margin: isMobile ? '4px auto' : '8px auto',
+      backgroundColor: 'var(--qf-bg-secondary)',
+      width: isMobile ? '100%' : '98%',
+      padding: isMobile ? '6px 10px' : '8px 16px',
       marginBottom: '10px',
       marginTop: '0px',
       borderRadius: '10px',
-      border: `1px solid ${Colors.Naranja}`,
+      border: '1px solid var(--qf-naranja)',
+      boxSizing: 'border-box',
     },
     breadcrumb: {
       listStyle: 'none',
       padding: '0',
       margin: '0',
       display: 'flex',
+      flexWrap: 'wrap',
     },
     breadcrumbItem: {
-      fontSize: '14px',
-      color: Colors.Naranja,
+      fontSize: isMobile ? '12px' : '14px',
+      color: 'var(--qf-naranja)',
+      whiteSpace: 'nowrap',
     },
     breadcrumbItemLink: {
       textDecoration: 'none',
@@ -31,14 +35,14 @@ const Breadcrumb = ({ items, style }) => {
       cursor: 'pointer',
     },
     breadcrumbItemActive: {
-      color: Colors.Negro,
+      color: 'var(--qf-text-white)',
     },
     breadcrumbDivider: {
-      content: "'>'",
-      margin: '0 10px',
-      color: Colors.Negro,
+      margin: isMobile ? '0 4px' : '0 10px',
+      color: 'var(--qf-text-white)',
     },
   };
+
   if (style) {
     styles = {
       ...styles,
@@ -48,8 +52,6 @@ const Breadcrumb = ({ items, style }) => {
       },
     };
   }
-  
-  
 
   return (
     <nav style={styles.breadcrumbContainer} aria-label="breadcrumb">

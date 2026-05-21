@@ -1,16 +1,14 @@
-import React from "react";
+﻿import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./../sass/main.scss";
 import img from "./../img/comida-rapida-casera.jpg";
-import useDynamicColors from "../../UseDinamicColors";
 import { FaCalendarAlt, FaStore, FaShoppingCart, FaMapMarkedAlt } from 'react-icons/fa'
 
 const ComoFunciona = () => {
-  const Colors = useDynamicColors();
   const styles = {
     comofunciona: {
       height: "100%",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     row: {
       height: "100%",
@@ -24,7 +22,7 @@ const ComoFunciona = () => {
     title: {
       textAlign: "center",
       marginTop: "1rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     itemsContainer: {
       display: "flex",
@@ -39,12 +37,12 @@ const ComoFunciona = () => {
       display: "flex",
       flexDirection: "row",
       alignItems: "center",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     icon: {
       fontSize: "2rem",
       marginBottom: "0.5rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     imageContainer: {
       paddingLeft: "0",
@@ -56,7 +54,7 @@ const ComoFunciona = () => {
       objectFit: "cover",
     },
     text: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
   };
   return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import "./../sass/main.css";
 import "./asociarAEventos.css";
 
@@ -97,10 +97,7 @@ function FormDinamicoRestricciones({ data, userType }) {
   }, [session, id]);
 
   return (
-<div className={`row m-0 mainFormRestricciones`}>
-  <div className="sidebar col-2 p-0">
-    <Sidebar tipoUsuario={session?.tipoUsuario} />
-  </div>
+<PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
   <div className="contenedorCard col-10">
     <div className="cardFormDin">
       <h3 className="tituloSeccionEvento">Restricciones del Evento</h3>
@@ -154,7 +151,7 @@ function FormDinamicoRestricciones({ data, userType }) {
       </div>
     </div>
   </div>
-</div>
+</PageLayout>
 
   );
 }

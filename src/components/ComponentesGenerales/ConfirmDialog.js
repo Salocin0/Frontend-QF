@@ -1,8 +1,6 @@
-import React from 'react';
-import useDynamicColors from "../../UseDinamicColors";
+﻿import React from 'react';
 
 const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
-  const Colors = useDynamicColors();
 
   if (!open) return null;
 
@@ -25,7 +23,7 @@ const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%,-50%)',
-          background: Colors.GrisAzuladoOscuro,
+          background: "var(--qf-bg-main)",
           color: '#FFFFFF',
           padding: '20px',
           zIndex: 1100,
@@ -42,7 +40,7 @@ const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
             onClick={onCancel}
             style={{
               padding: '8px 16px',
-              backgroundColor: Colors.GrisAzuladoClaro,
+              backgroundColor: "var(--qf-bg-secondary)",
               color: '#FFFFFF',
               border: 'none',
               cursor: 'pointer',
@@ -55,7 +53,7 @@ const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
             onClick={onConfirm}
             style={{
               padding: '8px 16px',
-              backgroundColor: Colors.Naranja,
+              backgroundColor: "var(--qf-naranja)",
               color: '#FFFFFF',
               border: 'none',
               cursor: 'pointer',

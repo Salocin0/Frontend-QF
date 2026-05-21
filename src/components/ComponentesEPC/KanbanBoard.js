@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
 import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from "react-toastify";
-import useDynamicColors from '../../UseDinamicColors';
 import PedidoDetalleDialog from './PedidoDetalleDialog';
 import { UserContext } from '../ComponentesGenerales/UserContext';
 import { useContext } from 'react';
@@ -54,9 +53,7 @@ const KanbanBoard = ({id}) => {
   const [showCancelledColumn] = useState(true);
   const [allowedColumns, setAllowedColumns] = useState(null);
   const [infoDialog, setInfoDialog] = useState({open:false, task:null});
-  const [detailData, setDetailData] = useState(null); // fetched order details
-  const Colors = useDynamicColors();
-
+  const [detailData, setDetailData] = useState(null); // fetched order detailsn
   const recargarComponente = () => {
     setRecargar(prevRecargar => prevRecargar + 1);
   };
@@ -254,7 +251,7 @@ const KanbanBoard = ({id}) => {
       padding: '8px',
       margin: '0 0 8px 0',
       minHeight: '120px',
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       color: '#F7B813',
       border: `1px solid ${statusColor}`,
       borderRadius: '4px',

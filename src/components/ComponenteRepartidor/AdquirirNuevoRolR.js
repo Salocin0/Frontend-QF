@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 
 
 const AdquirirNuevoRolR = () => {
@@ -13,17 +12,8 @@ const AdquirirNuevoRolR = () => {
   const [confirmacionMayorDeEdad, setConfirmacionMayorDeEdad] = useState(false);
   const [,setNuevorol] = useState(false);
   const { user,updateUser } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const styles = {
-    container: {
-      display: "flex",
-      background: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-    },
-    sidebarContainer: {
-      width: "20%",
-    },
     mainContent: {
       flexGrow: 1,
       display: "flex",
@@ -31,7 +21,7 @@ const AdquirirNuevoRolR = () => {
       justifyContent: "center",
     },
     form: {
-      background: Colors.GrisAzuladoClaro,
+      background: "var(--qf-bg-secondary)",
       borderRadius: "8px",
       padding: "20px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -40,18 +30,18 @@ const AdquirirNuevoRolR = () => {
       fontSize: "1.5rem",
       fontWeight: "bold",
       marginBottom: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     divider: {
       marginBottom: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     formCheck: {
       marginBottom: "1rem",
       marginLeft: "1rem",
     },
     formCheckLabel: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     buttonContainer: {
       display: "grid",
@@ -116,10 +106,7 @@ const AdquirirNuevoRolR = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebarContainer}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.mainContent}>
         <div style={styles.form}>
           <div>
@@ -166,7 +153,7 @@ const AdquirirNuevoRolR = () => {
                 <button
                   onClick={() => navigate("/inicio")}
                   style={{
-                    ...styles.submitButton, backgroundColor: Colors.Azul, marginTop: "10px"
+                    ...styles.submitButton, backgroundColor: "var(--qf-blue)", marginTop: "10px"
                   }}
                 >
                   Volver
@@ -177,7 +164,7 @@ const AdquirirNuevoRolR = () => {
         </div>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

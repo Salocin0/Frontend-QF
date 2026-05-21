@@ -1,12 +1,10 @@
-import { default as React, useContext, useEffect, useState } from "react";
+﻿import { default as React, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import useDynamicColors from "../../UseDinamicColors";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import imgDefault from "../img/logoevento.webp";
 
 const EventoEncargado = ({ evento, puestoId, recargar }) => {
-  const Colors = useDynamicColors();
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [isEnPreparacion, setIsEnPreparacion] = useState(false);
@@ -122,9 +120,9 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
     container: {
       padding: "0",
       margin: "0",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
     },
     card: { marginBottom: "20px", position: "relative" }, // Aseguramos que la tarjeta tenga posición relativa
     cardBody: { padding: "15px" },
@@ -148,18 +146,18 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
       width: "80%",
     },
     imgFluid: { maxWidth: "80%", borderRadius: "10px" },
-    cardTitle: { fontSize: "2rem", fontWeight: "bold", color: Colors.Naranja },
-    cardDescripcion: { fontSize: "1.5rem", color: Colors.BlancoEnBlanco },
+    cardTitle: { fontSize: "2rem", fontWeight: "bold", color: "var(--qf-naranja)" },
+    cardDescripcion: { fontSize: "1.5rem", color: "var(--qf-blanco-puro)" },
     cardText: {
       fontSize: "1.5rem",
       marginBottom: "1rem",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
     cardEstado: {
       fontSize: "18px",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       fontWeight: "bold",
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       padding: "5px",
       borderRadius: "5px",
       position: "absolute", // Cambiar a absolute
@@ -175,15 +173,15 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
       width: "100%",
     },
     btnSuccess: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       padding: "10px 15px",
       borderRadius: "10px",
       marginTop: "10px",
       fontWeight: "bold",
     },
     cardTextYellow: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       fontSize: "1.5rem",
       display: "flex",
@@ -225,7 +223,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
             <div style={styles.justifyCenter}>
               {!tieneAsociacionPendiente && isEnPreparacion && (
                 <div style={{ width: "100%" }}>
-                  <hr style={{ color: Colors.Naranja }} />
+                  <hr style={{ color: "var(--qf-naranja)" }} />
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <button
                       style={styles.btnSuccess}
@@ -238,7 +236,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
               )}
               {tieneAsociacionPendiente && (
                 <div style={styles.justifyCenter}>
-                  <hr style={{ color: Colors.Naranja }} />
+                  <hr style={{ color: "var(--qf-naranja)" }} />
                   <p style={styles.cardTextYellow}>
                     Tiene una asociación pendiente
                   </p>

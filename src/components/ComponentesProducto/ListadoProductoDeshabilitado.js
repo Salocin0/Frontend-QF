@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import ProductoDeshabilitado from "./ProductoDeshabilitado";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import Producto from "./Producto";
@@ -18,7 +17,6 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
   const [recargar, setRecargar] = useState(0);
   const [busqueda, setBusqueda] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const Colors = useDynamicColors();
 
   const recargarComponente = () => {
     setRecargar((prev) => prev + 1);
@@ -43,12 +41,6 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
   }, [user, recargar, id]);
 
   const styles = {
-    mainContainer: {
-      display: "flex",
-      flexDirection: "column",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      minHeight: "100vh",
-    },
     mainContent: {
       display: "flex",
       flexDirection: "column",
@@ -60,17 +52,17 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
       justifyContent: "center",
       alignItems: "center",
       marginBottom: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       paddingLeft: "20px",
       paddingRight: "20px",
     },
     title: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       textAlign: "center",
     },
     divider: {
-      borderColor: Colors.Naranja,
+      borderColor: "var(--qf-naranja)",
       width: "100%",
       margin: "10px 0",
     },
@@ -95,8 +87,8 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
     sidebarContainer: {
       width: "30%",
       minWidth: "260px",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "8px",
       padding: "20px",
       display: "flex",
@@ -104,8 +96,8 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
       gap: "10px",
     },
     sidebarButton: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       fontSize: "1rem",
       textDecoration: "none",
       padding: "10px",
@@ -115,14 +107,14 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
     },
     noProductsMessage: {
       fontSize: "1.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     backLink: {
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       position: "absolute",
       right: "20px",
       top: "20px",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "10px",
       borderRadius: "10px",
       fontWeight: "bold",
@@ -146,9 +138,7 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
   ];
 
   return (
-    <div>
-      <div style={styles.mainContainer}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
         <div style={styles.mainContent}>
           <div style={styles.header}>
             <h1 style={styles.title}>Productos Deshabilitados</h1>
@@ -205,7 +195,7 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
                     flex: 1,
                     padding: "8px",
                     borderRadius: "4px",
-                    border: `1px solid ${Colors.Gris}`,
+                    border: `1px solid var(--qf-text-muted)`,
                   }}
                 />
                 <button
@@ -214,8 +204,8 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
                     padding: "8px 12px",
                     borderRadius: "4px",
                     border: "none",
-                    backgroundColor: Colors.Verde,
-                    color: Colors.BlancoEnBlanco,
+                    backgroundColor: "var(--qf-green)",
+                    color: "var(--qf-blanco-puro)",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
@@ -233,9 +223,8 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
             </div>
           </div>
         </div>
-      </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

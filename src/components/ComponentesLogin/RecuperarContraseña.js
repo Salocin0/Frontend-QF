@@ -1,14 +1,12 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+﻿import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import { Link } from "react-router-dom";
-import useDynamicColors from "../../UseDinamicColors";
 import "../ComponenteRegister/placeholder.css";
 
 const RecuperarContraseña = () => {
-  const Colors = useDynamicColors();
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
@@ -54,17 +52,17 @@ const RecuperarContraseña = () => {
     card: {
       borderRadius: "10px",
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardBody: {
       textAlign: "center",
     },
     title: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "1rem",
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       fontSize: "1.2rem",
     },
     input: {
@@ -72,16 +70,16 @@ const RecuperarContraseña = () => {
       padding: "0.5rem",
     },
     button: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.5rem",
       cursor: "pointer",
       borderRadius: "5px",
     },
     buttonBack: {
-      backgroundColor: Colors.GrisOscuro,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-text-secondary)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.5rem",
       cursor: "pointer",
@@ -91,7 +89,7 @@ const RecuperarContraseña = () => {
       padding: "20px",
     },
     inputGroupText: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       display:"flex",
       alignItems:"center",
       justifyContent:"start",

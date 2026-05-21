@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 function FormPuestoEditar({ carrito }) {
-  const Colors = useDynamicColors();
   const [editMode, setEditMode] = useState(false);
   const [numeroCarro, setNumeroCarro] = useState("");
   const [nombreCarro, setNombreCarro] = useState("");
@@ -67,10 +65,10 @@ function FormPuestoEditar({ carrito }) {
       display: "flex",
       flexDirection: "column",
       gap: "16px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "8px",
       padding: "16px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       position: "relative",
       width: "Calc(100% - 40px)",
     },
@@ -93,15 +91,15 @@ function FormPuestoEditar({ carrito }) {
       borderRadius: "4px",
       cursor: "pointer",
     },
-    editButton: { backgroundColor: Colors.Azul, color: Colors.BlancoEnBlanco },
-    saveButton: { backgroundColor: Colors.Verde, color: Colors.BlancoEnBlanco },
+    editButton: { backgroundColor: "var(--qf-blue)", color: "var(--qf-blanco-puro)" },
+    saveButton: { backgroundColor: "var(--qf-green)", color: "var(--qf-blanco-puro)" },
     cancelButton: {
-      backgroundColor: Colors.Rojo,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-blanco-puro)",
     },
     row: { display: "flex", flexWrap: "wrap", gap: "16px" },
     column: { flex: "1", minWidth: "250px" },
-    label: { marginBottom: "8px", fontWeight: "bold", color: Colors.Blanco },
+    label: { marginBottom: "8px", fontWeight: "bold", color: "var(--qf-text-primary)" },
     input: {
       width: "100%",
       padding: "8px",

@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import React, { useState } from "react";
 
 const BuscadorEventosConsumidor = ({ setNombre }) => {
-  const Colors = useDynamicColors();
   const [searchText, setSearchText] = useState("");
 
   const handleInputChange = (event) => {
@@ -24,20 +22,20 @@ const BuscadorEventosConsumidor = ({ setNombre }) => {
       borderRadius: "8px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       flexDirection: "column",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
     },
     input: {
       flex: 1,
       padding: "10px",
-      border: `1px solid ${Colors.Gris}`,
+      border: `1px solid var(--qf-text-muted)`,
       borderRadius: "4px",
       fontSize: "16px",
       outline: "none",
     },
     button: {
       padding: "10px 15px",
-      backgroundColor: Colors.Verde,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
       border: "none",
       borderRadius: "4px",

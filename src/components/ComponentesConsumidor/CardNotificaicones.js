@@ -1,8 +1,6 @@
-import useDynamicColors from "../../UseDinamicColors";
-import { useEffect, useCallback } from "react";
+﻿import { useEffect, useCallback } from "react";
 
 const CardNotificaciones = ({ notificacion, recargarComponente }) => {
-  const Colors = useDynamicColors();
 
   const marcarComoLeida = useCallback(async () => {
     try {
@@ -36,17 +34,17 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
 
   const styles = {
     card: {
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       padding: "20px",
       margin: "10px 0px",
       borderRadius: "8px",
       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       width: "Calc(100% - 40px)",
       position: "relative",
       border:
         notificacion.estado === "pendiente"
-          ? `2px solid ${Colors.Naranja}`
+          ? `2px solid var(--qf-naranja)`
           : "none",
     },
     titulo: {
@@ -58,7 +56,7 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
     },
     fecha: {
       fontSize: "14px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       marginTop: "5px",
     },
     estado: {
@@ -68,17 +66,17 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
       fontSize: "14px",
       fontWeight: "bold",
       backgroundColor:
-        notificacion.estado === "pendiente" ? Colors.Naranja : Colors.Verde,
+        notificacion.estado === "pendiente" ? "var(--qf-naranja)" : "var(--qf-green)",
       padding: "5px 10px",
       borderRadius: "10px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     circuloDorado: {
       position: "absolute",
       width: "15px",
       height: "15px",
       borderRadius: "50%",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       right: "20px",
       top: "50%",
       transform: "translateY(-50%)",
@@ -89,8 +87,8 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
       alignItems: "center",
       justifyContent: "center",
       padding: "10px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
       border: "none",
       borderRadius: "5px",
       cursor: "pointer",

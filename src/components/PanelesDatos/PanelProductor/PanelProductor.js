@@ -1,17 +1,15 @@
-import React, { useContext, useEffect, useState } from "react";
-import Sidebar from "../../ComponentesGenerales/Sidebar";
+﻿import React, { useContext, useEffect, useState } from "react";
+import PageLayout from "../../ComponentesGenerales/PageLayout";
 import Footer from "../../ComponentesGenerales/Footer";
 import TopPuestos from "./TopPuestos";
 import GraficaBarras from "../GraficaBarras";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../../UseDinamicColors";
 import TotalQuickFood from "./TotalGenerado";
 import ValoracionPromedio from "./ValoracionPromedio";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
 
 const PanelProductor = () => {
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
   const [eventos, setEventos] = useState([]);
   const [eventoSeleccionado, setEventoSeleccionado] = useState("Todos");
 
@@ -51,12 +49,8 @@ const PanelProductor = () => {
   }, [user]);
 
   const styles = {
-    container: {
-      height: "100vh",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-    },
     header: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
       marginLeft: "20%",
       paddingTop: "10px",
@@ -66,7 +60,7 @@ const PanelProductor = () => {
     },
     select: {
       borderRadius: "5px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       position: "absolute",
       top: "25px",
       right: "20px",
@@ -77,14 +71,14 @@ const PanelProductor = () => {
       width: "200px",
     },
     hr: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       width: "100%",
       paddingBottom: "10px",
     },
     mainContent: {
       display: "flex",
       height: "70vh",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       marginLeft: "20%",
       width: "80%",
     },
@@ -113,13 +107,13 @@ const PanelProductor = () => {
       backgroundSize: "cover",
       backgroundRepeat: "no-repeat",
       backgroundPosition: "100% 25%",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
       position: "relative",
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       color: "white",
       padding: "16px",
     },
@@ -127,16 +121,16 @@ const PanelProductor = () => {
       gridArea: "grafica",
       borderRadius: "20px",
       marginBottom: "20px",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
       overflow: "hidden",
     },
     toppuestos: {
       gridArea: "toppuestos",
       marginTop: "20px",
       borderRadius: "20px",
-      background: Colors.GrisAzuladoClaro,
+      background: "var(--qf-bg-secondary)",
       marginBottom: "20px",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
     },
     footer: {
       marginTop: "auto",
@@ -157,7 +151,7 @@ const PanelProductor = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.header}>
         <h1>Estadísticas Productor</h1>
       </div>
@@ -182,7 +176,6 @@ const PanelProductor = () => {
           }}
         />
       </div>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
       <div style={styles.mainContent}>
         <div style={styles.graficaContainer}>
           <TotalQuickFood eventId={eventoSeleccionado} />
@@ -200,7 +193,7 @@ const PanelProductor = () => {
           <Footer />
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+﻿import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
-import useDynamicColors from "../../UseDinamicColors";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 
@@ -9,9 +8,7 @@ const GraficaBarras = ({ eventId }) => {
   const [chartData, setChartData] = useState(null); // Estado para los datos de la gráfica
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado para errores
-  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decal
-  const Colors = useDynamicColors();
-
+  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decaln
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,7 +73,7 @@ const GraficaBarras = ({ eventId }) => {
             stack: "total",
             label: { 
               show: true,
-              color: Colors.Naranja,
+              color: "var(--qf-naranja)",
             },
             emphasis: { focus: "series" },
             data,
@@ -122,7 +119,7 @@ const GraficaBarras = ({ eventId }) => {
       ...series,
       label: {
         show: true,
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
       itemStyle: {
         decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null,
@@ -137,7 +134,7 @@ const GraficaBarras = ({ eventId }) => {
 
   if (loading) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-      <CircularProgress style={{ color: Colors.Naranja }} />
+      <CircularProgress style={{ color: "var(--qf-naranja)" }} />
     </div>
   );
   if (error) return <div>Error: {error}</div>;
@@ -147,23 +144,23 @@ const GraficaBarras = ({ eventId }) => {
       trigger: "axis",
       axisPointer: { type: "shadow" },
     },
-    backgroundColor: Colors.GrisAzuladoClaro,
+    backgroundColor: "var(--qf-bg-secondary)",
     title: {
       text: "Recaudacion por Puesto y Dia",
       subtext: "Total Recaudado por cada Puesto en cada Dia",
       top: "3%",
       left: "center",
       textStyle: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
       subtextStyle: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
     },
     legend: {
       top: "20%",
       textStyle: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
     },
     grid: {
@@ -176,11 +173,11 @@ const GraficaBarras = ({ eventId }) => {
     yAxis: {
       type: "value",
       axisLabel: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
       axisLine: {
         lineStyle: {
-          color: Colors.Naranja,
+          color: "var(--qf-naranja)",
         },
       },
     },
@@ -188,11 +185,11 @@ const GraficaBarras = ({ eventId }) => {
       type: "category",
       data: chartData.xAxisData,
       axisLabel: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       },
       axisLine: {
         lineStyle: {
-          color: Colors.Naranja,
+          color: "var(--qf-naranja)",
         },
       },
     },
@@ -211,13 +208,13 @@ const GraficaBarras = ({ eventId }) => {
           <button
             onClick={() => setDecalEnabled(!decalEnabled)}
             style={{
-              backgroundColor: Colors.GrisAzuladoOscuro,
+              backgroundColor: "var(--qf-bg-main)",
               padding: "3px 10px",
               borderRadius:"10px",
               border: "none",
               cursor: "pointer",
               fontSize: "18px",
-              color: Colors.Naranja,
+              color: "var(--qf-naranja)",
               position: "absolute",
               top: "20px",
               right: "20px",
@@ -230,7 +227,7 @@ const GraficaBarras = ({ eventId }) => {
       ) : (
         <div
           style={{
-            backgroundColor: Colors.GrisAzuladoClaro,
+            backgroundColor: "var(--qf-bg-secondary)",
             height: "100%",
             display: "flex",
             justifyContent: "center",
@@ -239,7 +236,7 @@ const GraficaBarras = ({ eventId }) => {
         >
           <h1
             style={{
-              color: Colors.BlancoEnBlanco,
+              color: "var(--qf-blanco-puro)",
               fontSize: "18px",
             }}
           >

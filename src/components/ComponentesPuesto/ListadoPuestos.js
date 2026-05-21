@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Puesto from "./Puesto";
 import "./../sass/main.scss";
 
@@ -71,10 +71,7 @@ const ListadoPuestos = () => {
   }, [session, recargar]);
 
   return (
-    <div className={`background d-flex`}>
-      <div className="col-2">
-        <Sidebar tipoUsuario={session?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
       <div className="flex-grow-1 pb-5">
         <div className="container pt-2 h-100">
           <div className={`d-flex justify-content-between align-items-center mb-3`}>
@@ -118,7 +115,7 @@ const ListadoPuestos = () => {
         </Link>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

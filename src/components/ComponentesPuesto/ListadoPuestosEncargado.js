@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState, useMemo } from "react";
+﻿import { useContext, useEffect, useState, useMemo } from "react";
 import { CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
 import PuestoEncargado from "./PuestoEncargado";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Buscador from "../Filtros y Buscadores/Buscador";
@@ -19,7 +18,6 @@ const ListadoPuestosEncargado = () => {
   const [filtrosAplicados, setFiltrosAplicados] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
   const navigate = useNavigate();
   const [actualizar, setActualizar] = useState(0);
 
@@ -45,13 +43,6 @@ const ListadoPuestosEncargado = () => {
   ];
 
   const styles = {
-    container: {
-      margin: 0,
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      minHeight: "100vh",
-      display: "flex",
-      flexDirection: "column",
-    },
     mainContent: {
       display: "flex",
       flexDirection: "column",
@@ -80,8 +71,8 @@ const ListadoPuestosEncargado = () => {
       borderRadius: "8px",
       padding: "20px",
       top: "20px",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
     },
     headerContainer: {
       display: "flex",
@@ -92,12 +83,12 @@ const ListadoPuestosEncargado = () => {
       marginTop: "1rem",
     },
     sectionTitle: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontSize: "2rem",
       fontWeight: "bold",
     },
     divider: {
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       width: "100%",
     },
     rowContainer: {
@@ -114,26 +105,26 @@ const ListadoPuestosEncargado = () => {
     },
     gridTitle: {
       fontSize: "2rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       marginBottom: "1rem",
     },
     description: {
       fontSize: "1rem",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       marginBottom: "1.5rem",
     },
     linkButton: {
       textDecoration: "none",
       padding: "0.75rem 1.5rem",
-      backgroundColor: Colors.Naranja,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-naranja)",
+      color: "var(--qf-text-white)",
       borderRadius: "5px",
       fontWeight: "bold",
       display: "inline-block",
     },
     agregarButton: {
       padding: "0.5rem 1rem",
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       color: "white",
       borderRadius: "5px",
       border: "none",
@@ -240,8 +231,7 @@ const ListadoPuestosEncargado = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
 
       <div style={styles.mainContent}>
         <div style={styles.headerContainer}>
@@ -265,7 +255,7 @@ const ListadoPuestosEncargado = () => {
                 }}
               >
                 <CircularProgress
-                  style={{ color: Colors.Naranja }}
+                  style={{ color: "var(--qf-naranja)" }}
                   size={40}
                 />
               </div>
@@ -336,7 +326,7 @@ const ListadoPuestosEncargado = () => {
         </div>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

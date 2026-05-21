@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
-import useDynamicColors from "../../../UseDinamicColors";
+﻿import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import { CircularProgress } from "@mui/material";
 
@@ -8,7 +7,6 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,8 +48,8 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       marginTop: "20px",
       borderRadius: "20px",
       alignItems: "center",
-      border: `2px solid ${Colors.Naranja}`,
-      background: Colors.GrisAzuladoClaro,
+      border: `2px solid var(--qf-naranja)`,
+      background: "var(--qf-bg-secondary)",
       marginLeft: "20px",
     },
     loadingContainer: {
@@ -62,7 +60,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       width: "100%",
     },
     loadingText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontSize: "1.5rem",
       margin: 0,
       padding: 0,
@@ -75,7 +73,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       width: "100%",
     },
     errorText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontSize: "1.5rem",
       margin: 0,
       padding: 0,
@@ -89,13 +87,13 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       flexDirection: "column",
     },
     resultText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontSize: "2rem",
       margin: 0,
       padding: 0,
     },
     label: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin: 0,
       padding: 0,
     },
@@ -105,7 +103,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     <div style={styles.container}>
       {isLoading ? (
         <div style={styles.loadingContainer}>
-          <CircularProgress style={{ color: Colors.Naranja }} />
+          <CircularProgress style={{ color: "var(--qf-naranja)" }} />
         </div>
       ) : error ? (
         <div style={styles.errorContainer}>

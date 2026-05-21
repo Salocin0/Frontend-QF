@@ -1,16 +1,14 @@
-import React, { useEffect, useState, useContext } from "react";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+﻿import React, { useEffect, useState, useContext } from "react";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import EventoUser from "./EventoUser";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Footer from "../ComponentesGenerales/Footer";
-import useDynamicColors from "../../UseDinamicColors";
 import FiltersEventosConsumidor from "../Filtros y Buscadores/filtersEventosConsumidor";
 import Buscador from "../Filtros y Buscadores/BuscadorEventosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const ListadoEventosUsers = () => {
-  const Colors = useDynamicColors();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [eventos, setEventos] = useState([]);
@@ -112,18 +110,6 @@ const ListadoEventosUsers = () => {
   }, [distancia, nombre, preventa, eventos]);
 
   const styles = {
-    container: {
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "calc(100vh - 50px)",
-      overflow: "hidden",
-    },
-    sidebar: {
-      width: "20%",
-      padding: 0,
-      boxSizing: "border-box",
-    },
     mainContent: {
       width: "80%",
       height: "100%",
@@ -135,7 +121,7 @@ const ListadoEventosUsers = () => {
     headerWrapper: {
       flexShrink: 0,
       width: "100%",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       zIndex: 10,
     },
     scrollableContent: {
@@ -166,7 +152,7 @@ const ListadoEventosUsers = () => {
     header: {
       display: "flex",
       justifyContent: "flex-start",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       paddingLeft: "16px",
     }, 
     title: {
@@ -178,10 +164,10 @@ const ListadoEventosUsers = () => {
       textAlign: "left",
     },
     separator: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       border: "none",
       height: "2px",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
     },
     eventsContainer: {
       display: "flex",
@@ -206,7 +192,7 @@ const ListadoEventosUsers = () => {
     },
     noEventsMessage: {
       fontSize: "24px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
       display: "flex",
       justifyContent: "center",
@@ -225,14 +211,14 @@ const ListadoEventosUsers = () => {
     },
     buscadorBox: {
       width: "98%",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       padding: "8px 16px",
       boxSizing: "border-box",
     },
     filtroBox: {
       width: "98%",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       padding: "10px",
       boxSizing: "border-box",
@@ -241,10 +227,7 @@ const ListadoEventosUsers = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.mainContent}>
         <div style={styles.headerWrapper}>
           <div style={styles.header}>
@@ -305,7 +288,7 @@ const ListadoEventosUsers = () => {
       </div>
 
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

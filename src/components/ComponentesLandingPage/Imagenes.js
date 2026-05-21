@@ -1,9 +1,7 @@
-import React from "react";
+﻿import React from "react";
 import Carrousel from "./Carrousel";
-import useDynamicColors from "../../UseDinamicColors";
 
 const Imagenes = () => {
-  const Colors = useDynamicColors();
 
   const styles = {
     container: {
@@ -12,7 +10,7 @@ const Imagenes = () => {
       justifyContent: "center",
       flexDirection: "column",
       padding: "2rem 0", 
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
     },
     titleContainer: {
       textAlign: "center",

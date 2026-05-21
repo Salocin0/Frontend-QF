@@ -1,9 +1,7 @@
-import React from "react";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import React from "react";
 import { FaRegSquare } from "react-icons/fa";
 
 const ActionButton = ({ title, icon, onClick, style }) => {
-  const Colors = useDynamicColors();
   
   const styles = {
     container: {
@@ -12,7 +10,7 @@ const ActionButton = ({ title, icon, onClick, style }) => {
       alignItems: "center",
       justifyContent: "center",
       cursor: "pointer",
-      border: `2px solid ${Colors.BlancoEnBlanco}`,
+      border: `2px solid var(--qf-blanco-puro)`,
     },
     icon: {
       width: "80px",

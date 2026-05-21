@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+﻿import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import imgDefault from "../img/productoDefecto.png";
-import useDynamicColors from "../../UseDinamicColors";
 
 const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
-  const Colors = useDynamicColors();
 
   const habilitarNuevamente = () => {
     fetch(`${process.env?.REACT_APP_BACK_URL}producto/${producto.id}/habilitar`, {
@@ -46,7 +44,7 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
       borderRadius: "8px",
       overflow: "hidden",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       display: "flex",
       width: "100%",
       height: "100%",
@@ -56,7 +54,7 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
       height: "100%",
       overflow: "hidden",
       resizeMode: "cover",
-      backgroundColor: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-blanco-puro)",
       objectFit: "cover",
     },
     cardBody: {
@@ -71,7 +69,7 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
       fontWeight: "bold",
       textAlign: "center",
       marginBottom: "8px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     cardText: {
       fontSize: "1rem",
@@ -80,7 +78,7 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
       height: "100px",
       overflow: "hidden",
       textOverflow: "ellipsis",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
     priceRow: {
       display: "flex",
@@ -90,7 +88,7 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
     priceText: {
       fontSize: "1.5rem",
       fontWeight: "bold",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     actionsContainer: {
       display: "flex",
@@ -104,14 +102,14 @@ const ProductoDeshabilitado = ({ producto, idpuesto, recargar }) => {
       cursor: "pointer",
       fontWeight: "bold",
       fontSize: "0.9rem",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
     editButton: {
-      backgroundColor: Colors.Azul,
+      backgroundColor: "var(--qf-blue)",
       marginRight: "5px",
     },
     enableButton: {
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       marginLeft: "5px",
     },
   };

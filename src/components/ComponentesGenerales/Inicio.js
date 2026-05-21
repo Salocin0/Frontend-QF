@@ -1,24 +1,25 @@
 import CardInicio from "./CardInicio";
 import Sidebar from "./Sidebar";
+import PageLayout from "./PageLayout";
 import { useState, useEffect } from "react";
 import pedidoimg from "../img/comida-rapida-casera.jpg";
 import eventosimg2 from "../img/eventosimg2.png";
 import encargado from "../img/foodtruck.jpg";
 import productor from "../img/productor.jpg";
 import repartidor from "../img/repartidor.jpg";
-import useDynamicColors from "../../UseDinamicColors";
 import ActionButton from "./ActionButton";
 import { FaUser, FaSignOutAlt, FaShoppingCart } from 'react-icons/fa'
 import Panel from "../ComponentesLandingPage/ChatPanel";
 import Footer from "./Footer";
 import asociarEvento from "../img/asociarevento.png";
-import estadisticas from "../img/Estadísticas.jpg";
+import estadisticas from "../img/Estadísticas.jpg";
 import { useNavigate } from "react-router-dom";
+import useBreakpoint from "../../useBreakpoint";
 
 const Inicio = () => {
   const [session, setSession] = useState(null);
-  const Colors = useDynamicColors();
   const navigate = useNavigate();
+  const { isMobile } = useBreakpoint();
 
 
   useEffect(() => {
@@ -158,7 +159,18 @@ const Inicio = () => {
   };
 
   // Usar el tipo de usuario para obtener estilos
-  const contentStyles = getContentStyles(session?.tipoUsuario);
+  const desktopStyles = getContentStyles(session?.tipoUsuario);
+  // Override responsive para mobile: grilla vertical de 1 columna
+  const contentStyles = isMobile
+    ? {
+        ...desktopStyles,
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        padding: "12px",
+        marginBottom: "60px",
+      }
+    : desktopStyles;
 
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
@@ -318,7 +330,7 @@ const Inicio = () => {
       onClick: handleProfile,
       style: {
         gridArea: "perfil",
-        backgroundColor: Colors.Naranja,
+        backgroundColor: "var(--qf-naranja)",
         padding: "10px",
         borderRadius: "10px",
         cursor: "pointer",
@@ -330,7 +342,7 @@ const Inicio = () => {
       onClick: handleLogout,
       style: {
         gridArea: "cerrarSesion",
-        backgroundColor: Colors.Rojo,
+        backgroundColor: "var(--qf-rojo)",
         padding: "10px",
         borderRadius: "10px",
         cursor: "pointer",
@@ -342,7 +354,7 @@ const Inicio = () => {
       onClick: handleCart,
       style: {
         gridArea: "carrito",
-        backgroundColor: Colors.Naranja,
+        backgroundColor: "var(--qf-naranja)",
         padding: "10px",
         borderRadius: "10px",
         cursor: "pointer",
@@ -351,17 +363,9 @@ const Inicio = () => {
   ];
 
   const styles = {
-    container: {
-      display: "flex",
-      height: "100vh",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-    },
-    sidebar: {
-      width: "20%",
-    },
     profileButton: {
       gridArea: "perfil",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "10px",
       textAlign: "center",
       borderRadius: "5px",
@@ -369,7 +373,7 @@ const Inicio = () => {
     },
     logoutButton: {
       gridArea: "cerrarSesion",
-      backgroundColor: Colors.Rojo,
+      backgroundColor: "var(--qf-rojo)",
       padding: "10px",
       textAlign: "center",
       borderRadius: "5px",
@@ -377,7 +381,7 @@ const Inicio = () => {
     },
     chatbotButton: {
       gridArea: "chatbot",
-      backgroundColor: Colors.Rosa,
+      backgroundColor: "var(--qf-rosa)",
       padding: "10px",
       textAlign: "center",
       borderRadius: "5px",
@@ -386,10 +390,7 @@ const Inicio = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.sidebar}>
-        <SafeSidebar tipoUsuario={session?.tipoUsuario} />
-      </div>
+    <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
       <div style={contentStyles}>
         {cardsData.map((card, index) => (
           <SafeCardInicio key={index} data={card} />
@@ -400,7 +401,7 @@ const Inicio = () => {
       </div>
       {isPanelOpen && <SafePanel onClose={togglePanel} />}
       <SafeFooter />
-    </div>
+    </PageLayout>
   );
 };
 

@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
-import useDynamicColors from "../../UseDinamicColors";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const GraficaTortaProductos = ({ height, productos }) => {
   const [chartData, setChartData] = useState([]);
-  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decal
-  const Colors = useDynamicColors();
-
+  const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decaln
   useEffect(() => {
     if (productos.length > 0) {
       const totalRecaudado = productos.reduce((sum, producto) => sum + producto.dinero, 0);
@@ -29,7 +26,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
   ];
 
   const option = {
-    backgroundColor: Colors.GrisAzuladoClaro,
+    backgroundColor: "var(--qf-bg-secondary)",
     tooltip: {
       trigger: "item",
       formatter: "{b}: {c}% ({d}%)",
@@ -38,7 +35,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
       top: "7%",
       left: "center",
       textStyle: {
-        color: Colors.Naranja,
+        color: "var(--qf-naranja)",
       }
     },
     series: [
@@ -54,7 +51,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
         label: {
           show: true,
           fontSize: "10px",
-          color: Colors.Naranja,
+          color: "var(--qf-naranja)",
         },
         labelLine: {
           show: true,
@@ -74,13 +71,13 @@ const GraficaTortaProductos = ({ height, productos }) => {
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
-          backgroundColor: Colors.GrisAzuladoOscuro,
+          backgroundColor: "var(--qf-bg-main)",
           padding: "3px 10px",
           borderRadius: "10px",
           border: "none",
           cursor: "pointer",
           fontSize: "18px",
-          color: Colors.Naranja,
+          color: "var(--qf-naranja)",
           position: "absolute",
           top: "-5px",
           right: "0px",

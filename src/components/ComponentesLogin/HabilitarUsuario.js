@@ -1,16 +1,14 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+﻿import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import { useParams } from "react-router-dom";
-import useDynamicColors from "../../UseDinamicColors";
 import { Link } from "react-router-dom";
 const HabilitarUsuario = () => {
   const { id } = useParams();
   const [emailback, setEmailBack] = useState("");
   const [emailcompleto, setEmailCompleto] = useState("");
-  const Colors = useDynamicColors();
   const navigate = useNavigate();
 
   const handleEmailcompletoChange = (e) => {
@@ -71,33 +69,33 @@ const HabilitarUsuario = () => {
     card: {
       borderRadius: "10px",
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardBody: {
       textAlign: "center",
     },
     title: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "1rem",
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     input: {
       width: "100%",
       padding: "0.5rem",
     },
     button: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.5rem",
       cursor: "pointer",
       borderRadius: "5px",
     },
     buttonBack: {
-      backgroundColor: Colors.GrisOscuro,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-text-secondary)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.5rem",
       cursor: "pointer",
@@ -107,7 +105,7 @@ const HabilitarUsuario = () => {
       padding: "20px",
     },
     inputGroupText: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       display: "flex",
       alignItems: "center",
       justifyContent: "start",

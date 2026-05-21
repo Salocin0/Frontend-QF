@@ -1,13 +1,11 @@
-import { default as React, useContext, useEffect, useState } from "react";
+﻿import { default as React, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/logoevento.webp";
 
 const EventoRepartidor = ({ evento, recargar }) => {
   const navigate = useNavigate();
-  const Colors = useDynamicColors();
   const [isEnPreparacion,] = useState(
     evento.estado === "EnPreparacion"
   );
@@ -21,7 +19,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
       margin: "0 20px",
     },
     hr:{
-      color : Colors.Naranja
+      color : "var(--qf-naranja)"
     },
     datos:{
       width: "90%",
@@ -32,12 +30,12 @@ const EventoRepartidor = ({ evento, recargar }) => {
       textAlign: "center",
     },
     card: {
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       padding: "15px",
       marginBottom: "15px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       position: "relative",
     },
     cardBody: {
@@ -64,38 +62,38 @@ const EventoRepartidor = ({ evento, recargar }) => {
     cardTitle: {
       fontSize: "24px",
       fontWeight: "bold",
-      color: Colors.Naranja
+      color: "var(--qf-naranja)"
     },
     cardDescripcion: {
       fontSize: "1rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       marginBottom: "10px",
     },
     cardText: {
       fontSize: "0.9rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     cardEstado: {
       fontSize: "1rem",
       fontWeight: "bold",
-      color:  Colors.Negro,
+      color:  "var(--qf-text-white)",
       position: "absolute",
       top: "30px",
       right: "30px",
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       padding: "5px 10px",
       borderRadius: "10px",
     },
     cardTextFecha: {
       fontSize: "0.8rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     mt2: {
       marginTop: "10px",
     },
     btnSuccess: {
-      backgroundColor: Colors.Verde,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-primary)",
       border: "none",
       padding: "10px 20px",
       borderRadius: "5px",
@@ -106,7 +104,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
     },
     cardTextYellow: {
       fontSize: "0.9rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
     },
   };

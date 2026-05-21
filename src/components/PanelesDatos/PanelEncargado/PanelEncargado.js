@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useContext } from "react";
-import Sidebar from "../../ComponentesGenerales/Sidebar";
+﻿import React, { useEffect, useState, useContext } from "react";
+import PageLayout from "../../ComponentesGenerales/PageLayout";
 import Footer from "../../ComponentesGenerales/Footer";
 import GraficaLineas from "../GraficaLineas";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../../UseDinamicColors";
 import TopProductos from "./TopProductos";
 import TiempoPromedioEntrega from "./TiempoPromedioEntrega";
 import ValoracionPromedio from "./ValoracionPromedio";
@@ -12,7 +11,6 @@ import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
 
 const PanelEncargado = () => {
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const [eventos, setEventos] = useState([]);
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
@@ -20,13 +18,8 @@ const PanelEncargado = () => {
   const [puestoSeleccionado, setPuestoSeleccionado] = useState(null);
 
   const styles = {
-    container: {
-      height: "100vh",
-      width: "100%",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-    },
     header: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
       marginLeft: "20%",
       paddingTop: "10px",
@@ -36,7 +29,7 @@ const PanelEncargado = () => {
     },
     select1: {
       borderRadius: "5px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       position: "absolute",
       top: "25px",
       right: "20px",
@@ -48,7 +41,7 @@ const PanelEncargado = () => {
     },
     select2: {
       borderRadius: "5px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       position: "absolute",
       top: "25px",
       right: "230px",
@@ -59,7 +52,7 @@ const PanelEncargado = () => {
       width: "150px",
     },
     hr: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       width: "100%",
       paddingBottom: "0",
     },
@@ -67,7 +60,7 @@ const PanelEncargado = () => {
       display: "flex",
       height: "Calc(100% - 200px)",
       width: "80%",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       marginBottom: "50px",
       marginLeft: "20%",
     },
@@ -187,8 +180,7 @@ const PanelEncargado = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <h1 style={styles.header}>Estadísticas Encargado</h1>
       <select
         style={styles.select1}
@@ -253,7 +245,7 @@ const PanelEncargado = () => {
         </div>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

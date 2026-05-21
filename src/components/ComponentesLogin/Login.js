@@ -1,21 +1,18 @@
-import React, { useContext,useEffect } from "react";
+﻿import React, { useContext,useEffect } from "react";
 import { fetchToken } from '../../firebase.js';
 import PasswordToggle from "../ComponenteRegister/PasswordToggle.jsx";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useLogin from "../Hooks/UseLogin";
-import useDynamicColors from "../../UseDinamicColors.js";
 import { FaUser } from "react-icons/fa";
 
 const Login = () => {
   const { updateUser } = useContext(UserContext);
   const { email, password, setTokenWeb, handleEmailChange, handlePasswordChange, handleLogin } = useLogin();
-  const Colors = useDynamicColors();
 
   // Debug: verificar que las importaciones existen
   console.log('Debug imports - PasswordToggle:', PasswordToggle);
   console.log('Debug imports - Footer:', Footer);
-  console.log('Debug imports - useDynamicColors:', useDynamicColors);
   console.log('Debug imports - fetchToken:', fetchToken);
 
   const activarMensajes = async () => {
@@ -67,19 +64,19 @@ const Login = () => {
       padding: "2rem",
       borderRadius: "8px",
       boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       textAlign: "center",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
     },
     titleStyle: {
       fontSize: "1.5rem",
       fontWeight: "bold",
       marginBottom: "1rem",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     subtitleStyle: {
       fontSize: "0.875rem",
-      color: Colors.Gris,
+      color: "var(--qf-text-muted)",
       marginBottom: "1.5rem",
     },
     formStyle: {
@@ -104,14 +101,14 @@ const Login = () => {
       padding: "0.75rem",
       fontSize: "1rem",
       fontWeight: "bold",
-      backgroundColor: Colors.Naranja,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-naranja)",
+      color: "var(--qf-text-primary)",
       borderRadius: "4px",
       border: "none",
       cursor: "pointer",
     },
     linkStyle: {
-      color: Colors.Azul,
+      color: "var(--qf-blue)",
       textDecoration: "none",
       fontSize: "0.875rem",
       cursor: "pointer",
@@ -123,7 +120,7 @@ const Login = () => {
     },
     label: {
       fontSize: "1rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       fontWeight: "bold",
       margin: 0,
       cursor: "default",
@@ -134,7 +131,7 @@ const Login = () => {
       top: "68%",
       transform: "translateY(-50%)",
       cursor: "pointer",
-      color: Colors.Gris,
+      color: "var(--qf-text-muted)",
     }
   };
 

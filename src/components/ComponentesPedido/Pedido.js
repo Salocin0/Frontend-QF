@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
-import useDynamicColors from "../../UseDinamicColors";
+﻿import { useState, useEffect } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import { toast } from "react-toastify";
 import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay, FaHourglassStart, FaCheckCircle, FaTruck, FaBox, FaBan } from "react-icons/fa";
 
 const Pedido = ({ pedido,recargar }) => {
-  const Colors = useDynamicColors();
   const [opinion, setOpinion] = useState("");
   const [repartidorRating, setRepartidorRating] = useState(1);
   const [puestoRating, setPuestoRating] = useState(1);
@@ -39,13 +37,13 @@ const Pedido = ({ pedido,recargar }) => {
   };
 
   const coloresPorEstado = {
-    Pendiente: Colors.NaranjaOscuro,
-    Aceptado: Colors.Rosa,
-    EnPreparacion: Colors.Purpura,
-    EnCamino: Colors.Azul,
-    Entregado: Colors.Verde,
-    Cancelado: Colors.Rojo,
-    Precomprado: Colors.Rosa,
+    Pendiente: "var(--qf-orange-dark)",
+    Aceptado: "var(--qf-rosa)",
+    EnPreparacion: "var(--qf-purple)",
+    EnCamino: "var(--qf-blue)",
+    Entregado: "var(--qf-green)",
+    Cancelado: "var(--qf-rojo)",
+    Precomprado: "var(--qf-rosa)",
   };
 
   const handleCancelarPedido = async () => {
@@ -172,8 +170,8 @@ const Pedido = ({ pedido,recargar }) => {
       width: "100%",
     },
     card: {
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       marginBottom: "20px",
     },
@@ -184,28 +182,28 @@ const Pedido = ({ pedido,recargar }) => {
       fontSize: "24px",
       fontWeight: "bold",
       marginBottom: "0.75rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     cardSubTitle: {
       fontSize: "18px",
       fontWeight: "bold",
       marginBottom: "0.75rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     cardDescripcion: {
       fontSize: "1rem",
       marginBottom: "0.5rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     cardText: {
       fontSize: "1rem",
       fontWeight: "bold",
       marginBottom: "0.5rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     cardEstado: {
       fontSize: "16px",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       fontWeight: "bold",
       backgroundColor: coloresPorEstado[estadoLocal],
       borderRadius: "10px",
@@ -217,7 +215,7 @@ const Pedido = ({ pedido,recargar }) => {
       right: "10px",
     },
     separator: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     buttonGroup: {
       display: "flex",
@@ -225,8 +223,8 @@ const Pedido = ({ pedido,recargar }) => {
       marginTop: "1rem",
     },
     buttonInfo: {
-      backgroundColor: Colors.Info,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-info)",
+      color: "var(--qf-text-white)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -236,8 +234,8 @@ const Pedido = ({ pedido,recargar }) => {
       fontWeight: "bold",
     },
     buttonDanger: {
-      backgroundColor: Colors.Rojo,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-text-white)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -246,8 +244,8 @@ const Pedido = ({ pedido,recargar }) => {
       fontWeight: "bold",
     },
     buttonMap: {
-      backgroundColor: Colors.Azul,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-text-white)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -256,8 +254,8 @@ const Pedido = ({ pedido,recargar }) => {
       fontWeight: "bold",
     },
     buttonValorar: {
-      backgroundColor: Colors.Verde,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-white)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -266,8 +264,8 @@ const Pedido = ({ pedido,recargar }) => {
       fontWeight: "bold",
     },
     buttonSolicitar: {
-      backgroundColor: Colors.Verde,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-white)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -276,7 +274,7 @@ const Pedido = ({ pedido,recargar }) => {
       fontWeight: "bold",
     },
     price: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       fontSize: "1.5rem",
       fontWeight: "bold",
       display: "flex",
@@ -305,7 +303,7 @@ const Pedido = ({ pedido,recargar }) => {
       alignItems: "center",
     },
     dialogContent: {
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       padding: "20px",
       borderRadius: "10px",
       width: "80%",
@@ -316,12 +314,12 @@ const Pedido = ({ pedido,recargar }) => {
       fontSize: "20px",
       fontWeight: "bold",
       marginBottom: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     dialogText: {
       fontSize: "16px",
       marginBottom: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     // valoración dialog styles
     ratingContainer: {
@@ -332,7 +330,7 @@ const Pedido = ({ pedido,recargar }) => {
       textAlign: "left",
     },
     ratingLabel: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       marginBottom: "4px",
     },
@@ -340,18 +338,18 @@ const Pedido = ({ pedido,recargar }) => {
       width: "100%",
       padding: "8px",
       borderRadius: "4px",
-      border: `1px solid ${Colors.Naranja}`,
-      backgroundColor: Colors.GrisAzuladoClaro,
-      color: Colors.Negro,
+      border: `1px solid var(--qf-naranja)`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      color: "var(--qf-text-white)",
       marginBottom: "12px",
     },
     codigoInput: {
       width: "100%",
       padding: "8px",
       borderRadius: "4px",
-      border: `1px solid ${Colors.Naranja}`,
-      backgroundColor: Colors.GrisAzuladoClaro,
-      color: Colors.Negro,
+      border: `1px solid var(--qf-naranja)`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      color: "var(--qf-text-white)",
       marginBottom: "1rem",
     },
     textareaContainer: {
@@ -359,7 +357,7 @@ const Pedido = ({ pedido,recargar }) => {
       width: "100%",
     },
     textareaLabel: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       marginBottom: "4px",
       display: "block",
@@ -368,29 +366,29 @@ const Pedido = ({ pedido,recargar }) => {
       width: "100%",
       padding: "8px",
       borderRadius: "4px",
-      border: `1px solid ${Colors.Naranja}`,
-      backgroundColor: Colors.GrisAzuladoClaro,
-      color: Colors.Negro,
+      border: `1px solid var(--qf-naranja)`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      color: "var(--qf-text-white)",
       resize: "vertical",
     },
     tableCell: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       padding: "12px 8px",
-      borderBottom: `1px solid ${Colors.Naranja}33`,
+      borderBottom: `1px solid var(--qf-naranja)33`,
       textAlign: "center",
       fontSize: "15px",
     },
     tableHeaderCell: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-white)",
       padding: "12px 8px",
       fontWeight: "bold",
       textAlign: "center",
       fontSize: "14px",
-      borderBottom: `2px solid ${Colors.Naranja}`,
+      borderBottom: `2px solid var(--qf-naranja)`,
     },
     tableBody: {
-      backgroundColor: Colors.Blanco,
+      backgroundColor: "var(--qf-text-primary)",
       borderRadius: "0 0 6px 6px",
       overflow: "hidden",
     },
@@ -400,26 +398,26 @@ const Pedido = ({ pedido,recargar }) => {
       marginBottom: "1.5rem",
     },
     tableRow: {
-      backgroundColor: Colors.modoOscuroActivo ? Colors.GrisClaro : Colors.GrisAzuladoOscuro,
-      color: Colors.modoOscuroActivo ? Colors.Blanco : Colors.Negro,
+      backgroundColor: "var(--qf-bg-card)",
+      color: "var(--qf-text-primary)",
     },
     tableRowAlternate: {
-      backgroundColor: Colors.modoOscuroActivo ? Colors.GrisClaroPeroNoTanClaro : Colors.GrisAzuladoOscuro + "44",
-      color: Colors.modoOscuroActivo ? Colors.Blanco : Colors.Negro,
+      backgroundColor: "var(--qf-bg-neutral)",
+      color: "var(--qf-text-primary)",
     },
     totalContainer: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "20px",
       borderRadius: "8px",
       marginTop: "1rem",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     infoSection: {
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       padding: "16px",
       borderRadius: "8px",
       marginBottom: "1.5rem",
-      border: `1px solid ${Colors.Naranja}33`,
+      border: `1px solid var(--qf-naranja)33`,
     },
     infoRow: {
       display: "flex",
@@ -428,7 +426,7 @@ const Pedido = ({ pedido,recargar }) => {
       gap: "10px",
     },
     infoLabel: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       minWidth: "100px",
       display: "flex",
@@ -437,7 +435,7 @@ const Pedido = ({ pedido,recargar }) => {
       fontSize: "14px",
     },
     infoValue: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       fontSize: "15px",
     },
     dialogButtons: {
@@ -453,12 +451,12 @@ const Pedido = ({ pedido,recargar }) => {
       fontWeight: "bold",
     },
     cancelButton: {
-      backgroundColor: Colors.Rojo,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-blanco-puro)",
     },
     confirmButton: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
     },
     totalText: {
       fontSize: "30px",
@@ -735,7 +733,7 @@ const Pedido = ({ pedido,recargar }) => {
                 <div style={styles.infoLabel}>
                   {getIconoEstado(estadoLocal)} Estado:
                 </div>
-                <div style={{...styles.infoValue, color: Colors.Naranja, fontWeight: "bold"}}>
+                <div style={{...styles.infoValue, color: "var(--qf-naranja)", fontWeight: "bold"}}>
                   {traducirEstado(estadoLocal)}
                 </div>
               </div>
@@ -757,12 +755,12 @@ const Pedido = ({ pedido,recargar }) => {
                     <tr key={index} style={index % 2 === 0 ? styles.tableRow : styles.tableRowAlternate}>
                       <td style={styles.tableCell}>{detalle.producto.nombre}</td>
                       <td style={styles.tableCell}>
-                        <span style={{backgroundColor: Colors.Naranja, color: Colors.Blanco, padding: "4px 8px", borderRadius: "4px", fontWeight: "bold"}}>
+                        <span style={{backgroundColor: "var(--qf-naranja)", color: "var(--qf-text-primary)", padding: "4px 8px", borderRadius: "4px", fontWeight: "bold"}}>
                           {detalle.cantidad}
                         </span>
                       </td>
                       <td style={styles.tableCell}>${Number(detalle.producto.precio).toFixed(2)}</td>
-                      <td style={{...styles.tableCell, fontWeight: "bold", color: Colors.Naranja}}>
+                      <td style={{...styles.tableCell, fontWeight: "bold", color: "var(--qf-naranja)"}}>
                         ${(detalle.cantidad * detalle.producto.precio).toFixed(2)}
                       </td>
                     </tr>

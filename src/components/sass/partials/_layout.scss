@@ -1,0 +1,399 @@
+// ============================================================
+// _layout.scss — QuickFood Layout Utility Classes
+//
+// Clases reutilizables que reemplazan los inline styles más
+// comunes que aparecen repetidos en los ~98 componentes.
+//
+// Convención de nombres: .qf-[elemento]--[modificador]
+// ============================================================
+
+@import './theme.scss';
+
+// ── Página con Sidebar ──────────────────────────────────────
+
+// Contenedor raíz de todas las páginas internas (con sidebar)
+.qf-page {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--qf-bg-main);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+// Wrapper del sidebar (el div que contiene <Sidebar />)
+.qf-sidebar-wrapper {
+  width: var(--qf-sidebar-width);
+  flex-shrink: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// Área de contenido principal (todo lo que va a la derecha del sidebar)
+.qf-main-content {
+  flex: 1;
+  min-width: 0; // evita overflow en flex
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+// Variante con padding
+.qf-main-content--padded {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+// ── Header / Título de sección ───────────────────────────────
+
+.qf-page-header {
+  flex-shrink: 0;
+  width: 100%;
+  background-color: var(--qf-bg-main);
+  z-index: 10;
+  padding-left: 16px;
+}
+
+.qf-page-title {
+  padding-top: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+  color: var(--qf-naranja);
+  text-align: left;
+}
+
+.qf-section-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--qf-naranja);
+  margin-bottom: 12px;
+}
+
+// Línea separadora con color de acento
+.qf-separator {
+  border: none;
+  height: 2px;
+  background-color: var(--qf-naranja);
+  margin: 0;
+  color: var(--qf-naranja); // para compatibilidad con <hr>
+}
+
+// ── Layout de dos columnas (contenido + sidebar derecho) ─────
+
+.qf-two-col {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  height: 100%;
+  overflow: hidden;
+}
+
+.qf-col-left {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.qf-col-right {
+  width: 30%;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// ── Área scrollable ──────────────────────────────────────────
+
+.qf-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.qf-content-scroll {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Cards ────────────────────────────────────────────────────
+
+.qf-card {
+  background-color: var(--qf-naranja);
+  border: 1px solid white;
+  border-radius: var(--qf-border-radius);
+  box-shadow: var(--qf-shadow-card);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.qf-card--dark {
+  background-color: var(--qf-bg-card);
+  border: 1px solid var(--qf-naranja);
+  border-radius: 10px;
+  padding: 16px;
+  color: var(--qf-text-white);
+}
+
+// ── Buscador / Filtro boxes ──────────────────────────────────
+
+.qf-search-box {
+  width: 100%;
+  border: 1px solid var(--qf-naranja);
+  border-radius: 10px;
+  padding: 8px 16px;
+  box-sizing: border-box;
+  background-color: var(--qf-bg-main);
+}
+
+.qf-filter-box {
+  width: 100%;
+  border: 1px solid var(--qf-naranja);
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: 10px;
+  background-color: var(--qf-bg-main);
+}
+
+// ── Mensajes vacíos / Loading ─────────────────────────────────
+
+.qf-no-results {
+  font-size: 1.5rem;
+  color: var(--qf-naranja);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  width: 100%;
+}
+
+// ── Botones de acción ─────────────────────────────────────────
+
+.qf-btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-align: center;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.qf-btn--primary {
+  background-color: var(--qf-naranja);
+  color: black;
+}
+
+.qf-btn--danger {
+  background-color: var(--qf-rojo);
+  color: white;
+}
+
+.qf-btn--success {
+  background-color: var(--qf-green);
+  color: white;
+}
+
+// ── Formularios ───────────────────────────────────────────────
+
+.qf-form-container {
+  background-color: var(--qf-bg-main);
+  padding: 24px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.qf-form-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--qf-naranja);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.qf-form-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    color: var(--qf-text-primary);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--qf-naranja);
+    background-color: var(--qf-bg-secondary);
+    color: var(--qf-text-primary);
+    box-sizing: border-box;
+    font-size: 1rem;
+
+    &:focus {
+      outline: 2px solid var(--qf-naranja);
+      outline-offset: 1px;
+    }
+  }
+}
+
+// ── Texto helpers ─────────────────────────────────────────────
+
+.qf-text-accent  { color: var(--qf-naranja) !important; }
+.qf-text-muted   { color: var(--qf-text-muted) !important; }
+.qf-text-white   { color: var(--qf-text-white) !important; }
+.qf-text-primary { color: var(--qf-text-primary) !important; }
+
+// ── Background helpers ────────────────────────────────────────
+
+.qf-bg-main      { background-color: var(--qf-bg-main) !important; }
+.qf-bg-secondary { background-color: var(--qf-bg-secondary) !important; }
+.qf-bg-card      { background-color: var(--qf-bg-card) !important; }
+
+// ── Flex helpers ──────────────────────────────────────────────
+
+.qf-flex         { display: flex; }
+.qf-flex-col     { display: flex; flex-direction: column; }
+.qf-flex-center  { display: flex; align-items: center; justify-content: center; }
+.qf-flex-between { display: flex; align-items: center; justify-content: space-between; }
+.qf-gap-8        { gap: 8px; }
+.qf-gap-12       { gap: 12px; }
+.qf-gap-16       { gap: 16px; }
+.qf-gap-20       { gap: 20px; }
+
+// ============================================================
+// PageLayout — Contenedor responsive sidebar + contenido
+// ============================================================
+
+.page-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--qf-bg-main);
+}
+
+// ── Desktop (>= 768px) — sidebar fijo, contenido con margen ──
+
+.page-layout__sidebar {
+  width: var(--qf-sidebar-width);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.page-layout__content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
+  padding-bottom: 80px; // espacio para footer fijo
+}
+
+// ── Mobile (< 768px) — sidebar como drawer superpuesto ───────
+
+@media screen and (max-width: 767px) {
+  .page-layout {
+    flex-direction: column;
+  }
+
+  .page-layout__sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 85%;           // casi todo el ancho
+    max-width: 300px;
+    height: 100vh;
+    z-index: 1100;
+    transform: translateX(-100%); // oculto por defecto
+    background-color: var(--qf-sidebar-bg, #000000);
+    overflow-y: auto;
+
+    &.sidebar--open {
+      transform: translateX(0); // visible
+    }
+  }
+
+  .page-layout__content {
+    width: 100%;
+    margin-left: 0;
+    padding: 12px;
+    padding-top: 56px; // espacio para botón hamburguesa
+    padding-bottom: 80px;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .hamburger-btn {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1050;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--qf-naranja);
+    color: #000000;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.2s;
+
+    &:active {
+      background-color: var(--qf-orange-dark);
+    }
+  }
+}
+
+// ── Desktop — ocultar botón hamburguesa ─────────────────────
+
+@media screen and (min-width: 768px) {
+  .hamburger-btn {
+    display: none;
+  }
+
+  .sidebar-overlay {
+    display: none;
+  }
+}

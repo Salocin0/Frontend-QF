@@ -1,16 +1,14 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+﻿import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
-import useDynamicColors from "../../UseDinamicColors";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const ConsultarProducto = () => {
   const { id } = useParams();
-  const Colors = useDynamicColors();
   const { user } = useContext(UserContext);
   const [producto, setProducto] = useState();
   const [editMode, setEditMode] = useState(false);
@@ -74,13 +72,6 @@ const ConsultarProducto = () => {
   }, [id]);
 
   const styles = {
-    container: {
-      display: "flex",
-      background: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-      width: "100%",
-      flexDirection: "column",
-    },
     content: {
       display: "flex",
       justifyContent: "center",
@@ -90,14 +81,14 @@ const ConsultarProducto = () => {
       marginLeft: "20%",
     },
     card: {
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       width: "Calc(100% - 40px)",
       padding: "20px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
     },
-    label: { color: Colors.Blanco, padding: 0, margin: 0 },
+    label: { color: "var(--qf-text-primary)", padding: 0, margin: 0 },
     buttonContainer: { display: "grid" },
     button: { margin: "0.5rem 0" },
     breadcrumbWrapper: {
@@ -111,15 +102,15 @@ const ConsultarProducto = () => {
       alignItems: "center",
       width: "100%",
       padding: "20px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     divider: {
-      borderColor: Colors.Naranja,
+      borderColor: "var(--qf-naranja)",
       width: "100%",
       margin: "10px 0",
     },
     title: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
       textAlign: "center",
     },
@@ -139,8 +130,8 @@ const ConsultarProducto = () => {
       marginBottom: "0.25rem",
     },
     submitButton: {
-      backgroundColor: Colors.Verde,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-blanco-puro)",
       padding: "0.5rem 1rem",
       fontSize: "1rem",
       fontWeight: "bold",
@@ -149,8 +140,8 @@ const ConsultarProducto = () => {
       cursor: "pointer",
     },
     backButton: {
-      backgroundColor: Colors.Azul,
-      color: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-blanco-puro)",
       padding: "0.5rem 1rem",
       fontSize: "1rem",
       fontWeight: "bold",
@@ -170,8 +161,7 @@ const ConsultarProducto = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.content}>
         <div style={styles.header}>
           <h1 style={styles.title}>Actualizar Producto</h1>
@@ -272,7 +262,7 @@ const ConsultarProducto = () => {
         </div>
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

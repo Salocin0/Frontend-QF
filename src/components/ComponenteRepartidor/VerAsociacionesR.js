@@ -1,11 +1,10 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import imgDefault from "../img/logoevento.webp";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
@@ -15,7 +14,6 @@ const AsociacionesR = () => {
   const [eventos, setEventos] = useState([]);
   const [asociaciones, setAsociaciones] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const Colors = useDynamicColors();
 
   useEffect(() => {
     if (user) {
@@ -63,16 +61,6 @@ const AsociacionesR = () => {
   };
 
   const styles = {
-    mainFormEventos: {
-      margin: 0,
-      display: "flex",
-      flexDirection: "column",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-      overflowY: "scroll", // Permite scroll vertical
-      scrollbarWidth: "none", // Oculta el scrollbar en navegadores compatibles
-      msOverflowStyle: "none", // Oculta scrollbar en IE/Edge
-    },
     cardTextContainer: {
       display: "flex",
       flexDirection: "column",
@@ -88,14 +76,14 @@ const AsociacionesR = () => {
     tituloSeccion: {
       textAlign: "center",
       marginBottom: "20px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       paddingTop: "20px",
     },
     card: {
       margin: "20px 20px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "8px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
     },
     cardBody: {
       padding: "20px",
@@ -114,10 +102,10 @@ const AsociacionesR = () => {
     cardTitle: {
       fontSize: "28px",
       fontWeight: "bold",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
     },
-    cardText: { fontSize: "20px", margin: "5px 0", color: Colors.Negro },
+    cardText: { fontSize: "20px", margin: "5px 0", color: "var(--qf-text-white)" },
     button: {
       margin: "10px",
       padding: "10px 20px",
@@ -125,8 +113,8 @@ const AsociacionesR = () => {
       width: "200px",
       borderRadius: "10px",
       border: "none",
-      backgroundColor: Colors.Rojo,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-text-white)",
     },
     buttonContainer: {
       display: "flex",
@@ -148,10 +136,8 @@ const AsociacionesR = () => {
   ];
 
   return (
-    <div>
-      <div style={styles.mainFormEventos}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-        <div style={styles.contentColumn}>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+      <div style={styles.contentColumn}>
           <div>
             <div style={styles.tituloSeccion}>
               <h1>Mis Asociaciones</h1>
@@ -169,7 +155,7 @@ const AsociacionesR = () => {
             <div style={styles.noEventosContainer}>
               {isLoading ? (
                 <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-                  <CircularProgress style={{ color: Colors.Naranja }} />
+                  <CircularProgress style={{ color: "var(--qf-naranja)" }} />
                 </div>
               ) : eventos.length > 0 ? (
                 <>
@@ -210,7 +196,7 @@ const AsociacionesR = () => {
 
                           {asociacion.estado === "PendienteDeAceptacion" && (
                             <>
-                              <hr style={{ color: Colors.Naranja }} />
+                              <hr style={{ color: "var(--qf-naranja)" }} />
                               <div style={styles.buttonContainer}>
                                 <button
                                   style={{
@@ -248,10 +234,9 @@ const AsociacionesR = () => {
               )}
             </div>
           </div>
-        </div>
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

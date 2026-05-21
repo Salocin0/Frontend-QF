@@ -1,5 +1,4 @@
-import React from 'react';
-import useDynamicColors from "../../UseDinamicColors";
+﻿import React from 'react';
 
 const formatStatus = (s) => {
   if (!s) return '';
@@ -7,7 +6,6 @@ const formatStatus = (s) => {
 };
 
 const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
-  const Colors = useDynamicColors();
 
   if (!infoDialog.open) return null;
 
@@ -30,8 +28,8 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%,-50%)',
-          background: Colors.GrisAzuladoOscuro,
-          color: Colors.Blanco,
+          background: "var(--qf-bg-main)",
+          color: "var(--qf-text-primary)",
           padding: '20px',
           zIndex: 1100,
           borderRadius: '8px',
@@ -46,13 +44,13 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
         {/* datos basicos card */}
         <div
           style={{
-            border: `1px solid ${Colors.Naranja}`,
+            border: `1px solid var(--qf-naranja)`,
             borderRadius: '6px',
             padding: '10px',
             marginBottom: '1rem',
           }}
         >
-          <h4 style={{ color: Colors.Naranja }}>Resumen</h4>
+          <h4 style={{ color: "var(--qf-naranja)" }}>Resumen</h4>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <tbody>
               <tr>
@@ -93,13 +91,13 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
         {detailData?.Consumidor && (
           <div
             style={{
-              border: `1px solid ${Colors.Naranja}`,
+              border: `1px solid var(--qf-naranja)`,
               borderRadius: '6px',
               padding: '10px',
               marginBottom: '1rem',
             }}
           >
-            <h4 style={{ color: Colors.Naranja }}>Consumidor</h4>
+            <h4 style={{ color: "var(--qf-naranja)" }}>Consumidor</h4>
             <p>
               {detailData.Consumidor.nombre} {detailData.Consumidor.apellido}
             </p>
@@ -115,13 +113,13 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
         {detailData?.repartidor && (
           <div
             style={{
-              border: `1px solid ${Colors.Naranja}`,
+              border: `1px solid var(--qf-naranja)`,
               borderRadius: '6px',
               padding: '10px',
               marginBottom: '1rem',
             }}
           >
-            <h4 style={{ color: Colors.Naranja }}>Repartidor</h4>
+            <h4 style={{ color: "var(--qf-naranja)" }}>Repartidor</h4>
             <p>
               {detailData.repartidor?.Consumidor?.nombre || ''}{' '}
               {detailData.repartidor?.Consumidor?.apellido || ''}
@@ -139,13 +137,13 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
         {detailData?.Evento?.Productor && (
           <div
             style={{
-              border: `1px solid ${Colors.Naranja}`,
+              border: `1px solid var(--qf-naranja)`,
               borderRadius: '6px',
               padding: '10px',
               marginBottom: '1rem',
             }}
           >
-            <h4 style={{ color: Colors.Naranja }}>Productor</h4>
+            <h4 style={{ color: "var(--qf-naranja)" }}>Productor</h4>
             <p>{detailData.Evento.Productor.nombre || ''}</p>
             {detailData.Evento.Productor?.telefono && (
               <p>Tel: {detailData.Evento.Productor.telefono}</p>
@@ -159,13 +157,13 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
         {detailData && (
           <div
             style={{
-              border: `1px solid ${Colors.Naranja}`,
+              border: `1px solid var(--qf-naranja)`,
               borderRadius: '6px',
               padding: '10px',
               marginBottom: '1rem',
             }}
           >
-            <h4 style={{ color: Colors.Naranja }}>Productos</h4>
+            <h4 style={{ color: "var(--qf-naranja)" }}>Productos</h4>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr>
@@ -189,7 +187,7 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
 
         <button
           onClick={onClose}
-          style={{ marginTop: '10px', padding: '8px 16px', backgroundColor: Colors.Naranja, border: 'none', cursor: 'pointer', color: Colors.Negro }}
+          style={{ marginTop: '10px', padding: '8px 16px', backgroundColor: "var(--qf-naranja)", border: 'none', cursor: 'pointer', color: "var(--qf-text-white)" }}
         >
           Cerrar
         </button>

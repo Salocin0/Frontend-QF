@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import classnames from "classnames";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import "./../sass/main.scss";
-import useDynamicColors from "../../UseDinamicColors";
 import { FaUser, FaSeedling, FaTruck, FaStore } from "react-icons/fa";
 
 const SeleccionRegister = () => {
-  const Colors = useDynamicColors();
   const [selectedType, setSelectedType] = useState("consumidor");
   
 
@@ -43,16 +41,16 @@ const SeleccionRegister = () => {
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       textAlign: "center",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardHeader: {
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "1rem",
       borderTopLeftRadius: "8px",
       borderTopRightRadius: "8px",
     },
     cardHeaderText: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       margin: 0,
     },
     cardBody: {
@@ -70,16 +68,16 @@ const SeleccionRegister = () => {
       justifyContent: "space-between",
       padding: "1rem",
       fontSize: "1rem",
-      color: Colors.Negro,
-      border: `1px solid ${Colors.Naranja}`,
+      color: "var(--qf-text-white)",
+      border: `1px solid var(--qf-naranja)`,
       borderRadius: "5px",
       cursor: "pointer",
       transition: "background-color 0.3s",
       margin: "0.2rem 0",
     },
     activeLabel: {
-      backgroundColor: Colors.Naranja,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-naranja)",
+      color: "var(--qf-text-primary)",
     },
     span: {
       flex: 1,
@@ -87,7 +85,7 @@ const SeleccionRegister = () => {
     },
     icon: {
       fontSize: "1.25rem",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
     },
     footerButtons: {
       display: "flex",
@@ -95,23 +93,23 @@ const SeleccionRegister = () => {
       padding: "1rem",
     },
     clearButton: {
-      border: `1px solid ${Colors.GrisOscuro}`,
-      color: Colors.Blanco,
+      border: `1px solid var(--qf-text-secondary)`,
+      color: "var(--qf-text-primary)",
       borderRadius: "5px",
       marginTop: "0.5rem",
       padding: "0.2rem 0.2rem",
-      backgroundColor: Colors.GrisOscuro,
+      backgroundColor: "var(--qf-text-secondary)",
     },
     nextButton: {
-      backgroundColor: Colors.Azul,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-text-primary)",
       borderRadius: "5px",
       padding: "0.5rem 1rem",
       textDecoration: "none",
       cursor: "pointer",
     },
     hr: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       width: "100%",
     },
   };

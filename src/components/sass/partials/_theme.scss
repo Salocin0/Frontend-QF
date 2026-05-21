@@ -1,0 +1,78 @@
+// ============================================================
+// _theme.scss — QuickFood CSS Custom Properties
+// Reemplaza el sistema de useDynamicColors() inline styles.
+//
+// Dark mode (default): atributo data-theme="dark" en <html>
+// Light mode:          atributo data-theme="light" en <html>
+//
+// Mapeo 1:1 con UseDinamicColors.js (preserva apariencia actual)
+// ============================================================
+
+:root,
+[data-theme="dark"] {
+  // ── Colores de marca (iguales en ambos modos) ──────────────
+  --qf-naranja:      #c5a145;   // Colors.Naranja
+  --qf-rojo:         #ff5733;   // Colors.Rojo
+  --qf-negro-puro:   #000000;   // Colors.NegroEnNegro
+  --qf-blanco-puro:  #ffffff;   // Colors.BlancoEnBlanco
+
+  // ── Fondos ────────────────────────────────────────────────
+  --qf-bg-main:      #e5e5e5;   // Colors.GrisAzuladoOscuro (dark)  → fondo principal de páginas/sidebar
+  --qf-bg-secondary: #efefef;   // Colors.GrisAzuladoClaro  (dark)  → fondos secundarios
+  --qf-bg-card:      #2F2F2F;   // Colors.GrisClaro         (dark)  → fondo de tarjetas/cards
+  --qf-bg-dark:      #0D1E32;   // Colors.GrisAzulado       (dark)  → fondos oscuros
+  --qf-bg-neutral:   #333333;   // Colors.GrisClaroPeroNoTanClaro (dark)
+
+  // ── Textos ────────────────────────────────────────────────
+  --qf-text-primary:   #000000; // Colors.Blanco    (dark) — texto principal sobre fondo claro
+  --qf-text-white:     #ffffff; // Colors.Negro     (dark) — siempre blanco en ambos modos
+  --qf-text-muted:     #616161; // Colors.Gris      (dark)
+  --qf-text-secondary: #A4A8AA; // Colors.GrisOscuro (dark)
+
+  // ── Colores de acción/estado ───────────────────────────────
+  --qf-blue:          #0085fa;  // Colors.Azul          (dark)
+  --qf-rosa:          #BE185D;  // Colors.Rosa          (dark)
+  --qf-purple:        #7E22CE;  // Colors.Purpura       (dark)
+  --qf-accent-orange: #ff6d05;  // Colors.NaranjaDetalle (dark)
+  --qf-orange-dark:   #af6e0e;  // Colors.NaranjaOscuro  (dark)
+  --qf-green:         #45a145;  // Colors.Verde         (dark)
+  --qf-info:          #45d0e8;  // Colors.Info          (dark)
+
+  // ── Sidebar específico ─────────────────────────────────────
+  --qf-sidebar-width:         250px;
+  --qf-sidebar-width-reduced: 80px;
+  --qf-sidebar-bg:            #000000;
+  --qf-sidebar-border:        1px solid white;
+  --qf-sidebar-text:          black;
+  --qf-sidebar-icon:          #c5a145; // = var(--qf-naranja)
+  --qf-sidebar-muted:         #888B9A;
+
+  // ── Misc ──────────────────────────────────────────────────
+  --qf-border-accent:    1px solid #c5a145;
+  --qf-border-radius:    10px;
+  --qf-shadow-card:      0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] {
+  // ── Fondos ────────────────────────────────────────────────
+  --qf-bg-main:      #1a1a1a;   // Colors.GrisAzuladoOscuro (light)
+  --qf-bg-secondary: #2b2b2b;   // Colors.GrisAzuladoClaro  (light)
+  --qf-bg-card:      #101010;   // Colors.GrisClaro         (light)
+  --qf-bg-dark:      #101010;   // Colors.GrisAzulado       (light)
+  --qf-bg-neutral:   #212121;   // Colors.GrisClaroPeroNoTanClaro (light)
+
+  // ── Textos ────────────────────────────────────────────────
+  --qf-text-primary:   #ffffff; // Colors.Blanco    (light)
+  --qf-text-white:     #ffffff; // Colors.Negro     (light) — igual
+  --qf-text-muted:     #ffffff; // Colors.Gris      (light)
+  --qf-text-secondary: #101010; // Colors.GrisOscuro (light)
+
+  // ── Colores de acción/estado ───────────────────────────────
+  --qf-blue:          #028AFF;  // Colors.Azul          (light)
+  --qf-rosa:          #EC4899;  // Colors.Rosa          (light)
+  --qf-purple:        #A855F7;  // Colors.Purpura       (light)
+  --qf-accent-orange: #ffd600;  // Colors.NaranjaDetalle (light)
+  --qf-orange-dark:   #ffd600;  // Colors.NaranjaOscuro  (light)
+  --qf-green:         #4caf50;  // Colors.Verde         (light)
+  --qf-info:          #17a2b8;  // Colors.Info          (light)
+}

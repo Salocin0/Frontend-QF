@@ -1,17 +1,15 @@
-import React from "react";
-import useDynamicColors from "../../../UseDinamicColors";
+﻿import React from "react";
 
 const Tabs = ({ activeTab, setActiveTab }) => {
-    const Colors = useDynamicColors();
   const styles = {
     tabsWrapper: {
       display: "flex",
       justifyContent: "center",
       margin: "0 auto 1rem",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       width: "calc(100% - 50px)",
       borderRadius: "10px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       padding: "10px",
     },
     tab: {
@@ -19,15 +17,15 @@ const Tabs = ({ activeTab, setActiveTab }) => {
       margin: "0 0.5rem",
       cursor: "pointer",
       borderRadius: "0.25rem",
-      border: `1px solid ${Colors.GrisClaro}`,
-      backgroundColor: Colors.GrisOscuro,
-      color: Colors.Blanco,
+      border: `1px solid var(--qf-bg-card)`,
+      backgroundColor: "var(--qf-text-secondary)",
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
     },
     activeTab: {
-      backgroundColor: Colors.GrisAzuladoClaro,
-      color: Colors.Negro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      color: "var(--qf-text-white)",
+      border: `1px solid var(--qf-naranja)`,
     },
   };
 

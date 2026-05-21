@@ -1,37 +1,22 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 const AdquirirNuevoRolPE = () => {
   const [cuit, setCuit] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
   const [condicionIva, setCondicionIva] = useState("");
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const styles = {
-    formContainer: {
-      flex: 1,
-      padding: "2rem",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      display: "flex",
-      width: "80%",
-      height: "100vh",
-      justifyContent: "center",
-      alingItems: "center",
-      boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-      marginLeft: "20%",
-      flexDirection: "column",
-    },
     container:{
       width: "50%",
       margin: "0 auto",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
       padding: "20px",
       boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
@@ -40,12 +25,12 @@ const AdquirirNuevoRolPE = () => {
       fontSize: "1.5rem",
       fontWeight: "bold",
       marginBottom: "1rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
     },
     label: {
       display: "block",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       padding: "0px",
       margin: "0px",
     },
@@ -64,15 +49,15 @@ const AdquirirNuevoRolPE = () => {
     button: {
       width: "100%",
       padding: "0.75rem",
-      backgroundColor: Colors.Verde,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-white)",
       fontWeight: "bold",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
     },
     buttonHover: {
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
     },
   };
 
@@ -121,9 +106,7 @@ const AdquirirNuevoRolPE = () => {
   };
 
   return (
-    <>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
-
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.formContainer}>
         <div style={styles.container}>
           <h1 style={styles.title}>
@@ -194,7 +177,7 @@ const AdquirirNuevoRolPE = () => {
 
             <button
               type="submit"
-              style={{...styles.button,backgroundColor:Colors.Azul,marginTop:"10px"}}
+              style={{...styles.button,backgroundColor:"var(--qf-blue)",marginTop:"10px"}}
               onClick={() => navigate("/inicio")}
             >
               Volver
@@ -203,7 +186,7 @@ const AdquirirNuevoRolPE = () => {
         </div>
       </div>
       <Footer />
-    </>
+    </PageLayout>
   );
 };
 

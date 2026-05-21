@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "./../sass/main.scss";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const ConsultarUsuarioPE = () => {
@@ -208,11 +208,7 @@ const ConsultarUsuarioPE = () => {
   }, []);
 
   return (
-    <>
-      <div className="d-flex">
-        <div className="col-2">
-          <Sidebar tipoUsuario={session?.tipoUsuario} />
-        </div>
+    <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
         <div className="flex-grow-1 background">
           <section className="align-items-center justify-content-center col-6 offset-3 form">
             <div className="card shadow-lg ">
@@ -383,8 +379,7 @@ const ConsultarUsuarioPE = () => {
           </section>
           <Footer />
         </div>
-      </div>
-    </>
+    </PageLayout>
   );
 };
 

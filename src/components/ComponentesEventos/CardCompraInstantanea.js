@@ -1,8 +1,6 @@
-import useDynamicColors from "../../UseDinamicColors";
-import { FaBolt } from 'react-icons/fa'
+﻿import { FaBolt } from 'react-icons/fa'
 
 const CardCompraInstantanea = ({ evento }) => {
-    const Colors = useDynamicColors();
 
     // Verificamos el estado del evento
     const eventStatus = evento?.estado; // Asumiendo que 'evento' tiene un atributo 'estado'
@@ -19,19 +17,19 @@ const CardCompraInstantanea = ({ evento }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: Colors.GrisAzuladoClaro, // Fondo gris claro
+            backgroundColor: "var(--qf-bg-secondary)", // Fondo gris claro
             borderRadius: "8px",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
             marginBottom: "20px",
             marginLeft:"calc(20% + 20px)",
-            border: `1px solid ${Colors.Naranja}`,
+            border: `1px solid var(--qf-naranja)`,
             cursor: "pointer"
         },
         content: {
             textAlign: "center"
         },
         icon: {
-            color: Colors.Naranja, // Color del ícono (puedes cambiarlo)
+            color: "var(--qf-naranja)", // Color del ícono (puedes cambiarlo)
             marginBottom: "10px",
         },
         title: {
@@ -41,7 +39,7 @@ const CardCompraInstantanea = ({ evento }) => {
         },
         text: {
             fontSize: "16px",
-            color: Colors.Blanco
+            color: "var(--qf-text-primary)"
         }
     };
 

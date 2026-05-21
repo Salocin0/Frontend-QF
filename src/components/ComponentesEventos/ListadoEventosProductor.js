@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import EventoProductor from "./EventoProductor";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
 import Footer from "../ComponentesGenerales/Footer";
-import useDinamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Buscador from "../Filtros y Buscadores/Buscador";
@@ -19,7 +18,6 @@ const ListadoEventosProductor = () => {
   const [filterState, setFilterState] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
-  const Colors = useDinamicColors();
   const navigate = useNavigate();
 
   const recargarComponente = () => {
@@ -94,15 +92,6 @@ const ListadoEventosProductor = () => {
   });
 
   const styles = {
-    row: {
-      margin: 0,
-      display: "flex",
-      flexDirection: "row",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      height: "100vh",
-      overflow: "hidden",
-      width: "100%",
-    },
     colContent: {
       marginLeft: "20%",
       width: "calc(100% - 20%)",
@@ -125,7 +114,7 @@ const ListadoEventosProductor = () => {
       marginBottom: "1rem",
       paddingTop: "2rem",
       width: "100%",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     breadcrumbWrapper: {
       width: "Calc(100%)",
@@ -143,8 +132,8 @@ const ListadoEventosProductor = () => {
       marginLeft: "20px",
       marginRight: "20px",
       marginTop: "0",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
     },
     searchFilterContainer: {
       display: "flex",
@@ -156,7 +145,7 @@ const ListadoEventosProductor = () => {
       width: "100%",
     },
     agregarEventoButton: {
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       color: "white",
       padding: "15px 20px",
       borderRadius: "10px",
@@ -175,13 +164,13 @@ const ListadoEventosProductor = () => {
     descripcion: {
       marginBottom: "20px",
       fontSize: "18px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     linkAgregarEvento: {
       textDecoration: "none",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       padding: "10px 20px",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       borderRadius: "5px",
       fontWeight: "bold",
       fontSize: "18px",
@@ -196,14 +185,12 @@ const ListadoEventosProductor = () => {
   ];
 
   return (
-    <div>
-      <div style={styles.row}>
-        <Sidebar tipoUsuario={user?.tipoUsuario} />
-        <div style={styles.colContent}>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+      <div style={styles.colContent}>
           <div style={styles.sectionTitle}>
             <h1>Eventos</h1>
           </div>
-          <hr style={{ color: Colors.Naranja }} />
+          <hr style={{ color: "var(--qf-naranja)" }} />
           {/* main content with sidebar filters */}
           <div style={{ display: 'flex', width: 'calc(100% - 40px)', alignItems: 'flex-start', marginRight: '20px' }}>
             <div style={{ flex: '0 0 calc(70% - 0px)', width: 'calc(70% - 0px)' }}>
@@ -219,7 +206,7 @@ const ListadoEventosProductor = () => {
               <div style={styles.container}>
                 {isLoading || !user ? (
                   <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
-                    <CircularProgress style={{ color: Colors.Naranja }} />
+                    <CircularProgress style={{ color: "var(--qf-naranja)" }} />
                   </div>
                 ) : filteredEventos.length > 0 ? (
                   filteredEventos.map((evento, index) => (
@@ -231,7 +218,7 @@ const ListadoEventosProductor = () => {
                   ))
                 ) : (
                   <div style={styles.contenedorGrid}>
-                    <div style={{ fontSize: "1.5rem", color: Colors.Naranja }}>
+                    <div style={{ fontSize: "1.5rem", color: "var(--qf-naranja)" }}>
                       <h2>Eventos</h2>
                     </div>
                     <div style={styles.descripcion}>
@@ -266,11 +253,10 @@ const ListadoEventosProductor = () => {
                 </button>
               </div>
             </div>
-          </div>
         </div>
       </div>
       <Footer />
-    </div>
+    </PageLayout>
   );
 };
 

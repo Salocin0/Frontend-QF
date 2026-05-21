@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+﻿import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Modal from "react-modal";
-import useDynamicColors from "../../UseDinamicColors";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 const EncargadoPuesto = ({
@@ -15,7 +14,6 @@ const EncargadoPuesto = ({
   setShowModal,
   confirmarDeshabilitarEPC,
 }) => {
-  const Colors = useDynamicColors();
   const { user } = useContext(UserContext);
   const [cuitEPC, setCuitEPC] = useState("");
   const [razonSocialEPC, setRazonSocialEPC] = useState("");
@@ -30,9 +28,9 @@ const EncargadoPuesto = ({
       justifyContent: "center",
       width: "100%",
       marginTop: "20px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
-      border: `1px solid ${Colors.Naranja}`,
+      border: `1px solid var(--qf-naranja)`,
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
     },
     form: {
@@ -51,7 +49,7 @@ const EncargadoPuesto = ({
     },
     h1: {
       fontWeight: "bold",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     buttonContainer: {
       display: "flex",
@@ -70,16 +68,16 @@ const EncargadoPuesto = ({
       marginBottom: "1rem",
       border: "none",
       borderRadius: "5px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
     },
     fileInput: {
       width: "100%",
       padding: "0.5rem",
       borderRadius: "5px",
       border: `none`,
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-bg-main)",
+      color: "var(--qf-text-primary)",
       marginBottom: "1rem",
     },
     modal: {
@@ -101,8 +99,8 @@ const EncargadoPuesto = ({
         maxWidth: "400px",
         padding: "20px",
         textAlign: "center",
-        backgroundColor: Colors.GrisAzuladoClaro,
-        color: Colors.Blanco,
+        backgroundColor: "var(--qf-bg-secondary)",
+        color: "var(--qf-text-primary)",
       },
     },
     label: {
@@ -110,9 +108,9 @@ const EncargadoPuesto = ({
       marginBottom: "5px",
       fontWeight: "bold",
     },
-    dangerButton: { backgroundColor: Colors.Rojo, color: "white" },
-    successButton: { backgroundColor: Colors.Verde, color: "white" },
-    primaryButton: { backgroundColor: Colors.Azul, color: "white" },
+    dangerButton: { backgroundColor: "var(--qf-rojo)", color: "white" },
+    successButton: { backgroundColor: "var(--qf-green)", color: "white" },
+    primaryButton: { backgroundColor: "var(--qf-blue)", color: "white" },
   };
 
   const handleCuitChangeEPC = (e) => {

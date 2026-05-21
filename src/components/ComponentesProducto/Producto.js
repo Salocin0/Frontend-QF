@@ -1,10 +1,9 @@
-import { default as React, useEffect } from "react";
+﻿import { default as React, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import imgDefault from "../img/productoDefecto.png";
-import useDynamicColors from "../../UseDinamicColors";
 const Producto = ({
   producto,
   idpuesto,
@@ -13,7 +12,6 @@ const Producto = ({
   onEnable,
 }) => {
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const handleDelete = () => {
     const headers = new Headers();
@@ -68,7 +66,7 @@ const Producto = ({
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
       borderRadius: "8px",
       overflow: "hidden",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       display: "flex",
       width: "100%",
       /* height auto to fit content */
@@ -78,7 +76,7 @@ const Producto = ({
       height: "100%",
       overflow: "hidden",
       resizeMode: "cover",
-      backgroundColor: Colors.BlancoEnBlanco,
+      backgroundColor: "var(--qf-blanco-puro)",
       objectFit: "cover",
     },    
     cardBody: {
@@ -93,7 +91,7 @@ const Producto = ({
       fontWeight: "bold",
       textAlign: "center",
       marginBottom: "8px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     cardText: {
       fontSize: "1rem",
@@ -102,7 +100,7 @@ const Producto = ({
       /* allow more space for description if needed */
       height: "auto",
       overflow: "visible",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
     priceRow: {
       display: "flex",
@@ -112,7 +110,7 @@ const Producto = ({
     priceText: {
       fontSize: "1.5rem",
       fontWeight: "bold",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     actionsContainer: {
       display: "flex",
@@ -127,16 +125,16 @@ const Producto = ({
       cursor: "pointer",
       fontWeight: "bold",
       fontSize: "0.9rem",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
     },
     enableButton: {
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
     },
     primaryButton: {
-      backgroundColor: Colors.Azul,
+      backgroundColor: "var(--qf-blue)",
     },
     dangerButton: {
-      backgroundColor: Colors.Rojo,
+      backgroundColor: "var(--qf-rojo)",
     },
   };
 

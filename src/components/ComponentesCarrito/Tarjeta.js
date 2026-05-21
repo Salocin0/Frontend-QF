@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect } from "react";
+﻿import React, { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 import { FaTrash, FaMinus, FaPlus, FaShoppingCart, FaArrowRight, FaCheckCircle } from "react-icons/fa";
 
@@ -10,7 +9,6 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   console.log(productos);
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
   const [isOpen, setIsOpen] = useState(false);
   const [productosLocal, setProductosLocal] = useState(productos);
 
@@ -235,9 +233,9 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   const styles = {
     card: {
       padding: "20px",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
       borderRadius: "12px",
-      backgroundColor: Colors.GrisAzuladoClaro,
+      backgroundColor: "var(--qf-bg-secondary)",
       margin: "15px auto",
       width: "calc(100% - 40px)",
       position: "relative",
@@ -251,22 +249,22 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
       alignItems: "center",
       marginBottom: "20px",
       paddingBottom: "15px",
-      borderBottom: `2px solid ${Colors.Naranja}`,
+      borderBottom: `2px solid var(--qf-naranja)`,
     },
     cardTitle: {
       fontSize: "22px",
       fontWeight: "bold",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin: 0,
     },
     preventaText: {
       fontSize: "13px",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       display: "inline-flex",
       alignItems: "center",
       padding: "6px 12px",
       borderRadius: "25px",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       fontWeight: "bold",
       whiteSpace: "nowrap",
     },
@@ -292,24 +290,24 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
       display: "flex",
       gap: "15px",
       padding: "15px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       borderRadius: "10px",
       alignItems: "center",
       transition: "all 0.3s ease",
-      border: `1px solid ${Colors.Naranja}33`,
+      border: `1px solid var(--qf-naranja)33`,
     },
     productImage: {
       width: "100px",
       height: "100px",
       borderRadius: "8px",
       objectFit: "cover",
-      border: `2px solid ${Colors.Naranja}`,
-      backgroundColor: Colors.Blanco,
+      border: `2px solid var(--qf-naranja)`,
+      backgroundColor: "var(--qf-text-primary)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
       fontSize: "40px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       flexShrink: 0,
     },
     productInfo: {
@@ -321,12 +319,12 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     productName: {
       fontSize: "16px",
       fontWeight: "bold",
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
     },
     productPrice: {
       fontSize: "18px",
       fontWeight: "bold",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     productControls: {
       display: "flex",
@@ -339,14 +337,14 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
       display: "flex",
       alignItems: "center",
       gap: "8px",
-      backgroundColor: Colors.Naranja,
+      backgroundColor: "var(--qf-naranja)",
       borderRadius: "8px",
       padding: "5px 10px",
     },
     quantityButton: {
       backgroundColor: "transparent",
       border: "none",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       cursor: "pointer",
       fontSize: "14px",
       fontWeight: "bold",
@@ -357,14 +355,14 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
       transition: "all 0.2s ease",
     },
     quantity: {
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       fontWeight: "bold",
       minWidth: "30px",
       textAlign: "center",
     },
     deleteButton: {
-      backgroundColor: Colors.Rojo,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-text-primary)",
       border: "none",
       borderRadius: "6px",
       padding: "8px 10px",
@@ -378,10 +376,10 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     },
     rightSection: {
       width: "320px",
-      backgroundColor: Colors.GrisAzuladoOscuro,
+      backgroundColor: "var(--qf-bg-main)",
       borderRadius: "10px",
       padding: "20px",
-      borderLeft: `4px solid ${Colors.Naranja}`,
+      borderLeft: `4px solid var(--qf-naranja)`,
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
@@ -394,11 +392,11 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
       fontSize: "14px",
     },
     summaryLabel: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
     },
     summaryValue: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
     },
     totalRow: {
@@ -407,15 +405,15 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
       alignItems: "center",
       marginTop: "15px",
       paddingTop: "15px",
-      borderTop: `2px solid ${Colors.Naranja}`,
+      borderTop: `2px solid var(--qf-naranja)`,
       fontSize: "22px",
     },
     totalLabel: {
-      color: Colors.Blanco,
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
     },
     totalAmount: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       fontWeight: "bold",
     },
     actionButtons: {
@@ -439,18 +437,18 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
       width: "100%",
     },
     continueBtn: {
-      backgroundColor: Colors.Info,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-info)",
+      color: "var(--qf-text-white)",
     },
     deleteBtn: {
-      backgroundColor: Colors.Rojo,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-rojo)",
+      color: "var(--qf-text-primary)",
       fontSize: "12px",
       padding: "8px 12px",
     },
     buyBtn: {
-      backgroundColor: Colors.Verde,
-      color: Colors.Negro,
+      backgroundColor: "var(--qf-green)",
+      color: "var(--qf-text-white)",
       fontSize: "15px",
       padding: "12px 16px",
       order: -1,
@@ -499,7 +497,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
                       }}
                     />
                   ) : (
-                    <div style={{ fontSize: "30px", color: Colors.Naranja }}>—</div>
+                    <div style={{ fontSize: "30px", color: "var(--qf-naranja)" }}>—</div>
                   )}
                 </div>
 

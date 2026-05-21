@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import useDynamicColors from "../../UseDinamicColors";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserContext } from "./UserContext";
@@ -7,7 +6,6 @@ import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 
 const UserProfile = ({ haveRol }) => {
-  const Colors = useDynamicColors();
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const { user, updateUser } = useContext(UserContext);
@@ -54,7 +52,7 @@ const UserProfile = ({ haveRol }) => {
     icon: {
       fontSize: "1.5rem",
       cursor: "pointer",
-      color: isHovered ? "black" : Colors.Naranja,
+      color: isHovered ? "black" : "var(--qf-naranja)",
     },
     dropdownMenu: {
       position: "absolute",
@@ -64,11 +62,8 @@ const UserProfile = ({ haveRol }) => {
       display: "none",
       padding: "0.5rem 0",
       marginTop: "0.125rem",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      border:
-        Colors.Blanco === "#fff"
-          ? "1px solid rgba(0,0,0,0.60)"
-          : "1px solid rgba(255,255,255,0.60)",
+      backgroundColor: "var(--qf-bg-main)",
+      border: "1px solid rgba(255,255,255,0.60)",
       borderRadius: "0.25rem",
       boxShadow: "0 0.5rem 1rem rgba(0, 0, 0, 0.175)",
       listStyleType: "none",
@@ -79,21 +74,21 @@ const UserProfile = ({ haveRol }) => {
       padding: "0.25rem 1.5rem",
       clear: "both",
       fontWeight: "400",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       textAlign: "inherit",
       textDecoration: "none",
       whiteSpace: "nowrap",
       cursor: "pointer",
     },
     dropdownItemHovered: {
-      backgroundColor: Colors.Naranja,
-      color: Colors.Blanco,
+      backgroundColor: "var(--qf-naranja)",
+      color: "var(--qf-text-primary)",
     },
     divider: {
       height: "1px",
       margin: "0.5rem 0",
       overflow: "hidden",
-      backgroundColor: Colors.GrisClaroPeroNoTanClaro,
+      backgroundColor: "var(--qf-bg-neutral)",
     },
     navItemmasicon: {
       display: "flex",
@@ -101,7 +96,7 @@ const UserProfile = ({ haveRol }) => {
       width: "100%",
       clear: "both",
       fontWeight: "400",
-      color: Colors.Negro,
+      color: "var(--qf-text-white)",
       textAlign: "inherit",
       textDecoration: "none",
       whiteSpace: "nowrap",
@@ -117,15 +112,14 @@ const UserProfile = ({ haveRol }) => {
       borderRadius: "5px 5px 5px 5px",
       paddingRight: "5px",
       marginBottom: "20px",
-      color: Colors.Gris,
+      color: "var(--qf-text-muted)",
       listStyleType: "none",
       cursor: "pointer",
       bottom: "70px",
       width: "85%",
       margin: "0 auto",
       padding: "0",
-      backgroundColor: isHovered ? Colors.Naranja : "transparent",
-      border: `2px solid ${Colors.Naranja}`,
+      border: "2px solid var(--qf-naranja)",
     },
   };
 
@@ -152,7 +146,7 @@ const UserProfile = ({ haveRol }) => {
     <li
       style={{
         ...styles.navItem,
-        backgroundColor: isHovered ? Colors.Naranja : "transparent",
+        backgroundColor: isHovered ? "var(--qf-naranja)" : "transparent",
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -170,7 +164,7 @@ const UserProfile = ({ haveRol }) => {
         <span className="icono" style={styles.icon}><FaUser /></span>
         <span
           className="ms-1 d-none d-sm-inline text-center"
-          style={{ color: isHovered ? Colors.Negro : Colors.Naranja }}
+          style={{ color: isHovered ? "var(--qf-text-primary)" : "var(--qf-naranja)" }}
         >
           Mi Perfil
         </span>
@@ -178,12 +172,12 @@ const UserProfile = ({ haveRol }) => {
       <ul
         style={{
           ...styles.dropdownMenu,
-          display: isHovered ? "block" : "none", // Mostrar el menú solo cuando `isHovered` es verdadero
+          display: isHovered ? "block" : "none",
         }}
         aria-labelledby="dropdown"
       >
         {menuItems
-          .filter((item) => !haveRol || item.showWhenNoRol) // Condicional para mostrar elementos
+          .filter((item) => !haveRol || item.showWhenNoRol)
           .map((item, index) => (
             <li
               key={index}

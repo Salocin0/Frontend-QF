@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+﻿import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
-import Sidebar from "../ComponentesGenerales/Sidebar";
+import PageLayout from "../ComponentesGenerales/PageLayout";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../UseDinamicColors";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 
 const CrearNuevoPuesto = () => {
@@ -20,7 +19,6 @@ const CrearNuevoPuesto = () => {
   const [bannerBase64, setBannerBase64] = useState(null);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  const Colors = useDynamicColors();
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -78,20 +76,12 @@ const CrearNuevoPuesto = () => {
   };
 
   const styles = {
-    container: {
-      display: "flex",
-      backgroundColor: Colors.GrisAzuladoOscuro,
-      flexDirection: "column",
-      height: "100vh",
-      margin: "0",
-      padding: "0",
-    },
     formContainer: {
       width: "Calc(100% - 40px)",
       margin: "0rem auto 5rem auto",
       borderRadius: "8px",
-      backgroundColor: Colors.GrisAzuladoClaro,
-      border: `1px solid ${Colors.Naranja}`,
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
     },
     card: {
       boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
@@ -106,7 +96,7 @@ const CrearNuevoPuesto = () => {
       fontSize: "1.25rem",
       fontWeight: "bold",
       marginBottom: "0.5rem",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     row: {
       display: "flex",
@@ -117,21 +107,21 @@ const CrearNuevoPuesto = () => {
     input: {
       width: "100%",
       padding: "0.5rem",
-      border: `1px solid ${Colors.BlancoEnBlanco}`,
+      border: `1px solid var(--qf-blanco-puro)`,
       borderRadius: "10px",
       marginBottom: "0.5rem",
-      backgroundColor: Colors.Blanco,
+      backgroundColor: "var(--qf-text-primary)",
     },
     label: {
       margin: "0",
       display: "block",
-      color: Colors.BlancoEnBlanco,
+      color: "var(--qf-blanco-puro)",
       width: "100%",
     },
     button: {
       width: "100%",
       padding: "0.5rem",
-      backgroundColor: Colors.Verde,
+      backgroundColor: "var(--qf-green)",
       color: "white",
       border: "none",
       borderRadius: "10px",
@@ -141,7 +131,7 @@ const CrearNuevoPuesto = () => {
     backButton: {
       width: "100%",
       padding: "0.5rem",
-      backgroundColor: Colors.Azul,
+      backgroundColor: "var(--qf-blue)",
       color: "white",
       border: "none",
       borderRadius: "10px",
@@ -165,13 +155,13 @@ const CrearNuevoPuesto = () => {
       justifyContent: "center",
       marginTop: "5px",
       marginBottom: "5px",
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
     },
     separator: {
       border: "none",
       marginBottom: "5px",
       marginTop: "0px",
-      borderTop: `1px solid ${Colors.Naranja}`,
+      borderTop: `1px solid var(--qf-naranja)`,
     },
   };
 
@@ -182,8 +172,7 @@ const CrearNuevoPuesto = () => {
   ];
 
   return (
-    <div style={styles.container}>
-      <Sidebar tipoUsuario={user?.tipoUsuario} />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.mainContent}>
         <div style={styles.titleSection}>
           <h1>Crear un Puesto</h1>
@@ -329,7 +318,7 @@ const CrearNuevoPuesto = () => {
         </section>
         <Footer />
       </div>
-    </div>
+    </PageLayout>
   );
 };
 

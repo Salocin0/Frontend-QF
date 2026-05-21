@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useContext } from "react";
+﻿import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
-import useDynamicColors from "../../../UseDinamicColors";
 import { CircularProgress } from "@mui/material";
 
 const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
@@ -8,26 +7,25 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useContext(UserContext);
-  const Colors = useDynamicColors();
 
   const styles = {
     div2Encargado: {
       gridArea: "div2",
       marginTop: 20,
       borderRadius: 20,
-      backgroundColor: Colors.GrisAzuladoClaro, 
+      backgroundColor: "var(--qf-bg-secondary)", 
       alignItems: "center",
-      border: `2px solid ${Colors.Naranja}`,
+      border: `2px solid var(--qf-naranja)`,
       position: "relative",
     },
     loadingText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
       margin:0,
       padding:0
     },
     errorText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       textAlign: "center",
       margin:0,
       padding:0
@@ -42,13 +40,13 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       padding:0
     },
     valoracionText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin:0,
       padding:0,
       fontSize: "2rem",
     },
     strongText: {
-      color: Colors.Naranja,
+      color: "var(--qf-naranja)",
       margin:0,
       padding:0,
       fontWeight: "bold",
@@ -91,7 +89,7 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     return (
       <div style={styles.div2Encargado}>
         <div style={styles.contentContainer}>
-          <CircularProgress style={{ color: Colors.Naranja }} />
+          <CircularProgress style={{ color: "var(--qf-naranja)" }} />
         </div>
       </div>
     );
