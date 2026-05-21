@@ -9,8 +9,10 @@ import EncargadoPuesto from "./FormEncargadoPerfil";
 import RepartidorComponent from "./FormRepartidorPerfil";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import EstadisticasPerfil from "./estadisticasPerfil/EstadisticasPerfil";
+import useBreakpoint from "../../useBreakpoint";
 
 const ConsultarUsuario = () => {
+  const { isMobile } = useBreakpoint();
   const [showModal, setShowModal] = useState(false);
   const { user, updateUser } = useContext(UserContext);
   const [mostrarContenidoProductor, setMostrarContenidoProductor] =
@@ -270,32 +272,33 @@ const ConsultarUsuario = () => {
 
   const styles = {
     breadcrumbWrapper: {
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
-    contentWrapper: { display: "flex", flexDirection: "row", height: "100%" },
+    contentWrapper: { display: "flex", flexDirection: isMobile ? "column" : "row", height: "100%" },
     mainContent: {
       display: "flex",
-      marginRight: "Calc(25% + 20px)",
+      marginRight: isMobile ? "0" : "Calc(25% + 20px)",
       flexDirection: "column",
-      marginLeft: "calc(20% + 20px)",
+      marginLeft: isMobile ? "0" : "calc(20% + 20px)",
       marginBottom: "20px",
     },
     placeholderWrapper: {
-      width: "25%",
-      position: "absolute",
-      top: "160px",
-      right: "0",
-      height: "Calc(100vh - 250px)",
+      width: isMobile ? "100%" : "25%",
+      position: isMobile ? "relative" : "absolute",
+      top: isMobile ? "auto" : "160px",
+      right: isMobile ? "auto" : "0",
+      height: isMobile ? "auto" : "Calc(100vh - 250px)",
       backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
       border: `1px solid var(--qf-naranja)`,
       color: "var(--qf-text-primary)",
       margin: "20px",
-      marginLeft: "0px",
+      marginLeft: isMobile ? "20px" : "0px",
       padding: "20px",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      order: isMobile ? -1 : 0,
     },
     card: {
       marginBottom: "50px",
@@ -309,7 +312,7 @@ const ConsultarUsuario = () => {
     titleSection: {
       display: "flex",
       justifyContent: "center",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       marginBottom: "5px",
       color: "var(--qf-naranja)",
     },

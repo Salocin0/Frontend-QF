@@ -7,9 +7,11 @@ import { UserContext } from "../../ComponentesGenerales/UserContext";
 import TotalQuickFood from "./TotalGenerado";
 import ValoracionPromedio from "./ValoracionPromedio";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
+import useBreakpoint from "../../../useBreakpoint";
 
 const PanelProductor = () => {
   const { user } = useContext(UserContext);
+  const { isMobile } = useBreakpoint();
   const [eventos, setEventos] = useState([]);
   const [eventoSeleccionado, setEventoSeleccionado] = useState("Todos");
 
@@ -52,7 +54,7 @@ const PanelProductor = () => {
     header: {
       color: "var(--qf-naranja)",
       textAlign: "center",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       paddingTop: "10px",
       display: "flex",
       alignItems: "center",
@@ -77,17 +79,22 @@ const PanelProductor = () => {
     },
     mainContent: {
       display: "flex",
-      height: "70vh",
+      height: isMobile ? "auto" : "70vh",
       backgroundColor: "var(--qf-bg-main)",
-      marginLeft: "20%",
-      width: "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      width: isMobile ? "100%" : "80%",
     },
     graficaContainer: {
       display: "grid",
-      gridTemplateColumns: "repeat(7, 1fr)",
-      gridTemplateRows: "repeat(6, 1fr)",
+      gridTemplateColumns: isMobile ? "1fr" : "repeat(7, 1fr)",
+      gridTemplateRows: isMobile ? "auto" : "repeat(6, 1fr)",
       gap: "20px",
-      gridTemplateAreas: `
+      gridTemplateAreas: isMobile ? `
+        "div1"
+        "div2"
+        "toppuestos"
+        "grafica"
+      ` : `
         "div1 div1 div2 div2 toppuestos toppuestos toppuestos"
         "div1 div1 div2 div2 toppuestos toppuestos toppuestos"
         "grafica grafica grafica grafica toppuestos toppuestos toppuestos"

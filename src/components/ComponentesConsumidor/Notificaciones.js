@@ -6,8 +6,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import CardNotificaciones from "./CardNotificaicones";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { CircularProgress } from "@mui/material";
+import useBreakpoint from "../../useBreakpoint";
 
 const Notificaciones = () => {
+  const { isMobile } = useBreakpoint();
   const { user } = useContext(UserContext);
   const [notificaciones, setNotificaciones] = useState([]);
   const [recargar, setRecargar] = useState(0);
@@ -48,13 +50,13 @@ const Notificaciones = () => {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      marginLeft: "calc(20%)",
+      marginLeft: isMobile ? "0" : "calc(20%)",
       marginBottom: "60px",
-      overflowY: "scroll", // Habilitar scroll interno
+      overflowY: "scroll",
       overflowX: "hidden",
-      height: "calc(100vh - 60px)", // Altura dinámica para permitir el scroll sin afectar el footer
-      scrollbarWidth: "none", // Ocultar barra de scroll en Firefox
-      msOverflowStyle: "none", // Ocultar barra de scroll en IE y Edge
+      height: "calc(100vh - 60px)",
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
     },
     hr: {
       color: "var(--qf-naranja)",

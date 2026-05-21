@@ -7,6 +7,7 @@ import PedidoDetalleDialog from './PedidoDetalleDialog';
 import { UserContext } from '../ComponentesGenerales/UserContext';
 import { useContext } from 'react';
 import { FaEye } from 'react-icons/fa';
+import useBreakpoint from '../../useBreakpoint';
 
 const initialData = {
   tasks: {},
@@ -48,6 +49,7 @@ const initialData = {
 const KanbanBoard = ({id}) => {
   const [data, setData] = useState(initialData);
   const { user } = useContext(UserContext);
+  const { isMobile } = useBreakpoint();
   const [recargar, setRecargar] = useState(0);
   // const [confirmPopup, setConfirmPopup] = useState(null); // removed confirmation
   const [showCancelledColumn] = useState(true);
@@ -431,7 +433,7 @@ const KanbanBoard = ({id}) => {
   }, [infoDialog]);
 
   return (
-    <div style={{ display: 'flex', height: '70vh', margin: 0, padding: 0, overflowX: 'hidden' }}>
+    <div style={{ display: 'flex', height: isMobile ? 'auto' : '70vh', margin: 0, padding: 0, overflowX: isMobile ? 'auto' : 'hidden' }}>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragCancel={() => setAllowedColumns(null)} onDragEnd={handleDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];
