@@ -8,8 +8,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import imgDefault from "../img/logoevento.webp";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import useBreakpoint from "../../useBreakpoint";
 
 const AsociacionesR = () => {
+  const { isMobile } = useBreakpoint();
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
   const [asociaciones, setAsociaciones] = useState([]);
@@ -71,7 +73,7 @@ const AsociacionesR = () => {
       marginRight: "150px",
     },
     contentColumn: {
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     tituloSeccion: {
       textAlign: "center",

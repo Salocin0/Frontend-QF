@@ -2,6 +2,7 @@
 import { toast } from "react-toastify";
 import Modal from "react-modal";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import useBreakpoint from "../../useBreakpoint";
 
 const EncargadoPuesto = ({
   setMostrarContenidoEncargadoPuesto,
@@ -15,6 +16,7 @@ const EncargadoPuesto = ({
   confirmarDeshabilitarEPC,
 }) => {
   const { user } = useContext(UserContext);
+  const { isMobile } = useBreakpoint();
   const [cuitEPC, setCuitEPC] = useState("");
   const [razonSocialEPC, setRazonSocialEPC] = useState("");
   const [condicionEPC, setCondicionEPC] = useState("");
@@ -85,7 +87,7 @@ const EncargadoPuesto = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        marginLeft: "20%",
+        marginLeft: isMobile ? "0" : "20%",
         marginBottom: "50px",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
       },

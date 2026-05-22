@@ -6,8 +6,10 @@ import "./../sass/main.css";
 import EventoRepartidor from "./EventoRepartidor";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import useBreakpoint from "../../useBreakpoint";
 
 const AsociarRepartidorAEvento = () => {
+  const { isMobile } = useBreakpoint();
   const {user} = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
@@ -41,7 +43,7 @@ const AsociarRepartidorAEvento = () => {
 
   const styles = {
     contentCol: {
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     titleSection: {
       display: "flex",

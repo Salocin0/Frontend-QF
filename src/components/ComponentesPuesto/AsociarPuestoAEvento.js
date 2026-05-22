@@ -5,8 +5,10 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
+import useBreakpoint from "../../useBreakpoint";
 
 const AsociarPuestoAEvento = () => {
+  const { isMobile } = useBreakpoint();
   const { puestoId } = useParams();
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
@@ -40,9 +42,9 @@ const AsociarPuestoAEvento = () => {
 
   const styles = {
     mainContent: {
-      width: "80%",
+      width: isMobile ? "100%" : "80%",
       padding: "0 2rem",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     titleContainer: {
       display: "flex",

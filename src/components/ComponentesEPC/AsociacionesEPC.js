@@ -11,8 +11,10 @@ import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import Buscador from "../Filtros y Buscadores/Buscador";
 import Filtros from "../Filtros y Buscadores/Filtros";
 import { CircularProgress } from "@mui/material";
+import useBreakpoint from "../../useBreakpoint";
 
 const AsociacionesEPC = () => {
+  const { isMobile } = useBreakpoint();
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
   const [, setIsPendienteDeAceptacion] = useState(false);
@@ -113,7 +115,7 @@ const AsociacionesEPC = () => {
 
   const styles = {
     colContent: {
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       width: "calc(100% - 20%)",
       height: "100%", // Asegura que el contenedor de contenido ocupe toda la altura disponible
       overflowY: "auto", // Permite el desplazamiento solo si es necesario
@@ -165,7 +167,7 @@ const AsociacionesEPC = () => {
       alignItems: "center",
     },
     img: {
-      width: "80%",
+      width: isMobile ? "100%" : "80%",
       height: "200px",
       objectFit: "cover",
       borderRadius: "10px",

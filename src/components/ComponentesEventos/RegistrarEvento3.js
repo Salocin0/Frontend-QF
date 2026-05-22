@@ -7,8 +7,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
+import useBreakpoint from "../../useBreakpoint";
 
 const RegistrarEvento3 = () => {
+  const { isMobile } = useBreakpoint();
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const location = useLocation();
   const evento = location.state || {}; // Recuperar los datos del evento
@@ -302,7 +304,7 @@ const RegistrarEvento3 = () => {
       padding: 0,
       display: "flex",
       width: "Calc(100% - 20%)",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       
     },
     formWrapper: {
@@ -405,9 +407,9 @@ const RegistrarEvento3 = () => {
       justifyContent: "center",
       marginTop: "20px",
       fontSize: "24px",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       color: "var(--qf-text-primary)",
-      width: "80%",
+      width: isMobile ? "100%" : "80%",
     },
     separator: {
       border: "none",
@@ -416,8 +418,8 @@ const RegistrarEvento3 = () => {
       borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
-      marginLeft: "20%",
-      width: "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      width: isMobile ? "100%" : "80%",
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },

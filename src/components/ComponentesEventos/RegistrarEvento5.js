@@ -11,6 +11,7 @@ import "leaflet/dist/leaflet.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import useBreakpoint from "../../useBreakpoint";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -45,6 +46,7 @@ const RecenterMap = ({ center }) => {
 };
 
 const RegistrarEvento5 = () => {
+  const { isMobile } = useBreakpoint();
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const { eventoId, diferenciaDiasEvento } = useParams();
   const effectiveEventoId = eventoId || localStorage.getItem(EVENTO_CREACION_ID_KEY);
@@ -333,7 +335,7 @@ const RegistrarEvento5 = () => {
   const styles = {
     contentCol: {
       width: "calc(100% - 20%)",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       paddingBottom: "70px",
     },
     titleWrap: {

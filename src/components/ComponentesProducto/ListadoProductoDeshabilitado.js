@@ -9,10 +9,12 @@ import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import Producto from "./Producto";
 import { FaSearch, FaPlus } from "react-icons/fa";
+import useBreakpoint from "../../useBreakpoint";
 
 const ListadoProductoDeshabilitado = ({ carrito }) => {
   const { user } = useContext(UserContext);
   const { id } = useParams();
+  const { isMobile } = useBreakpoint();
   const [productos, setProductos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [busqueda, setBusqueda] = useState("");
@@ -45,7 +47,7 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
       display: "flex",
       flexDirection: "column",
       flexGrow: 1,
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     header: {
       display: "flex",

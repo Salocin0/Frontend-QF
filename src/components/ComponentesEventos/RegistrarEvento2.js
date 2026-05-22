@@ -9,8 +9,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
+import useBreakpoint from "../../useBreakpoint";
 
 const RegistrarEvento2 = () => {
+  const { isMobile } = useBreakpoint();
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const [nombre, setNombre] = useState("");
   const [imagenEvento, setImagenEvento] = useState(null);
@@ -322,7 +324,7 @@ const RegistrarEvento2 = () => {
       padding: 0,
       display: "flex",
       width: "Calc(100% - 20%)",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     darkFormWrapper: {
       backgroundColor: "var(--qf-bg-secondary)",
@@ -448,7 +450,7 @@ const RegistrarEvento2 = () => {
       justifyContent: "center",
       marginTop: "20px",
       fontSize: "24px",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       color: "var(--qf-text-primary)",
     },
     separator: {
@@ -458,8 +460,8 @@ const RegistrarEvento2 = () => {
       borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
-      marginLeft: "20%",
-      width: "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      width: isMobile ? "100%" : "80%",
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },

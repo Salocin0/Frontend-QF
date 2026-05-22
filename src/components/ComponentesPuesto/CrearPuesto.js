@@ -7,8 +7,10 @@ import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import useBreakpoint from "../../useBreakpoint";
 
 const CrearNuevoPuesto = () => {
+  const { isMobile } = useBreakpoint();
   const [numeroCarro, setNumeroCarro] = useState("");
   const [nombreCarro, setNombreCarro] = useState("");
   const [tipoNegocio, setTipoNegocio] = useState("");
@@ -141,14 +143,14 @@ const CrearNuevoPuesto = () => {
       marginTop: "1rem",
     },
     breadcrumbWrapper: {
-      marginLeft: "20%",
-      width: "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      width: isMobile ? "100%" : "80%",
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     mainContent: {
-      width: "80%",
-      marginLeft: "20%",
+      width: isMobile ? "100%" : "80%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     titleSection: {
       display: "flex",

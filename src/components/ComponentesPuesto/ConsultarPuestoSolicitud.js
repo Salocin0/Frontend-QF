@@ -6,8 +6,10 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import FormPuestoEditar from "./FormPuestoEditar";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Footer from "../ComponentesGenerales/Footer";
+import useBreakpoint from "../../useBreakpoint";
 
 const ConsultarPuestoSolicitud = () => {
+  const { isMobile } = useBreakpoint();
   const location = useLocation();
   const carrito = location.state;
   const { user } = useContext(UserContext);
@@ -20,8 +22,8 @@ const ConsultarPuestoSolicitud = () => {
     },
     content: {
       marginTop: "10px",
-      marginLeft: "20%",
-      width: "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      width: isMobile ? "100%" : "80%",
       display: "flex",
       flexDirection: "row",
       justifyContent: "center",
@@ -35,7 +37,7 @@ const ConsultarPuestoSolicitud = () => {
       paddingBottom: "1rem",
       fontSize: "2rem",
       color: "var(--qf-naranja)",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
     },
     breadcrumbWrapper: {
       width: "Calc(100%)",

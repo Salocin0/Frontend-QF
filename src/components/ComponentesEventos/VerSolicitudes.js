@@ -9,8 +9,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Buscador from "../Filtros y Buscadores/Buscador";
 import Filtros from "../Filtros y Buscadores/Filtros";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
+import useBreakpoint from "../../useBreakpoint";
 
 const VerSolicitudesEvento = () => {
+  const { isMobile } = useBreakpoint();
   const { evento } = useParams();
   const [eventos, setEventos] = useState([]);
   const [asociaciones, setAsociaciones] = useState([]);
@@ -167,7 +169,7 @@ const VerSolicitudesEvento = () => {
 
   const styles = {
     colContent: {
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       width: "calc(100% - 20%)",
       height: "100%",
       overflowY: "auto",

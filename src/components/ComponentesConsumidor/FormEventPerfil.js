@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import useBreakpoint from "../../useBreakpoint";
 
 const EventProducerForm = ({
   mostrarContenidoProductor,
@@ -11,6 +12,7 @@ const EventProducerForm = ({
   setMostrarContenidoProductor,
   isCuitValid,
 }) => {
+  const { isMobile } = useBreakpoint();
   const [condicionIvaPE, setCondicionPE] = useState("");
   const [razonSocialPE, setRazonSocialPE] = useState("");
   const [isDisabledPE, setIsDisabledPE] = useState(true);
@@ -74,7 +76,7 @@ const EventProducerForm = ({
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       marginBottom: "50px",
       backgroundColor: "rgba(0, 0, 0, 0.5)",
     },

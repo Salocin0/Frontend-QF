@@ -2,8 +2,10 @@
 import { Modal, Button } from "react-bootstrap"; // Utilizando Bootstrap para el modal
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt } from 'react-icons/fa';
+import useBreakpoint from "../../useBreakpoint";
 
 const CardPreCompra = ({ evento }) => {
+  const { isMobile } = useBreakpoint();
   const [selectedDay, setSelectedDay] = useState(null); // Día seleccionado
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
   const navigate = useNavigate();
@@ -46,7 +48,7 @@ const CardPreCompra = ({ evento }) => {
       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
       textAlign: "center",
       height: "55vh",
-      marginLeft: "calc(20% + 20px)",
+      marginLeft: isMobile ? "0" : "calc(20% + 20px)",
       border: `1px solid var(--qf-naranja)`,
       position:"relative"
     },

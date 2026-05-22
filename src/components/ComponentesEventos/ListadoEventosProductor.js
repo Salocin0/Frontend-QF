@@ -10,8 +10,10 @@ import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Buscador from "../Filtros y Buscadores/Buscador";
 import Filtros from "../Filtros y Buscadores/Filtros";
 import { CircularProgress } from "@mui/material";
+import useBreakpoint from "../../useBreakpoint";
 
 const ListadoEventosProductor = () => {
+  const { isMobile } = useBreakpoint();
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -93,7 +95,7 @@ const ListadoEventosProductor = () => {
 
   const styles = {
     colContent: {
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       width: "calc(100% - 20%)",
       height: "100%",
       overflowY: "auto",

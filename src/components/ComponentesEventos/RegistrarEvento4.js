@@ -9,8 +9,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
+import useBreakpoint from "../../useBreakpoint";
 
 const RegistrarEvento4 = () => {
+  const { isMobile } = useBreakpoint();
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const { diferenciaDiasEvento } = useParams();
   const navigate = useNavigate();
@@ -156,7 +158,7 @@ const RegistrarEvento4 = () => {
       padding: 0,
       display: "flex",
       width: "Calc(100% - 20%)",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       marginBottom: "70px",
     },
     formWrapper: {
@@ -216,9 +218,9 @@ const RegistrarEvento4 = () => {
       justifyContent: "center",
       marginTop: "20px",
       fontSize: "24px",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       color: "var(--qf-text-primary)",
-      width: "80%",
+      width: isMobile ? "100%" : "80%",
     },
     separator: {
       border: "none",
@@ -227,8 +229,8 @@ const RegistrarEvento4 = () => {
       borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
-      marginLeft: "20%",
-      width: "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      width: isMobile ? "100%" : "80%",
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },

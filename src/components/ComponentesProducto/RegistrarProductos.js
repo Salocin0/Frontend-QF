@@ -7,8 +7,10 @@ import { useParams } from "react-router-dom";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import useBreakpoint from "../../useBreakpoint";
 
 const RegistrarProductos = () => {
+  const { isMobile } = useBreakpoint();
   const [nombre, setNombre] = useState("");
   const [imagen, setImagen] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -105,7 +107,7 @@ const RegistrarProductos = () => {
       borderRadius: "10px",
       flexDirection: "column",
       backgroundColor: "var(--qf-bg-secondary)",
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       width: "Calc(80% - 40px)",
       border: `1px solid var(--qf-naranja)`,
       height: "100%",
@@ -159,7 +161,7 @@ const RegistrarProductos = () => {
       cursor: "pointer",
     },
     breadcrumbWrapper: {
-      marginLeft: "20%",
+      marginLeft: isMobile ? "0" : "20%",
       width: "Calc(80%)",
       paddingTop: "10px",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -168,8 +170,8 @@ const RegistrarProductos = () => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      marginLeft: "20%",
-      width: "80%",
+      marginLeft: isMobile ? "0" : "20%",
+      width: isMobile ? "100%" : "80%",
       padding: "20px",
       backgroundColor: "var(--qf-bg-main)",
     },
