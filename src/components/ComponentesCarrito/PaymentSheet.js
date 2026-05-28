@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { FaCreditCard, FaTimes, FaLock } from "react-icons/fa";
+import useBreakpoint from "../../useBreakpoint";
 
 const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecret, amount }) => {
   const stripe = useStripe();
@@ -12,6 +13,7 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
   const [isLoading, setIsLoading] = useState(false);
   const [isElementReady, setIsElementReady] = useState(false);
   const [cardError, setCardError] = useState(null);
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     if (stripe && elements) {
@@ -311,7 +313,7 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
   }
 
   return (
-    <div style={{ ...styles.container, position: "relative" }}>
+    <div style={{ ...styles.container, maxWidth: isMobile ? "100%" : "450px", position: "relative" }} data-testid="payment-sheet-container">
       {/* Header */}
       <div style={styles.header}>
         <div style={styles.title}>

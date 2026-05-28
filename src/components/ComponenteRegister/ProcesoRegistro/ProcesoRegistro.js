@@ -6,9 +6,17 @@ import FormEncargado from "./FormEncargado";
 import FormProductor from "./FormProductor";
 import FormRepartidor from "./FormRepartidor";
 import FormUsuario from "./FormUsuario";
+import useBreakpoint from "../../../useBreakpoint";
 import "../placeholder.css"
 
+const STEP_LABELS = {
+  1: "Usuario",
+  2: "Datos",
+  3: "Perfil",
+};
+
 const ProcesoRegistro = () => {
+  const { isMobile } = useBreakpoint();
   const { tipoUsuario } = useParams();
   const [step, setStep] = useState(1);
   const [userData, setUserData] = useState({});
@@ -127,57 +135,140 @@ const ProcesoRegistro = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [registrar]);
 
-  // eslint-disable-next-line default-case
-  switch (step) {
-    case 1:
-      return (
-        <FormUsuario
-          nextStep={nextStep}
-          backStep={backStep}
-          tipoUsuario={tipoUsuario}
-          handleRegistro={handleUser}
-        />
-      );
-    case 2:
-      return (
-        <FormConsumidor
-          nextStep={nextStep}
-          backStep={backStep}
-          tipoUsuario={tipoUsuario}
-          handleRegistro={handleConsumidor}
-          isRegistering={isRegistering}
-        />
-      );
-    case 3:
-      if (tipoUsuario === "repartidor") {
+  const stepperDots = (
+    <div
+      data-testid="registro-stepper"
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: isMobile ? "4px" : "16px",
+        padding: isMobile ? "12px 8px" : "20px 16px",
+        width: "100%",
+        maxWidth: isMobile ? "100%" : "600px",
+        margin: "0 auto",
+      }}
+    >
+      {[1, 2, 3].map((s) => (
+        <div
+          key={s}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: isMobile ? "4px" : "8px",
+          }}
+        >
+          <div
+            style={{
+              width: isMobile ? "32px" : "36px",
+              height: isMobile ? "32px" : "36px",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "bold",
+              fontSize: isMobile ? "0.8rem" : "0.9rem",
+              backgroundColor: step === s ? "var(--qf-naranja)" : "var(--qf-bg-card)",
+              color: step === s ? "#000" : "var(--qf-text-white)",
+              border: "2px solid var(--qf-naranja)",
+              transition: "background-color 0.2s",
+            }}
+          >
+            {s}
+          </div>
+          {!isMobile && (
+            <span
+              style={{
+                fontSize: "0.85rem",
+                color: step === s ? "var(--qf-naranja)" : "var(--qf-text-muted)",
+                fontWeight: step === s ? "bold" : "normal",
+              }}
+            >
+              {STEP_LABELS[s]}
+            </span>
+          )}
+          {s < 3 && (
+            <div
+              style={{
+                width: isMobile ? "24px" : "40px",
+                height: "2px",
+                backgroundColor: step > s ? "var(--qf-naranja)" : "var(--qf-bg-card)",
+                transition: "background-color 0.2s",
+              }}
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderForm = () => {
+    switch (step) {
+      case 1:
         return (
-          <FormRepartidor
+          <FormUsuario
             nextStep={nextStep}
             backStep={backStep}
             tipoUsuario={tipoUsuario}
-            handleRegistro={handleRepartidor}
+            handleRegistro={handleUser}
           />
         );
-      } else if (tipoUsuario === "encargado") {
+      case 2:
         return (
-          <FormEncargado
+          <FormConsumidor
             nextStep={nextStep}
             backStep={backStep}
             tipoUsuario={tipoUsuario}
-            handleRegistro={handleEncargado}
+            handleRegistro={handleConsumidor}
+            isRegistering={isRegistering}
           />
         );
-      } else if (tipoUsuario === "productor") {
-        return (
-          <FormProductor
-            nextStep={nextStep}
-            backStep={backStep}
-            tipoUsuario={tipoUsuario}
-            handleRegistro={handleProductor}
-          />
-        );
-      }
-  }
+      case 3:
+        if (tipoUsuario === "repartidor") {
+          return (
+            <FormRepartidor
+              nextStep={nextStep}
+              backStep={backStep}
+              tipoUsuario={tipoUsuario}
+              handleRegistro={handleRepartidor}
+            />
+          );
+        } else if (tipoUsuario === "encargado") {
+          return (
+            <FormEncargado
+              nextStep={nextStep}
+              backStep={backStep}
+              tipoUsuario={tipoUsuario}
+              handleRegistro={handleEncargado}
+            />
+          );
+        } else if (tipoUsuario === "productor") {
+          return (
+            <FormProductor
+              nextStep={nextStep}
+              backStep={backStep}
+              tipoUsuario={tipoUsuario}
+              handleRegistro={handleProductor}
+            />
+          );
+        }
+    }
+  };
+
+  return (
+    <div data-testid="proceso-registro">
+      {stepperDots}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: isMobile ? "100%" : "700px",
+          margin: "0 auto",
+        }}
+      >
+        {renderForm()}
+      </div>
+    </div>
+  );
 };
 
 export default ProcesoRegistro;

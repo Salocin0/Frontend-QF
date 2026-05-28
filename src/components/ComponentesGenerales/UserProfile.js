@@ -4,12 +4,14 @@ import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
+import useBreakpoint from "../../useBreakpoint";
 
 const UserProfile = ({ haveRol }) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   const { user, updateUser } = useContext(UserContext);
   const [isHoveredIndex, setIsHoveredIndex] = useState(null);
+  const { isMobile } = useBreakpoint();
 
   const handleLogout = () => {
     if (user.id) {
@@ -144,8 +146,12 @@ const UserProfile = ({ haveRol }) => {
 
   return (
     <li
+      data-testid="user-profile-nav"
       style={{
         ...styles.navItem,
+        position: isMobile ? "relative" : styles.navItem.position,
+        bottom: isMobile ? "auto" : styles.navItem.bottom,
+        width: isMobile ? "100%" : styles.navItem.width,
         backgroundColor: isHovered ? "var(--qf-naranja)" : "transparent",
       }}
       onMouseEnter={() => setIsHovered(true)}

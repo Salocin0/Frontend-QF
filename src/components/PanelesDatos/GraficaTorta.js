@@ -2,12 +2,14 @@
 import ReactECharts from "echarts-for-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
+import useBreakpoint from "../../useBreakpoint";
 
 const GraficaTorta = ({ id }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decaln
+  const { isMobile } = useBreakpoint();
   useEffect(() => {
     const fetchEstadisticas = async () => {
       try {
@@ -70,7 +72,9 @@ const GraficaTorta = ({ id }) => {
       },
     },
     legend: {
-      show: false,
+      show: true,
+      bottom: isMobile ? 0 : "auto",
+      orient: isMobile ? "horizontal" : "vertical",
       textStyle: {
         color: "var(--qf-naranja)",
       },
@@ -111,10 +115,13 @@ const GraficaTorta = ({ id }) => {
     <div
       style={{
         borderRadius: "20px",
-        overflow: "hidden", // Recorta las esquinas del contenido
-        height: "30vh", // Ajusta el tamaño del contenedor
+        overflow: "hidden",
+        height: "30vh",
         position: "relative",
+        maxWidth: isMobile ? "100%" : "800px",
+        width: "100%",
       }}
+      data-testid="grafica-wrapper"
     >
       <button
                   onClick={() => setDecalEnabled((prev) => !prev)}

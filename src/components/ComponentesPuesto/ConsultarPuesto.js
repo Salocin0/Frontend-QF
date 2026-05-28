@@ -5,9 +5,11 @@ import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import "./../sass/main.scss";
+import useBreakpoint from "../../useBreakpoint";
 
 const ConsultarPuesto = () => {
   const { id } = useParams();
+  const { isMobile } = useBreakpoint();
   const [session, setSession] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [numeroCarro, setNumeroCarro] = useState("");
@@ -146,7 +148,8 @@ const ConsultarPuesto = () => {
     <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
       <div className={`flex-grow-1`}>
         <section
-          className={`align-items-center justify-content-center col-6 offset-3 form mt-3 mb-5 rad`}
+          className={`align-items-center justify-content-center form mt-3 mb-5 rad`}
+          style={{ width: isMobile ? "100%" : "80%", maxWidth: isMobile ? "100%" : "700px", margin: "0 auto" }}
         >
           <div className={`card shadow-lg`}>
             <div className={`card-body p-3 formulario`}>
@@ -300,7 +303,7 @@ const ConsultarPuesto = () => {
                     // required to be implemented
                   />
               </div>*/}
-                <div className="d-grid">
+                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: "8px" }}>
                   {!editMode && (
                     <>
                       <button

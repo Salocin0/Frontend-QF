@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
+import useBreakpoint from "../../useBreakpoint";
 
 const RegistroRepartidor = () => {
   const [nombre, setNombre] = useState("");
@@ -22,6 +23,7 @@ const RegistroRepartidor = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
@@ -189,7 +191,7 @@ const RegistroRepartidor = () => {
     <>
       <div className="fondo">
         <div className="containerRegistrar d-flex justify-content-center align-items-center">
-          <div className="cardRegistrar shadow-lg">
+          <div className="cardRegistrar shadow-lg" style={{ maxWidth: isMobile ? "100%" : "500px", width: "100%" }} data-testid="form-card-registrar-repartidor">
             <div className="cardRegistrar-body p-2 formularioRegistrar">
               <h1 className="fs-4 cardRegistrar-title fw-bold mb-4 text-black">
                 Registrar Usuario

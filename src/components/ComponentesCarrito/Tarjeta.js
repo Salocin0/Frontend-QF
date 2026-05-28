@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 import { FaTrash, FaMinus, FaPlus, FaShoppingCart, FaArrowRight, FaCheckCircle } from "react-icons/fa";
+import useBreakpoint from "../../useBreakpoint";
 
 const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   console.log(productos);
@@ -11,6 +12,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   const { user } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [productosLocal, setProductosLocal] = useState(productos);
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     setProductosLocal(productos);
@@ -477,12 +479,12 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
         </span>
       </div>
 
-      <div style={styles.contentWrapper}>
+      <div style={{ ...styles.contentWrapper, flexDirection: isMobile ? "column" : "row" }} data-testid="cart-content-wrapper">
         {/* Sección izquierda: Productos */}
         <div style={styles.leftSection}>
           <div style={styles.productsContainer}>
             {productosLocal?.map((item, index) => (
-              <div key={index} style={styles.productCard}>
+              <div key={index} style={{ ...styles.productCard, flexDirection: isMobile ? "column" : "row" }} data-testid="cart-product-card">
                 {/* Imagen del producto */}
                 <div style={styles.productImage}>
                   {item.producto.img ? (
@@ -544,7 +546,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
         </div>
 
         {/* Sección derecha: Resumen y botones */}
-        <div style={styles.rightSection}>
+        <div style={{ ...styles.rightSection, width: isMobile ? "100%" : "320px" }} data-testid="cart-right-section">
           <div>
             <div style={styles.summaryRow}>
               <span style={styles.summaryLabel}>Subtotal:</span>

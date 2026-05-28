@@ -1,9 +1,11 @@
 ﻿import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Footer from "../../ComponentesGenerales/Footer";
+import useBreakpoint from "../../../useBreakpoint";
 import "../placeholder.css"
 
 const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isRegistering }) => {
+  const { isMobile } = useBreakpoint();
   const [provincias, setProvincias] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
   const [localidades, setLocalidades] = useState([]);
@@ -162,7 +164,7 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
     },
     row: {
       width: "100%",
-      maxWidth: "600px",
+      maxWidth: isMobile ? "100%" : "500px",
     },
     col: {
       width: "100%",
@@ -234,7 +236,7 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
   return (
     <div style={styles.background}>
       <div style={styles.container}>
-        <div style={styles.row}>
+          <div style={styles.row} data-testid="form-card-consumidor">
           <div style={styles.col}>
             <div style={styles.card}>
               <div style={styles.cardHeader}>

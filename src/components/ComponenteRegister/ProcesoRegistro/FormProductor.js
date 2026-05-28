@@ -1,8 +1,10 @@
 ﻿import React, { useState } from "react";
 import { toast } from "react-toastify";
+import useBreakpoint from "../../../useBreakpoint";
 import "../placeholder.css"
 
 const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
+  const { isMobile } = useBreakpoint();
   const [productorData, setProductorData] = useState({
     cuit: "",
     razonSocial: "",
@@ -58,7 +60,7 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
     },
     card: {
       width: "100%",
-      maxWidth: "600px",
+      maxWidth: isMobile ? "100%" : "500px",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       backgroundColor: "var(--qf-bg-main)",
@@ -120,7 +122,7 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
 
   return (
     <div className="background-prelogin" style={styles.container}>
-      <div style={styles.card}>
+      <div style={styles.card} data-testid="form-card-productor">
         <div style={styles.cardHeader}>
           <h2 style={styles.title}>Datos Productor - Paso 3</h2>
         </div>

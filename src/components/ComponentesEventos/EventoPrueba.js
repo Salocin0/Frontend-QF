@@ -3,8 +3,10 @@ import React from "react";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import "./../sass/main.scss";
 import imgdefault from "./img/villa maria.png";
+import useBreakpoint from "../../useBreakpoint";
 
 const EventoPrueba = ({ session }) => {
+    const { isMobile } = useBreakpoint();
     // Supongamos que tienes información del evento
     const evento = {
         nombre: "Festival Internacional de Peñas",
@@ -16,7 +18,7 @@ const EventoPrueba = ({ session }) => {
 
     return (
         <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
-                <div className="col-md-7">
+                <div className="col-md-7" data-testid="evento-prueba-container" style={{flexDirection: isMobile ? "column" : "row"}}>
                     <div className="card" style={{ width: "100%" }}>
                         <div className="card-body">
                             <div className="row">

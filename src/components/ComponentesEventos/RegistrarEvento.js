@@ -5,8 +5,10 @@ import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import "./../sass/main.scss";
+import useBreakpoint from "../../useBreakpoint";
 
 const RegistrarEvento = () => {
+  const { isMobile } = useBreakpoint();
   const [nombre, setNombre] = useState("");
   const [imagenEvento, setImagenEvento] = useState(null);
   const [croquis, setCroquis] = useState(null);
@@ -345,7 +347,8 @@ const RegistrarEvento = () => {
           <div className="fondo">
             <div className="containerRegistrar d-flex justify-content-center align-items-center">
               <section
-                className={`align-items-center col-8 form mt-3 mb-5 rad`}
+                className={`align-items-center form mt-3 mb-5 rad`}
+                style={{ width: isMobile ? "100%" : "80%", maxWidth: isMobile ? "100%" : "800px", margin: "0 auto" }}
               >
                 <div className="cardRegistrar-body p-2 formularioRegistrar">
                   <div className={`card-body p-3 formulario`}>
@@ -694,7 +697,7 @@ const RegistrarEvento = () => {
                           </button>
                         </div>
                       </form>
-                      <div className="d-flex justify-content-center aling-content-center">
+                      <div className="d-flex justify-content-center aling-content-center" style={{ overflowX: isMobile ? "auto" : "visible" }}>
                         <table className="w-100 mx-auto text-center table table-striped table-bordered">
                           <thead>
                             <tr>

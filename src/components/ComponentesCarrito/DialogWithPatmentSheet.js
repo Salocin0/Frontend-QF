@@ -7,6 +7,7 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentSheet from "./PaymentSheet";
 import { loadStripe } from "@stripe/stripe-js";
+import useBreakpoint from "../../useBreakpoint";
 
 // Cargar stripe una sola vez (fuera del componente)
 const stripePromise = loadStripe(process.env?.REACT_APP_API_KEY_STRIPE);
@@ -20,6 +21,7 @@ const DialogWithPaymentSheet = ({
   const [paymentSheetData, setPaymentSheetData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     const fetchPaymentSheetData = async (amountToPay) => {
@@ -76,8 +78,9 @@ const DialogWithPaymentSheet = ({
     <Dialog 
       open={isOpen} 
       onClose={handleClose} 
-      maxWidth="sm" 
+      maxWidth={isMobile ? "xs" : "sm"} 
       fullWidth
+      fullScreen={isMobile}
     >
       <DialogContent
         style={{

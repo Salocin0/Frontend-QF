@@ -7,7 +7,7 @@ const Footer = () => {
 
   const styles = {
     footerStyle: {
-      padding: isMobile ? "0.5rem" : "0.5rem 1rem",
+      padding: "0.5rem 1rem",
       backgroundColor: "var(--qf-bg-main)",
       textAlign: "center",
       position: "fixed",
@@ -18,7 +18,7 @@ const Footer = () => {
       zIndex: 900,
     },
     containerStyle: {
-      maxWidth: "960px",
+      maxWidth: isMobile ? "100%" : "960px",
       margin: "0 auto",
       display: "flex",
       flexDirection: isMobile ? "column" : "row",
@@ -47,24 +47,24 @@ const Footer = () => {
     linkStyle: {
       color: "var(--qf-naranja)",
       textDecoration: "none",
-      fontSize: isMobile ? "0.75rem" : "0.875rem",
+      fontSize: "0.875rem",
       cursor: "pointer",
     },
     iconStyle: {
       color: "var(--qf-naranja)",
       textDecoration: "none",
       cursor: "pointer",
-      fontSize: isMobile ? "0.9rem" : "1rem",
+      fontSize: "1rem",
     },
     textStyle: {
-      fontSize: isMobile ? "0.65rem" : "0.875rem",
+      fontSize: "0.875rem",
       color: "var(--qf-blanco-puro)",
       margin: 0,
     },
   };
 
   return (
-    <footer style={styles.footerStyle}>
+    <footer style={styles.footerStyle} data-testid="footer">
       <div style={styles.containerStyle}>
         <div style={styles.rowStyle}>
           <div style={styles.leftSection}>

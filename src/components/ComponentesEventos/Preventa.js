@@ -7,12 +7,14 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify"; // Importa Toastify
+import useBreakpoint from "../../useBreakpoint";
 
 const Preventa = () => {
   const [evento, setEvento] = useState([]);
   const { user } = useContext(UserContext);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isMobile, isTablet } = useBreakpoint();
 
   useEffect(() => {
     if (user) {
@@ -46,10 +48,23 @@ const Preventa = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
-      <div onClick={() => irACompraInstantanea()}>
-        <CardCompraInstantanea evento={evento} />
+      <div
+        data-testid="preventa-cards-grid"
+        style={{
+          display: "grid",
+          gridTemplateColumns: isMobile
+            ? "1fr"
+            : isTablet
+            ? "repeat(2, 1fr)"
+            : "repeat(3, 1fr)",
+          gap: "16px",
+        }}
+      >
+        <div onClick={() => irACompraInstantanea()}>
+          <CardCompraInstantanea evento={evento} />
+        </div>
+        <CardPreCompra evento={evento} />
       </div>
-      <CardPreCompra evento={evento} />
       <Footer />
     </PageLayout>
   );

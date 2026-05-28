@@ -4,9 +4,11 @@ import { toast } from "react-toastify";
 import Footer from "../../ComponentesGenerales/Footer";
 import PasswordToggle from "../PasswordToggle.jsx";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import useBreakpoint from "../../../useBreakpoint";
 import "../placeholder.css"
 
 const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
+  const { isMobile } = useBreakpoint();
 
   const [userData, setUserData] = useState({
     username: "",
@@ -71,7 +73,8 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
     },
     card: {
       width: "100%",
-      maxWidth: "600px",
+      maxWidth: isMobile ? "100%" : "500px",
+      margin: "0 auto",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
       backgroundColor: "var(--qf-bg-main)",
@@ -143,7 +146,7 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
+      <div style={styles.card} data-testid="form-card-usuario">
         <div style={styles.cardHeader}>
           <h2 style={styles.title}>Crear Cuenta - Paso 1</h2>
         </div>

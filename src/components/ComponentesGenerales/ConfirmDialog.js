@@ -1,6 +1,8 @@
 ﻿import React from 'react';
+import useBreakpoint from "../../useBreakpoint";
 
 const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
+  const { isMobile } = useBreakpoint();
 
   if (!open) return null;
 
@@ -20,16 +22,17 @@ const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
       <div
         style={{
           position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%,-50%)',
+          top: isMobile ? 'auto' : '50%',
+          left: isMobile ? 0 : '50%',
+          transform: isMobile ? 'none' : 'translate(-50%,-50%)',
+          bottom: isMobile ? 0 : 'auto',
           background: "var(--qf-bg-main)",
           color: '#FFFFFF',
           padding: '20px',
           zIndex: 1100,
-          borderRadius: '8px',
-          width: '90%',
-          maxWidth: '400px',
+          borderRadius: isMobile ? '12px 12px 0 0' : '8px',
+          width: isMobile ? '100%' : '90%',
+          maxWidth: isMobile ? '100%' : '400px',
           textAlign: 'center',
         }}
       >

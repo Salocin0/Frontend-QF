@@ -3,8 +3,10 @@ import Logo from "../img/adaptive-icon.png";
 import MenuItems from "./MenuItems";
 import UserProfile from "./UserProfile";
 import Panel from "../ComponentesLandingPage/ChatPanel";
+import useBreakpoint from "../../useBreakpoint";
 
 const Sidebar = ({ tipoUsuario }) => {
+  const { isMobile, isTablet } = useBreakpoint();
   const [usuario, setUsuario] = useState("consumidor");
   const [isResponsable, setIsResponsable] = useState(false);
   const [isProductor, setIsProductor] = useState(false);
@@ -30,7 +32,7 @@ const Sidebar = ({ tipoUsuario }) => {
   }, [tipoUsuario, usuario]);
 
   return (
-    <div className="sidebar">
+    <div className="sidebar" style={{ width: isMobile ? "100%" : isTablet ? "200px" : "250px" }}>
       <div className="logocontainer">
         <a href="/inicio">
           <img src={Logo} alt="Logo" className="logo" style={{ borderRadius: "10px" }} />

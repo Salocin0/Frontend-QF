@@ -3,6 +3,7 @@ import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
+import useBreakpoint from "../../useBreakpoint";
 
 const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   const [chartData, setChartData] = useState(null);
@@ -13,6 +14,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   const [categorias, setCategorias] = useState([]); // Guardar categorías en estado
   const [groupedData, setGroupedData] = useState({}); // Guardar datos agrupados en estado
   const [puestos, setPuestos] = useState([]); // Guardar puestos en estadon
+  const { isMobile } = useBreakpoint();
   useEffect(() => {
     console.log("Evento seleccionado:", eventId, "Puesto seleccionado:", puestoId);
 
@@ -98,7 +100,9 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
       },
       legend: { 
         data: puestos, 
-        top: 30,
+        top: isMobile ? "auto" : 30,
+        bottom: isMobile ? 0 : "auto",
+        orient: isMobile ? "horizontal" : "vertical",
         textStyle: { color: "var(--qf-naranja)" }
       },
       xAxis: { 
@@ -134,7 +138,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   );
 
   return (
-    <div style={{ position: "relative", height: "100%", width: "100%" }}>
+    <div style={{ position: "relative", height: "100%", width: "100%", maxWidth: isMobile ? "100%" : "800px" }} data-testid="grafica-wrapper">
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
@@ -245,7 +249,8 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
           grid: { bottom: 100 },
           legend: { 
             data: Object.keys(seriesData), 
-            bottom: 0,
+            bottom: isMobile ? 0 : "auto",
+            orient: isMobile ? "horizontal" : "vertical",
             textStyle: { color: "var(--qf-naranja)" }
           },
           series: Object.keys(seriesData).map((key) => ({

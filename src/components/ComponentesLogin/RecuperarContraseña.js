@@ -1,14 +1,16 @@
-﻿import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import { Link } from "react-router-dom";
+import useBreakpoint from "../../useBreakpoint";
 import "../ComponenteRegister/placeholder.css";
 
 const RecuperarContraseña = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
+  const { isMobile } = useBreakpoint();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -101,7 +103,7 @@ const RecuperarContraseña = () => {
   return (
     <>
       <section style={styles.container}>
-        <div style={{ maxWidth: "500px", width: "100%" }}>
+        <div style={{ maxWidth: isMobile ? "100%" : "400px", width: "100%" }} data-testid="form-card-recuperar">
           <div style={styles.card}>
             <div style={styles.cardBody}>
               <h1 style={styles.title}>Recuperar Contraseña</h1>

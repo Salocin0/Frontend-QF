@@ -2,8 +2,10 @@
 import { toast } from "react-toastify";
 import "./../../sass/main.css";
 import Footer from "../../ComponentesGenerales/Footer";
+import useBreakpoint from "../../../useBreakpoint";
 
 const FormEncargado = ({ nextStep, backStep, handleRegistro }) => {
+  const { isMobile } = useBreakpoint();
   const [encargadoData, setEncargadoData] = useState({
     cuit: "",
     razonSocial: "",
@@ -65,7 +67,7 @@ const FormEncargado = ({ nextStep, backStep, handleRegistro }) => {
     },
     card: {
       width: "100%",
-      maxWidth: "600px",
+      maxWidth: isMobile ? "100%" : "500px",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
       backgroundColor: "var(--qf-bg-main)",
@@ -129,7 +131,7 @@ const FormEncargado = ({ nextStep, backStep, handleRegistro }) => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
+      <div style={styles.card} data-testid="form-card-encargado">
         <h2 style={styles.title}>Datos Encargado - Paso 3</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGroup}>

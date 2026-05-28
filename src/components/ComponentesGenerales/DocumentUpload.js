@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import useBreakpoint from "../../useBreakpoint";
 
 function DocumentUpload() {
   const [base64String, setBase64String] = useState(null);
   const [fileTypeMime, setFileTypeMime] = useState('');
   const [fileToDownload, setFileToDownload] = useState(null);
+  const { isMobile } = useBreakpoint();
 
   const getFileExtension = (filename) => {
     return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
@@ -74,7 +76,7 @@ function DocumentUpload() {
   };
 
   return (
-    <div>
+    <div style={{ width: isMobile ? "100%" : "auto" }}>
       <h1>Cargar y Descargar Documento</h1>
       <input type="file" accept=".pdf, .doc, .docx, .jpg, .jpeg, .png" onChange={handleFileChange} />
       {base64String && (

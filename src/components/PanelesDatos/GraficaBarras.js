@@ -3,12 +3,14 @@ import ReactECharts from "echarts-for-react";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
+import useBreakpoint from "../../useBreakpoint";
 
 const GraficaBarras = ({ eventId }) => {
   const [chartData, setChartData] = useState(null); // Estado para los datos de la gráfica
   const [loading, setLoading] = useState(true); // Estado de carga
   const [error, setError] = useState(null); // Estado para errores
   const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decaln
+  const { isMobile } = useBreakpoint();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -158,7 +160,9 @@ const GraficaBarras = ({ eventId }) => {
       },
     },
     legend: {
-      top: "20%",
+      top: isMobile ? "auto" : "20%",
+      bottom: isMobile ? 0 : "auto",
+      orient: isMobile ? "horizontal" : "vertical",
       textStyle: {
         color: "var(--qf-naranja)",
       },
@@ -197,7 +201,7 @@ const GraficaBarras = ({ eventId }) => {
   } : null;
 
   return (
-    <div className="h-100 w-100" style={{position:"relative"}}>
+    <div className="h-100 w-100" style={{position:"relative", maxWidth: isMobile ? "100%" : "800px", width: "100%"}} data-testid="grafica-wrapper">
       {option ? (
         <>
           <ReactECharts

@@ -1,13 +1,15 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import classnames from "classnames";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import "./../sass/main.scss";
 import { FaUser, FaSeedling, FaTruck, FaStore } from "react-icons/fa";
+import useBreakpoint from "../../useBreakpoint";
 
 const SeleccionRegister = () => {
   const [selectedType, setSelectedType] = useState("consumidor");
+  const { isMobile } = useBreakpoint();
   
 
   const handleTypeChange = (type) => {
@@ -36,7 +38,7 @@ const SeleccionRegister = () => {
       backgroundRepeat: "no-repeat",
     },
     card: {
-      maxWidth: "400px",
+      maxWidth: isMobile ? "100%" : "500px",
       width: "100%",
       borderRadius: "8px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -116,7 +118,7 @@ const SeleccionRegister = () => {
 
   return (
     <div style={styles.background}>
-      <div style={styles.card}>
+      <div style={styles.card} data-testid="form-card-seleccion">
         <div style={styles.cardHeader}>
           <h2 style={styles.cardHeaderText}>Seleccione Perfil</h2>
         </div>

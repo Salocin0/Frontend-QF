@@ -1,14 +1,16 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PasswordToggle from "../ComponenteRegister/PasswordToggle";
 import { Link } from "react-router-dom";
+import useBreakpoint from "../../useBreakpoint";
 
 const CambiarContraseña = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { codigo } = useParams();
   const navigate = useNavigate();
+  const { isMobile } = useBreakpoint();
 
   const handleNewPasswordChange = (e) => {
     setNewPassword(e.target.value);
@@ -65,7 +67,7 @@ const CambiarContraseña = () => {
     card: {
       borderRadius: "10px",
       boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-      maxWidth: "600px",
+      maxWidth: isMobile ? "100%" : "400px",
       width: "100%",
       backgroundColor: "var(--qf-bg-main)",
     },
@@ -125,7 +127,7 @@ const CambiarContraseña = () => {
 
   return (
     <section style={styles.container}>
-      <div style={styles.card}>
+      <div style={styles.card} data-testid="form-card-cambiar">
         <div style={styles.cardBody}>
           <h1 style={styles.title}>Cambiar Contraseña</h1>
           <form onSubmit={handleSubmit} style={styles.form}>

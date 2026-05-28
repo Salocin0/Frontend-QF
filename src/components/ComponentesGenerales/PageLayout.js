@@ -42,7 +42,7 @@ const PageLayout = ({ children, sidebarProps = {} }) => {
       </div>
 
       {/* Contenido principal */}
-      <div className="page-layout__content">{children}</div>
+      <div className="page-layout__content" data-testid="page-layout-content">{children}</div>
     </div>
   );
 };

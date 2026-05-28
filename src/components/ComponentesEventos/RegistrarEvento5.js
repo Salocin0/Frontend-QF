@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import L from "leaflet";
@@ -12,6 +12,7 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import useBreakpoint from "../../useBreakpoint";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -47,6 +48,7 @@ const RecenterMap = ({ center }) => {
 
 const RegistrarEvento5 = () => {
   const { isMobile } = useBreakpoint();
+  const { user } = useContext(UserContext);
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const { eventoId, diferenciaDiasEvento } = useParams();
   const effectiveEventoId = eventoId || localStorage.getItem(EVENTO_CREACION_ID_KEY);
@@ -523,7 +525,7 @@ const RegistrarEvento5 = () => {
       : [-34.603722, -58.381592];
 
   return (
-    <PageLayout sidebarProps={{}}>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
           <div style={styles.contentCol}>
           <div style={styles.titleWrap}>
             <h1>Crear un Evento</h1>

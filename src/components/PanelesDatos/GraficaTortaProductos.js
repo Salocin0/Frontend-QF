@@ -1,10 +1,12 @@
 ﻿import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import useBreakpoint from "../../useBreakpoint";
 
 const GraficaTortaProductos = ({ height, productos }) => {
   const [chartData, setChartData] = useState([]);
   const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decaln
+  const { isMobile } = useBreakpoint();
   useEffect(() => {
     if (productos.length > 0) {
       const totalRecaudado = productos.reduce((sum, producto) => sum + producto.dinero, 0);
@@ -32,8 +34,10 @@ const GraficaTortaProductos = ({ height, productos }) => {
       formatter: "{b}: {c}% ({d}%)",
     },
     legend: {
-      top: "7%",
+      top: isMobile ? "auto" : "7%",
       left: "center",
+      bottom: isMobile ? 0 : "auto",
+      orient: isMobile ? "horizontal" : "vertical",
       textStyle: {
         color: "var(--qf-naranja)",
       }
@@ -67,7 +71,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
   };
 
   return (
-    <div style={{ position: "relative", height: "32vh", width: "100%" }}>
+    <div style={{ position: "relative", height: "32vh", width: "100%", maxWidth: isMobile ? "100%" : "800px" }} data-testid="grafica-wrapper">
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
