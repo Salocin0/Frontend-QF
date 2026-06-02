@@ -185,6 +185,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { isMobile } = useBreakpoint();
 
   const formatFecha = (fecha) => {
     const [day, month, year] = fecha.split("/");
