@@ -124,7 +124,7 @@ const ListadoEventosUsers = () => {
       }}>
         {/* Header */}
         <div className="qf-page-header">
-          <h1 className="qf-page-title">Eventos</h1>
+          <h1 className="qf-page-title" style={{ fontSize: "1.75rem" }}>Eventos</h1>
           <hr className="qf-separator" />
         </div>
 
