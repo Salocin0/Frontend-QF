@@ -327,6 +327,8 @@
   padding-bottom: 80px; // espacio para footer fijo
   display: flex;
   flex-direction: column;
+  min-height: 0; // permite que flex:1 en hijos funcione con overflow
+  overflow: hidden; // evita scroll vertical en la pagina
 }
 
 // ── Mobile (< 768px) — sidebar como drawer superpuesto ───────
@@ -598,9 +600,9 @@
   width: 100%;
   padding: 20px;
   box-sizing: border-box;
-  margin-bottom: 50px;
   flex: 1;
-  min-height: calc(100vh - 100px); // forzar alto mínimo = viewport
+  min-height: 0; // permite que flex funcione sin forzar overflow
+  height: calc(100vh - 100px); // viewport - 20px padding-top - 80px padding-bottom
 }
 
 // Las cards de acción (perfil, cerrar sesión, carrito) ocupan
