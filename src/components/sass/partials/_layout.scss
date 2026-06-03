@@ -592,34 +592,55 @@
 // Mantiene la misma distribución visual pero se adapta al ancho.
 // ──────────────────────────────────────────────────────────
 
+// ── Contenedor del dashboard: flex column, llena el alto disponible ──
+.qf-dashboard-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  gap: 16px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+// ── Cards del dashboard: wrap horizontal, llenan el espacio ──
 .qf-dashboard-grid {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
   width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
   flex: 1;
-  min-height: 0; // permite que flex funcione sin forzar overflow
-  height: calc(100vh - 100px); // viewport - 20px padding-top - 80px padding-bottom
-  align-content: flex-start; // cards arriba, action buttons abajo
+  min-height: 0;
 }
 
-// Cada card (item directo) se estira con flex y tiene min-width razonable
-.qf-dashboard-grid > *:not(.qf-dashboard-action) {
-  flex: 1 1 180px; // grow + shrink + basis 180px
+// Cada card se estira con flex y tiene min-width razonable
+.qf-dashboard-grid > * {
+  flex: 1 1 180px;
   min-width: 180px;
 }
 
-// Action buttons container ocupa toda la fila
-.qf-dashboard-grid > .qf-dashboard-action {
-  flex: 0 0 100%; // 100% del ancho, sin grow ni shrink
+// ── Action buttons: fila separada, no overlapping con el footer ──
+.qf-dashboard-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  width: 100%;
 }
 
-// Las cards de acción (perfil, cerrar sesión, carrito) ocupan
-// todo el ancho del grid y van en la segunda fila
-.qf-dashboard-grid .qf-dashboard-action {
-  grid-column: 1 / -1;
+.qf-dashboard-actions > * {
+  flex: 1;
+}
+
+// En mobile: apilar verticalmente los botones
+@media screen and (max-width: 767px) {
+  .qf-dashboard-actions {
+    flex-direction: column;
+  }
+  .qf-dashboard-actions > * {
+    flex: none;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════

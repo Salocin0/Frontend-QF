@@ -234,25 +234,16 @@ const Inicio = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
-      <div className="qf-dashboard-grid" style={{
-        gridTemplateColumns: isMobile
-          ? "1fr"
-          : "repeat(auto-fit, minmax(280px, 1fr))"
-      }}>
-        {cardsData.map((card, index) => (
-          <SafeCardInicio key={index} data={card} />
-        ))}
-        {/* Action buttons ocupan todo el ancho como una fila separada */}
-        <div style={{
-          flex: "0 0 100%",
-          display: "flex",
-          gap: "12px",
-          flexWrap: "wrap",
-          marginTop: "10px",
-          flexDirection: isMobile ? "column" : "row"
-        }}>
+      <div className="qf-dashboard-container">
+        <div className="qf-dashboard-grid">
+          {cardsData.map((card, index) => (
+            <SafeCardInicio key={index} data={card} />
+          ))}
+        </div>
+        {/* Action buttons en fila propia, no overlapping con el footer */}
+        <div className="qf-dashboard-actions">
           {actionButtonsData.map((btn, index) => (
-            <div key={index} style={{ flex: isMobile ? "none" : 1 }}>
+            <div key={index} className="qf-dashboard-action-item">
               <SafeActionButton
                 title={btn.title}
                 icon={btn.icon}
