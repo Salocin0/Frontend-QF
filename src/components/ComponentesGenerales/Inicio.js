@@ -243,13 +243,13 @@ const Inicio = () => {
           <SafeCardInicio key={index} data={card} />
         ))}
         {/* Action buttons ocupan todo el ancho como una fila separada */}
-        <div style={{ 
-          gridColumn: "1 / -1", 
-          display: "flex", 
-          gap: "12px", 
+        <div style={{
+          flex: "0 0 100%",
+          display: "flex",
+          gap: "12px",
           flexWrap: "wrap",
           marginTop: "10px",
-          flexDirection: isMobile ? "column" : "row" 
+          flexDirection: isMobile ? "column" : "row"
         }}>
           {actionButtonsData.map((btn, index) => (
             <div key={index} style={{ flex: isMobile ? "none" : 1 }}>
