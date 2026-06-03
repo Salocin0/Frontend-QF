@@ -10,7 +10,7 @@ import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import useBreakpoint from "../../useBreakpoint";
 
 const ListadoEventosUsers = () => {
-  const { isMobile } = useBreakpoint();
+  const { isMobile, isTablet } = useBreakpoint();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [eventos, setEventos] = useState([]);
@@ -113,57 +113,124 @@ const ListadoEventosUsers = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div className="qf-page-content" style={{ padding: isMobile ? "0" : "0", height: "100%" }}>
-        {/* Columna principal: breadcrumb + listado de eventos */}
-        <div className="qf-page-content__main">
-          <div className="qf-page-header">
-            <h1 className="qf-page-title">Eventos</h1>
-            <hr className="qf-separator" />
-          </div>
-
-          <div style={{ paddingLeft: "16px", paddingTop: "4px" }}>
-            <Breadcrumb items={breadcrumbItems} />
-          </div>
-
-          <div className="qf-scrollable" style={{ padding: "0 16px" }}>
-            {!loanding ? (
-              <LoandingComponent />
-            ) : Array.isArray(filteredEventos) && filteredEventos.length > 0 ? (
-              rows.length > 0 &&
-              rows.map((row, rowIndex) => (
-                <div key={rowIndex} style={{ width: "100%" }}>
-                  {row.map((evento, index) => (
-                    <div
-                      key={index}
-                      style={{ marginBottom: "10px", width: "100%" }}
-                    >
-                      {evento !== null ? (
-                        <EventoUser evento={evento} />
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              ))
-            ) : (
-              <h2 className="qf-no-results">
-                No hay eventos activos en este momento.
-              </h2>
-            )}
-          </div>
+      <div style={{
+        width: isMobile ? "100%" : "80%",
+        height: "100%",
+        padding: 0,
+        display: "flex",
+        flexDirection: "column",
+        boxSizing: "border-box",
+        flex: 1,
+      }}>
+        {/* Header */}
+        <div className="qf-page-header">
+          <h1 className="qf-page-title">Eventos</h1>
+          <hr className="qf-separator" />
         </div>
 
-        {/* Aside: buscador + filtros */}
-        <aside className="qf-page-content__aside" style={{ padding: "0 16px" }}>
-          <div className="qf-search-box">
-            <Buscador setNombre={setNombre} />
+        {/* Contenido scrollable con dos columnas */}
+        <div style={{
+          flex: 1,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}>
+          <div style={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            gap: "20px",
+            alignItems: isMobile ? "stretch" : "flex-start",
+            height: isMobile ? "auto" : "100%",
+            overflow: isMobile ? "visible" : "hidden",
+          }}>
+            {/* Columna izquierda: listado de eventos */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
+              boxSizing: "border-box",
+            }}>
+              <div style={{ paddingLeft: "16px" }}>
+                <Breadcrumb items={breadcrumbItems} />
+              </div>
+
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                height: "100%",
+                width: "100%",
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}>
+                <div style={{
+                  minHeight: "100%",
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                  boxSizing: "border-box",
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}>
+                  {!loanding ? (
+                    <LoandingComponent />
+                  ) : Array.isArray(filteredEventos) && filteredEventos.length > 0 ? (
+                    rows.length > 0 &&
+                    rows.map((row, rowIndex) => (
+                      <div key={rowIndex} style={{ width: "100%" }}>
+                        {row.map((evento, index) => (
+                          <div
+                            key={index}
+                            style={{ marginBottom: "10px", width: "100%" }}
+                          >
+                            {evento !== null ? (
+                              <EventoUser evento={evento} />
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    ))
+                  ) : (
+                    <h2 style={{
+                      fontSize: "24px",
+                      color: "var(--qf-naranja)",
+                      textAlign: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "80%",
+                      width: "80%",
+                    }}>
+                      No hay eventos activos en este momento.
+                    </h2>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Columna derecha: buscador + filtros */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "35%" : "30%",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              alignItems: "center",
+              order: isMobile ? -1 : 0,
+            }}>
+              <div className="qf-search-box">
+                <Buscador setNombre={setNombre} />
+              </div>
+              <div className="qf-filter-box">
+                <FiltersEventosConsumidor
+                  setDistancia={setDistancia}
+                  setPreventa={setPreventa}
+                />
+              </div>
+            </div>
           </div>
-          <div className="qf-filter-box">
-            <FiltersEventosConsumidor
-              setDistancia={setDistancia}
-              setPreventa={setPreventa}
-            />
-          </div>
-        </aside>
+        </div>
       </div>
 
       <Footer />

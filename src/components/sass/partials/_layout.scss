@@ -327,6 +327,8 @@
   overflow-x: hidden;
   padding: 20px;
   padding-bottom: 80px; // espacio para footer fijo
+  display: flex;
+  flex-direction: column;
 }
 
 // ── Mobile (< 768px) — sidebar como drawer superpuesto ───────
@@ -461,9 +463,12 @@
   left: 10px;
 }
 
-// Sidebar colapsado: se desliza fuera
+// Sidebar colapsado: reducir el ancho a 0 para que flex reflowee el contenido
 .page-layout--collapsed .page-layout__sidebar {
-  transform: translateX(-100%);
+  width: 0;
+  overflow: hidden;
+  padding: 0;
+  transform: none;
 }
 
 // En mobile (< 768px) el sidebar-toggle-btn NO se muestra
@@ -486,11 +491,7 @@
   }
 
   // Cuando el sidebar está colapsado en desktop,
-  // el contenido ocupa todo el ancho
-  .page-layout--collapsed .page-layout__content {
-    margin-left: 0;
-    width: 100%;
-  }
+  // el contenido ocupa todo el ancho (flex lo maneja automáticamente)
 
   // Sidebar expandido en desktop: asegurar que se vea
   .page-layout__sidebar {
@@ -599,6 +600,8 @@
   padding: 20px;
   box-sizing: border-box;
   margin-bottom: 50px;
+  flex: 1;
+  align-content: start;
 }
 
 // Las cards de acción (perfil, cerrar sesión, carrito) ocupan
