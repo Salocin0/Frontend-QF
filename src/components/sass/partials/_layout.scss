@@ -593,9 +593,8 @@
 // ──────────────────────────────────────────────────────────
 
 .qf-dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  grid-template-rows: 1fr auto; // cards se estiran (1fr) + buttons mantienen su alto (auto)
+  display: flex;
+  flex-wrap: wrap;
   gap: 16px;
   width: 100%;
   padding: 20px;
@@ -603,6 +602,18 @@
   flex: 1;
   min-height: 0; // permite que flex funcione sin forzar overflow
   height: calc(100vh - 100px); // viewport - 20px padding-top - 80px padding-bottom
+  align-content: flex-start; // cards arriba, action buttons abajo
+}
+
+// Cada card (item directo) se estira con flex y tiene min-width razonable
+.qf-dashboard-grid > *:not(.qf-dashboard-action) {
+  flex: 1 1 180px; // grow + shrink + basis 180px
+  min-width: 180px;
+}
+
+// Action buttons container ocupa toda la fila
+.qf-dashboard-grid > .qf-dashboard-action {
+  flex: 0 0 100%; // 100% del ancho, sin grow ni shrink
 }
 
 // Las cards de acción (perfil, cerrar sesión, carrito) ocupan
