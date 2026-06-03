@@ -594,7 +594,7 @@
 
 .qf-dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   grid-template-rows: 1fr auto; // cards se estiran (1fr) + buttons mantienen su alto (auto)
   gap: 16px;
   width: 100%;

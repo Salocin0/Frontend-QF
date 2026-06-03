@@ -234,10 +234,10 @@ const Inicio = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
-      <div className="qf-dashboard-grid" style={{ 
-        gridTemplateColumns: isMobile 
-          ? "1fr" 
-          : "repeat(auto-fill, minmax(280px, 1fr))" 
+      <div className="qf-dashboard-grid" style={{
+        gridTemplateColumns: isMobile
+          ? "1fr"
+          : "repeat(auto-fit, minmax(280px, 1fr))"
       }}>
         {cardsData.map((card, index) => (
           <SafeCardInicio key={index} data={card} />
