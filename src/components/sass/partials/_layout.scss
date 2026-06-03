@@ -602,6 +602,7 @@
   box-sizing: border-box;
   margin-bottom: 50px;
   flex: 1;
+  min-height: calc(100vh - 100px); // forzar alto mínimo = viewport
 }
 
 // Las cards de acción (perfil, cerrar sesión, carrito) ocupan

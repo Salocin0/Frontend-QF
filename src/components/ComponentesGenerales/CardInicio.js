@@ -5,8 +5,8 @@ const CardInicio = ({ data }) => {
     card: {
       display: "flex",
       flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      alignItems: "stretch",
+      justifyContent: "flex-start",
       textDecoration: "none",
       color: "black",
       backgroundColor: "var(--qf-naranja)",
@@ -18,20 +18,26 @@ const CardInicio = ({ data }) => {
       height: "100%",
       minHeight: "180px",
       width: "100%",
+      overflow: "hidden",
     },
     link: {
       textDecoration: "none",
       color: "inherit",
       display: "flex",
       flexDirection: "column",
-      justifyContent: "space-between",
       height: "100%",
+      width: "100%",
     },
     imagen: {
       width: "100%",
-      height: "100%",
+      flex: 1, // la imagen toma todo el alto disponible
+      minHeight: 0, // permite que flex funcione con overflow
       objectFit: "cover",
-      borderRadius: "10px 10px 0 0",
+      display: "block",
+    },
+    textContainer: {
+      flexShrink: 0, // el texto mantiene su tamaño
+      padding: "0 8px 8px 8px",
     },
     title: {
       fontSize: "1.5rem",
@@ -52,7 +58,7 @@ const CardInicio = ({ data }) => {
   const cardContent = (
     <div style={styles.card}>
       <img src={imgSrc} alt={title} style={styles.imagen} />
-      <div>
+      <div style={styles.textContainer}>
         <h2 style={styles.title}>{title}</h2>
         <p style={styles.subtitle}>{subtitle}</p>
       </div>
