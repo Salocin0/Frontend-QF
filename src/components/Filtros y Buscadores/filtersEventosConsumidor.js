@@ -1,8 +1,6 @@
-﻿import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
-
-  // Estado local para los filtros de preventa
   const [localPreventa, setLocalPreventa] = useState({
     conPreventa: true,
     sinPreventa: true,
@@ -12,9 +10,8 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
     setPreventa(localPreventa);
   }, [localPreventa, setPreventa]);
 
-  // Manejo de cambios en los filtros
   const handleDistanciaChange = (value) => {
-    setDistancia(value); // Actualiza el estado en el componente padre
+    setDistancia(value);
   };
 
   const handlePreventaChange = (key, value) => {
@@ -22,84 +19,42 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
     setPreventa((prev) => ({ ...prev, [key]: value }));
   };
 
-  // Estilos
-  const styles = {
-    container: {
-      padding: "20px",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      borderRadius: "10px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      width: "100%",
-    },
-    header: {
-      fontSize: "20px",
-      fontWeight: "bold",
-      textAlign: "center",
-      marginBottom: "15px",
-    },
-    header2: {
-      fontSize: "16px",
-      fontWeight: "bold",
-      marginBottom: "15px",
-    },
-    divider: {
-      border: "none",
-      height: "1px",
-      backgroundColor: "var(--qf-bg-card)",
-      margin: "15px 0",
-    },
-    filterGroup: {
-      marginBottom: "15px",
-    },
-    label: {
-      display: "block",
-      marginBottom: "10px",
-      fontSize: "16px",
-      cursor: "pointer",
-    },
-    checkbox: {
-      marginRight: "10px",
-      cursor: "pointer",
-    },
-  };
-
   return (
-    <div style={styles.container}>
-      <h2 style={styles.header}>FILTROS</h2>
-      <hr style={styles.divider} />
+    <div className="qf-filter-panel">
+      <h2 className="qf-filter-panel__title">FILTROS</h2>
+      <hr className="qf-filter-panel__divider" />
 
-      {/* Filtro de Distancia */}
-      <h3 style={styles.header2}>DISTANCIA</h3>
-      <div style={styles.filterGroup}>
-        <label style={styles.label} htmlFor="menos5">
+      <h3 className="qf-filter-panel__section-title">DISTANCIA</h3>
+      <div className="qf-filter-panel__group">
+        <label className="qf-filter-panel__label" htmlFor="menos5">
           <input
             id="menos5"
             type="radio"
             name="distancia"
             value="5"
-            style={styles.checkbox}
+            className="qf-filter-panel__checkbox"
             onChange={() => handleDistanciaChange("5")}
           />
           Menos de 5 KM
         </label>
-        <label style={styles.label} htmlFor="menos25">
+        <label className="qf-filter-panel__label" htmlFor="menos25">
           <input
             id="menos25"
             type="radio"
             name="distancia"
             value="25"
-            style={styles.checkbox}
+            className="qf-filter-panel__checkbox"
             onChange={() => handleDistanciaChange("25")}
           />
           Menos de 25 KM
         </label>
-        <label style={styles.label} htmlFor="menos100">
+        <label className="qf-filter-panel__label" htmlFor="menos100">
           <input
             id="menos100"
             type="radio"
             name="distancia"
             value="100"
-            style={styles.checkbox}
+            className="qf-filter-panel__checkbox"
             defaultChecked
             onChange={() => handleDistanciaChange("100")}
           />
@@ -107,26 +62,25 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
         </label>
       </div>
 
-      <hr style={styles.divider} />
+      <hr className="qf-filter-panel__divider" />
 
-      {/* Filtro de Preventa */}
-      <h3 style={styles.header2}>PREVENTA</h3>
-      <div style={styles.filterGroup}>
-        <label style={styles.label} htmlFor="conPreventa">
+      <h3 className="qf-filter-panel__section-title">PREVENTA</h3>
+      <div className="qf-filter-panel__group">
+        <label className="qf-filter-panel__label" htmlFor="conPreventa">
           <input
             id="conPreventa"
             type="checkbox"
-            style={styles.checkbox}
+            className="qf-filter-panel__checkbox"
             checked={localPreventa.conPreventa}
             onChange={(e) => handlePreventaChange("conPreventa", e.target.checked)}
           />
           Con Preventa
         </label>
-        <label style={styles.label} htmlFor="sinPreventa">
+        <label className="qf-filter-panel__label" htmlFor="sinPreventa">
           <input
             id="sinPreventa"
             type="checkbox"
-            style={styles.checkbox}
+            className="qf-filter-panel__checkbox"
             checked={localPreventa.sinPreventa}
             onChange={(e) => handlePreventaChange("sinPreventa", e.target.checked)}
           />

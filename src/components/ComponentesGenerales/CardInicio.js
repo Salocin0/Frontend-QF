@@ -16,7 +16,8 @@ const CardInicio = ({ data }) => {
       transition: "transform 0.3s, boxShadow 0.3s",
       cursor: "pointer",
       height: "100%",
-      gridArea: data.gridArea,
+      minHeight: "180px",
+      width: "100%",
     },
     link: {
       textDecoration: "none",

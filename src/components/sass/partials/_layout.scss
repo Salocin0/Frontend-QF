@@ -9,6 +9,16 @@
 
 @import './theme.scss';
 
+// ── Variables CSS de layout (seteadas desde :root en el HTML) ──
+// Se definen en index.js mediante setProperty para que JS pueda
+// leerlas y modificarlas (sidebar collapse).
+// Valores por defecto por si no están seteadas:
+:root {
+  --sidebar-width: 250px;
+  --sidebar-collapsed-width: 0px;
+  --sidebar-transition: 0.3s ease;
+}
+
 // ── Página con Sidebar ──────────────────────────────────────
 
 // Contenedor raíz de todas las páginas internas (con sidebar)
@@ -395,5 +405,301 @@
 
   .sidebar-overlay {
     display: none;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// SIDEBAR COLAPSABLE (Fase 1 — refactor responsive)
+// ═══════════════════════════════════════════════════════════
+//
+// El PageLayout ahora soporta un estado "collapsed" que permite
+// ocultar el sidebar en desktop (no solo en mobile).
+//
+// Mecanismo:
+//   1. PageLayout agrega clase `page-layout--collapsed` al contenedor
+//   2. El sidebar se transforma fuera de la vista (translateX)
+//   3. El contenido ocupa el 100% del ancho
+//   4. Un botón toggle es visible en desktop para colapsar/expandir
+//
+// Los estilos EXISTENTES de mobile no se tocan — solo se agregan
+// los estados collapsed para desktop.
+// ──────────────────────────────────────────────────────────────
+
+// Botón toggle para colapsar sidebar (visible en desktop también)
+.sidebar-toggle-btn {
+  position: fixed;
+  top: 10px;
+  left: calc(var(--sidebar-width) + 10px);
+  z-index: 1050;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background-color: var(--qf-naranja);
+  color: #000000;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: left 0.3s ease, background-color 0.2s;
+  padding: 0;
+  line-height: 1;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:active {
+    background-color: var(--qf-orange-dark);
+  }
+}
+
+// Cuando el sidebar está colapsado, mover el botón más a la izquierda
+.page-layout--collapsed .sidebar-toggle-btn {
+  left: 10px;
+}
+
+// Sidebar colapsado: se desliza fuera
+.page-layout--collapsed .page-layout__sidebar {
+  transform: translateX(-100%);
+}
+
+// En mobile (< 768px) el sidebar-toggle-btn NO se muestra
+// (porque ya está el hamburger-btn)
+@media screen and (max-width: 767px) {
+  .sidebar-toggle-btn {
+    display: none !important;
+  }
+}
+
+// En desktop el hamburger-btn se oculta (como antes),
+// y el sidebar-toggle-btn se muestra
+@media screen and (min-width: 768px) {
+  .hamburger-btn {
+    display: none;
+  }
+
+  .sidebar-overlay {
+    display: none;
+  }
+
+  // Cuando el sidebar está colapsado en desktop,
+  // el contenido ocupa todo el ancho
+  .page-layout--collapsed .page-layout__content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  // Sidebar expandido en desktop: asegurar que se vea
+  .page-layout__sidebar {
+    transform: translateX(0);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// CLASES DE LAYOUT REUTILIZABLES (Fase 3+)
+// ═══════════════════════════════════════════════════════════
+//
+// Para reemplazar el patrón repetido de:
+//   <div style={{ display: 'flex', width: '70%' }}>...
+//   <div style={{ width: '30%' }}>...
+//
+// Uso:
+//   <div className="qf-page-content">
+//     <div className="qf-page-content__main">...contenido...</div>
+//     <aside className="qf-page-content__aside">...filtros...</aside>
+//   </div>
+// ──────────────────────────────────────────────────────────
+
+.qf-page-content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+
+  // En mobile: apilar contenido y aside
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+}
+
+.qf-page-content__main {
+  flex: 1;
+  min-width: 0; // evita overflow en flex
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.qf-page-content__aside {
+  width: 320px;
+  min-width: 320px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  // En mobile: pasar a full-width y aparecer arriba
+  @media screen and (max-width: 767px) {
+    width: 100%;
+    min-width: 0;
+    order: -1; // aparece antes del contenido principal
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 991px) {
+    width: 280px;
+    min-width: 280px;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// GRID DE CARDS RESPONSIVO (Fase 2+)
+// ═══════════════════════════════════════════════════════════
+//
+// Reemplaza los gridTemplateAreas hardcodeados y las filas
+// manuales. Las cards se reordenan solas según el ancho.
+// ──────────────────────────────────────────────────────────
+
+.qf-grid-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.qf-grid-cards--2cols {
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+}
+
+.qf-grid-cards--compact {
+  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+// ═══════════════════════════════════════════════════════════
+// INICIO DASHBOARD (Fase 2)
+// ═══════════════════════════════════════════════════════════
+//
+// Grid responsivo para las cards del dashboard Inicio.js
+// Mantiene la misma distribución visual pero se adapta al ancho.
+// ──────────────────────────────────────────────────────────
+
+.qf-dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-bottom: 50px;
+}
+
+// Las cards de acción (perfil, cerrar sesión, carrito) ocupan
+// todo el ancho del grid
+.qf-dashboard-grid .qf-dashboard-action {
+  grid-column: 1 / -1;
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILTROS Y BUSCADORES (Fase 5)
+// ═══════════════════════════════════════════════════════════
+//
+// Clases compartidas para los paneles de filtros
+// ──────────────────────────────────────────────────────────
+
+.qf-filter-panel {
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background-color: var(--qf-bg-secondary);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.qf-filter-panel__title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+  color: var(--qf-text-primary);
+}
+
+.qf-filter-panel__section-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: var(--qf-text-primary);
+}
+
+.qf-filter-panel__divider {
+  border: none;
+  height: 1px;
+  background-color: var(--qf-bg-card);
+  margin: 15px 0;
+}
+
+.qf-filter-panel__group {
+  margin-bottom: 15px;
+}
+
+.qf-filter-panel__label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--qf-text-primary);
+}
+
+.qf-filter-panel__checkbox {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+// Buscador compartido
+.qf-search-panel {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  background-color: var(--qf-bg-secondary);
+  box-sizing: border-box;
+}
+
+.qf-search-panel__input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--qf-text-muted);
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  background-color: var(--qf-bg-main);
+  color: var(--qf-text-primary);
+  box-sizing: border-box;
+}
+
+.qf-search-panel__button {
+  padding: 10px 15px;
+  background-color: var(--qf-green);
+  color: var(--qf-text-primary);
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  width: 100%;
+
+  &:hover {
+    opacity: 0.85;
   }
 }

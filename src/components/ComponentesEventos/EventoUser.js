@@ -1,10 +1,13 @@
-﻿import React from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import logoevento from "./../img/logoevento.webp";
 import { toast } from "react-toastify";
+import useBreakpoint from "../../useBreakpoint";
 
 const EventoUser = ({ evento }) => {
   const navigate = useNavigate();
+  const { isMobile } = useBreakpoint();
+
   const calcularTiempoRestante = (fecha) => {
     const ahora = new Date();
     const diferencia = fecha - ahora;
@@ -75,15 +78,15 @@ const EventoUser = ({ evento }) => {
     cardBody: {
       flex: 1,
       display: "flex",
-      flexDirection: "row",
-      gap: "12px",
-      alignItems: "center",
+      flexDirection: isMobile ? "column" : "row",
+      gap: isMobile ? "8px" : "12px",
+      alignItems: isMobile ? "stretch" : "center",
       cursor: "pointer",
       padding: "10px 18px",
     },
     imageContainer: {
-      width: "140px",
-      minWidth: "140px",
+      width: isMobile ? "100%" : "140px",
+      minWidth: isMobile ? "auto" : "140px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -92,7 +95,9 @@ const EventoUser = ({ evento }) => {
     },
     img: {
       width: "100%",
-      maxWidth: "110px",
+      maxWidth: isMobile ? "200px" : "110px",
+      height: isMobile ? "120px" : "auto",
+      objectFit: "cover",
       borderRadius: "8px",
       marginLeft: "0",
       boxShadow: "none",
@@ -146,10 +151,12 @@ const EventoUser = ({ evento }) => {
     },
     estadoContainer: {
       display: "flex",
-      position: "absolute",
-      top: "10px",
-      right: "10px",
-      width: "180px",
+      position: isMobile ? "relative" : "absolute",
+      top: isMobile ? "0" : "10px",
+      right: isMobile ? "0" : "10px",
+      width: isMobile ? "100%" : "180px",
+      marginBottom: isMobile ? "8px" : "0",
+      justifyContent: isMobile ? "center" : "flex-start",
     },
     preventa: {
       fontSize: "16px",
@@ -191,7 +198,7 @@ const EventoUser = ({ evento }) => {
                 alt="Logo del Evento"
                 style={styles.img}
                 onError={(e) => {
-                  e.target.onerror = null; // Previene bucles infinitos si el placeholder también falla
+                  e.target.onerror = null;
                   e.target.src = logoevento;
                 }}
               />

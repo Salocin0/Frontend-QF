@@ -476,33 +476,59 @@
 
 ---
 
-## 14. PRIORIDAD DE IMPLEMENTACIÓN
+## 14. ESTADO DE IMPLEMENTACIÓN
 
-### Fase 1 — Crítico (pantallas que más se rompen en mobile)
-1. `PageLayout` + `Sidebar` — ya tiene drawer, auditar consistencia
-2. `LandingPage` — es la primera vista
-3. `Login` / `ProcesoRegistro` — auth flow
-4. `Inicio` — dashboard principal
-5. `ListadoEventosUsers` — listado más usado
-6. `Carrito` — flujo de compra
+> ✅ = Completado · 🔄 = En progreso · ⏳ = Pendiente
 
-### Fase 2 — Alto (listados y forms principales)
-7. `ListadoPuestosUser` / `ListadoPuestosEncargado`
-8. `ListadoProductoUser` / `ListadoProducto`
-9. `ConsultarEvento` / `ConsultarPuesto` / `ConsultarProducto`
-10. `ListadoPedidos` / `ListadoPedidosEncargado` / `ListadoPedidosRepartidor`
-11. `RegistrarEvento` (wizard completo)
+### ✅ Fase 0+1 — Fundación CSS + PageLayout (sidebar colapsable)
+- `_layout.scss` — nuevas clases CSS: `.qf-page-content`, `.qf-grid-cards`, `.qf-filter-panel`, `.qf-search-panel`, etc.
+- `PageLayout.js` — sidebar colapsable en desktop con toggle (chevron), drawer en mobile
 
-### Fase 3 — Medio (paneles y perfiles)
-12. `PanelEncargado` / `PanelProductor`
-13. `ConsultarUsuarioPrueba` (perfil)
-14. `Notificaciones`
-15. `KanbanBoard`
+### ✅ Fase 2 — Inicio (`/inicio`)
+- `Inicio.js` — grid responsivo con `auto-fill, minmax(280px, 1fr)`
+- `CardInicio.js` — cards se reordenan solas según el viewport
 
-### Fase 4 — Bajo (secundarios)
-16. Todos los formularios de registro de rol
-17. `AsociarRepartidorAEvento` / `AsociacionesR`
-18. `AsociacionesEPC`
-19. `Preventa` / `VerSolicitudesEvento`
-20. `DocumentUpload`
-21. `FormDinamicoRestricciones`
+### ✅ Fase 3 — Listado de eventos
+- `ListadoEventoUsers.js` — layout estandarizado con `.qf-page-content__main` + `__aside`
+- `ListadoEventosProductor.js` — mismo patrón
+
+### ✅ Fase 4 — Cards responsive
+- `EventoUser.js` — imagen adaptable, layout se apila en mobile
+- `EventoProductor.js` — imagen + botones full-width en mobile
+
+### ✅ Fase 5 — Filtros y buscadores estandarizados
+- `filtersEventosConsumidor.js` — migrado a clases CSS
+- `filtersPuestosConsumidor.js` — migrado a clases CSS
+- `BuscadorEventosConsumidor.js` — migrado a clases CSS
+- `BuscadorProductoConsumidor.js` — migrado a clases CSS
+- `BuscadorPuestosConsumidor.js` — migrado a clases CSS
+
+### ⏳ Próximas fases (pendientes)
+#### Fase 6 — Listado de puestos
+- `ListadoPuestosUser.js`
+- `ListadoPuestosEncargado.js`
+
+#### Fase 7 — Productos
+- `ListadoProductoUser.js`
+- `ListadoProducto.js`
+- `ConsultarProducto.js`
+- `RegistrarProductos.js`
+- `Producto.js` / `ProductoUser.js` / `ProductoDeshabilitado.js`
+
+#### Fase 8 — Carrito y pedidos
+- `Carrito.js`
+- `ListadoPedidos.js`
+- `ListadoPedidosEncargado.js`
+- `ListadoPedidosRepartidor.js`
+
+#### Fase 9 — Paneles y perfiles
+- `PanelEncargado.js` / `PanelProductor.js`
+- `ConsultarUsuarioPrueba.js` (perfil)
+- `Notificaciones.js`
+- `KanbanBoard.js`
+
+#### Fase 10 — Restantes
+- LandingPage, Login, ProcesoRegistro
+- ConsultarEvento, ConsultarPuesto
+- Preventa, VerSolicitudesEvento
+- Formularios de registro de rol (AdquirirNuevoRol*, Asociaciones, etc.)

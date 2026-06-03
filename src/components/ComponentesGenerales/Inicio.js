@@ -1,5 +1,4 @@
 import CardInicio from "./CardInicio";
-import Sidebar from "./Sidebar";
 import PageLayout from "./PageLayout";
 import { useState, useEffect } from "react";
 import pedidoimg from "../img/comida-rapida-casera.jpg";
@@ -20,7 +19,6 @@ const Inicio = () => {
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
   const { isMobile } = useBreakpoint();
-
 
   useEffect(() => {
     const sessionId = sessionStorage.getItem("sessionId");
@@ -53,7 +51,6 @@ const Inicio = () => {
   }, []);
 
   const handleLogout = () => {
-    //TODO: Implementar funcionalidad de logout
     navigate("/login");
   };
 
@@ -65,118 +62,145 @@ const Inicio = () => {
     navigate("/carrito");
   };
 
-  const getContentStyles = (tipoUsuario) => {
-    switch (tipoUsuario) {
-      case "repartidor":
-        return {
-          flex: 1,
-          padding: "20px",
-          marginBottom: "50px",
-          display: "grid",
-          gridTemplateColumns: "repeat(16, 1fr)",
-          gridTemplateRows: "repeat(10, 1fr)",
-          gap: "10px",
-          gridTemplateAreas: `
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos misasociaciones misasociaciones misasociaciones misasociaciones pedidosasignados pedidosasignados pedidosasignados pedidosasignados"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos carrito carrito carrito perfil perfil perfil perfil perfil"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos carrito carrito carrito cerrarSesion cerrarSesion cerrarSesion cerrarSesion cerrarSesion"
-          `,
-        };
-      case "productor":
-        return {
-          flex: 1,
-          padding: "20px",
-          marginBottom: "50px",
-          display: "grid",
-          gridTemplateColumns: "repeat(16, 1fr)",
-          gridTemplateRows: "repeat(10, 1fr)",
-          gap: "10px",
-          gridTemplateAreas: `
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos miseventos miseventos miseventos miseventos estadisticas estadisticas estadisticas estadisticas"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos carrito carrito carrito perfil perfil perfil perfil perfil"
-            "eventos eventos eventos eventos pedidos pedidos pedidos pedidos carrito carrito carrito cerrarSesion cerrarSesion cerrarSesion cerrarSesion cerrarSesion"
-          `,
-        };
-      case "encargado":
-        return {
-          flex: 1,
-          padding: "20px",
-          marginBottom: "50px",
-          display: "grid",
-          gridTemplateColumns: "repeat(5, 1fr)",
-          gridTemplateRows: "repeat(10, 1fr)",
-          gap: "10px",
-          gridTemplateAreas: `
-            "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos misasociaciones mispuestos estadisticas"
-            "eventos pedidos carrito perfil perfil"
-            "eventos pedidos carrito cerrarSesion cerrarSesion"
-          `,
-        };
-      default:
-        return {
-          flex: 1,
-          padding: "20px",
-          marginBottom: "50px",
-          display: "grid",
-          gridTemplateColumns: "repeat(5, 1fr)",
-          gridTemplateRows: "repeat(10, 1fr)",
-          gap: "10px",
-          gridTemplateAreas: `
-            "eventos pedidos productores puestos repartidores"
-            "eventos pedidos productores puestos repartidores"
-            "eventos pedidos productores puestos repartidores"
-            "eventos pedidos productores puestos repartidores"
-            "eventos pedidos productores puestos repartidores"
-            "eventos pedidos productores puestos repartidores"
-            "eventos pedidos productores puestos repartidores"
-            "eventos pedidos productores puestos repartidores"
-            "eventos pedidos carrito perfil perfil"
-            "eventos pedidos carrito cerrarSesion cerrarSesion"
-          `,
-        };
-    }
-  };
-
-  // Usar el tipo de usuario para obtener estilos
-  const desktopStyles = getContentStyles(session?.tipoUsuario);
-  // Override responsive para mobile: grilla vertical de 1 columna
-  const contentStyles = isMobile
-    ? {
-        ...desktopStyles,
-        display: "flex",
-        flexDirection: "column",
-        gap: "12px",
-        padding: "12px",
-        marginBottom: "60px",
-      }
-    : desktopStyles;
-
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   const togglePanel = () => {
     setIsPanelOpen((prevState) => !prevState);
   };
+
+  const cardsData = [
+    {
+      to: "/Listado-eventos",
+      imgSrc: eventosimg2,
+      title: "Eventos",
+      subtitle: "Busca tus eventos favoritos",
+    },
+    {
+      to: "/pedidos",
+      imgSrc: pedidoimg,
+      title: "Pedidos",
+      subtitle: "¿Quieres ver tus pedidos?",
+    },
+  ];
+
+  if (session?.tipoUsuario === "consumidor") {
+    cardsData.push(
+      {
+        to: "/adquirir-nuevo-rolPE",
+        imgSrc: productor,
+        title: "Productores",
+        subtitle: "Quickfood para tus eventos",
+      },
+      {
+        to: "/adquirir-nuevo-rolEPC",
+        imgSrc: encargado,
+        title: "Puestos",
+        subtitle: "Quickfood para tus puestos",
+      },
+      {
+        to: "/adquirir-nuevo-rolR",
+        imgSrc: repartidor,
+        title: "Repartidores",
+        subtitle: "Quickfood para repartidores",
+      }
+    );
+  }
+
+  if (session?.tipoUsuario === "repartidor") {
+    cardsData.push(
+      {
+        to: "/asociarRepartidorAEvento",
+        imgSrc: asociarEvento,
+        title: "Asociarse a un evento",
+        subtitle: "¿Quieres asociarte a un evento?",
+      },
+      {
+        to: "/pedidos-asignados",
+        imgSrc: repartidor,
+        title: "Pedidos asignados",
+        subtitle: "Ver tus pedidos asignados",
+      }
+    );
+  }
+
+  if (session?.tipoUsuario === "productor") {
+    cardsData.push(
+      {
+        to: "/listado-eventos-productor",
+        imgSrc: asociarEvento,
+        title: "Mis Eventos",
+        subtitle: "ver mis eventos",
+      },
+      {
+        to: "/grafica-productor",
+        imgSrc: estadisticas,
+        title: "Estadisticas",
+        subtitle: "Ver tus estadisticas",
+      }
+    );
+  }
+
+  if (session?.tipoUsuario === "encargado") {
+    cardsData.push(
+      {
+        to: "/listado-puestos-encargado",
+        imgSrc: encargado,
+        title: "Mis puestos",
+        subtitle: "ver mis puestos",
+      },
+      {
+        to: "/misAsociacionesEPC",
+        imgSrc: asociarEvento,
+        title: "Mis asociaciones",
+        subtitle: "Ver tus asociaciones",
+      },
+      {
+        to: "/grafica-encargado",
+        imgSrc: estadisticas,
+        title: "Estadisticas",
+        subtitle: "Ver tus estadisticas",
+      }
+    );
+  }
+
+  const actionButtonsData = [
+    {
+      title: "Mi Perfil",
+      icon: <FaUser />,
+      onClick: handleProfile,
+      className: "qf-dashboard-action",
+      style: {
+        backgroundColor: "var(--qf-naranja)",
+        padding: "10px",
+        borderRadius: "10px",
+        cursor: "pointer",
+      },
+    },
+    {
+      title: "Cerrar Sesión",
+      icon: <FaSignOutAlt />,
+      onClick: handleLogout,
+      className: "qf-dashboard-action",
+      style: {
+        backgroundColor: "var(--qf-rojo)",
+        padding: "10px",
+        borderRadius: "10px",
+        cursor: "pointer",
+      },
+    },
+    {
+      title: "Carrito",
+      icon: <FaShoppingCart />,
+      onClick: handleCart,
+      className: "qf-dashboard-action",
+      style: {
+        backgroundColor: "var(--qf-naranja)",
+        padding: "10px",
+        borderRadius: "10px",
+        cursor: "pointer",
+      },
+    },
+  ];
 
   // Verificación de seguridad para evitar renderizar componentes undefined
   const SafeCardInicio = (props) => {
@@ -191,13 +215,6 @@ const Inicio = () => {
       return <ActionButton {...props} />;
     } else {
       return <div>Error: ActionButton no cargó</div>;
-    }
-  };
-  const SafeSidebar = (props) => {
-    if (typeof Sidebar === 'function') {
-      return <Sidebar {...props} />;
-    } else {
-      return <div>Error: Sidebar no cargó</div>;
     }
   };
   const SafePanel = (props) => {
@@ -215,189 +232,36 @@ const Inicio = () => {
     }
   };
 
-
-  const cardsData = [
-    {
-      to: "/Listado-eventos",
-      imgSrc: eventosimg2,
-      title: "Eventos",
-      subtitle: "Busca tus eventos favoritos",
-      gridArea: "eventos",
-    },
-    {
-      to: "/pedidos",
-      imgSrc: pedidoimg,
-      title: "Pedidos",
-      subtitle: "¿Quieres ver tus pedidos?",
-      gridArea: "pedidos",
-    },
-  ];
-
-  if (session?.tipoUsuario === "consumidor") {
-    cardsData.push(
-      {
-        to: "/adquirir-nuevo-rolPE",
-        imgSrc: productor,
-        title: "Productores",
-        subtitle: "Quickfood para tus eventos",
-        gridArea: "productores",
-      },
-      {
-        to: "/adquirir-nuevo-rolEPC",
-        imgSrc: encargado,
-        title: "Puestos",
-        subtitle: "Quickfood para tus puestos",
-        gridArea: "puestos",
-      },
-      {
-        to: "/adquirir-nuevo-rolR",
-        imgSrc: repartidor,
-        title: "Repartidores",
-        subtitle: "Quickfood para repartidores",
-        gridArea: "repartidores",
-      }
-    );
-  }
-
-  if (session?.tipoUsuario === "repartidor") {
-    cardsData.push(
-      {
-        to: "/asociarRepartidorAEvento",
-        imgSrc: asociarEvento,
-        title: "Asociarse a un evento",
-        subtitle: "¿Quieres asociarte a un evento?",
-        gridArea: "misasociaciones",
-      },
-      {
-        to: "/pedidos-asignados",
-        imgSrc: repartidor,
-        title: "Pedidos asignados",
-        subtitle: "Ver tus pedidos asignados",
-        gridArea: "pedidosasignados",
-      }
-    );
-  }
-
-  if (session?.tipoUsuario === "productor") {
-    cardsData.push(
-      {
-        to: "/listado-eventos-productor",
-        imgSrc: asociarEvento,
-        title: "Mis Eventos",
-        subtitle: "ver mis eventos",
-        gridArea: "miseventos",
-      },
-      {
-        to: "/grafica-productor",
-        imgSrc: estadisticas,
-        title: "Estadisticas",
-        subtitle: "Ver tus estadisticas",
-        gridArea: "estadisticas",
-      }
-    );
-  }
-
-  if (session?.tipoUsuario === "encargado") {
-    cardsData.push(
-      {
-        to: "/listado-puestos-encargado",
-        imgSrc: encargado,
-        title: "Mis puestos",
-        subtitle: "ver mis puestos",
-        gridArea: "mispuestos",
-      },
-      {
-        to: "/misAsociacionesEPC",
-        imgSrc: asociarEvento,
-        title: "Mis asociaciones",
-        subtitle: "Ver tus asociaciones",
-        gridArea: "misasociaciones",
-      },
-      {
-        to: "/grafica-encargado",
-        imgSrc: estadisticas,
-        title: "Estadisticas",
-        subtitle: "Ver tus estadisticas",
-        gridArea: "estadisticas",
-      }
-    );
-  }
-
-  const actionButtonsData = [
-    {
-      title: "Mi Perfil",
-      icon: <FaUser />,
-      onClick: handleProfile,
-      style: {
-        gridArea: "perfil",
-        backgroundColor: "var(--qf-naranja)",
-        padding: "10px",
-        borderRadius: "10px",
-        cursor: "pointer",
-      },
-    },
-    {
-      title: "Cerrar Sesión",
-      icon: <FaSignOutAlt />,
-      onClick: handleLogout,
-      style: {
-        gridArea: "cerrarSesion",
-        backgroundColor: "var(--qf-rojo)",
-        padding: "10px",
-        borderRadius: "10px",
-        cursor: "pointer",
-      },
-    },
-    {
-      title: "Carrito",
-      icon: <FaShoppingCart />,
-      onClick: handleCart,
-      style: {
-        gridArea: "carrito",
-        backgroundColor: "var(--qf-naranja)",
-        padding: "10px",
-        borderRadius: "10px",
-        cursor: "pointer",
-      },
-    },
-  ];
-
-  const styles = {
-    profileButton: {
-      gridArea: "perfil",
-      backgroundColor: "var(--qf-naranja)",
-      padding: "10px",
-      textAlign: "center",
-      borderRadius: "5px",
-      cursor: "pointer",
-    },
-    logoutButton: {
-      gridArea: "cerrarSesion",
-      backgroundColor: "var(--qf-rojo)",
-      padding: "10px",
-      textAlign: "center",
-      borderRadius: "5px",
-      cursor: "pointer",
-    },
-    chatbotButton: {
-      gridArea: "chatbot",
-      backgroundColor: "var(--qf-rosa)",
-      padding: "10px",
-      textAlign: "center",
-      borderRadius: "5px",
-      cursor: "pointer",
-    },
-  };
-
   return (
     <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
-      <div style={contentStyles}>
+      <div className="qf-dashboard-grid" style={{ 
+        gridTemplateColumns: isMobile 
+          ? "1fr" 
+          : "repeat(auto-fill, minmax(280px, 1fr))" 
+      }}>
         {cardsData.map((card, index) => (
           <SafeCardInicio key={index} data={card} />
         ))}
-        {actionButtonsData.map((button, index) => (
-          <SafeActionButton key={index} {...button} />
-        ))}
+        {/* Action buttons ocupan todo el ancho como una fila separada */}
+        <div style={{ 
+          gridColumn: "1 / -1", 
+          display: "flex", 
+          gap: "12px", 
+          flexWrap: "wrap",
+          marginTop: "10px",
+          flexDirection: isMobile ? "column" : "row" 
+        }}>
+          {actionButtonsData.map((btn, index) => (
+            <div key={index} style={{ flex: isMobile ? "none" : 1 }}>
+              <SafeActionButton
+                title={btn.title}
+                icon={btn.icon}
+                onClick={btn.onClick}
+                style={btn.style}
+              />
+            </div>
+          ))}
+        </div>
       </div>
       {isPanelOpen && <SafePanel onClose={togglePanel} />}
       <SafeFooter />

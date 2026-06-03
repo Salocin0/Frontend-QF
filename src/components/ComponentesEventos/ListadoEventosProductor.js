@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import EventoProductor from "./EventoProductor";
@@ -71,7 +71,6 @@ const ListadoEventosProductor = () => {
     return estado.startsWith("EnPreparacion") ? "EnPreparacion" : estado;
   };
 
-  // helper group for estados
   const estadoGroup = {
     nombre: 'estado',
     opciones: Array.from(
@@ -82,7 +81,6 @@ const ListadoEventosProductor = () => {
     })),
   };
 
-  // compute filtered list
   const filteredEventos = eventos.filter((evento) => {
     const matchesSearch = searchTerm
       ? evento.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -93,94 +91,6 @@ const ListadoEventosProductor = () => {
     return matchesSearch && matchesState;
   });
 
-  const styles = {
-    colContent: {
-      marginLeft: isMobile ? "0" : "20%",
-      width: "calc(100% - 20%)",
-      height: "100%",
-      overflowY: "auto",
-      msOverflowStyle: "none",
-      scrollbarWidth: "none",
-      WebkitScrollbar: { display: "none" },
-    },
-    container: {
-      paddingBottom: "60px",
-      paddingLeft: "20px",
-      paddingRight: "20px",
-      width: "100%",
-      flexDirection: "column",
-    },
-    sectionTitle: {
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "1rem",
-      paddingTop: "2rem",
-      width: "100%",
-      color: "var(--qf-naranja)",
-    },
-    breadcrumbWrapper: {
-      width: "Calc(100%)",
-      paddingTop: "0px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    filtersContainer: {
-      width: "320px",
-      minWidth: "320px",
-      alignSelf: "flex-start",
-      height: "auto",
-      borderRadius: "8px",
-      padding: "20px",
-      paddingTop: "10px",
-      marginLeft: "20px",
-      marginRight: "20px",
-      marginTop: "0",
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: `1px solid var(--qf-naranja)`,
-    },
-    searchFilterContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
-      flex: "none",
-      maxWidth: "100%",
-      marginTop: "0",
-      width: "100%",
-    },
-    agregarEventoButton: {
-      backgroundColor: "var(--qf-green)",
-      color: "white",
-      padding: "15px 20px",
-      borderRadius: "10px",
-      border: "none",
-      cursor: "pointer",
-      width: "100%",
-      fontSize: "16px",
-      fontWeight: "bold",
-      marginTop: "20px",
-    },
-    contenedorGrid: {
-      textAlign: "center",
-      padding: "40px 20px",
-      margin: "40px",
-    },
-    descripcion: {
-      marginBottom: "20px",
-      fontSize: "18px",
-      color: "var(--qf-text-primary)",
-    },
-    linkAgregarEvento: {
-      textDecoration: "none",
-      backgroundColor: "var(--qf-naranja)",
-      padding: "10px 20px",
-      color: "var(--qf-text-primary)",
-      borderRadius: "5px",
-      fontWeight: "bold",
-      fontSize: "18px",
-      transition: "background-color 0.3s",
-      display: "inline-block",
-    },
-  };
-
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Eventos", url: "/listado-eventos-productor" },
@@ -188,74 +98,96 @@ const ListadoEventosProductor = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.colContent}>
-          <div style={styles.sectionTitle}>
-            <h1>Eventos</h1>
+      <div className="qf-page-content" style={{ padding: isMobile ? "0 12px" : "0", height: "100%" }}>
+        {/* Columna principal */}
+        <div className="qf-page-content__main">
+          <div className="qf-page-header">
+            <h1 className="qf-page-title">Eventos</h1>
+            <hr className="qf-separator" />
           </div>
-          <hr style={{ color: "var(--qf-naranja)" }} />
-          {/* main content with sidebar filters */}
-          <div style={{ display: 'flex', width: 'calc(100% - 40px)', alignItems: 'flex-start', marginRight: '20px' }}>
-            <div style={{ flex: '0 0 calc(70% - 0px)', width: 'calc(70% - 0px)' }}>
-              <div style={styles.breadcrumbWrapper}>
-                <Breadcrumb
-                  items={breadcrumbItems}
+
+          <div style={{ paddingLeft: "16px" }}>
+            <Breadcrumb items={breadcrumbItems} />
+          </div>
+
+          <div className="qf-scrollable" style={{ padding: "0 16px", paddingBottom: "60px" }}>
+            {isLoading || !user ? (
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
+                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
+              </div>
+            ) : filteredEventos.length > 0 ? (
+              filteredEventos.map((evento, index) => (
+                <EventoProductor
+                  key={index}
+                  evento={evento}
+                  recargarComponente={recargarComponente}
+                />
+              ))
+            ) : (
+              <div style={{ textAlign: "center", padding: "40px 20px", margin: "40px" }}>
+                <div style={{ fontSize: "1.5rem", color: "var(--qf-naranja)" }}>
+                  <h2>Eventos</h2>
+                </div>
+                <div style={{ marginBottom: "20px", fontSize: "18px", color: "var(--qf-text-primary)" }}>
+                  <p>
+                    Con Quickfood, crea tu evento para hacerlo mejor. Descubre
+                    nuestras increíbles características y ofrece una experiencia
+                    única a tus consumidores.
+                  </p>
+                </div>
+                <Link
+                  to={`/registrar-evento`}
                   style={{
-                    width: "Calc(100% - 40px)",
-                    marginLeft: "Calc(20px)",
+                    textDecoration: "none",
+                    backgroundColor: "var(--qf-naranja)",
+                    padding: "10px 20px",
+                    color: "var(--qf-text-primary)",
+                    borderRadius: "5px",
+                    fontWeight: "bold",
+                    fontSize: "18px",
+                    transition: "background-color 0.3s",
+                    display: "inline-block",
                   }}
-                />
+                >
+                  Crear Evento
+                </Link>
               </div>
-              <div style={styles.container}>
-                {isLoading || !user ? (
-                  <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
-                    <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-                  </div>
-                ) : filteredEventos.length > 0 ? (
-                  filteredEventos.map((evento, index) => (
-                    <EventoProductor
-                      key={index}
-                      evento={evento}
-                      recargarComponente={recargarComponente}
-                    />
-                  ))
-                ) : (
-                  <div style={styles.contenedorGrid}>
-                    <div style={{ fontSize: "1.5rem", color: "var(--qf-naranja)" }}>
-                      <h2>Eventos</h2>
-                    </div>
-                    <div style={styles.descripcion}>
-                      <p>
-                        Con Quickfood, crea tu evento para hacerlo mejor. Descubre
-                        nuestras increíbles características y ofrece una experiencia
-                        única a tus consumidores.
-                      </p>
-                    </div>
-                    <Link to={`/registrar-evento`} style={styles.linkAgregarEvento}>
-                      Crear Evento
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* sidebar */}
-            <div style={{ ...styles.filtersContainer, flex: '0 0 calc(30% - 0px)', width: 'calc(30% - 0px)', paddingTop: "10px" }}>
-              <div style={{ ...styles.searchFilterContainer, marginTop: '10px' }}>
-                <Buscador
-                  placeholder="Buscar eventos..."
-                  onBuscar={setSearchTerm}
-                  style={{ display: 'flex', width: '100%' }}
-                />
-                <Filtros
-                  gruposFiltros={[estadoGroup]}
-                  onFiltrar={(f) => setFilterState(f.estado || '')}
-                  titulo="ESTADOS"
-                />
-                <button onClick={agregarNuevo} style={styles.agregarEventoButton}>
-                  Agregar Evento
-                </button>
-              </div>
-            </div>
+            )}
+          </div>
         </div>
+
+        {/* Aside: buscador + filtros */}
+        <aside className="qf-page-content__aside" style={{ padding: "16px" }}>
+          <div className="qf-search-box">
+            <Buscador
+              placeholder="Buscar eventos..."
+              onBuscar={setSearchTerm}
+            />
+          </div>
+          <div className="qf-filter-box">
+            <Filtros
+              gruposFiltros={[estadoGroup]}
+              onFiltrar={(f) => setFilterState(f.estado || '')}
+              titulo="ESTADOS"
+            />
+          </div>
+          <button
+            onClick={agregarNuevo}
+            style={{
+              backgroundColor: "var(--qf-green)",
+              color: "white",
+              padding: "15px 20px",
+              borderRadius: "10px",
+              border: "none",
+              cursor: "pointer",
+              width: "100%",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
+            Agregar Evento
+          </button>
+        </aside>
       </div>
       <Footer />
     </PageLayout>
