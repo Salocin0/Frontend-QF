@@ -132,8 +132,25 @@ const RegistrarEvento2 = () => {
         addressComponents.town ||
         addressComponents.village;
 
-      const lat = result?.geometry?.lat ?? null;
-      const lng = result?.geometry?.lng ?? null;
+      let lat = result?.geometry?.lat ?? null;
+      let lng = result?.geometry?.lng ?? null;
+
+      // Si Nominatim no encontró coordenadas, intentar con geolocalización del navegador
+      if (lat === null || lng === null) {
+        try {
+          const pos = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: true,
+              timeout: 5000,
+            });
+          });
+          lat = String(pos.coords.latitude);
+          lng = String(pos.coords.longitude);
+        } catch {
+          // No se pudo obtener ubicación, sigue con null
+          console.warn("No se pudo obtener ubicación del navegador");
+        }
+      }
 
       setProvincia(prov || "");
       setLocalidad(loc || "");
