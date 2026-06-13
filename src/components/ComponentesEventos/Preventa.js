@@ -33,14 +33,25 @@ const Preventa = () => {
     }
   }, [user,id]);
 
+  const eventoFinalizado = () => {
+    if (!evento?.diaEventos?.length) return false;
+    const ahora = new Date();
+    const fechaFin = new Date(
+      Math.max(...evento.diaEventos.map((d) => new Date(d.fechaHoraFinDiaEvento)))
+    );
+    return fechaFin <= ahora;
+  };
+
   const irACompraInstantanea = () => {
-    if (evento.estado !== "EnCurso") {
-      // Muestra un toast si el evento no está en estado "EnCurso"
-      toast.error("El evento todavía no ha comenzado.");
-    } else {
-      console.log(evento.id);
-      navigate(`/listado-puestos/${evento.id}`);
+    if (eventoFinalizado()) {
+      toast.error("El evento ha finalizado. No se pueden realizar pedidos.");
+      return;
     }
+    if (evento.estado !== "EnCurso") {
+      toast.error("El evento todavía no ha comenzado.");
+      return;
+    }
+    navigate(`/listado-puestos/${evento.id}`);
   };
 
   const styles = {

@@ -1,7 +1,8 @@
-﻿import React, { useState } from "react";
+import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap"; // Utilizando Bootstrap para el modal
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt } from 'react-icons/fa';
+import { toast } from "react-toastify";
 import useBreakpoint from "../../useBreakpoint";
 
 const CardPreCompra = ({ evento }) => {
@@ -9,6 +10,15 @@ const CardPreCompra = ({ evento }) => {
   const [selectedDay, setSelectedDay] = useState(null); // Día seleccionado
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
   const navigate = useNavigate();
+
+  const eventoFinalizado = () => {
+    if (!evento?.diaEventos?.length) return false;
+    const ahora = new Date();
+    const fechaFin = new Date(
+      Math.max(...evento.diaEventos.map((d) => new Date(d.fechaHoraFinDiaEvento)))
+    );
+    return fechaFin <= ahora;
+  };
 
   // Obtener la fecha actual y establecerla al inicio del día (para evitar conflictos de horas)
   const currentDate = new Date();
@@ -34,6 +44,11 @@ const CardPreCompra = ({ evento }) => {
   // Manejadores para el modal de advertencia
   const handleCloseModal = () => setShowModal(false);
   const handleAccept = () => {
+    if (eventoFinalizado()) {
+      setShowModal(false);
+      toast.error("El evento ha finalizado. No se pueden realizar pedidos.");
+      return;
+    }
     setShowModal(false);
     navigate(`/listado-puestos/${evento.id}`, { state: { selectedDay } });
   };

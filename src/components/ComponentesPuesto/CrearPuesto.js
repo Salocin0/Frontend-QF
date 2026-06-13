@@ -112,7 +112,8 @@ const CrearNuevoPuesto = () => {
       border: `1px solid var(--qf-blanco-puro)`,
       borderRadius: "10px",
       marginBottom: "0.5rem",
-      backgroundColor: "var(--qf-text-primary)",
+      color: "var(--qf-blanco-puro)",
+      backgroundColor: "var(--qf-bg-card)",
     },
     label: {
       margin: "0",

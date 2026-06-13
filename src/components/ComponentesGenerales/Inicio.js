@@ -1,6 +1,6 @@
 import CardInicio from "./CardInicio";
 import PageLayout from "./PageLayout";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import pedidoimg from "../img/comida-rapida-casera.jpg";
 import eventosimg2 from "../img/eventosimg2.png";
 import encargado from "../img/foodtruck.jpg";
@@ -14,11 +14,13 @@ import asociarEvento from "../img/asociarevento.png";
 import estadisticas from "../img/Estadísticas.jpg";
 import { useNavigate } from "react-router-dom";
 import useBreakpoint from "../../useBreakpoint";
+import { UserContext } from "./UserContext";
 
 const Inicio = () => {
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
   const { isMobile } = useBreakpoint();
+  const { clearUser } = useContext(UserContext);
 
   useEffect(() => {
     const sessionId = sessionStorage.getItem("sessionId");
@@ -39,19 +41,41 @@ const Inicio = () => {
           if (!response.ok) {
             const text = await response.text().catch(() => "<no body>");
             console.error("Error fetching session - non-OK response:", response.status, text);
+            clearUser();
+            navigate("/login", { replace: true });
             return;
           }
           return response.json();
         })
         .then((data) => {
-          if (data) setSession(data.data);
+          if (data) {
+            if (data.status !== "success") {
+              clearUser();
+              navigate("/login", { replace: true });
+              return;
+            }
+            setSession(data.data);
+          }
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
   }, []);
 
   const handleLogout = () => {
-    navigate("/login");
+    // Llamar al backend para cerrar sesión si existe session
+    if (session?.id) {
+      const base = process.env?.REACT_APP_BACK_URL || "";
+      const normalizedBase = base.startsWith("http") ? base : `https://${base}`;
+      const url = normalizedBase.endsWith("/") ? `${normalizedBase}user/cerrarWeb` : `${normalizedBase}/user/cerrarWeb`;
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: session.id }),
+      }).catch((err) => console.error("Error cerrando sesión en backend:", err));
+    }
+    clearUser();
+    sessionStorage.removeItem("sessionId");
+    navigate("/login", { replace: true });
   };
 
   const handleProfile = () => {

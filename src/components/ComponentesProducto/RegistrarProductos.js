@@ -151,7 +151,7 @@ const RegistrarProductos = () => {
       marginBottom: "0.25rem",
     },
     submitButton: {
-      backgroundColor: "var(--qf-green)",
+      backgroundColor: "var(--qf-naranja)",
       color: "var(--qf-blanco-puro)",
       padding: "0.5rem 1rem",
       fontSize: "1rem",

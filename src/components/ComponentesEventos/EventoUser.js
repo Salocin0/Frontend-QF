@@ -26,15 +26,17 @@ const EventoUser = ({ evento }) => {
   };
 
   const calcularTextoTiempo = (fechaInicio, fechaFin) => {
-    if (fechaInicio > new Date()) {
+    const ahora = new Date();
+
+    if (fechaInicio > ahora) {
       return `Empieza en ${calcularTiempoRestante(fechaInicio)}`;
     }
 
-    if (fechaFin > new Date()) {
-      return `Termina en ${calcularTiempoRestante(fechaFin)}`;
+    if (fechaFin > ahora) {
+      return "En progreso";
     }
 
-    return "Evento finalizado";
+    return null; // Evento finalizado, se filtrará del listado
   };
 
   const fechaInicio = evento?.diaEventos?.length
@@ -52,10 +54,22 @@ const EventoUser = ({ evento }) => {
       )
     : null;
 
+  const ahora = new Date();
+  const eventoFinalizado = fechaFin && fechaFin <= ahora;
+  const eventoEnProgreso = fechaInicio && fechaFin && fechaInicio <= ahora && fechaFin > ahora;
+
   const textoTiempo =
     fechaInicio && fechaFin
       ? calcularTextoTiempo(fechaInicio, fechaFin)
       : "Fecha no disponible";
+
+  const textoBadge = eventoFinalizado
+    ? "Finalizado"
+    : eventoEnProgreso
+    ? "En progreso"
+    : evento.estado === "Confirmado"
+    ? "Empieza pronto"
+    : formatEstado(evento.estado);
 
   const styles = {
     container: {
@@ -176,7 +190,7 @@ const EventoUser = ({ evento }) => {
   };
 
   const handleCardClick = () => {
-    if (evento.estado === "Finalizado") {
+    if (eventoFinalizado) {
       toast.error("El evento ha finalizado.");
     } else {
       navigate(`/tipo-compra/${evento.id}`);
@@ -205,14 +219,17 @@ const EventoUser = ({ evento }) => {
             </div>
 
             <div style={styles.content}>
-              {evento.estado !== "EnCurso" && (
+              {textoBadge && (
                 <div style={styles.estadoContainer}>
-                  <p style={styles.estado}>
-                    {evento.estado === "EnCurso"
-                      ? ""
-                      : evento.estado === "Confirmado"
-                      ? "Empieza pronto"
-                      : formatEstado(evento.estado)}
+                  <p style={{
+                    ...styles.estado,
+                    backgroundColor: eventoFinalizado
+                      ? "var(--qf-rojo)"
+                      : eventoEnProgreso
+                      ? "var(--qf-green)"
+                      : "var(--qf-green)",
+                  }}>
+                    {textoBadge}
                   </p>
                 </div>
               )}
@@ -221,7 +238,15 @@ const EventoUser = ({ evento }) => {
               <p style={styles.text}>
                 {evento.ubicacion}, {evento.localidad}, {evento.provincia}
               </p>
-              <p style={styles.distance}>A 1km de distancia</p>
+              {evento.distanciaCalculada !== undefined && evento.distanciaCalculada !== null ? (
+                <p style={styles.distance}>
+                  A {evento.distanciaCalculada < 1
+                    ? `${Math.round(evento.distanciaCalculada * 1000)}m`
+                    : `${evento.distanciaCalculada.toFixed(1)}km`} de distancia
+                </p>
+              ) : (
+                <p style={styles.distance}>Distancia no disponible</p>
+              )}
 
               <p style={styles.fecha}>{textoTiempo}</p>
 

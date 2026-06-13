@@ -12,7 +12,7 @@ import { FaEyeSlash, FaPlus, FaSearch } from "react-icons/fa";
 import useBreakpoint from "../../useBreakpoint";
 
 const ListadoProducto = () => {
-  const { isMobile } = useBreakpoint();
+  const { isMobile, isTablet } = useBreakpoint();
   const { id } = useParams();
   const { user } = useContext(UserContext);
   const [productos, setProductos] = useState([]);
@@ -44,114 +44,6 @@ const ListadoProducto = () => {
     }
   }, [user, recargar, id]);
 
-  const styles = {
-    mainContent: {
-      display: "flex",
-      flexDirection: "column",
-      flexGrow: 1,
-      marginLeft: isMobile ? "0" : "20%",
-    },
-    header: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginBottom: "1rem",
-      color: "var(--qf-naranja)",
-      paddingLeft: "20px",
-      paddingRight: "20px",
-    },
-    pageTitle: {
-      paddingTop: "1rem",
-      color: "var(--qf-naranja)",
-    },
-    disabledLink: {
-      position: "absolute",
-      top: "25px",
-      right: "20px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      padding: "10px",
-      borderRadius: "10px",
-      color: "var(--qf-blanco-puro)",
-      fontWeight: "bold",
-      cursor: "pointer",
-    },
-    divider: {
-      color: "var(--qf-naranja)",
-      marginRight: "1rem",
-    },
-    addButtonContainer: {
-      position: "fixed",
-      bottom: "80px",
-      right: "20px",
-      zIndex: 10,
-    },
-    addButton: {
-      backgroundColor: "var(--qf-green)",
-      color: "var(--qf-blanco-puro)",
-      fontSize: "1.25rem",
-      textDecoration: "none",
-      padding: "10px 15px",
-      borderRadius: "10px",
-      cursor: "pointer",
-    },
-    contentContainer: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-start",
-      justifyContent: "flex-start",
-      paddingTop: "1rem",
-      paddingBottom: "50px",
-      gap: "20px",
-      paddingLeft: "20px",
-      paddingRight: "20px",
-    },
-    cardsContainer: {
-      flex: 1,
-      display: "flex",
-      flexDirection: "column",
-      gap: "10px",
-      paddingRight: "20px",
-    },
-    sidebarContainer: {
-      width: "30%",
-      minWidth: "260px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "8px",
-      padding: "20px",
-      display: "flex",
-      flexDirection: "column",
-      gap: "10px",
-    },
-    sidebarButton: {
-      backgroundColor: "var(--qf-green)",
-      color: "var(--qf-blanco-puro)",
-      fontSize: "1rem",
-      textDecoration: "none",
-      padding: "10px",
-      borderRadius: "5px",
-      cursor: "pointer",
-      textAlign: "center",
-    },
-    noProductsMessage: {
-      fontSize: "1.5rem",
-      color: "var(--qf-naranja)",
-    },
-    noProductsMessage: {
-      fontSize: "1.5rem",
-      color: "var(--qf-naranja)",
-    },
-    breadcrumbWrapper: {
-      margin: "0px auto 10px 0px",
-      backgroundColor: "rgb(43, 43, 43)",
-      width: "calc(100% - 0px)",
-      padding: "8px 16px",
-      borderRadius: "10px",
-      border: "1px solid rgb(197, 161, 69)",
-      /* no top padding beyond specified, and remain flushed */
-    },
-  };
-
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Puestos", url: "/listado-puestos-encargado" },
@@ -160,26 +52,74 @@ const ListadoProducto = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-        <div style={styles.mainContent}>
-          <div style={styles.header}>
-            <h1 style={styles.pageTitle}>
-              {carrito?.nombreCarro
-                ? "Productos de " + carrito?.nombreCarro
-                : "Productos"}
-            </h1>
-            <Link
-              to={`/listado-productos-deshabilitados/${id}`}
-              style={styles.disabledLink}
-            >
-              <FaEyeSlash /> Productos Deshabilitados
-            </Link>
-          </div>
-          <hr style={styles.divider} />
-          <div style={styles.contentContainer}>
-            {/* product list left, search/sidebar right */}
-            <div style={styles.cardsContainer}>
-              {/* breadcrumb now inside cards area */}
-              <div style={styles.breadcrumbWrapper}>
+      <div style={{
+        width: isMobile ? "100%" : "80%",
+        height: "100%",
+        padding: 0,
+        display: "flex",
+        flexDirection: "column",
+        boxSizing: "border-box",
+        flex: 1,
+      }}>
+        {/* Header con título + link a deshabilitados */}
+        <div className="qf-page-header" style={{
+          position: "relative",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+          <h1 className="qf-page-title" style={{ fontSize: "1.75rem" }}>
+            {carrito?.nombreCarro
+              ? "Productos de " + carrito?.nombreCarro
+              : "Productos"}
+          </h1>
+          <Link
+            to={`/listado-productos-deshabilitados/${id}`}
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "20px",
+              backgroundColor: "var(--qf-bg-secondary)",
+              padding: "10px",
+              borderRadius: "10px",
+              color: "var(--qf-blanco-puro)",
+              fontWeight: "bold",
+              cursor: "pointer",
+              textDecoration: "none",
+            }}
+          >
+            <FaEyeSlash /> Productos Deshabilitados
+          </Link>
+        </div>
+        <hr className="qf-separator" style={{ marginRight: "1rem" }} />
+
+        {/* Contenido scrollable con dos columnas */}
+        <div style={{
+          flex: 1,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}>
+          <div style={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            gap: "20px",
+            alignItems: isMobile ? "stretch" : "flex-start",
+            padding: "1rem 20px 50px 20px",
+          }}>
+            {/* Columna izquierda: breadcrumb + productos */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
+              boxSizing: "border-box",
+            }}>
+              <div style={{
+                margin: "0 0 10px 0",
+                backgroundColor: "var(--qf-bg-secondary)",
+                width: "100%",
+                padding: "8px 16px",
+                borderRadius: "10px",
+                border: "1px solid var(--qf-naranja)",
+              }}>
                 <Breadcrumb
                   items={breadcrumbItems}
                   style={{
@@ -188,39 +128,56 @@ const ListadoProducto = () => {
                     padding: "0",
                     backgroundColor: "transparent",
                     border: "none",
-                    /* ensure child has no extra gap */
                   }}
                 />
               </div>
-              {isLoading ? (
-                <LoandingComponent />
-              ) : Array.isArray(productos) &&
-                productos.filter((p) =>
-                  JSON.stringify(p)
-                    .toLowerCase()
-                    .includes(busqueda.toLowerCase())
-                ).length > 0 ? (
-                productos
-                  .filter((p) =>
+
+              <div style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}>
+                {isLoading ? (
+                  <LoandingComponent />
+                ) : Array.isArray(productos) &&
+                  productos.filter((p) =>
                     JSON.stringify(p)
                       .toLowerCase()
                       .includes(busqueda.toLowerCase())
-                  )
-                  .map((producto, index) => (
-                    <Producto
-                      key={index}
-                      producto={producto}
-                      idpuesto={id}
-                      recargar={recargarComponente}
-                    />
-                  ))
-              ) : (
-                <h2 style={styles.noProductsMessage}>
-                  No tienes ningún producto asociado a este carrito.
-                </h2>
-              )}
+                  ).length > 0 ? (
+                  productos
+                    .filter((p) =>
+                      JSON.stringify(p)
+                        .toLowerCase()
+                        .includes(busqueda.toLowerCase())
+                    )
+                    .map((producto, index) => (
+                      <Producto
+                        key={index}
+                        producto={producto}
+                        idpuesto={id}
+                        recargar={recargarComponente}
+                      />
+                    ))
+                ) : (
+                  <h2 className="qf-no-results">
+                    No tienes ningún producto asociado a este carrito.
+                  </h2>
+                )}
+              </div>
             </div>
-            <div style={styles.sidebarContainer}>
+
+            {/* Columna derecha: buscador + botón agregar */}
+            <div style={{
+              width: isMobile ? "100%" : "30%",
+              minWidth: isMobile ? "auto" : "260px",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              gap: "10px",
+              order: isMobile ? -1 : 0,
+            }}>
               <div style={{ display: "flex", gap: "5px" }}>
                 <input
                   type="text"
@@ -232,21 +189,14 @@ const ListadoProducto = () => {
                     padding: "8px",
                     borderRadius: "4px",
                     border: `1px solid var(--qf-text-muted)`,
+                    backgroundColor: "var(--qf-bg-main)",
+                    color: "var(--qf-text-primary)",
                   }}
                 />
                 <button
                   onClick={() => { /* filtering already automatic */ }}
-                  style={{
-                    padding: "8px 12px",
-                    borderRadius: "4px",
-                    border: "none",
-                    backgroundColor: "var(--qf-green)",
-                    color: "var(--qf-blanco-puro)",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "4px",
-                  }}
+                  className="qf-btn qf-btn--success"
+                  style={{ padding: "8px 12px", display: "flex", alignItems: "center", gap: "4px" }}
                 >
                   <FaSearch />
                   Buscar
@@ -254,7 +204,8 @@ const ListadoProducto = () => {
               </div>
               <Link
                 to={`/registrar-productos/${id}`}
-                style={styles.sidebarButton}
+                className="qf-btn qf-btn--primary"
+                style={{ textDecoration: "none", textAlign: "center" }}
               >
                 <FaPlus style={{ marginRight: "6px" }} />
                 Agregar Producto
@@ -262,6 +213,8 @@ const ListadoProducto = () => {
             </div>
           </div>
         </div>
+      </div>
+
       <Footer />
     </PageLayout>
   );

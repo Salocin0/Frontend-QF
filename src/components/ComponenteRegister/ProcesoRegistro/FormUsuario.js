@@ -37,6 +37,12 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userData.email)) {
+      toast.error("El formato del email no es válido.");
+      return;
+    }
+
     if (userData.password !== userData.confirmPassword) {
       toast.error("Las contraseñas no coinciden");
       return;

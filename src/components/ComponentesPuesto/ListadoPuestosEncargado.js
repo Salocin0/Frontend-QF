@@ -12,7 +12,7 @@ import Filtros from "../Filtros y Buscadores/Filtros";
 import useBreakpoint from "../../useBreakpoint";
 
 const ListadoPuestosEncargado = () => {
-  const { isMobile } = useBreakpoint();
+  const { isMobile, isTablet } = useBreakpoint();
   const [rows, setRows] = useState([]);
   const [carritos, setCarritos] = useState([]);
   const [carritosOriginales, setCarritosOriginales] = useState([]);
@@ -43,111 +43,6 @@ const ListadoPuestosEncargado = () => {
       ],
     },
   ];
-
-  const styles = {
-    mainContent: {
-      display: "flex",
-      flexDirection: "column",
-      flexGrow: 1,
-      marginLeft: isMobile ? "0" : "20%",
-    },
-    contentContainer: {
-      display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      alignItems: isMobile ? "stretch" : "flex-start",
-      padding: "0",
-      gap: "20px",
-      paddingLeft: "20px",
-      paddingRight: "20px",
-    },
-    cardsContainer: {
-      flex: 1,
-      display: "flex",
-      flexDirection: "column",
-      width: isMobile ? "100%" : "70%",
-      minWidth: isMobile ? "auto" : "60%",
-    },
-    filtersContainer: {
-      width: isMobile ? "100%" : "30%",
-      minWidth: isMobile ? "auto" : "260px",
-      borderRadius: "8px",
-      padding: "20px",
-      top: "20px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: `1px solid var(--qf-naranja)`,
-      order: isMobile ? -1 : 0,
-    },
-    headerContainer: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "100%",
-      position: "relative",
-      marginTop: "1rem",
-    },
-    sectionTitle: {
-      color: "var(--qf-naranja)",
-      fontSize: "2rem",
-      fontWeight: "bold",
-    },
-    divider: {
-      border: `1px solid var(--qf-naranja)`,
-      width: "100%",
-    },
-    rowContainer: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "flex-start",
-      width: "100%",
-      gap: "10px",
-      padding: "5px 0",
-    },
-    gridContainer: {
-      textAlign: "center",
-      width: "100%",
-    },
-    gridTitle: {
-      fontSize: "2rem",
-      color: "var(--qf-naranja)",
-      marginBottom: "1rem",
-    },
-    description: {
-      fontSize: "1rem",
-      color: "var(--qf-blanco-puro)",
-      marginBottom: "1.5rem",
-    },
-    linkButton: {
-      textDecoration: "none",
-      padding: "0.75rem 1.5rem",
-      backgroundColor: "var(--qf-naranja)",
-      color: "var(--qf-text-white)",
-      borderRadius: "5px",
-      fontWeight: "bold",
-      display: "inline-block",
-    },
-    agregarButton: {
-      padding: "0.5rem 1rem",
-      backgroundColor: "var(--qf-green)",
-      color: "white",
-      borderRadius: "5px",
-      border: "none",
-      cursor: "pointer",
-      fontWeight: "bold",
-      position: "absolute",
-      top: "0",
-      right: "20px",
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-      padding: "0px 0px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    searchFilterContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
-    },
-  };
 
   useEffect(() => {
     if (user) {
@@ -235,73 +130,109 @@ const ListadoPuestosEncargado = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-
-      <div style={styles.mainContent}>
-        <div style={styles.headerContainer}>
-          <h1 style={styles.sectionTitle}>Mis Puestos</h1>
+      <div style={{
+        width: isMobile ? "100%" : "80%",
+        height: "100%",
+        padding: 0,
+        display: "flex",
+        flexDirection: "column",
+        boxSizing: "border-box",
+        flex: 1,
+      }}>
+        {/* Header */}
+        <div className="qf-page-header">
+          <h1 className="qf-page-title" style={{ fontSize: "1.75rem" }}>
+            Mis Puestos
+          </h1>
+          <hr className="qf-separator" />
         </div>
-        <hr style={styles.divider} />
-        <div style={styles.contentContainer}>
-          <div style={styles.cardsContainer}>
-            <div style={styles.breadcrumbWrapper}>
-              <Breadcrumb
-                items={breadcrumbItems}
-                style={{ width: "Calc(100% - 20px)", marginLeft: "20px" }}
-              />
-            </div>
-            {isLoading ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  padding: "2rem",
-                }}
-              >
-                <CircularProgress
-                  style={{ color: "var(--qf-naranja)" }}
-                  size={40}
-                />
-              </div>
-            ) : Array.isArray(carritos) && carritos.length > 0 ? (
-              <>
-                {rows.length > 0 &&
-                  rows.map((row, rowIndex) => (
-                    <div style={styles.rowContainer} key={rowIndex}>
-                      {row.map((carrito, index) => (
-                        <div key={index}>
-                          {carrito !== null ? (
-                            <PuestoEncargado
-                              carrito={carrito}
-                              actualizarListado={actualizarListado}
-                            />
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  ))}
-              </>
-            ) : (
-              <div style={styles.gridContainer}>
-                <div style={styles.gridTitle}>
-                  <h2>Puestos</h2>
-                </div>
-                <div style={styles.description}>
-                  <p>
-                    Con Quickfood, crea tus Puestos de Comida para hacerlo
-                    mejor. Descubre nuestras increíbles características y ofrece
-                    una experiencia única a tus consumidores.
-                  </p>
-                </div>
-                <Link to={`/crear-puesto`} style={styles.linkButton}>
-                  Crear Puesto
-                </Link>
-              </div>
-            )}
-          </div>
 
-          {/* Panel de filtros al lado de las cards */}
-          <div style={styles.filtersContainer}>
-            <div style={styles.searchFilterContainer}>
+        {/* Contenido scrollable con dos columnas */}
+        <div style={{
+          flex: 1,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}>
+          <div style={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            gap: "20px",
+            alignItems: isMobile ? "stretch" : "flex-start",
+            height: isMobile ? "auto" : "100%",
+            overflow: isMobile ? "visible" : "hidden",
+            paddingLeft: isMobile ? "0" : "20px",
+            paddingRight: isMobile ? "0" : "20px",
+          }}>
+            {/* Columna izquierda: breadcrumb + cards */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
+              boxSizing: "border-box",
+            }}>
+              <Breadcrumb items={breadcrumbItems} />
+
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "2rem",
+                  }}
+                >
+                  <CircularProgress
+                    style={{ color: "var(--qf-naranja)" }}
+                    size={40}
+                  />
+                </div>
+              ) : Array.isArray(carritos) && carritos.length > 0 ? (
+                <>
+                  {rows.length > 0 &&
+                    rows.map((row, rowIndex) => (
+                      <div key={rowIndex} style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", width: "100%", gap: "10px", padding: "5px 0" }}>
+                        {row.map((carrito, index) => (
+                          <div key={index}>
+                            {carrito !== null ? (
+                              <PuestoEncargado
+                                carrito={carrito}
+                                actualizarListado={actualizarListado}
+                              />
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                </>
+              ) : (
+                <div style={{ textAlign: "center", width: "100%" }}>
+                  <h2 style={{ fontSize: "2rem", color: "var(--qf-naranja)", marginBottom: "1rem" }}>
+                    Puestos
+                  </h2>
+                  <p style={{ fontSize: "1rem", color: "var(--qf-blanco-puro)", marginBottom: "1.5rem" }}>
+                    Con Quickfood, crea tus Puestos de Comida para hacerlo mejor.
+                    Descubre nuestras increíbles características y ofrece una experiencia
+                    única a tus consumidores.
+                  </p>
+                  <Link
+                    to={`/crear-puesto`}
+                    className="qf-btn qf-btn--primary"
+                    style={{ textDecoration: "none", display: "inline-block" }}
+                  >
+                    Crear Puesto
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Columna derecha: filtros + buscador + agregar */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "35%" : "30%",
+              minWidth: isMobile ? "auto" : "260px",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+              order: isMobile ? -1 : 0,
+            }}>
               <Buscador
                 placeholder="Buscar puestos..."
                 onBuscar={handleBuscar}
@@ -311,22 +242,17 @@ const ListadoPuestosEncargado = () => {
                 onFiltrar={handleFiltrar}
                 titulo="FILTRAR PUESTOS"
               />
+              <button
+                onClick={agregarNuevo}
+                className="qf-btn qf-btn--success"
+                style={{ width: "100%" }}
+              >
+                Agregar Puesto
+              </button>
             </div>
-            <button
-              onClick={agregarNuevo}
-              style={{
-                ...styles.agregarButton,
-                position: "relative",
-                top: "auto",
-                right: "auto",
-                marginTop: "1rem",
-                width: "100%",
-              }}
-            >
-              Agregar Puesto
-            </button>
           </div>
         </div>
+
         <Footer />
       </div>
     </PageLayout>

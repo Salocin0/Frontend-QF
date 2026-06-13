@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute";
 import ProcesoRegistro from "../ComponenteRegister/ProcesoRegistro/ProcesoRegistro";
 import RegistroEncargado from "../ComponenteRegister/RegistrarEncargado";
 import RegistroProductor from "../ComponenteRegister/RegistrarProductor";
@@ -85,10 +86,13 @@ const SafeRoute = ({ component: Component, name }) => {
   }
 };
 
+const ALL_ROLES = ["consumidor", "repartidor", "encargado", "productor"];
+
 const Main = () => {
   return (
     <main>
       <Routes>
+        {/* ─── Públicas (sin protección) ─── */}
         <Route path="/registrarse/:tipoUsuario" element={<SafeRoute component={ProcesoRegistro} name="ProcesoRegistro" />} />
         <Route path="/login" element={<SafeRoute component={Login} name="Login" />} />
         <Route path="/seleccion-perfil" element={<SafeRoute component={SeleccionRegister} name="SeleccionRegister" />} />
@@ -98,50 +102,60 @@ const Main = () => {
         <Route path="/cambiar-contrasenia/:codigo" element={<SafeRoute component={CambiarContraseña} name="CambiarContraseña" />} />
         <Route path="/habilitar-Usuario-deshabilitado/:id" element={<SafeRoute component={HabilitarUsuario} name="HabilitarUsuario" />} />
         <Route path="/" element={<SafeRoute component={LandingPage} name="LandingPage" />} />
-        <Route path="/inicio" element={<SafeRoute component={Inicio} name="Inicio" />} />
-        <Route path="/sidebar" element={<SafeRoute component={Sidebar} name="Sidebar" />} />
-        <Route path="/listado-eventos" element={<SafeRoute component={ListadoEventosUsers} name="ListadoEventosUsers" />} />
-        <Route path="/listado-puestos/:idEvento" element={<SafeRoute component={ListadoPuestosUser} name="ListadoPuestosUser" />} />
-        <Route path="/productos-puesto/:id" element={<SafeRoute component={ListadoProductoUser} name="ListadoProductoUser" />} />
-        <Route path="/carrito/" element={<SafeRoute component={Carrito} name="Carrito" />} />
-        <Route path="/pedidos" element={<SafeRoute component={ListadoPedidos} name="ListadoPedidos" />} />
-        <Route path="/adquirir-nuevo-rolR" element={<SafeRoute component={AdquirirNuevoRolR} name="AdquirirNuevoRolR" />} />
-        <Route path="/adquirir-nuevo-rolPE" element={<SafeRoute component={AdquirirNuevoRolPE} name="AdquirirNuevoRolPE" />} />
-        <Route path="/adquirir-nuevo-rolEPC" element={<SafeRoute component={AdquirirNuevoRolEPC} name="AdquirirNuevoRolEPC" />} />
-        <Route path="/pedidos-asignados" element={<SafeRoute component={ListadoPedidosRepartidor} name="ListadoPedidosRepartidor" />} />
-        <Route path="/asociarRepartidorAEvento" element={<SafeRoute component={AsociarRepartidorAEvento} name="AsociarRepartidorAEvento" />} />
-        <Route path="/misAsociacionesR" element={<SafeRoute component={AsociacionesR} name="AsociacionesR" />} />
-        <Route path="/listado-puestos-encargado" element={<SafeRoute component={ListadoPuestosEncargado} name="ListadoPuestosEncargado" />} />
-        <Route path="/asociarPuestoAEvento/:puestoId" element={<SafeRoute component={AsociarPuestoAEvento} name="AsociarPuestoAEvento" />} />
-        <Route path="/listado-productos/:id" element={<SafeRoute component={ListadoProducto} name="ListadoProducto" />} />
-        <Route path="/crear-puesto" element={<SafeRoute component={CrearNuevoPuesto} name="CrearNuevoPuesto" />} />
-        <Route path="/listado-productos-deshabilitados/:id" element={<SafeRoute component={ListadoProductoDeshabilitado} name="ListadoProductoDeshabilitado" />} />
-        <Route path="/registrar-productos/:id" element={<SafeRoute component={RegistrarProductos} name="RegistrarProductos" />} />
-        <Route path="/misAsociacionesEPC" element={<SafeRoute component={AsociacionesEPC} name="AsociacionesEPC" />} />
-        <Route path="/pedidos-Encargado/:id" element={<SafeRoute component={ListadoPedidosEncargado} name="ListadoPedidosEncargado" />} />
-        <Route path="/listado-eventos-productor" element={<SafeRoute component={ListadoEventosProductor} name="ListadoEventosProductor" />} />
-        <Route path="/ver-solicitudes-evento/:evento" element={<SafeRoute component={VerSolicitudesEvento} name="VerSolicitudesEvento" />} />
-        <Route path="/registrar-evento2" element={<SafeRoute component={RegistrarEvento2} name="RegistrarEvento2" />} />
-        <Route path="/registrar-evento3" element={<SafeRoute component={RegistrarEvento3} name="RegistrarEvento3" />} />
-        <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<SafeRoute component={RegistrarEvento4} name="RegistrarEvento4" />} />
-        <Route path="/registrar-evento5/:eventoId/:diferenciaDiasEvento" element={<SafeRoute component={RegistrarEvento5} name="RegistrarEvento5" />} />
-        <Route path="/grafica-productor" element={<SafeRoute component={PanelProductor} name="PanelProductor" />} />
-        <Route path="/grafica-encargado" element={<SafeRoute component={PanelEncargado} name="PanelEncargado" />} />
-        <Route path="/tipo-compra/:id" element={<SafeRoute component={Preventa} name="Preventa" />} />
-        <Route path="/puestos-deshabilitados" element={<SafeRoute component={ListadoPuestosDeshabilitados} name="ListadoPuestosDeshabilitados" />} />
-        <Route path="/notificaciones" element={<SafeRoute component={Notificaciones} name="Notificaciones" />} />
-        <Route path="/perfil" element={<SafeRoute component={ConsultarUsuarioPrueba} name="ConsultarUsuarioPrueba" />} />
-        <Route path="/info-puesto/:id" element={<SafeRoute component={ConsultarPuestoSolicitud} name="ConsultarPuestoSolicitud" />} />
-        <Route path="/puesto/:id" element={<SafeRoute component={ConsultarPuesto} name="ConsultarPuesto" />} />
         <Route path="/ser-repartidor" element={<SafeRoute component={RegistroRepartidor} name="RegistroRepartidor" />} />
         <Route path="/ser-productor" element={<SafeRoute component={RegistroProductor} name="RegistroProductor" />} />
         <Route path="/ser-encargado" element={<SafeRoute component={RegistroEncargado} name="RegistroEncargado" />} />
         <Route path="/subir-archivo" element={<SafeRoute component={DocumentUpload} name="DocumentUpload" />} />
-        <Route path="/producto/:id" element={<SafeRoute component={ConsultarProducto} name="ConsultarProducto" />} />
-        <Route path="/registrar-evento" element={<SafeRoute component={RegistrarEvento} name="RegistrarEvento" />} />
-        <Route path="/eventoPrueba" element={<SafeRoute component={EventoPrueba} name="EventoPrueba" />} />
-        <Route path="/evento/:id" element={<SafeRoute component={ConsultarEvento} name="ConsultarEvento" />} />
-        <Route path="/restriccionesEvento/:id" element={<SafeRoute component={FormDinamicoRestricciones} name="FormDinamicoRestricciones" />} />
+
+        {/* ─── Todos autenticados ─── */}
+        <Route path="/inicio" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={Inicio} name="Inicio" /></PrivateRoute>} />
+        <Route path="/sidebar" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={Sidebar} name="Sidebar" /></PrivateRoute>} />
+        <Route path="/listado-eventos" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ListadoEventosUsers} name="ListadoEventosUsers" /></PrivateRoute>} />
+        <Route path="/listado-puestos/:idEvento" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ListadoPuestosUser} name="ListadoPuestosUser" /></PrivateRoute>} />
+        <Route path="/productos-puesto/:id" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ListadoProductoUser} name="ListadoProductoUser" /></PrivateRoute>} />
+        <Route path="/carrito/" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={Carrito} name="Carrito" /></PrivateRoute>} />
+        <Route path="/notificaciones" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={Notificaciones} name="Notificaciones" /></PrivateRoute>} />
+        <Route path="/perfil" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ConsultarUsuarioPrueba} name="ConsultarUsuarioPrueba" /></PrivateRoute>} />
+        <Route path="/info-puesto/:id" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ConsultarPuestoSolicitud} name="ConsultarPuestoSolicitud" /></PrivateRoute>} />
+        <Route path="/puesto/:id" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ConsultarPuesto} name="ConsultarPuesto" /></PrivateRoute>} />
+        <Route path="/producto/:id" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ConsultarProducto} name="ConsultarProducto" /></PrivateRoute>} />
+        <Route path="/evento/:id" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ConsultarEvento} name="ConsultarEvento" /></PrivateRoute>} />
+        <Route path="/eventoPrueba" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={EventoPrueba} name="EventoPrueba" /></PrivateRoute>} />
+
+        {/* ─── Solo consumidor ─── */}
+        <Route path="/pedidos" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={ListadoPedidos} name="ListadoPedidos" /></PrivateRoute>} />
+        <Route path="/tipo-compra/:id" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={Preventa} name="Preventa" /></PrivateRoute>} />
+        <Route path="/adquirir-nuevo-rolR" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={AdquirirNuevoRolR} name="AdquirirNuevoRolR" /></PrivateRoute>} />
+        <Route path="/adquirir-nuevo-rolPE" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={AdquirirNuevoRolPE} name="AdquirirNuevoRolPE" /></PrivateRoute>} />
+        <Route path="/adquirir-nuevo-rolEPC" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={AdquirirNuevoRolEPC} name="AdquirirNuevoRolEPC" /></PrivateRoute>} />
+
+        {/* ─── Solo repartidor ─── */}
+        <Route path="/pedidos-asignados" element={<PrivateRoute requiredRoles={["repartidor"]}><SafeRoute component={ListadoPedidosRepartidor} name="ListadoPedidosRepartidor" /></PrivateRoute>} />
+        <Route path="/asociarRepartidorAEvento" element={<PrivateRoute requiredRoles={["repartidor"]}><SafeRoute component={AsociarRepartidorAEvento} name="AsociarRepartidorAEvento" /></PrivateRoute>} />
+        <Route path="/misAsociacionesR" element={<PrivateRoute requiredRoles={["repartidor"]}><SafeRoute component={AsociacionesR} name="AsociacionesR" /></PrivateRoute>} />
+        <Route path="/restriccionesEvento/:id" element={<PrivateRoute requiredRoles={["repartidor"]}><SafeRoute component={FormDinamicoRestricciones} name="FormDinamicoRestricciones" /></PrivateRoute>} />
+
+        {/* ─── Solo productor ─── */}
+        <Route path="/listado-eventos-productor" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={ListadoEventosProductor} name="ListadoEventosProductor" /></PrivateRoute>} />
+        <Route path="/ver-solicitudes-evento/:evento" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={VerSolicitudesEvento} name="VerSolicitudesEvento" /></PrivateRoute>} />
+        <Route path="/registrar-evento2" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={RegistrarEvento2} name="RegistrarEvento2" /></PrivateRoute>} />
+        <Route path="/registrar-evento3" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={RegistrarEvento3} name="RegistrarEvento3" /></PrivateRoute>} />
+        <Route path="/registrar-evento4/:diferenciaDiasEvento" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={RegistrarEvento4} name="RegistrarEvento4" /></PrivateRoute>} />
+        <Route path="/registrar-evento5/:eventoId/:diferenciaDiasEvento" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={RegistrarEvento5} name="RegistrarEvento5" /></PrivateRoute>} />
+        <Route path="/grafica-productor" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={PanelProductor} name="PanelProductor" /></PrivateRoute>} />
+        <Route path="/registrar-evento" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={RegistrarEvento} name="RegistrarEvento" /></PrivateRoute>} />
+
+        {/* ─── Solo encargado ─── */}
+        <Route path="/listado-puestos-encargado" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoPuestosEncargado} name="ListadoPuestosEncargado" /></PrivateRoute>} />
+        <Route path="/asociarPuestoAEvento/:puestoId" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={AsociarPuestoAEvento} name="AsociarPuestoAEvento" /></PrivateRoute>} />
+        <Route path="/listado-productos/:id" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoProducto} name="ListadoProducto" /></PrivateRoute>} />
+        <Route path="/crear-puesto" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={CrearNuevoPuesto} name="CrearNuevoPuesto" /></PrivateRoute>} />
+        <Route path="/listado-productos-deshabilitados/:id" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoProductoDeshabilitado} name="ListadoProductoDeshabilitado" /></PrivateRoute>} />
+        <Route path="/registrar-productos/:id" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={RegistrarProductos} name="RegistrarProductos" /></PrivateRoute>} />
+        <Route path="/misAsociacionesEPC" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={AsociacionesEPC} name="AsociacionesEPC" /></PrivateRoute>} />
+        <Route path="/pedidos-Encargado/:id" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoPedidosEncargado} name="ListadoPedidosEncargado" /></PrivateRoute>} />
+        <Route path="/grafica-encargado" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={PanelEncargado} name="PanelEncargado" /></PrivateRoute>} />
+        <Route path="/puestos-deshabilitados" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoPuestosDeshabilitados} name="ListadoPuestosDeshabilitados" /></PrivateRoute>} />
       </Routes>
     </main>
   );

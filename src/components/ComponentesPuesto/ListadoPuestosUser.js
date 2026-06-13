@@ -102,168 +102,123 @@ const ListadoPuestosUser = () => {
     setRows(generatedRows);
   }, [filteredCarritos]);
 
-  const styles = {
-    mainContent: {
-      width: isMobile ? "100%" : "80%",
-      height: "100%",
-      padding: 0,
-      display: "flex",
-      flexDirection: "column",
-      boxSizing: "border-box",
-    },
-    contentRow: {
-      display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      gap: "20px",
-      alignItems: isMobile ? "stretch" : "flex-start",
-    },
-    leftCol: {
-      width: isMobile ? "100%" : isTablet ? "65%" : "70%",
-      boxSizing: "border-box",
-    },
-    rightColInner: {
-      width: isMobile ? "100%" : isTablet ? "35%" : "30%",
-      boxSizing: "border-box",
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px",
-      alignItems: "center",
-      order: isMobile ? -1 : 0,
-    },
-    header: {
-      display: "flex",
-      justifyContent: "flex-start",
-      color: "var(--qf-naranja)",
-      paddingLeft: "16px",
-    },
-    title: {
-      paddingTop: "10px",
-      fontSize: "32px",
-      fontWeight: "bold",
-      margin: 0,
-      width: "98%",
-      textAlign: "left",
-    },
-    separator: {
-      color: "var(--qf-naranja)",
-      border: "none",
-      height: "2px",
-      backgroundColor: "var(--qf-naranja)",
-    },
-    eventsContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      height: "100%",
-      width: "100%",
-      overflowY: "auto",
-      overflowX: "hidden",
-    },
-    eventsWrapper: {
-      height: "100%",
-      width: "100%",
-      display: "flex",
-      flexWrap: "wrap",
-
-      justifyContent: "center",
-      gap: "10px",
-      boxSizing: "border-box",
-      overflowY: "scroll",
-      overflowX: "hidden",
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
-    },
-    noEventsMessage: {
-      fontSize: "24px",
-      color: "var(--qf-naranja)",
-      textAlign: "center",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "80%",
-      width: "80%",
-    },
-    rightCol: {
-      width: "20%",
-      padding: "20px",
-      boxSizing: "border-box",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "12px",
-    },
-    buscadorBox: {
-      width: "98%",
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      padding: "8px 16px",
-      boxSizing: "border-box",
-    },
-    filtroBox: {
-      width: "98%",
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      padding: "10px",
-      boxSizing: "border-box",
-      marginTop: "10px",
-    },
-  };
-
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.mainContent}>
-        <div style={styles.header}>
-          <h1 style={styles.title}>{ `Puestos de ${evento.nombre}` || "Puestos"} </h1>
+      <div style={{
+        width: isMobile ? "100%" : "80%",
+        height: "100%",
+        padding: 0,
+        display: "flex",
+        flexDirection: "column",
+        boxSizing: "border-box",
+        flex: 1,
+      }}>
+        {/* Header */}
+        <div className="qf-page-header">
+          <h1 className="qf-page-title" style={{ fontSize: "1.75rem" }}>
+            {`Puestos de ${evento.nombre}` || "Puestos"}
+          </h1>
+          <hr className="qf-separator" />
         </div>
-        <hr style={styles.separator} />
-        <div style={styles.contentRow}>
-          <div style={styles.leftCol}>
-            <div>
-              <Breadcrumb items={breadcrumbItems} />
-            </div>
-            <div style={styles.eventsContainer}>
-              <div style={styles.eventsWrapper}>
-                {!loanding ? (
-                  <LoandingComponent />
-                ) : Array.isArray(filteredCarritos) && filteredCarritos.length > 0 ? (
-                  rows.length > 0 &&
-                  rows.map((row, rowIndex) => (
-                    <div key={rowIndex} style={{ width: "100%" }}>
-                      {row.map((carrito, index) => (
-                        <div
-                          key={index}
-                          style={{ marginBottom: "10px", width: "100%" }}
-                        >
-                          {carrito !== null ? (
-                            <PuestoUser carrito={carrito} selectedDay={selectedDay} evento={evento} />
-                          ) : null}
-                        </div>
-                      ))}
-                    </div>
-                  ))
-                ) : (
-                    <h2 style={styles.noEventsMessage}>
-                      No tienes ningún puesto en este momento.
+
+        {/* Contenido scrollable con dos columnas */}
+        <div style={{
+          flex: 1,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}>
+          <div style={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            gap: "20px",
+            alignItems: isMobile ? "stretch" : "flex-start",
+            height: isMobile ? "auto" : "100%",
+            overflow: isMobile ? "visible" : "hidden",
+          }}>
+            {/* Columna izquierda: breadcrumb + listado */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
+              boxSizing: "border-box",
+            }}>
+              <div style={{ paddingLeft: "16px" }}>
+                <Breadcrumb items={breadcrumbItems} />
+              </div>
+
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100%",
+                width: "100%",
+                overflowY: "auto",
+                overflowX: "hidden",
+              }}>
+                <div style={{
+                  height: "100%",
+                  width: "100%",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: "10px",
+                  boxSizing: "border-box",
+                  overflowY: "scroll",
+                  overflowX: "hidden",
+                  scrollbarWidth: "none",
+                  msOverflowStyle: "none",
+                }}>
+                  {!loanding ? (
+                    <LoandingComponent />
+                  ) : Array.isArray(filteredCarritos) && filteredCarritos.length > 0 ? (
+                    rows.length > 0 &&
+                    rows.map((row, rowIndex) => (
+                      <div key={rowIndex} style={{ width: "100%" }}>
+                        {row.map((carrito, index) => (
+                          <div
+                            key={index}
+                            style={{ marginBottom: "10px", width: "100%" }}
+                          >
+                            {carrito !== null ? (
+                              <PuestoUser carrito={carrito} selectedDay={selectedDay} evento={evento} />
+                            ) : null}
+                          </div>
+                        ))}
+                      </div>
+                    ))
+                  ) : (
+                    <h2 className="qf-no-results">
+                      No hay puestos en este momento.
                     </h2>
                   )}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div style={styles.rightColInner}>
-            <div style={styles.buscadorBox}>
-              <BuscadorPuestosConsumidor setNombre={setNombre} />
-            </div>
-            <div style={styles.filtroBox}>
-              <FiltersPuestosConsumidor
-                setEstrella={setEstrella}
-                setTiempo={setTiempo}
-              />
+            {/* Columna derecha: buscador + filtros */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "35%" : "30%",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              alignItems: "center",
+              order: isMobile ? -1 : 0,
+            }}>
+              <div className="qf-search-box">
+                <BuscadorPuestosConsumidor setNombre={setNombre} />
+              </div>
+              <div className="qf-filter-box">
+                <FiltersPuestosConsumidor
+                  setEstrella={setEstrella}
+                  setTiempo={setTiempo}
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
+
       <Footer />
     </PageLayout>
   );

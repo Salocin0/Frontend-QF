@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import EventoUser from "./EventoUser";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
@@ -9,6 +9,36 @@ import Buscador from "../Filtros y Buscadores/BuscadorEventosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import useBreakpoint from "../../useBreakpoint";
 
+const haversineDistance = (lat1, lon1, lat2, lon2) => {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+
+// Filtra eventos cuya fecha del último día ya pasó
+const filtrarFinalizados = (eventosList) => {
+  const ahora = new Date();
+  return eventosList.filter((evento) => {
+    // Si tiene diaEventos, filtrar por la fecha del último día
+    if (evento.diaEventos?.length) {
+      const fechaFin = new Date(
+        Math.max(...evento.diaEventos.map((d) => new Date(d.fechaHoraFinDiaEvento)))
+      );
+      return fechaFin > ahora;
+    }
+    // Sin diaEventos: dejarlo pasar, el badge se encargará
+    return true;
+  });
+};
+
 const ListadoEventosUsers = () => {
   const { isMobile, isTablet } = useBreakpoint();
   const [loanding, setLoanding] = useState(false);
@@ -16,11 +46,47 @@ const ListadoEventosUsers = () => {
   const [eventos, setEventos] = useState([]);
   const [filteredEventos, setFilteredEventos] = useState([]);
   const { user } = useContext(UserContext);
+  const [userLocation, setUserLocation] = useState(null);
 
   
   const [distancia, setDistancia] = useState(100);
   const [nombre, setNombre] = useState("");
-  const [preventa, setPreventa] = useState("");
+  const [preventa, setPreventa] = useState({ conPreventa: true, sinPreventa: true });
+
+  // Obtener ubicación del navegador
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.warn("No se pudo obtener la ubicación:", error.message);
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+  }, []);
+
+  // Calcular distancia para cada evento cuando cambia userLocation o eventos
+  const calcularDistancias = useCallback((eventosList) => {
+    if (!userLocation) return eventosList;
+    return eventosList.map((evento) => {
+      if (evento.latitud && evento.longitud) {
+        const distancia = haversineDistance(
+          userLocation.lat,
+          userLocation.lon,
+          parseFloat(evento.latitud),
+          parseFloat(evento.longitud)
+        );
+        return { ...evento, distanciaCalculada: distancia };
+      }
+      return { ...evento, distanciaCalculada: null };
+    });
+  }, [userLocation]);
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Eventos", url: "/Listado-eventos" },
@@ -38,9 +104,11 @@ const ListadoEventosUsers = () => {
         .then((response) => response.json())
         .then((data) => {
           const eventosData = Array.isArray(data.data) ? data.data : [];
-          setEventos(eventosData);
-          setFilteredEventos(eventosData);
-          generateRows(eventosData);
+          const eventosSinFinalizados = filtrarFinalizados(eventosData);
+          const eventosConDistancia = calcularDistancias(eventosSinFinalizados);
+          setEventos(eventosConDistancia);
+          setFilteredEventos(eventosConDistancia);
+          generateRows(eventosConDistancia);
           return fetch(
             `${process.env?.REACT_APP_BACK_URL}evento/enEstado/Confirmado`,
             {
@@ -52,8 +120,10 @@ const ListadoEventosUsers = () => {
         .then((response) => response.json())
         .then((confirmadoData) => {
           const confirmadoEventos = Array.isArray(confirmadoData.data) ? confirmadoData.data : [];
+          const confirmadoSinFinalizados = filtrarFinalizados(confirmadoEventos);
+          const confirmadoConDistancia = calcularDistancias(confirmadoSinFinalizados);
           setEventos((prev) => {
-            const allEventos = [...prev, ...confirmadoEventos];
+            const allEventos = [...prev, ...confirmadoConDistancia];
             generateRows(allEventos);
             return allEventos;
           });
@@ -65,6 +135,19 @@ const ListadoEventosUsers = () => {
         });
     }
   }, [user]);
+
+  // Recalcular distancias cuando se obtiene la ubicación y ya hay eventos
+  useEffect(() => {
+    if (userLocation && eventos.length > 0) {
+      const eventosConDistancia = calcularDistancias(eventos);
+      setEventos(eventosConDistancia);
+      setFilteredEventos((prev) => {
+        const filteredIds = new Set(prev.map((e) => e.id));
+        return eventosConDistancia.filter((e) => filteredIds.has(e.id));
+      });
+      generateRows(eventosConDistancia);
+    }
+  }, [userLocation]);
 
   const generateRows = (eventosList) => {
     const list = Array.isArray(eventosList) ? eventosList : [];
@@ -86,9 +169,15 @@ const ListadoEventosUsers = () => {
     const applyFilters = () => {
       let filtered = Array.isArray(eventos) ? eventos : [];
 
+      // Filtrar eventos finalizados
+      filtered = filtrarFinalizados(filtered);
+
       if (distancia) {
         filtered = filtered.filter(
-          (evento) => (evento.distancia || 1) <= distancia
+          (evento) =>
+            evento.distanciaCalculada !== null &&
+            evento.distanciaCalculada !== undefined &&
+            evento.distanciaCalculada <= distancia
         );
       }
       if (nombre) {
@@ -224,6 +313,7 @@ const ListadoEventosUsers = () => {
               </div>
               <div className="qf-filter-box">
                 <FiltersEventosConsumidor
+                  distancia={distancia}
                   setDistancia={setDistancia}
                   setPreventa={setPreventa}
                 />

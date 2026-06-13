@@ -1,30 +1,13 @@
 ﻿import imgDefault from "./../img/puestoLogoDefault.jpg";
 import { useNavigate } from "react-router-dom";
-import { useEffect,useState } from "react";
-import { FaClock, FaStar } from "react-icons/fa";
 
 const PuestoUser = ({ carrito, selectedDay, evento }) => {
   const navigate = useNavigate();
-  const [estrellas, setEstrellas] = useState(0);
-  const [tiempoEntrega, setTiempoEntrega] = useState(0);
   const handleClick = () => {
     navigate(`/productos-puesto/${carrito?.id}`, {
       state: { selectedDay, evento },
     });
   };
-
-  useEffect(() => {
-    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/getEstadisticas/${carrito.id}`, {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.data)
-        setEstrellas(data.data.estrellas);
-        setTiempoEntrega(data.data.tiempo);
-      })
-      .catch((error) => console.log("error al obtener estadisticas."));
-  }, [carrito]);
 
   const styles = {
     cardLink: {
@@ -105,10 +88,6 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
       right: "10px",
       width: "100px",
     },
-    iconText: {
-      fontSize: "16px",
-      color: "var(--qf-text-white)",
-    },
   };
 
   return (
@@ -124,16 +103,6 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
         <div style={styles.content}>
           <p style={styles.title}>{carrito.nombreCarro}</p>
           <p style={styles.descripcion}>{carrito.tipoNegocio}</p>
-          <div style={styles.iconWrapper}>
-            <FaClock />
-            <span style={styles.iconText}>
-              {tiempoEntrega || " 30"} {"Min"}
-            </span>
-          </div>
-          <div style={styles.iconWrapper}>
-            <FaStar />
-            <span style={styles.iconText}>{estrellas || " 4.5"}</span>
-          </div>
         </div>
       </div>
     </div>

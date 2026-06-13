@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 
-export const UserContext = createContext({ user: null, updateUser: () => {} });
+export const UserContext = createContext({ user: null, updateUser: () => {}, clearUser: () => {} });
 
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -13,8 +13,13 @@ export const UserProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(newUser));
   };
 
+  const clearUser = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
   return (
-    <UserContext.Provider value={{ user, updateUser }}>
+    <UserContext.Provider value={{ user, updateUser, clearUser }}>
       {children}
     </UserContext.Provider>
   );

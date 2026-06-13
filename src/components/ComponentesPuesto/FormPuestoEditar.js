@@ -105,6 +105,8 @@ function FormPuestoEditar({ carrito }) {
       padding: "8px",
       border: "none",
       borderRadius: "4px",
+      color: "var(--qf-blanco-puro)",
+      backgroundColor: "var(--qf-bg-card)",
     },
     link: {
       display: "inline-block",

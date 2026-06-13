@@ -466,10 +466,10 @@ const VerSolicitudesEvento = () => {
                       </p>
                     </div>
                     <Link
-                      to={`/inicio`}
+                      to={`/listado-eventos-productor`}
                       style={styles.linkAgregarEvento}
                     >
-                      Enviar Invitación
+                      Volver a mis Eventos
                     </Link>
                   </div>
                 )}

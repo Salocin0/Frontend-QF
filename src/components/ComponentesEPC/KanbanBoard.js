@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
-import { SortableContext, useSortable, arrayMove, rectSortingStrategy } from '@dnd-kit/sortable';
+import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from "react-toastify";
 import PedidoDetalleDialog from './PedidoDetalleDialog';
@@ -234,16 +234,6 @@ const KanbanBoard = ({id}) => {
   const sensors = useSensors(useSensor(PointerSensor));
 
   const SortableItem = ({task}) => {
-    // expose drag start to compute allowed columns
-    const handleDragStartInternal = () => {
-      const estado = task.estado;
-      // forward moves
-      const forward = allowedMovesMap[estado] || [];
-      // compute backward allowed: all states whose forward list includes this estado
-      const backward = Object.keys(allowedMovesMap).filter(s => allowedMovesMap[s].includes(estado));
-      const allowed = Array.from(new Set([...forward, ...backward]));
-      setAllowedColumns(allowed);
-    };
     const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id});
     const statusColor = getStatusColor(task.estado);
     const style = {
@@ -271,7 +261,7 @@ const KanbanBoard = ({id}) => {
       return `${dd}/${mm}/${yy} ${hh}:${mi}`;
     };
     return (
-      <div ref={setNodeRef} {...attributes} {...listeners} style={style} onDragStart={handleDragStartInternal} onMouseDown={handleDragStartInternal} onMouseUp={()=>setAllowedColumns(null)}>
+      <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
         {/* header empty, no close button anymore */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
         </div>
@@ -287,9 +277,7 @@ const KanbanBoard = ({id}) => {
           <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>${Number(task.total).toFixed(2)}</div>
           <button
             onClick={(e) => { e.stopPropagation(); setInfoDialog({open:true, task}); }}
-            onMouseDown={(e)=>e.stopPropagation()}
-            onPointerDown={(e)=>{ e.stopPropagation(); e.preventDefault(); }}
-            onTouchStart={(e)=>{ e.stopPropagation(); }}
+            onPointerDown={(e) => e.stopPropagation()}
             style={{ background:'transparent', border:'none', color:'#F7B813', cursor:'pointer', fontSize:'18px', padding:'0' }}
           >
             <FaEye />
@@ -317,10 +305,10 @@ const KanbanBoard = ({id}) => {
     if (id === 'column-3') column.title = 'En Prep.';
 
     return (
-      <div key={column.id} style={{ flex: 1, margin: '8px', opacity: allowedColumns && !allowedColumns.includes(column.id) ? 0.4 : 1 }}>
-        <h3 style={{ textAlign: 'center', color: '#FFF', backgroundColor: headerColors[column.id], padding: '8px', borderRadius: '4px' }}>{column.title}</h3>
-        <div ref={setNodeRef} style={{ background: '#333', padding: '8px', height: '90%', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-          <SortableContext items={column.taskIds} strategy={rectSortingStrategy}>
+      <div key={column.id} style={{ flex: '0 0 auto', width: isMobile ? '80vw' : '280px', minWidth: isMobile ? '80vw' : '250px', margin: '0 6px', opacity: allowedColumns && !allowedColumns.includes(column.id) ? 0.4 : 1 }}>
+        <h3 style={{ textAlign: 'center', color: '#FFF', backgroundColor: headerColors[column.id], padding: '8px', borderRadius: '4px', margin: 0 }}>{column.title}</h3>
+        <div ref={setNodeRef} style={{ background: '#333', padding: '8px', minHeight: isMobile ? '50vh' : '55vh', maxHeight: isMobile ? '50vh' : '55vh', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <SortableContext items={column.taskIds} strategy={verticalListSortingStrategy}>
             {tasks.map((task) => (
               <SortableItem key={task.id} task={task} />
             ))}
@@ -433,7 +421,7 @@ const KanbanBoard = ({id}) => {
   }, [infoDialog]);
 
   return (
-    <div style={{ display: 'flex', height: isMobile ? 'auto' : '70vh', margin: 0, padding: 0, overflowX: isMobile ? 'auto' : 'hidden' }}>
+    <div style={{ display: 'flex', height: isMobile ? 'auto' : '75vh', margin: 0, padding: '4px 0', overflowX: 'auto', overflowY: 'hidden', gap: 0 }}>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragCancel={() => setAllowedColumns(null)} onDragEnd={handleDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];

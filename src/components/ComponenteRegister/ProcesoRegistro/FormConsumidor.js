@@ -120,12 +120,18 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
 
   const handleLocalidadChange = (e) => {
     setSelectedLocalidad(e.target.value);
-    consumidorData.localidad = e.target.value;
+    setConsumidorData({
+      ...consumidorData,
+      localidad: e.target.value,
+    });
   };
 
   const handleProvinceChange = (e) => {
     setSelectedProvince(e.target.value);
-    consumidorData.provincia = e.target.value;
+    setConsumidorData({
+      ...consumidorData,
+      provincia: e.target.value,
+    });
 
     if (e.target.value !== "") {
       fetch(

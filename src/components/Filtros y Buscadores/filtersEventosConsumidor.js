@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from "react";
 
-const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
+const FiltersEventosConsumidor = ({
+  distancia: externalDistancia,
+  setDistancia: externalSetDistancia,
+  setPreventa: externalSetPreventa,
+}) => {
+  // Estado interno para cuando se usa standalone (sin props externas)
+  const [internalDistancia, setInternalDistancia] = useState(100);
   const [localPreventa, setLocalPreventa] = useState({
     conPreventa: true,
     sinPreventa: true,
   });
 
+  // Determinar si estamos en modo conectado o standalone
+  const hasExternal = typeof externalSetDistancia === "function";
+  const distancia = hasExternal ? externalDistancia : internalDistancia;
+  const setDistancia = hasExternal ? externalSetDistancia : setInternalDistancia;
+  const setPreventa = hasExternal ? externalSetPreventa : setLocalPreventa;
+
+  // Sincronizar preventa local con el padre SOLO en modo conectado
   useEffect(() => {
-    setPreventa(localPreventa);
-  }, [localPreventa, setPreventa]);
+    if (hasExternal) {
+      externalSetPreventa(localPreventa);
+    }
+  }, [localPreventa, hasExternal, externalSetPreventa]);
 
   const handleDistanciaChange = (value) => {
     setDistancia(value);
@@ -16,7 +31,11 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
 
   const handlePreventaChange = (key, value) => {
     setLocalPreventa((prev) => ({ ...prev, [key]: value }));
-    setPreventa((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleClearFilters = () => {
+    setLocalPreventa({ conPreventa: true, sinPreventa: true });
+    setDistancia(100);
   };
 
   return (
@@ -33,6 +52,7 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
             name="distancia"
             value="5"
             className="qf-filter-panel__checkbox"
+            checked={distancia === "5"}
             onChange={() => handleDistanciaChange("5")}
           />
           Menos de 5 KM
@@ -44,6 +64,7 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
             name="distancia"
             value="25"
             className="qf-filter-panel__checkbox"
+            checked={distancia === "25"}
             onChange={() => handleDistanciaChange("25")}
           />
           Menos de 25 KM
@@ -55,7 +76,7 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
             name="distancia"
             value="100"
             className="qf-filter-panel__checkbox"
-            defaultChecked
+            checked={distancia === "100"}
             onChange={() => handleDistanciaChange("100")}
           />
           Menos de 100 KM
@@ -87,6 +108,14 @@ const FiltersEventosConsumidor = ({ setDistancia, setPreventa }) => {
           Sin Preventa
         </label>
       </div>
+
+      <hr className="qf-filter-panel__divider" />
+      <button
+        className="qf-filter-panel__clear-btn"
+        onClick={handleClearFilters}
+      >
+        Limpiar filtros
+      </button>
     </div>
   );
 };

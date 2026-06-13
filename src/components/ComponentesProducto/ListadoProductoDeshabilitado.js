@@ -98,7 +98,7 @@ const ListadoProductoDeshabilitado = ({ carrito }) => {
       gap: "10px",
     },
     sidebarButton: {
-      backgroundColor: "var(--qf-green)",
+      backgroundColor: "var(--qf-naranja)",
       color: "var(--qf-blanco-puro)",
       fontSize: "1rem",
       textDecoration: "none",

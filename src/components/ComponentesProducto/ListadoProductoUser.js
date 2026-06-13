@@ -26,7 +26,7 @@ const ListadoProductoUser = () => {
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Eventos", url: "/Listado-eventos" },
-    { title: "Puestos", url: `/listado-puestos/${id}` },
+    { title: "Puestos", url: `/listado-puestos/${evento?.id || id}` },
     { title: "Productos", url: `/productos/${puesto?.id}` },
   ];
   const location = useLocation();
@@ -80,143 +80,118 @@ const ListadoProductoUser = () => {
     setFilteredProductos(filtered);
   };
 
-  const styles = {
-    mainContent: {
-      width: isMobile ? "100%" : "80%",
-      padding: "0",
-      boxSizing: "border-box",
-    },
-    contentRow: {
-      display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      gap: "20px",
-      alignItems: isMobile ? "stretch" : "flex-start",
-    },
-    leftCol: {
-      width: isMobile ? "100%" : isTablet ? "65%" : "70%",
-      boxSizing: "border-box",
-    },
-    rightColInner: {
-      width: isMobile ? "100%" : isTablet ? "35%" : "30%",
-      boxSizing: "border-box",
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px",
-      alignItems: isMobile ? "stretch" : "flex-start",
-      order: isMobile ? -1 : 0,
-    },
-    buscadorBox: {
-      width: "98%",
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      padding: "8px 16px",
-      boxSizing: "border-box",
-      backgroundColor: "var(--qf-bg-secondary)",
-    },
-    boton: {
-      width: "98%",
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      backgroundColor: "var(--qf-naranja)",
-      padding: "10px",
-      color: "var(--qf-text-primary)",
-      cursor: "pointer",
-    },
-    banner: {
-      backgroundImage: `url(${banner})`,
-      height: "120px",
-      backgroundSize: "100%",
-      backgroundRepeat: "no-repeat",
-      display: "flex",
-      justifyContent: "flex-start",
-      alignItems: "center",
-      borderBottom: `2px solid var(--qf-blanco-puro)`,
-      marginBottom: "20px",
-      paddingLeft: "16px",
-    },
-    bannerText: {
-      fontSize: "32px",
-      fontWeight: "bold",
-      color: "var(--qf-naranja)",
-      backgroundColor: "var(--qf-bg-secondary)",
-      padding: "10px 16px",
-      borderRadius: "10px",
-      border: `2px solid var(--qf-blanco-puro)`,
-      width: "98%",
-      margin: 0,
-      textAlign: "left",
-    },
-    productsContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      padding: "0",
-      paddingBottom: "80px",
-      // Dejar que la página maneje el scroll, no el contenedor
-      overflow: "visible",
-      width: "100%",
-      boxSizing: "border-box",
-    },
-    productCard: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      boxSizing: "border-box",
-    },
-    noProductsMessage: {
-      textAlign: "center",
-      fontSize: "24px",
-      color: "var(--qf-naranja)",
-      height: "50vh",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-
-  };
-
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-
-      <div style={styles.mainContent}>
-        <div style={styles.banner}>
-          <h1 style={styles.bannerText}>{puesto?.nombreCarro}</h1>
+      <div style={{
+        width: isMobile ? "100%" : "80%",
+        height: "100%",
+        padding: 0,
+        display: "flex",
+        flexDirection: "column",
+        boxSizing: "border-box",
+        flex: 1,
+      }}>
+        {/* Banner */}
+        <div style={{
+          backgroundImage: `url(${banner})`,
+          height: "120px",
+          backgroundSize: "100%",
+          backgroundRepeat: "no-repeat",
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          borderBottom: "2px solid var(--qf-blanco-puro)",
+          marginBottom: "20px",
+          paddingLeft: "16px",
+        }}>
+          <h1 className="qf-page-title" style={{
+            fontSize: "1.5rem",
+            backgroundColor: "var(--qf-bg-secondary)",
+            padding: "10px 16px",
+            borderRadius: "10px",
+            border: "2px solid var(--qf-blanco-puro)",
+            width: "98%",
+            margin: 0,
+            textAlign: "left",
+          }}>
+            {puesto?.nombreCarro}
+          </h1>
         </div>
-        <div style={styles.contentRow}>
-          <div style={styles.leftCol}>
-            <div>
-              <Breadcrumb items={breadcrumbItems} />
+
+        {/* Contenido scrollable con dos columnas */}
+        <div style={{
+          flex: 1,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+        }}>
+          <div style={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            gap: "20px",
+            alignItems: isMobile ? "stretch" : "flex-start",
+            height: isMobile ? "auto" : "100%",
+            overflow: isMobile ? "visible" : "hidden",
+          }}>
+            {/* Columna izquierda: breadcrumb + productos */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
+              boxSizing: "border-box",
+            }}>
+              <div style={{ paddingLeft: "16px" }}>
+                <Breadcrumb items={breadcrumbItems} />
+              </div>
+
+              <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "0",
+                paddingBottom: "80px",
+                overflow: "visible",
+                width: "100%",
+                boxSizing: "border-box",
+              }}>
+                {!loanding ? (
+                  <LoandingComponent />
+                ) : Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
+                  filteredProductos.map((producto, index) => (
+                    <div key={index} style={{ width: "100%", display: "flex", justifyContent: "center", boxSizing: "border-box" }}>
+                      <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} evento={evento}/>
+                    </div>
+                  ))
+                ) : (
+                  <h2 className="qf-no-results">
+                    No existen productos en este carrito.
+                  </h2>
+                )}
+              </div>
             </div>
 
-            <div style={styles.productsContainer}>
-              {!loanding ? (
-                <LoandingComponent />
-              ) : Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
-                filteredProductos.map((producto, index) => (
-                  <div key={index} style={styles.productCard}>
-                    <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} evento={evento}/>
-                  </div>
-                ))
-              ) : (
-                <h2 style={styles.noProductsMessage}>
-                  No existen productos en este carrito.
-                </h2>
-              )}
+            {/* Columna derecha: buscador + botón carrito */}
+            <div style={{
+              width: isMobile ? "100%" : isTablet ? "35%" : "30%",
+              boxSizing: "border-box",
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              alignItems: isMobile ? "stretch" : "flex-start",
+              order: isMobile ? -1 : 0,
+            }}>
+              <div className="qf-search-box">
+                <BuscadorProductoConsumidor onSearch={handleSearch} />
+              </div>
+              <button
+                className="qf-btn qf-btn--primary"
+                style={{ width: "100%" }}
+                onClick={() => navigate("/carrito")}
+              >
+                Ir a mi Carrito
+              </button>
             </div>
-          </div>
-
-          <div style={styles.rightColInner}>
-            <div style={styles.buscadorBox}>
-              <BuscadorProductoConsumidor onSearch={handleSearch} />
-            </div>
-            <button style={styles.boton} onClick={() => navigate("/carrito")}>
-              Ir a mi Carrito
-            </button>
           </div>
         </div>
       </div>
-
-
 
       <Footer />
     </PageLayout>

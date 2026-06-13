@@ -698,6 +698,23 @@
   cursor: pointer;
 }
 
+.qf-filter-panel__clear-btn {
+  width: 100%;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--qf-rojo);
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
 // Buscador compartido
 .qf-search-panel {
   display: flex;
