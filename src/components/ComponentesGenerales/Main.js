@@ -16,6 +16,7 @@ import Notificaciones from "../ComponentesConsumidor/Notificaciones";
 import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
 import AsociacionesEPC from "../ComponentesEPC/AsociacionesEPC";
 import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
+import EventoDetalleWeb from "../ComponentesEventos/EventoDetalleWeb";
 import EventoPrueba from "../ComponentesEventos/EventoPrueba";
 import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
 import ListadoEventosProductor from "../ComponentesEventos/ListadoEventosProductor";
@@ -71,7 +72,7 @@ const importsToCheck = {
   ListadoProducto, ListadoProductoDeshabilitado, ListadoProductoUser, RegistrarProductos,
   AdquirirNuevoRolPE, AsociarPuestoAEvento, ConsultarPuesto, ConsultarPuestoSolicitud,
   CrearNuevoPuesto, ListadoPuestosEncargado, ListadoPuestosUser, ListadoPuestosDeshabilitados,
-  PanelEncargado, PanelProductor, DocumentUpload, Inicio, Sidebar, Preventa
+  PanelEncargado, PanelProductor, DocumentUpload, Inicio, Sidebar, Preventa, EventoDetalleWeb
 };
 Object.entries(importsToCheck).forEach(([name, val]) => {
   if (typeof val === "undefined") console.error(`CRITICAL: Import ${name} is undefined in Main.js`);
@@ -144,6 +145,7 @@ const Main = () => {
         <Route path="/registrar-evento5/:eventoId/:diferenciaDiasEvento" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={RegistrarEvento5} name="RegistrarEvento5" /></PrivateRoute>} />
         <Route path="/grafica-productor" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={PanelProductor} name="PanelProductor" /></PrivateRoute>} />
         <Route path="/registrar-evento" element={<PrivateRoute requiredRoles={["productor"]}><SafeRoute component={RegistrarEvento} name="RegistrarEvento" /></PrivateRoute>} />
+        <Route path="/evento-detalle/:id" element={<PrivateRoute requiredRoles={["productor","encargado"]}><SafeRoute component={EventoDetalleWeb} name="EventoDetalleWeb" /></PrivateRoute>} />
 
         {/* ─── Solo encargado ─── */}
         <Route path="/listado-puestos-encargado" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoPuestosEncargado} name="ListadoPuestosEncargado" /></PrivateRoute>} />
