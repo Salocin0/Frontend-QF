@@ -22,6 +22,10 @@ const ListadoProductoUser = () => {
   const [puesto, setPuesto] = useState();
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const selectedDay = location.state?.selectedDay || null;
+  let evento = location.state?.evento || null;
+  const eventoId = location.state?.eventoid;
   
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
@@ -29,10 +33,6 @@ const ListadoProductoUser = () => {
     { title: "Puestos", url: `/listado-puestos/${evento?.id || id}` },
     { title: "Productos", url: `/productos/${puesto?.id}` },
   ];
-  const location = useLocation();
-  const selectedDay = location.state?.selectedDay || null;
-  let evento = location.state?.evento || null;
-  const eventoId = location.state?.eventoid;
   console.log(eventoId);
   if(evento===null){
     evento={id:eventoId}
