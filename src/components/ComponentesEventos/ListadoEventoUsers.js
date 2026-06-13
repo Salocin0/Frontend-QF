@@ -270,7 +270,7 @@ const ListadoEventosUsers = () => {
                       <div key={rowIndex} style={{ width: "100%" }}>
                         {row.map((evento, index) => (
                           <div
-                            key={index}
+                            key={evento?.id ?? `empty-${rowIndex}-${index}`}
                             style={{ marginBottom: "10px", width: "100%" }}
                           >
                             {evento !== null ? (
