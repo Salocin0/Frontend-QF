@@ -49,7 +49,7 @@ const ListadoEventosUsers = () => {
   const [userLocation, setUserLocation] = useState(null);
 
   
-  const [distancia, setDistancia] = useState(100);
+  const [distancia, setDistancia] = useState(null);
   const [nombre, setNombre] = useState("");
   const [preventa, setPreventa] = useState({ conPreventa: true, sinPreventa: true });
 
