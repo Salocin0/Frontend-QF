@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const BuscadorProductoConsumidor = ({ onSearch }) => {
   const [searchText, setSearchText] = useState("");
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (onSearch) {
+        onSearch(searchText);
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchText, onSearch]);
+
   const handleInputChange = (event) => {
     setSearchText(event.target.value);
-  };
-
-  const handleSearch = () => {
-    if (onSearch) {
-      onSearch(searchText);
-    }
   };
 
   return (
@@ -22,9 +26,6 @@ const BuscadorProductoConsumidor = ({ onSearch }) => {
         onChange={handleInputChange}
         className="qf-search-panel__input"
       />
-      <button className="qf-search-panel__button" onClick={handleSearch}>
-        Buscar
-      </button>
     </div>
   );
 };

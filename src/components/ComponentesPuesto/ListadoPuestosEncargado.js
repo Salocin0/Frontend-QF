@@ -236,6 +236,7 @@ const ListadoPuestosEncargado = () => {
               <Buscador
                 placeholder="Buscar puestos..."
                 onBuscar={handleBuscar}
+                botonBuscar={false}
               />
               <Filtros
                 gruposFiltros={gruposEjemplo}

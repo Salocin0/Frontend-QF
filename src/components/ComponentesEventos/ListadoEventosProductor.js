@@ -162,6 +162,7 @@ const ListadoEventosProductor = () => {
             <Buscador
               placeholder="Buscar eventos..."
               onBuscar={setSearchTerm}
+              botonBuscar={false}
             />
           </div>
           <div className="qf-filter-box">
