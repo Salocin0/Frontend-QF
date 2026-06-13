@@ -1,5 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
-import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable } from '@dnd-kit/core';
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { toast } from "react-toastify";
@@ -54,6 +54,7 @@ const KanbanBoard = ({id}) => {
   // const [confirmPopup, setConfirmPopup] = useState(null); // removed confirmation
   const [showCancelledColumn] = useState(true);
   const [allowedColumns, setAllowedColumns] = useState(null);
+  const [activeTask, setActiveTask] = useState(null); // for DragOverlay
   const [infoDialog, setInfoDialog] = useState({open:false, task:null});
   const [detailData, setDetailData] = useState(null); // fetched order detailsn
   const recargarComponente = () => {
@@ -189,6 +190,34 @@ const KanbanBoard = ({id}) => {
     }
   };
 
+  const formatDate = (fecha) => {
+    const d = new Date(fecha);
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy = String(d.getFullYear()).slice(-2);
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mi = String(d.getMinutes()).padStart(2,'0');
+    return `${dd}/${mm}/${yy} ${hh}:${mi}`;
+  };
+
+  // Visual card content — reused in SortableItem and DragOverlay
+  const TaskCardContent = ({ task }) => (
+    <>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }} />
+      {(task.consumerName || task.consumidorId) && (
+        <div style={{ fontSize: '0.9em', marginTop: '4px' }}>
+          Consumidor: {task.consumerName || task.consumidorId}
+        </div>
+      )}
+      <div style={{ marginTop: '4px', marginBottom: '4px', fontSize:'0.9em' }}>
+        {formatDate(task.fecha)}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
+        <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>${Number(task.total).toFixed(2)}</div>
+      </div>
+    </>
+  );
+
 
 
   const handleDelete = (taskId) => {
@@ -250,39 +279,11 @@ const KanbanBoard = ({id}) => {
       display: 'flex',
       flexDirection: 'column',
       position: 'relative',
-    };
-    const formatDate = (fecha) => {
-      const d = new Date(fecha);
-      const dd = String(d.getDate()).padStart(2,'0');
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const yy = String(d.getFullYear()).slice(-2);
-      const hh = String(d.getHours()).padStart(2,'0');
-      const mi = String(d.getMinutes()).padStart(2,'0');
-      return `${dd}/${mm}/${yy} ${hh}:${mi}`;
+      opacity: activeTask && activeTask.id === task.id ? 0.3 : 1,
     };
     return (
       <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-        {/* header empty, no close button anymore */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-        </div>
-        {(task.consumerName || task.consumidorId) && (
-          <div style={{ fontSize: '0.9em', marginTop: '4px' }}>
-            Consumidor: {task.consumerName || task.consumidorId}
-          </div>
-        )}
-        <div style={{ marginTop: '4px', marginBottom: '4px', fontSize:'0.9em' }}>
-          {formatDate(task.fecha)}
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
-          <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>${Number(task.total).toFixed(2)}</div>
-          <button
-            onClick={(e) => { e.stopPropagation(); setInfoDialog({open:true, task}); }}
-            onPointerDown={(e) => e.stopPropagation()}
-            style={{ background:'transparent', border:'none', color:'#F7B813', cursor:'pointer', fontSize:'18px', padding:'0' }}
-          >
-            <FaEye />
-          </button>
-        </div>
+        <TaskCardContent task={task} />
       </div>
     );
   };
@@ -325,10 +326,12 @@ const KanbanBoard = ({id}) => {
     if (task) {
       const estado = task.estado;
       setAllowedColumns(allowedMovesMap[estado] || []);
+      setActiveTask(task);
     }
   };
 
   const handleDragEnd = (event) => {
+    setActiveTask(null);
     const {active, over} = event;
     if (!over) return;
 
@@ -422,11 +425,32 @@ const KanbanBoard = ({id}) => {
 
   return (
     <div style={{ display: 'flex', height: isMobile ? 'auto' : '75vh', margin: 0, padding: '4px 0', overflowX: 'auto', overflowY: 'hidden', gap: 0 }}>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragCancel={() => setAllowedColumns(null)} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragCancel={() => { setAllowedColumns(null); setActiveTask(null); }} onDragEnd={handleDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];
           return <Column key={columnId} column={column} />;
         })}
+        <DragOverlay dropAnimation={null}>
+          {activeTask ? (
+            <div style={{
+              padding: '8px',
+              margin: '0',
+              minHeight: '120px',
+              width: isMobile ? '80vw' : '280px',
+              backgroundColor: 'var(--qf-bg-secondary)',
+              color: '#F7B813',
+              border: `1px solid ${getStatusColor(activeTask.estado)}`,
+              borderRadius: '4px',
+              display: 'flex',
+              flexDirection: 'column',
+              position: 'relative',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+              cursor: 'grabbing',
+            }}>
+              <TaskCardContent task={activeTask} />
+            </div>
+          ) : null}
+        </DragOverlay>
       </DndContext>
 
       {/* confirmation popup removed - moves now apply immediately */}
