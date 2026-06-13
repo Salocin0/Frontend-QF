@@ -35,7 +35,7 @@ const FiltersEventosConsumidor = ({
 
   const handleClearFilters = () => {
     setLocalPreventa({ conPreventa: true, sinPreventa: true });
-    setDistancia(100);
+    setDistancia(null);
   };
 
   return (
