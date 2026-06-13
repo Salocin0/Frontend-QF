@@ -58,6 +58,11 @@ const EventoUser = ({ evento }) => {
   const eventoFinalizado = fechaFin && fechaFin <= ahora;
   const eventoEnProgreso = fechaInicio && fechaFin && fechaInicio <= ahora && fechaFin > ahora;
 
+  const formatEstado = (str) => {
+    if (!str) return "";
+    return str.replace(/([A-Z])/g, " $1").trim();
+  };
+
   const textoTiempo =
     fechaInicio && fechaFin
       ? calcularTextoTiempo(fechaInicio, fechaFin)
@@ -182,11 +187,6 @@ const EventoUser = ({ evento }) => {
       display: "flex",
       justifyContent: "center",
     },
-  };
-
-  const formatEstado = (str) => {
-    if (!str) return "";
-    return str.replace(/([A-Z])/g, " $1").trim();
   };
 
   const handleCardClick = () => {
