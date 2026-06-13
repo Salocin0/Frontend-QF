@@ -173,17 +173,8 @@ const ListadoEventosProductor = () => {
           </div>
           <button
             onClick={agregarNuevo}
-            style={{
-              backgroundColor: "var(--qf-green)",
-              color: "white",
-              padding: "15px 20px",
-              borderRadius: "10px",
-              border: "none",
-              cursor: "pointer",
-              width: "100%",
-              fontSize: "16px",
-              fontWeight: "bold",
-            }}
+            className="qf-btn qf-btn--primary"
+            style={{ width: "100%" }}
           >
             Agregar Evento
           </button>

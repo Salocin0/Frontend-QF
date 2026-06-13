@@ -244,7 +244,7 @@ const ListadoPuestosEncargado = () => {
               />
               <button
                 onClick={agregarNuevo}
-                className="qf-btn qf-btn--success"
+                className="qf-btn qf-btn--primary"
                 style={{ width: "100%" }}
               >
                 Agregar Puesto

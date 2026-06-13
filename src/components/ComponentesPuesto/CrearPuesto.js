@@ -50,6 +50,11 @@ const CrearNuevoPuesto = () => {
       consumidorId: user.consumidorId,
     };
 
+    if (!pdfAfip) {
+      toast.error("Debe adjuntar la constancia de AFIP");
+      return;
+    }
+
     if (!numeroCarro || !nombreCarro || !tipoNegocio || !telefonoCarro) {
       toast.error("Por favor rellene todos los datos");
       return;
@@ -276,14 +281,27 @@ const CrearNuevoPuesto = () => {
                     <option value="" disabled>
                       Seleccione un tipo de negocio
                     </option>
-                    <option value="Tipo de Negocio 1">Tipo de Negocio 1</option>
-                    <option value="Tipo de Negocio 2">Tipo de Negocio 2</option>
+                    <option value="Heladería">Heladería</option>
+                    <option value="Pizzería">Pizzería</option>
+                    <option value="Restaurante">Restaurante</option>
+                    <option value="Hamburguesería">Hamburguesería</option>
+                    <option value="Rotisería">Rotisería</option>
+                    <option value="Panadería">Panadería</option>
+                    <option value="Comida rápida">Comida rápida</option>
+                    <option value="Parrilla">Parrilla</option>
+                    <option value="Comida vegana/vegetariana">Comida vegana/vegetariana</option>
+                    <option value="Café / Deli">Café / Deli</option>
+                    <option value="Empanadas / Tartas">Empanadas / Tartas</option>
+                    <option value="Comida mexicana">Comida mexicana</option>
+                    <option value="Comida árabe">Comida árabe</option>
+                    <option value="Sushi / Comida japonesa">Sushi / Comida japonesa</option>
+                    <option value="Otros">Otros</option>
                   </select>
                 </div>
                 <div style={styles.row}>
                 <div style={{ width: "50%" }}>
                   <label style={styles.label} htmlFor="pdfAfip">
-                    Constancia de inscripción a AFIP (PDF)
+                    Constancia de inscripción a AFIP
                   </label>
                   <input
                     type="file"
@@ -295,7 +313,7 @@ const CrearNuevoPuesto = () => {
                 </div>
                 <div style={{ width: "50%" }}>
                   <label style={styles.label} htmlFor="pdfCuil">
-                    Constancia de Inspección Bromatológica (PDF)
+                    Constancia de Inspección Bromatológica
                   </label>
                   <input
                     type="file"
