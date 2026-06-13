@@ -175,8 +175,8 @@ const ListadoEventosUsers = () => {
       if (distancia) {
         filtered = filtered.filter(
           (evento) =>
-            evento.distanciaCalculada !== null &&
-            evento.distanciaCalculada !== undefined &&
+            evento.distanciaCalculada === null ||
+            evento.distanciaCalculada === undefined ||
             evento.distanciaCalculada <= distancia
         );
       }
