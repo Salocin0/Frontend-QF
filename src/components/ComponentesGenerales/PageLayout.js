@@ -80,7 +80,7 @@ const PageLayout = ({
 
       {/* Sidebar */}
       <div className={`page-layout__sidebar ${sidebarOpenClass}`}>
-        <Sidebar {...sidebarProps} />
+        <Sidebar {...sidebarProps} onClose={closeSidebar} isCollapsed={isCollapsed} />
       </div>
 
       {/* Contenido principal */}

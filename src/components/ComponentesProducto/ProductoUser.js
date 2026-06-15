@@ -1,9 +1,22 @@
-﻿import { default as React } from "react";
+﻿import React, { useRef, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import productoDefecto from "./../img/productoDefecto.png";
 
 const ProductoUser = ({ producto, user, selectedDay, evento }) => {
-  const [isHovered, setIsHovered] = React.useState(false);
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const isNarrow = cardWidth < 600;
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleAddtocart = () => {
     const headers = new Headers();
@@ -32,24 +45,24 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
     cardContainer: {
       boxShadow: isHovered ? "0px 8px 15px rgba(0, 0, 0, 0.3)" : "0px 4px 6px rgba(0, 0, 0, 0.1)",
       borderRadius: "12px",
-      width: "98%",
+      width: "100%",
       minHeight: "120px",
       overflow: "hidden",
       backgroundColor: "var(--qf-bg-secondary)",
-      margin: "0 auto 14px auto",
+      margin: "0 0 14px 0",
       border: `1px solid var(--qf-naranja)`,
       transition: "all 0.25s ease",
       display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
+      flexDirection: isNarrow ? "column" : "row",
+      alignItems: isNarrow ? "stretch" : "center",
       cursor: "default",
       transform: isHovered ? "translateY(-2px)" : "none",
-      paddingLeft: "16px",
-      paddingRight: "16px",
+      padding: isNarrow ? "16px" : "0 16px",
+      gap: isNarrow ? "12px" : "0",
     },
     imageContainer: {
-      width: "140px",
-      minWidth: "140px",
+      width: isNarrow ? "100%" : "140px",
+      minWidth: isNarrow ? "auto" : "140px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -58,7 +71,8 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
     },
     image: {
       width: "100%",
-      height: "90px",
+      maxWidth: isNarrow ? "200px" : "none",
+      height: isNarrow ? "120px" : "90px",
       objectFit: "cover",
       borderRadius: "8px",
       boxShadow: "none",
@@ -66,11 +80,13 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
     },
     cardBody: {
       flex: 1,
-      padding: "10px 18px",
+      padding: isNarrow ? "0" : "10px 18px",
       display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
+      flexDirection: isNarrow ? "column" : "row",
+      justifyContent: isNarrow ? "center" : "space-between",
+      alignItems: isNarrow ? "stretch" : "center",
+      gap: isNarrow ? "12px" : "0",
+      width: isNarrow ? "100%" : "auto",
     },
 
     infoSection: {
@@ -105,10 +121,11 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
     },
     actionSection: {
       display: "flex",
-      justifyContent: "flex-end",
+      justifyContent: isNarrow ? "space-between" : "flex-end",
       alignItems: "center",
       gap: "14px",
       marginTop: "0",
+      width: isNarrow ? "100%" : "auto",
     },
     button: {
       backgroundColor: "var(--qf-green)",
@@ -138,6 +155,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
 
   return (
     <div 
+      ref={cardRef}
       style={styles.cardContainer}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

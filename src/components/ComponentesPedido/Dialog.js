@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useEffect, useState } from "react";
-import "./../sass/main.css";
+import "./../sass/main.scss";
 
 const DialogPregunta = ({
   info,

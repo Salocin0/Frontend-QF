@@ -1,4 +1,5 @@
-﻿import React, { useEffect, useState, useContext } from "react";
+﻿import React, { useEffect, useState, useContext, useRef } from "react";
+import { FaChevronDown } from "react-icons/fa";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
@@ -9,15 +10,13 @@ import FiltersPuestosConsumidor from "../Filtros y Buscadores/filtersPuestosCons
 import BuscadorPuestosConsumidor from "../Filtros y Buscadores/BuscadorPuestosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useLocation } from "react-router-dom";
-import useBreakpoint from "../../useBreakpoint";
 
 const ListadoPuestosUser = () => {
-  const { isMobile, isTablet } = useBreakpoint();
   const { idEvento } = useParams();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [carritos, setCarritos] = useState([]);
-  const [filteredCarritos, setFilteredCarritos] = useState([]); // Estado para los carritos filtrados
+  const [filteredCarritos, setFilteredCarritos] = useState([]);
   const { user } = useContext(UserContext);
   const [estrella, setEstrella] = useState(0);
   const [tiempo, setTiempo] = useState(0);
@@ -30,6 +29,20 @@ const ListadoPuestosUser = () => {
   ];
   const location = useLocation();
   const selectedDay = location.state?.selectedDay || null;
+  const contentRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(999);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const isNarrowLayout = contentWidth <= 780;
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContentWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Obtener datos iniciales
   useEffect(() => {
@@ -105,106 +118,96 @@ const ListadoPuestosUser = () => {
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={{
-        width: isMobile ? "100%" : "80%",
-        height: "100%",
-        padding: 0,
         display: "flex",
         flexDirection: "column",
-        boxSizing: "border-box",
+        height: "100%",
         flex: 1,
+        minHeight: 0,
+        boxSizing: "border-box",
       }}>
         {/* Header */}
-        <div className="qf-page-header">
-          <h1 className="qf-page-title" style={{ fontSize: "1.75rem" }}>
+        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
+          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
             {`Puestos de ${evento.nombre}` || "Puestos"}
           </h1>
-          <hr className="qf-separator" />
+          <hr className="qf-separator qf-separator--spaced" />
         </div>
 
-        {/* Contenido scrollable con dos columnas */}
-        <div style={{
-          flex: 1,
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-        }}>
-          <div style={{
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            gap: "20px",
-            alignItems: isMobile ? "stretch" : "flex-start",
-            height: isMobile ? "auto" : "100%",
-            overflow: isMobile ? "visible" : "hidden",
-          }}>
-            {/* Columna izquierda: breadcrumb + listado */}
-            <div style={{
-              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
-              boxSizing: "border-box",
-            }}>
-              <div style={{ paddingLeft: "16px" }}>
-                <Breadcrumb items={breadcrumbItems} />
-              </div>
+        {/* Dos columnas: izquierda (breadcrumb + listado) | derecha (buscador + filtros) */}
+        <div ref={contentRef} className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`} style={{ flex: 1, minHeight: 0 }}>
+          {/* Columna izquierda */}
+          <div className="qf-page-content__main">
+            <Breadcrumb items={breadcrumbItems} style={{
+              margin: '0px auto 8px',
+              backgroundColor: 'var(--qf-bg-secondary)',
+              width: '98%',
+              paddingRight: '16px',
+              padding: '8px',
+              paddingLeft: '16px',
+              borderRadius: '10px',
+              border: '1px solid var(--qf-naranja)',
+              boxSizing: 'border-box',
+            }} />
 
-              <div style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                height: "100%",
-                width: "100%",
-                overflowY: "auto",
-                overflowX: "hidden",
-              }}>
-                <div style={{
-                  height: "100%",
-                  width: "100%",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                  gap: "10px",
-                  boxSizing: "border-box",
-                  overflowY: "scroll",
-                  overflowX: "hidden",
-                  scrollbarWidth: "none",
-                  msOverflowStyle: "none",
-                }}>
-                  {!loanding ? (
-                    <LoandingComponent />
-                  ) : Array.isArray(filteredCarritos) && filteredCarritos.length > 0 ? (
-                    rows.length > 0 &&
-                    rows.map((row, rowIndex) => (
-                      <div key={rowIndex} style={{ width: "100%" }}>
-                        {row.map((carrito, index) => (
-                          <div
-                            key={index}
-                            style={{ marginBottom: "10px", width: "100%" }}
-                          >
-                            {carrito !== null ? (
-                              <PuestoUser carrito={carrito} selectedDay={selectedDay} evento={evento} />
-                            ) : null}
-                          </div>
-                        ))}
-                      </div>
-                    ))
-                  ) : (
-                    <h2 className="qf-no-results">
-                      No hay puestos en este momento.
-                    </h2>
+            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
+            {isNarrowLayout && (
+              <div className="qf-narrow-filters" style={{ width: "98%", margin: "0 auto 0 auto" }}>
+                <div className="qf-search-box" style={{ marginBottom: "8px" }}>
+                  <BuscadorPuestosConsumidor setNombre={setNombre} />
+                </div>
+                <div className="qf-filter-box" style={{ margin: 0 }}>
+                  <div
+                    className="qf-collapsible-header"
+                    onClick={() => setFiltersOpen((prev) => !prev)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
+                  >
+                    <span className="qf-collapsible-title">FILTROS</span>
+                    <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
+                  </div>
+                  {filtersOpen && (
+                    <div className="qf-collapsible-body">
+                      <FiltersPuestosConsumidor
+                        setEstrella={setEstrella}
+                        setTiempo={setTiempo}
+                      />
+                    </div>
                   )}
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Columna derecha: buscador + filtros */}
-            <div style={{
-              width: isMobile ? "100%" : isTablet ? "35%" : "30%",
-              boxSizing: "border-box",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              alignItems: "center",
-              order: isMobile ? -1 : 0,
-            }}>
+            <div className="qf-scrollable" style={{ paddingTop: "8px" }}>
+              {!loanding ? (
+                <LoandingComponent />
+              ) : Array.isArray(filteredCarritos) && filteredCarritos.length > 0 ? (
+                rows.length > 0 &&
+                rows.map((row, rowIndex) => (
+                  <div key={rowIndex} style={{ width: "100%" }}>
+                    {row.map((carrito, index) => (
+                      <div
+                        key={index}
+                        style={{ marginBottom: "10px", width: "100%" }}
+                      >
+                        {carrito !== null ? (
+                          <PuestoUser carrito={carrito} selectedDay={selectedDay} evento={evento} />
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <h2 className="qf-no-results">
+                  No hay puestos en este momento.
+                </h2>
+              )}
+            </div>
+          </div>
+
+          {/* Columna derecha: buscador + filtros */}
+          {!isNarrowLayout && (
+            <aside className="qf-page-content__aside">
               <div className="qf-search-box">
                 <BuscadorPuestosConsumidor setNombre={setNombre} />
               </div>
@@ -214,8 +217,8 @@ const ListadoPuestosUser = () => {
                   setTiempo={setTiempo}
                 />
               </div>
-            </div>
-          </div>
+            </aside>
+          )}
         </div>
       </div>
 

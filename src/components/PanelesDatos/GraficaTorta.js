@@ -4,6 +4,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 import useBreakpoint from "../../useBreakpoint";
 
+const cssVar = (name) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || name;
+
 const GraficaTorta = ({ id }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,23 +55,25 @@ const GraficaTorta = ({ id }) => {
     { symbol: "line" },
   ];
 
+  const naranja = cssVar("--qf-naranja");
+  const bgSecondary = cssVar("--qf-bg-secondary");
   const option = {
     height: "90%",
     tooltip: {
       trigger: "item",
       formatter: "{a} <br/>{b}: {c} ({d}%)",
     },
-    backgroundColor: "var(--qf-bg-secondary)",
+    backgroundColor: bgSecondary,
     title: {
       text: "Porcentaje de Recaudación por Puesto",
       subtext: "Porcentaje de lo recaudado en el evento por cada puesto",
       top: "3%",
       left: "center",
       textStyle: {
-        color: "var(--qf-naranja)",
+        color: naranja,
       },
       subtextStyle: {
-        color: "var(--qf-naranja)",
+        color: naranja,
       },
     },
     legend: {
@@ -76,7 +81,7 @@ const GraficaTorta = ({ id }) => {
       bottom: isMobile ? 0 : "auto",
       orient: isMobile ? "horizontal" : "vertical",
       textStyle: {
-        color: "var(--qf-naranja)",
+        color: naranja,
       },
     },
     series: [
@@ -84,20 +89,20 @@ const GraficaTorta = ({ id }) => {
         top: "15%",
         name: "Total Recaudado",
         type: "pie",
-        radius: ["30%", "60%"], // Ajusta el tamaño del gráfico (más pequeño o más grande)
-        center: ["50%", "50%"], // Ajusta la posición del gráfico dentro del contenedor
+        radius: ["30%", "60%"],
+        center: ["50%", "50%"],
         label: {
-          color: "var(--qf-naranja)",
+          color: naranja,
         },
         labelLine: {
           lineStyle: {
-            color: "var(--qf-naranja)",
+            color: naranja,
           },
         },
         data: formattedData.map((item, index) => ({
           ...item,
           itemStyle: {
-            decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null, // Aplica un patrón distinto por sección
+            decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null,
           },
         })),
         emphasis: {

@@ -1,7 +1,8 @@
 ﻿import React, { useState } from "react";
 
-const Filtros = ({ gruposFiltros = [], onFiltrar, titulo = "FILTROS" }) => {
+const Filtros = ({ gruposFiltros = [], onFiltrar, titulo = "FILTROS", collapsible = false, defaultCollapsed = false }) => {
   const [filtrosSeleccionados, setFiltrosSeleccionados] = useState({});
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
 
   const styles = {
     container: {
@@ -18,6 +19,11 @@ const Filtros = ({ gruposFiltros = [], onFiltrar, titulo = "FILTROS" }) => {
       fontWeight: "bold",
       marginBottom: "15px",
       textTransform: "uppercase",
+      cursor: collapsible ? "pointer" : "default",
+      userSelect: collapsible ? "none" : "auto",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
     },
     divider: {
       border: "none",
@@ -55,10 +61,13 @@ const Filtros = ({ gruposFiltros = [], onFiltrar, titulo = "FILTROS" }) => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>{titulo}</h2>
+      <h2 style={styles.title} onClick={() => collapsible && setCollapsed(!collapsed)}>
+        {titulo}
+        {collapsible && <span>{collapsed ? "▸" : "▾"}</span>}
+      </h2>
       <hr style={styles.divider} />
 
-      {gruposFiltros.map((grupo, index) => (
+      {!collapsed && gruposFiltros.map((grupo, index) => (
         <React.Fragment key={index}>
           {grupo.opciones.map((opcion, idx) => (
             <div key={`${index}-${idx}`} style={styles.filterGroup}>

@@ -1,9 +1,6 @@
 ﻿import { FaBolt } from 'react-icons/fa'
-import useBreakpoint from "../../useBreakpoint";
 
 const CardCompraInstantanea = ({ evento }) => {
-    const { isMobile } = useBreakpoint();
-
     // Verificamos el estado del evento
     const eventStatus = evento?.estado; // Asumiendo que 'evento' tiene un atributo 'estado'
 
@@ -14,16 +11,14 @@ const CardCompraInstantanea = ({ evento }) => {
 
     const styles = {
         card: {
-            width: "calc(80% - 40px)", // 70%
-            height: "30vh", // 30% del alto de la pantalla
+            width: "100%",
+            minHeight: "30vh",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "var(--qf-bg-secondary)", // Fondo gris claro
             borderRadius: "8px",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            marginBottom: "20px",
-            marginLeft: isMobile ? "0" : "calc(20% + 20px)",
             border: `1px solid var(--qf-naranja)`,
             cursor: "pointer"
         },

@@ -91,36 +91,36 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
     }));
 
     setChartData({
-      tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+      tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, confine: true },
       title: { 
         text: "Recaudación por Día", 
         left: "center", 
         top: "1%",
-        textStyle: { color: "var(--qf-naranja)" }
+        textStyle: { color: "#ffffff" }
       },
       legend: { 
         data: puestos, 
         top: isMobile ? "auto" : 30,
         bottom: isMobile ? 0 : "auto",
         orient: isMobile ? "horizontal" : "vertical",
-        textStyle: { color: "var(--qf-naranja)" }
+        textStyle: { color: "#ffffff" }
       },
       xAxis: { 
         type: "category", 
         data: categorias,
-        axisLabel: { color: "var(--qf-naranja)" },
-        axisLine: { lineStyle: { color: "var(--qf-naranja)" } }
+        axisLabel: { color: "#ffffff" },
+        axisLine: { lineStyle: { color: "#ffffff" } }
       },
       yAxis: { 
         type: "value",
-        axisLabel: { color: "var(--qf-naranja)" },
-        axisLine: { lineStyle: { color: "var(--qf-naranja)" } },
+        axisLabel: { color: "#ffffff" },
+        axisLine: { lineStyle: { color: "#ffffff" } },
         splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
       },
       series,
-      backgroundColor: "var(--qf-bg-secondary)",
+      backgroundColor: "transparent",
     });
-  }, [decalEnabled, categorias, groupedData, puestos, puestoId]);
+  }, [decalEnabled, categorias, groupedData, puestos, puestoId, isMobile]);
 
   const onChartClick = (params) => {
     setSelectedDay(params.name);
@@ -138,7 +138,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   );
 
   return (
-    <div style={{ position: "relative", height: "100%", width: "100%", maxWidth: isMobile ? "100%" : "800px" }} data-testid="grafica-wrapper">
+    <div style={{ position: "relative", height: "100%", width: "100%", minHeight: "400px", overflow: "visible" }} data-testid="grafica-wrapper">
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
@@ -164,6 +164,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
           <ReactECharts
             option={chartData}
             theme="dark"
+            notMerge={true}
             style={{ height: "100%", width: "100%" }}
             onEvents={{ click: onChartClick }}
           />
@@ -227,32 +228,32 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
         });
 
         setChartData({
-          backgroundColor: "var(--qf-bg-secondary)",
-          tooltip: { trigger: "axis", axisPointer: { type: "cross" } },
+          backgroundColor: "transparent",
+          tooltip: { trigger: "axis", axisPointer: { type: "cross" }, confine: true },
           title: { 
             text: `Detalle de Ventas - ${selectedDay}`, 
             left: "center",
             top : "1%",
-            textStyle: { color: "var(--qf-naranja)" }
+            textStyle: { color: "#ffffff" }
           },
           xAxis: { 
             type: "category", 
             data: xAxisData,
-            axisLabel: { color: "var(--qf-naranja)" },
-            axisLine: { lineStyle: { color: "var(--qf-naranja)" } }
+            axisLabel: { color: "#ffffff" },
+            axisLine: { lineStyle: { color: "#ffffff" } }
           },
           yAxis: { 
             type: "value",
-            axisLabel: { color: "var(--qf-naranja)" },
-            axisLine: { lineStyle: { color: "var(--qf-naranja)" } },
+            axisLabel: { color: "#ffffff" },
+            axisLine: { lineStyle: { color: "#ffffff" } },
             splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
           },
-          grid: { bottom: 100 },
+          grid: { bottom: isMobile ? 40 : 100 },
           legend: { 
             data: Object.keys(seriesData), 
             bottom: isMobile ? 0 : "auto",
             orient: isMobile ? "horizontal" : "vertical",
-            textStyle: { color: "var(--qf-naranja)" }
+            textStyle: { color: "#ffffff" }
           },
           series: Object.keys(seriesData).map((key) => ({
             name: key,
@@ -264,7 +265,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [selectedDay, idevento, idpuesto]);
+  }, [selectedDay, idevento, idpuesto, isMobile]);
 
   if (loading) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
@@ -278,8 +279,8 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
   );
 
   return (
-    <div style={{ position: "relative" }} className="h-100 w-100">
-      <ReactECharts option={chartData} theme="dark" className="h-100 w-100" />
+    <div style={{ position: "relative", overflow: "visible" }} className="h-100 w-100">
+      <ReactECharts option={chartData} theme="dark" notMerge={true} className="h-100 w-100" />
       <button
         style={{
           position: "absolute",

@@ -1,6 +1,6 @@
 ﻿import React, { useState } from "react";
 import { toast } from "react-toastify";
-import "./../../sass/main.css";
+import "./../../sass/main.scss";
 import Footer from "../../ComponentesGenerales/Footer";
 import useBreakpoint from "../../../useBreakpoint";
 

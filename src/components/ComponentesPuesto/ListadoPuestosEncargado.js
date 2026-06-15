@@ -1,48 +1,34 @@
-﻿import { useContext, useEffect, useState, useMemo } from "react";
-import { CircularProgress } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import PageLayout from "../ComponentesGenerales/PageLayout";
-import Footer from "../ComponentesGenerales/Footer";
 import PuestoEncargado from "./PuestoEncargado";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import { useContext } from "react";
+import Footer from "../ComponentesGenerales/Footer";
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Buscador from "../Filtros y Buscadores/Buscador";
 import Filtros from "../Filtros y Buscadores/Filtros";
+import { CircularProgress } from "@mui/material";
 import useBreakpoint from "../../useBreakpoint";
 
 const ListadoPuestosEncargado = () => {
-  const { isMobile, isTablet } = useBreakpoint();
-  const [rows, setRows] = useState([]);
-  const [carritos, setCarritos] = useState([]);
-  const [carritosOriginales, setCarritosOriginales] = useState([]);
-  const [busqueda, setBusqueda] = useState("");
-  const [filtrosAplicados, setFiltrosAplicados] = useState({});
+  const { isMobile, width } = useBreakpoint();
+  const isVeryNarrow = width < 1100;
+  const [puestos, setPuestos] = useState([]);
+  const [recargar, setRecargar] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterState, setFilterState] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  const [actualizar, setActualizar] = useState(0);
 
-  const actualizarListado = () => {
-    setActualizar((prev) => prev + 1);
+  const recargarComponente = () => {
+    console.log("Recargando componente");
+    setTimeout(() => {
+      setRecargar(recargar + 1);
+    }, 100);
   };
-
-  const gruposEjemplo = [
-    {
-      nombre: "estado",
-      opciones: [
-        { valor: "Creado", etiqueta: "Creado" },
-        { valor: "Deshabilitado", etiqueta: "Deshabilitado" },
-      ],
-    },
-    {
-      nombre: "tipo",
-      opciones: [
-        { valor: "comida_rapida", etiqueta: "Comida Rápida" },
-        { valor: "restaurante", etiqueta: "Restaurante" },
-      ],
-    },
-  ];
 
   useEffect(() => {
     if (user) {
@@ -57,205 +43,135 @@ const ListadoPuestosEncargado = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          setCarritos(data.data);
-          setCarritosOriginales(data.data);
-          const totalCarritos = Math.ceil(data.data.length / 4) * 4;
-          const carritosConNulos = [
-            ...data.data,
-            ...Array(totalCarritos - data.data.length).fill(null),
-          ];
-
-          const generatedRows = [];
-          for (let i = 0; i < carritosConNulos.length; i += 4) {
-            const row = carritosConNulos.slice(i, i + 4);
-            generatedRows.push(row);
-          }
-          setRows(generatedRows);
+          setPuestos(data.data);
         })
-        .catch((error) => console.log("No existen carritos."))
+        .catch((error) => console.log("No existen puestos.", error))
         .finally(() => setIsLoading(false));
-
     }
-  }, [actualizar, user]);
-
-  const handleBuscar = (texto) => {
-    setBusqueda(texto);
-  };
-
-  const handleFiltrar = (filtros) => {
-    setFiltrosAplicados(filtros);
-  };
-
-  const carritosFiltrados = useMemo(() => {
-    return carritosOriginales.filter((carrito) => {
-      const coincideBusqueda =
-        !busqueda ||
-        JSON.stringify(carrito).toLowerCase().includes(busqueda.toLowerCase());
-
-      const coincideFiltros = Object.entries(filtrosAplicados).every(
-        ([campo, valor]) => {
-          if (!valor) return true;
-          return carrito[campo] === valor;
-        }
-      );
-
-      return coincideBusqueda && coincideFiltros;
-    });
-  }, [busqueda, filtrosAplicados, carritosOriginales]);
-
-  useEffect(() => {
-    setCarritos(carritosFiltrados);
-    const totalCarritos = Math.ceil(carritosFiltrados.length / 4) * 4;
-    const carritosConNulos = [
-      ...carritosFiltrados,
-      ...Array(totalCarritos - carritosFiltrados.length).fill(null),
-    ];
-
-    const generatedRows = [];
-    for (let i = 0; i < carritosConNulos.length; i += 4) {
-      const row = carritosConNulos.slice(i, i + 4);
-      generatedRows.push(row);
-    }
-    setRows(generatedRows);
-  }, [carritosFiltrados]);
+  }, [user, recargar]);
 
   const agregarNuevo = () => {
     navigate(`/crear-puesto`);
   };
+
+  const estadoGroup = {
+    nombre: 'estado',
+    opciones: Array.from(
+      new Set(puestos.map((p) => p.estado))
+    ).map((estado) => ({
+      valor: estado,
+      etiqueta: estado ? estado.replace(/([A-Z])/g, ' $1').trim() : estado,
+    })),
+  };
+
+  const filteredPuestos = puestos.filter((puesto) => {
+    const matchesSearch = searchTerm
+      ? JSON.stringify(puesto).toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
+    const matchesState = filterState
+      ? puesto.estado === filterState
+      : true;
+    return matchesSearch && matchesState;
+  });
 
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Puestos", url: "/listado-puestos-encargado" },
   ];
 
+  const asideContent = (
+    <aside className="qf-page-content__aside" style={isVeryNarrow ? { width: "calc(100% - 20px)", margin: "0 20px 10px 20px", minWidth: 0, order: 0 } : undefined}>
+      <div className="qf-search-box">
+        <Buscador
+          placeholder="Buscar puestos..."
+          onBuscar={setSearchTerm}
+          botonBuscar={false}
+        />
+      </div>
+      <div className="qf-filter-box">
+        <Filtros
+          gruposFiltros={[estadoGroup]}
+          onFiltrar={(f) => setFilterState(f.estado || '')}
+          titulo="ESTADOS"
+          collapsible
+          defaultCollapsed
+        />
+      </div>
+      <button
+        onClick={agregarNuevo}
+        className="qf-btn qf-btn--primary"
+        style={{ width: "100%" }}
+      >
+        Agregar Puesto
+      </button>
+    </aside>
+  );
+
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        width: isMobile ? "100%" : "80%",
-        height: "100%",
-        padding: 0,
-        display: "flex",
-        flexDirection: "column",
-        boxSizing: "border-box",
-        flex: 1,
-      }}>
-        {/* Header */}
-        <div className="qf-page-header">
-          <h1 className="qf-page-title" style={{ fontSize: "1.75rem" }}>
-            Mis Puestos
-          </h1>
-          <hr className="qf-separator" />
-        </div>
+      {/* Header full-width */}
+      <div className="qf-page-header" style={{ textAlign: "center", paddingLeft: 0 }}>
+        <h1 className="qf-page-title" style={{ textAlign: "center", paddingBottom: "20px" }}>Puestos</h1>
+      </div>
+      <hr className="qf-separator" style={{ margin: "0 0 20px", width: "100vw", marginLeft: "calc(-50vw + 50%)" }} />
 
-        {/* Contenido scrollable con dos columnas */}
-        <div style={{
-          flex: 1,
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-        }}>
-          <div style={{
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            gap: "20px",
-            alignItems: isMobile ? "stretch" : "flex-start",
-            height: isMobile ? "auto" : "100%",
-            overflow: isMobile ? "visible" : "hidden",
-            paddingLeft: isMobile ? "0" : "20px",
-            paddingRight: isMobile ? "0" : "20px",
-          }}>
-            {/* Columna izquierda: breadcrumb + cards */}
-            <div style={{
-              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
-              boxSizing: "border-box",
-            }}>
-              <Breadcrumb items={breadcrumbItems} />
+      {/* Contenido en dos columnas */}
+      <div className="qf-page-content" style={{ padding: isMobile ? "0 12px" : "0", flex: 1, minHeight: 0, flexDirection: isVeryNarrow ? "column" : "row" }}>
+        {/* Columna principal: breadcrumb + aside (si es angosto) + listado */}
+        <div className="qf-page-content__main">
+          <Breadcrumb items={breadcrumbItems} style={{ width: "calc(100% - 20px)", margin: "0 20px 10px 20px" }} />
+          {isVeryNarrow && asideContent}
 
-              {isLoading ? (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    padding: "2rem",
-                  }}
-                >
-                  <CircularProgress
-                    style={{ color: "var(--qf-naranja)" }}
-                    size={40}
-                  />
+          <div className="qf-scrollable" style={{ paddingBottom: "60px" }}>
+            {isLoading || !user ? (
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
+                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
+              </div>
+            ) : filteredPuestos.length > 0 ? (
+              filteredPuestos.map((puesto, index) => (
+                <PuestoEncargado
+                  key={index}
+                  carrito={puesto}
+                  actualizarListado={recargarComponente}
+                />
+              ))
+            ) : (
+              <div style={{ textAlign: "center", padding: "40px 20px", margin: "40px" }}>
+                <div style={{ fontSize: "1.5rem", color: "var(--qf-naranja)" }}>
+                  <h2>Puestos</h2>
                 </div>
-              ) : Array.isArray(carritos) && carritos.length > 0 ? (
-                <>
-                  {rows.length > 0 &&
-                    rows.map((row, rowIndex) => (
-                      <div key={rowIndex} style={{ display: "flex", flexDirection: "column", justifyContent: "flex-start", width: "100%", gap: "10px", padding: "5px 0" }}>
-                        {row.map((carrito, index) => (
-                          <div key={index}>
-                            {carrito !== null ? (
-                              <PuestoEncargado
-                                carrito={carrito}
-                                actualizarListado={actualizarListado}
-                              />
-                            ) : null}
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                </>
-              ) : (
-                <div style={{ textAlign: "center", width: "100%" }}>
-                  <h2 style={{ fontSize: "2rem", color: "var(--qf-naranja)", marginBottom: "1rem" }}>
-                    Puestos
-                  </h2>
-                  <p style={{ fontSize: "1rem", color: "var(--qf-blanco-puro)", marginBottom: "1.5rem" }}>
+                <div style={{ marginBottom: "20px", fontSize: "18px", color: "var(--qf-text-primary)" }}>
+                  <p>
                     Con Quickfood, crea tus Puestos de Comida para hacerlo mejor.
                     Descubre nuestras increíbles características y ofrece una experiencia
                     única a tus consumidores.
                   </p>
-                  <Link
-                    to={`/crear-puesto`}
-                    className="qf-btn qf-btn--primary"
-                    style={{ textDecoration: "none", display: "inline-block" }}
-                  >
-                    Crear Puesto
-                  </Link>
                 </div>
-              )}
-            </div>
-
-            {/* Columna derecha: filtros + buscador + agregar */}
-            <div style={{
-              width: isMobile ? "100%" : isTablet ? "35%" : "30%",
-              minWidth: isMobile ? "auto" : "260px",
-              boxSizing: "border-box",
-              display: "flex",
-              flexDirection: "column",
-              gap: "20px",
-              order: isMobile ? -1 : 0,
-            }}>
-              <Buscador
-                placeholder="Buscar puestos..."
-                onBuscar={handleBuscar}
-                botonBuscar={false}
-              />
-              <Filtros
-                gruposFiltros={gruposEjemplo}
-                onFiltrar={handleFiltrar}
-                titulo="FILTRAR PUESTOS"
-              />
-              <button
-                onClick={agregarNuevo}
-                className="qf-btn qf-btn--primary"
-                style={{ width: "100%" }}
-              >
-                Agregar Puesto
-              </button>
-            </div>
+                <Link
+                  to={`/crear-puesto`}
+                  style={{
+                    textDecoration: "none",
+                    backgroundColor: "var(--qf-naranja)",
+                    padding: "10px 20px",
+                    color: "var(--qf-text-primary)",
+                    borderRadius: "5px",
+                    fontWeight: "bold",
+                    fontSize: "18px",
+                    transition: "background-color 0.3s",
+                    display: "inline-block",
+                  }}
+                >
+                  Crear Puesto
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
-        <Footer />
+        {!isVeryNarrow && asideContent}
       </div>
+
+      <Footer />
     </PageLayout>
   );
 };

@@ -5,6 +5,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 import useBreakpoint from "../../useBreakpoint";
 
+const cssVar = (name) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || name;
+
 const GraficaBarras = ({ eventId }) => {
   const [chartData, setChartData] = useState(null); // Estado para los datos de la gráfica
   const [loading, setLoading] = useState(true); // Estado de carga
@@ -75,7 +78,7 @@ const GraficaBarras = ({ eventId }) => {
             stack: "total",
             label: { 
               show: true,
-              color: "var(--qf-naranja)",
+              color: cssVar("--qf-naranja"),
             },
             emphasis: { focus: "series" },
             data,
@@ -121,7 +124,7 @@ const GraficaBarras = ({ eventId }) => {
       ...series,
       label: {
         show: true,
-        color: "var(--qf-naranja)",
+        color: cssVar("--qf-naranja"),
       },
       itemStyle: {
         decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null,
@@ -141,22 +144,24 @@ const GraficaBarras = ({ eventId }) => {
   );
   if (error) return <div>Error: {error}</div>;
 
+  const naranja = cssVar("--qf-naranja");
+  const bgSecondary = cssVar("--qf-bg-secondary");
   const option = chartData ? {
     tooltip: {
       trigger: "axis",
       axisPointer: { type: "shadow" },
     },
-    backgroundColor: "var(--qf-bg-secondary)",
+    backgroundColor: bgSecondary,
     title: {
       text: "Recaudacion por Puesto y Dia",
       subtext: "Total Recaudado por cada Puesto en cada Dia",
       top: "3%",
       left: "center",
       textStyle: {
-        color: "var(--qf-naranja)",
+        color: naranja,
       },
       subtextStyle: {
-        color: "var(--qf-naranja)",
+        color: naranja,
       },
     },
     legend: {
@@ -164,7 +169,7 @@ const GraficaBarras = ({ eventId }) => {
       bottom: isMobile ? 0 : "auto",
       orient: isMobile ? "horizontal" : "vertical",
       textStyle: {
-        color: "var(--qf-naranja)",
+        color: naranja,
       },
     },
     grid: {
@@ -177,11 +182,11 @@ const GraficaBarras = ({ eventId }) => {
     yAxis: {
       type: "value",
       axisLabel: {
-        color: "var(--qf-naranja)",
+        color: naranja,
       },
       axisLine: {
         lineStyle: {
-          color: "var(--qf-naranja)",
+          color: naranja,
         },
       },
     },
@@ -189,11 +194,11 @@ const GraficaBarras = ({ eventId }) => {
       type: "category",
       data: chartData.xAxisData,
       axisLabel: {
-        color: "var(--qf-naranja)",
+        color: naranja,
       },
       axisLine: {
         lineStyle: {
-          color: "var(--qf-naranja)",
+          color: naranja,
         },
       },
     },
@@ -201,7 +206,7 @@ const GraficaBarras = ({ eventId }) => {
   } : null;
 
   return (
-    <div className="h-100 w-100" style={{position:"relative", maxWidth: isMobile ? "100%" : "800px", width: "100%"}} data-testid="grafica-wrapper">
+    <div className="h-100 w-100" style={{position:"relative", width: "100%"}} data-testid="grafica-wrapper">
       {option ? (
         <>
           <ReactECharts

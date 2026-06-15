@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import { FaChevronDown } from "react-icons/fa";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import EventoProductor from "./EventoProductor";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -10,10 +11,8 @@ import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Buscador from "../Filtros y Buscadores/Buscador";
 import Filtros from "../Filtros y Buscadores/Filtros";
 import { CircularProgress } from "@mui/material";
-import useBreakpoint from "../../useBreakpoint";
 
 const ListadoEventosProductor = () => {
-  const { isMobile } = useBreakpoint();
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,6 +20,21 @@ const ListadoEventosProductor = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+
+  const contentRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(999);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const isNarrowLayout = contentWidth <= 780;
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContentWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const recargarComponente = () => {
     console.log("Recargando componente");
@@ -98,19 +112,82 @@ const ListadoEventosProductor = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div className="qf-page-content" style={{ padding: isMobile ? "0 12px" : "0", height: "100%" }}>
-        {/* Columna principal */}
-        <div className="qf-page-content__main">
-          <div className="qf-page-header">
-            <h1 className="qf-page-title">Eventos</h1>
-            <hr className="qf-separator" />
-          </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        flex: 1,
+        minHeight: 0,
+        boxSizing: "border-box",
+      }}>
+        {/* Header full-width */}
+        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
+          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
+            Eventos
+          </h1>
+          <hr className="qf-separator qf-separator--spaced" />
+        </div>
 
-          <div style={{ paddingLeft: "16px" }}>
-            <Breadcrumb items={breadcrumbItems} />
-          </div>
+        {/* Contenido en dos columnas */}
+        <div
+          ref={contentRef}
+          className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`}
+          style={{ flex: 1, minHeight: 0 }}
+        >
+          {/* Columna principal: breadcrumb + listado */}
+          <div className="qf-page-content__main">
+            <Breadcrumb items={breadcrumbItems} style={{
+              margin: 0,
+              backgroundColor: 'var(--qf-bg-secondary)',
+              width: '100%',
+              padding: '8px 16px',
+              borderRadius: '10px',
+              border: '1px solid var(--qf-naranja)',
+              boxSizing: 'border-box',
+            }} />
 
-          <div className="qf-scrollable" style={{ padding: "0 16px", paddingBottom: "60px" }}>
+            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
+            {isNarrowLayout && (
+            <div className="qf-narrow-filters" style={{ marginBottom: "8px" }}>
+              <div className="qf-search-box" style={{ marginBottom: "8px" }}>
+                <Buscador
+                  placeholder="Buscar eventos..."
+                  onBuscar={setSearchTerm}
+                  botonBuscar={false}
+                />
+              </div>
+              <div className="qf-filter-box" style={{ margin: 0 }}>
+                <div
+                  className="qf-collapsible-header"
+                  onClick={() => setFiltersOpen((prev) => !prev)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
+                >
+                  <span className="qf-collapsible-title">ESTADOS</span>
+                  <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
+                </div>
+                {filtersOpen && (
+                  <div className="qf-collapsible-body">
+                    <Filtros
+                      gruposFiltros={[estadoGroup]}
+                      onFiltrar={(f) => setFilterState(f.estado || '')}
+                      titulo="ESTADOS"
+                    />
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={agregarNuevo}
+                className="qf-btn qf-btn--primary"
+                style={{ width: "100%", marginTop: "8px" }}
+              >
+                Agregar Evento
+              </button>
+            </div>
+          )}
+
+          <div className="qf-scrollable" style={{ paddingTop: "8px", paddingBottom: "60px" }}>
             {isLoading || !user ? (
               <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
                 <CircularProgress style={{ color: "var(--qf-naranja)" }} />
@@ -156,31 +233,36 @@ const ListadoEventosProductor = () => {
           </div>
         </div>
 
-        {/* Aside: buscador + filtros */}
-        <aside className="qf-page-content__aside" style={{ padding: "16px" }}>
-          <div className="qf-search-box">
-            <Buscador
-              placeholder="Buscar eventos..."
-              onBuscar={setSearchTerm}
-              botonBuscar={false}
-            />
-          </div>
-          <div className="qf-filter-box">
-            <Filtros
-              gruposFiltros={[estadoGroup]}
-              onFiltrar={(f) => setFilterState(f.estado || '')}
-              titulo="ESTADOS"
-            />
-          </div>
-          <button
-            onClick={agregarNuevo}
-            className="qf-btn qf-btn--primary"
-            style={{ width: "100%" }}
-          >
-            Agregar Evento
-          </button>
-        </aside>
+        {/* Aside: buscador + filtros (solo en layout ancho) */}
+        {!isNarrowLayout && (
+          <aside className="qf-page-content__aside">
+            <div className="qf-search-box">
+              <Buscador
+                placeholder="Buscar eventos..."
+                onBuscar={setSearchTerm}
+                botonBuscar={false}
+              />
+            </div>
+            <div className="qf-filter-box">
+              <Filtros
+                gruposFiltros={[estadoGroup]}
+                onFiltrar={(f) => setFilterState(f.estado || '')}
+                titulo="ESTADOS"
+              />
+            </div>
+            <button
+              onClick={agregarNuevo}
+              className="qf-btn qf-btn--primary"
+              style={{ width: "100%" }}
+            >
+              Agregar Evento
+            </button>
+          </aside>
+        )}
+        </div>
+
       </div>
+
       <Footer />
     </PageLayout>
   );

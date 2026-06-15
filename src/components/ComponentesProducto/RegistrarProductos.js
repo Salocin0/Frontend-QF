@@ -95,22 +95,41 @@ const RegistrarProductos = () => {
   };
 
   const styles = {
-    mainFormEventos: {
-      padding: "0",
-      backgroundColor: "var(--qf-bg-main)",
+    pagina: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+    },
+    tituloSeccion: {
+      textAlign: "center",
+      paddingTop: "1rem",
+      fontSize: "2rem",
+      color: "var(--qf-naranja)",
+      margin: 0,
+    },
+    hrFull: {
+      border: "none",
+      borderTop: "1px solid var(--qf-naranja)",
+      margin: 0,
+      width: "100vw",
+      marginLeft: "calc(-50vw + 50%)",
+    },
+    breadcrumbWrapper: {
+      width: "100%",
+    },
+    content: {
       display: "flex",
       justifyContent: "center",
-      
+      backgroundColor: "var(--qf-bg-main)",
     },
     cardBody: {
       padding: "20px",
       borderRadius: "10px",
       flexDirection: "column",
       backgroundColor: "var(--qf-bg-secondary)",
-      marginLeft: isMobile ? "0" : "20%",
-      width: "Calc(80% - 40px)",
+      width: "100%",
       border: `1px solid var(--qf-naranja)`,
-      height: "100%",
+      boxSizing: "border-box",
     },
     formTitle: {
       fontSize: "1.25rem",
@@ -123,7 +142,7 @@ const RegistrarProductos = () => {
       margin: "0rem",
       color: "var(--qf-blanco-puro)",
     },
-    formControl: {
+    formInput: {
       width: "100%",
       padding: "0.375rem 0.75rem",
       fontSize: "1rem",
@@ -131,24 +150,11 @@ const RegistrarProductos = () => {
       borderRadius: "0.375rem",
       border: "1px solid #ccc",
       marginBottom: "0.25rem",
-    },
-    formSelect: {
-      width: "100%",
-      padding: "0.375rem 0.75rem",
-      fontSize: "1rem",
-      lineHeight: "1",
-      borderRadius: "0.375rem",
-      border: "1px solid #ccc",
-      marginBottom: "0.25rem",
-    },
-    formTextArea: {
-      width: "100%",
-      padding: "0.375rem 0.75rem",
-      fontSize: "1rem",
-      lineHeight: "1",
-      borderRadius: "0.375rem",
-      border: "1px solid #ccc",
-      marginBottom: "0.25rem",
+      color: "var(--qf-blanco-puro)",
+      backgroundColor: "var(--qf-bg-secondary)",
+      boxSizing: "border-box",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
     },
     submitButton: {
       backgroundColor: "var(--qf-naranja)",
@@ -159,31 +165,6 @@ const RegistrarProductos = () => {
       borderRadius: "0.375rem",
       border: "none",
       cursor: "pointer",
-    },
-    breadcrumbWrapper: {
-      marginLeft: isMobile ? "0" : "20%",
-      width: "Calc(80%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    header: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      marginLeft: isMobile ? "0" : "20%",
-      width: isMobile ? "100%" : "80%",
-      padding: "20px",
-      backgroundColor: "var(--qf-bg-main)",
-    },
-    divider: {
-      borderColor: "var(--qf-naranja)",
-      width: "100%",
-      margin: "10px 0",
-    },
-    title: {
-      color: "var(--qf-naranja)",
-      fontWeight: "bold",
-      textAlign: "center",
     },
     row: {
       display: "flex",
@@ -202,118 +183,122 @@ const RegistrarProductos = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div>
-        <div style={styles.header}>
-          <h1 style={styles.title}>Crear Producto Nuevo</h1>
-        </div>
-        <hr style={styles.divider} />
+      <div style={styles.pagina}>
+        {/* Título centrado */}
+        <h1 style={styles.tituloSeccion}>Crear Producto Nuevo</h1>
+
+        {/* HR que ocupa el 100% del viewport */}
+        <hr style={styles.hrFull} />
+
+        {/* Breadcrumb a ancho completo */}
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+            style={{ width: "100%", margin: "8px 0" }}
           />
         </div>
-      </div>
 
-      <div style={styles.mainFormEventos}>
-        <div style={styles.cardBody}>
-          <h1 style={styles.formTitle}>Registrar Producto</h1>
-          <form onSubmit={handleSubmit} className="needs-validation">
-            <div style={styles.row}>
+        {/* Formulario centrado */}
+        <div style={styles.content}>
+          <div style={styles.cardBody}>
+            <h1 style={styles.formTitle}>Registrar Producto</h1>
+            <form onSubmit={handleSubmit} className="needs-validation">
+              <div style={styles.row}>
+                <div className="mb-3" style={{ width: "50%", marginRight: "20px" }}>
+                  <label style={styles.formLabel} htmlFor="nombre">
+                    Nombre del Producto
+                  </label>
+                  <input
+                    type="text"
+                    id="nombre"
+                    style={styles.formInput}
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-3" style={{ width: "50%" }}>
+                  <label style={styles.formLabel} htmlFor="precio">
+                    Precio
+                  </label>
+                  <input
+                    id="precio"
+                    style={styles.formInput}
+                    value={precio}
+                    onChange={(e) => setPrecio(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="mb-3">
+                <label style={styles.formLabel} htmlFor="imagen">
+                  Imagen
+                </label>
+                <input
+                  type="file"
+                  id="imagen"
+                  style={styles.formInput}
+                  accept="image/*"
+                  onChange={handleImgChange}
+                  required
+                />
+              </div>
+              <div style={styles.row}>
               <div className="mb-3" style={{ width: "50%", marginRight: "20px" }}>
-                <label style={styles.formLabel} htmlFor="nombre">
-                  Nombre del Producto
+                <label style={styles.formLabel} htmlFor="descripcion">
+                  Descripción
                 </label>
-                <input
-                  type="text"
-                  id="nombre"
-                  style={styles.formControl}
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
+                <textarea
+                  id="descripcion"
+                  style={styles.formInput}
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
                   required
                 />
               </div>
+
               <div className="mb-3" style={{ width: "50%" }}>
-                <label style={styles.formLabel} htmlFor="precio">
-                  Precio
+                <label style={styles.formLabel} htmlFor="aderezos">
+                  Aderezos
                 </label>
-                <input
-                  id="precio"
-                  style={styles.formControl}
-                  value={precio}
-                  onChange={(e) => setPrecio(e.target.value)}
+                <textarea
+                  id="aderezos"
+                  style={styles.formInput}
+                  value={aderezos}
+                  onChange={(e) => setAderezos(e.target.value)}
                   required
                 />
               </div>
-            </div>
+              </div>
+              
 
-            <div className="mb-3">
-              <label style={styles.formLabel} htmlFor="imagen">
-                Imagen
-              </label>
-              <input
-                type="file"
-                id="imagen"
-                style={styles.formControl}
-                accept="image/*"
-                onChange={handleImgChange}
-                required
-              />
-            </div>
-            <div style={styles.row}>
-            <div className="mb-3" style={{ width: "50%", marginRight: "20px" }}>
-              <label style={styles.formLabel} htmlFor="descripcion">
-                Descripción
-              </label>
-              <textarea
-                id="descripcion"
-                style={styles.formTextArea}
-                value={descripcion}
-                onChange={(e) => setDescripcion(e.target.value)}
-                required
-              />
-            </div>
+              <div className="mb-3">
+                <label style={styles.formLabel} htmlFor="estado">
+                  Estado
+                </label>
+                <select
+                  id="estado"
+                  style={styles.formInput}
+                  value={estado}
+                  onChange={(e) => setEstado(e.target.value)}
+                  required
+                >
+                  <option value={false}>Standby</option>
+                  <option value={true}>Listo para la venta</option>
+                </select>
+              </div>
 
-            <div className="mb-3" style={{ width: "50%" }}>
-              <label style={styles.formLabel} htmlFor="aderezos">
-                Aderezos
-              </label>
-              <textarea
-                id="aderezos"
-                style={styles.formTextArea}
-                value={aderezos}
-                onChange={(e) => setAderezos(e.target.value)}
-                required
-              />
-            </div>
-            </div>
-            
-
-            <div className="mb-3">
-              <label style={styles.formLabel} htmlFor="estado">
-                Estado
-              </label>
-              <select
-                id="estado"
-                style={styles.formSelect}
-                value={estado}
-                onChange={(e) => setEstado(e.target.value)}
-                required
-              >
-                <option value={false}>Standby</option>
-                <option value={true}>Listo para la venta</option>
-              </select>
-            </div>
-
-            <div className="d-grid">
-              <button type="submit" style={styles.submitButton}>
-                Registrar
-              </button>
-            </div>
-          </form>
+              <div className="d-grid">
+                <button type="submit" style={styles.submitButton}>
+                  Registrar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-        <Footer />
       </div>
+      <Footer />
     </PageLayout>
   );
 };

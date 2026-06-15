@@ -1,20 +1,17 @@
-﻿import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useContext, useEffect, useState } from "react";
+﻿import React, { useContext, useEffect, useState } from "react";
 import { CircularProgress } from "@mui/material";
 import PageLayout from "../ComponentesGenerales/PageLayout";
-import "./../sass/main.css";
+import "./../sass/main.scss";
 import EventoRepartidor from "./EventoRepartidor";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import useBreakpoint from "../../useBreakpoint";
+import Footer from "../ComponentesGenerales/Footer";
 
 const AsociarRepartidorAEvento = () => {
-  const { isMobile } = useBreakpoint();
   const {user} = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-
 
   const recargarComponente = () => {
     setRecargar(+1);
@@ -36,51 +33,8 @@ const AsociarRepartidorAEvento = () => {
         })
         .catch((error) => console.log("No existen carritos.", error))
         .finally(() => setIsLoading(false));
-
-
     }
   }, [user, recargar]);
-
-  const styles = {
-    contentCol: {
-      marginLeft: isMobile ? "0" : "20%",
-    },
-    titleSection: {
-      display: "flex",
-      justifyContent: "center",
-      fontWeight: "bold",
-      fontSize: "1.5rem",
-      textAlign: "center",
-      color: "var(--qf-naranja)",
-    },
-    titleText: {
-      paddingTop: "0.5rem",
-    },
-    separator: {
-      color: "var(--qf-naranja)",
-    },
-    noEvents: {
-      color: "red",
-      fontWeight: "bold",
-      textAlign: "center",
-    },
-    eventsContainer: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    eventsList: {
-      paddingTop: "1rem",
-      paddingBottom: "2rem",
-      height: "100%",
-      width: "100%",
-    },
-    breadcrumbWrapper: {
-      width: "Calc(100%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-  };
 
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
@@ -89,44 +43,55 @@ const AsociarRepartidorAEvento = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.contentCol}>
-        <div style={styles.titleSection}>
-          <h1 style={styles.titleText}>Asociate a un Evento</h1>
+      <div style={{ width: "100%" }}>
+        {/* Header centrado */}
+        <div className="qf-page-header--full" style={{ paddingTop: "1rem" }}>
+          <h1 style={{ color: "var(--qf-naranja)", textAlign: "center" }}>
+            Asociate a un Evento
+          </h1>
         </div>
-        <hr style={styles.separator} />
-        <div style={styles.breadcrumbWrapper}>
-                  <Breadcrumb
-                    items={breadcrumbItems}
-                    style={{
-                      width: "Calc(100% - 40px)",
-                      marginLeft: "Calc(20px)",
-                    }}
+        <hr className="qf-separator qf-separator--spaced" />
+
+        {/* Breadcrumb con borde dorado */}
+        <Breadcrumb
+          items={breadcrumbItems}
+          style={{
+            border: "1px solid var(--qf-naranja)",
+            margin: "0 20px",
+            width: "auto",
+          }}
+        />
+
+        {/* Listado de eventos */}
+        <div style={{ padding: "1rem 20px 2rem 20px" }}>
+          {isLoading ? (
+            <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
+              <CircularProgress style={{ color: "var(--qf-naranja)" }} />
+            </div>
+          ) : Array.isArray(eventos) && eventos.length > 0 ? (
+            <div>
+              {eventos.map((evento, index) => (
+                <div key={index}>
+                  <EventoRepartidor
+                    evento={evento}
+                    recargar={recargarComponente}
                   />
                 </div>
-        <div style={styles.eventsContainer}>
-          <div style={styles.eventsList}>
-            {isLoading ? (
-              <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-              </div>
-            ) : Array.isArray(eventos) && eventos.length > 0 ? (
-              <div>
-                {eventos.map((evento, index) => (
-                  <div key={index}>
-                    <EventoRepartidor
-                      evento={evento}
-                      recargar={recargarComponente}
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <h2 style={styles.noEvents}>
-                No hay eventos activos en este momento.
-              </h2>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <h2
+              style={{
+                color: "var(--qf-naranja)",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
+              No hay eventos activos en este momento.
+            </h2>
+          )}
         </div>
+        <Footer />
       </div>
     </PageLayout>
   );

@@ -1,9 +1,23 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import { toast } from "react-toastify";
 import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay, FaHourglassStart, FaCheckCircle, FaTruck, FaBox, FaBan } from "react-icons/fa";
 
 const Pedido = ({ pedido,recargar }) => {
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const isNarrow = cardWidth > 0 && cardWidth < 370;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const [opinion, setOpinion] = useState("");
   const [repartidorRating, setRepartidorRating] = useState(1);
   const [puestoRating, setPuestoRating] = useState(1);
@@ -210,9 +224,10 @@ const Pedido = ({ pedido,recargar }) => {
       padding: "5px 10px",
       width: "150px",
       textAlign: "center",
-      position: "absolute",
-      top: "10px",
-      right: "10px",
+      position: isNarrow ? "relative" : "absolute",
+      top: isNarrow ? "0" : "10px",
+      right: isNarrow ? "0" : "10px",
+      margin: isNarrow ? "10px 0 0 auto" : "0",
     },
     separator: {
       color: "var(--qf-naranja)",
@@ -279,10 +294,11 @@ const Pedido = ({ pedido,recargar }) => {
       fontWeight: "bold",
       display: "flex",
       alignItems: "center",
-      justifyContent: "center",
-      position: "absolute",
-      right: "10px",
-      bottom: "10px",
+      justifyContent: isNarrow ? "flex-start" : "center",
+      position: isNarrow ? "relative" : "absolute",
+      right: isNarrow ? "0" : "10px",
+      bottom: isNarrow ? "0" : "10px",
+      marginTop: isNarrow ? "10px" : "0",
     },
     dialogContainer: {
       display:
@@ -469,7 +485,7 @@ const Pedido = ({ pedido,recargar }) => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
+      <div ref={cardRef} style={styles.card}>
         <div style={styles.cardBody}>
           <div className="row">
             <div className="position-relative">
@@ -602,7 +618,7 @@ const Pedido = ({ pedido,recargar }) => {
                 width="100%"
                 height="100%"
                 frameBorder="0"
-                style={{border:0}}
+                style={{border:0, pointerEvents: "none"}}
                 src={
                   pedido?.puntoEncuentro?.latitud && pedido?.puntoEncuentro?.longitud
                     ? `https://www.google.com/maps?q=${pedido.puntoEncuentro.latitud},${pedido.puntoEncuentro.longitud}&z=15&output=embed`

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+﻿import { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
@@ -11,11 +11,23 @@ import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import Buscador from "../Filtros y Buscadores/Buscador";
 import Filtros from "../Filtros y Buscadores/Filtros";
 import { CircularProgress } from "@mui/material";
-import useBreakpoint from "../../useBreakpoint";
 
 const AsociacionesEPC = () => {
-  const { isMobile } = useBreakpoint();
   const { user } = useContext(UserContext);
+  const contentRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(999);
+  const isNarrowLayout = contentWidth <= 900;
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContentWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const [eventos, setEventos] = useState([]);
   const [, setIsPendienteDeAceptacion] = useState(false);
   const [asociaciones, setAsociaciones] = useState([]);
@@ -114,124 +126,67 @@ const AsociacionesEPC = () => {
   });
 
   const styles = {
-    colContent: {
-      marginLeft: isMobile ? "0" : "20%",
-      width: "calc(100% - 20%)",
-      height: "100%", // Asegura que el contenedor de contenido ocupe toda la altura disponible
-      overflowY: "auto", // Permite el desplazamiento solo si es necesario
-      msOverflowStyle: "none", // IE and Edge
-      scrollbarWidth: "none", // Firefox
-      WebkitScrollbar: { display: "none" }, // Hide scrollbar for Chrome, Safari, and Opera
-    },
-    container: {
-      paddingBottom: "60px",
-      paddingLeft: "20px",
-      paddingRight: "20px",
-      width: "100%",
-      flexDirection: "column", // Asegura que el contenido esté alineado de arriba hacia abajo
-    },
-    sectionTitle: {
+    pagina: {
       display: "flex",
-      justifyContent: "center",
-      marginBottom: "1rem",
-      paddingTop: "2rem",
-      width: "100%",
-      color: "var(--qf-naranja)",
+      flexDirection: "column",
+      gap: "20px",
     },
-    card: {
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      marginBottom: "1rem",
-      backgroundColor: "var(--qf-bg-secondary)",
-      marginLeft: "0px",
-      marginRight: "0px",
-      display: "flex",
-      flexDirection: "Column",
-      position: "relative",
-    },
-    cardBody: {
-      padding: "10px",
-      width: "100%",
-      display: "flex",
-      flexDirection: "row",
-    },
-    rowInner: {
-      display: "flex",
-      flexDirection: "Column",
-      width: "100%",
-    },
-    imgContainer: {
-      width: "20%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    img: {
-      width: isMobile ? "100%" : "80%",
-      height: "200px",
-      objectFit: "cover",
-      borderRadius: "10px",
-    },
-    textContainer: {
-      width: "60%",
-      display: "flex",
-      flexDirection: "Column",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    title: {
-      fontSize: "2rem",
-      fontWeight: "bold",
-      marginBottom: "0.5rem",
-      color: "var(--qf-naranja)",
+    tituloSeccion: {
       textAlign: "center",
-      width: "100%",
+      paddingTop: "1rem",
+      fontSize: "2rem",
+      color: "var(--qf-naranja)",
+      margin: 0,
     },
-    description: {
-      color: "var(--qf-blanco-puro)",
-      width: "100%",
-    },
-    locationText: {
-      color: "var(--qf-blanco-puro)",
-      width: "100%",
-    },
-    actionContainer: {
-      display: "flex",
-      width: "100%",
-    },
-    buttonContainer: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "Column",
-      padding: "10px",
-    },
-    button: {
-      backgroundColor: "var(--qf-rojo)",
-      color: "var(--qf-blanco-puro)",
-      padding: "0.5rem 1rem",
+    hrFull: {
       border: "none",
-      cursor: "pointer",
-      borderRadius: "10px",
-      width: "200px",
+      borderTop: "1px solid var(--qf-naranja)",
+      margin: 0,
+      width: "100vw",
+      marginLeft: "calc(-50vw + 50%)",
     },
-    estadoText: {
-      fontWeight: "bold",
-      backgroundColor: "var(--qf-green)",
-      color: "var(--qf-blanco-puro)",
-      borderRadius: "10px",
-      padding: "5px 10px",
-      marginLeft: "1rem",
-      position: "absolute",
-      top: "20px",
-      right: "20px",
+    breadcrumbWrapper: {
+      width: "100%",
     },
+    /* Layout principal: listado + sidebar filtros */
+    mainLayout: {
+      display: "flex",
+      flexDirection: isNarrowLayout ? "column" : "row",
+      gap: "20px",
+      width: "100%",
+    },
+    listadoContainer: {
+      flex: isNarrowLayout ? "0 0 100%" : "1",
+      width: isNarrowLayout ? "100%" : "auto",
+      display: "flex",
+      flexDirection: "column",
+      gap: "16px",
+    },
+    /* Sidebar de filtros (solo modo ancho) */
+    filtersContainer: {
+      flex: "0 0 300px",
+      width: "300px",
+      borderRadius: "8px",
+      padding: "20px",
+      paddingTop: "10px",
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: `1px solid var(--qf-naranja)`,
+      boxSizing: "border-box",
+      alignSelf: "flex-start",
+    },
+    searchFilterContainer: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+      width: "100%",
+    },
+    /* Estado vacío */
     noAsociacionesContainer: {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       width: "100%",
+      padding: "2rem 0",
     },
     noAsociacionesTitle: {
       fontSize: "1.5rem",
@@ -245,34 +200,6 @@ const AsociacionesEPC = () => {
       textDecoration: "none",
       fontWeight: "bold",
     },
-    breadcrumbWrapper: {
-      width: "Calc(100%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    filtersContainer: {
-      width: "320px",
-      minWidth: "320px",
-      alignSelf: "flex-start",
-      height: "auto",
-      borderRadius: "8px",
-      padding: "20px",
-      paddingTop: "10px",
-      marginLeft: "20px",
-      marginRight: "20px",
-      marginTop: "0",
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: `1px solid var(--qf-naranja)`,
-    },
-    searchFilterContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
-      flex: "none",
-      maxWidth: "100%",
-      marginTop: "0",
-      width: "100%",
-    },
   };
 
   const breadcrumbItems = [
@@ -280,125 +207,102 @@ const AsociacionesEPC = () => {
     { title: "Mis asociaciones", url: "/misAsociacionesEPC" },
   ];
 
+  const formatEstado = (s) =>
+    s ? s.replace(/([A-Z])/g, " $1").trim() : "";
+
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.colContent}>
-          <div style={styles.sectionTitle}>
-            <h1>Mis Asociaciones</h1>
-          </div>
-          <hr style={{ color: "var(--qf-naranja)" }} />
-          {/* main content with sidebar filters */}
-          <div style={{ display: 'flex', width: 'calc(100% - 40px)', alignItems: 'flex-start', marginRight: '20px' }}>
-            <div style={{ flex: '0 0 calc(70% - 0px)', width: 'calc(70% - 0px)' }}>
-            <div style={styles.breadcrumbWrapper}>
-              <Breadcrumb
-                items={breadcrumbItems}
-                style={{
-                  width: "Calc(100% - 40px)",
-                  marginLeft: "Calc(20px)",
-                }}
-              />
-            </div>
-          <div style={{...styles.container}}>
-              {isLoading ? (
-                <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-                  <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-                </div>
-              ) : filteredEventos.length > 0 ? (
-                <div style={styles.rowInner}>
-                  {filteredEventos.map((evento, index) => {
-                    const asociacion = asociaciones.find(
-                      (asoc) => asoc.eventoId === evento.id
-                    );
-                    return (
-                      <div style={styles.card} key={index}>
-                        <div style={styles.cardBody}>
-                          <div style={styles.imgContainer}>
-                            <img
-                              src={
-                                evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
-                                  ? evento.img
-                                  : imgDefault
-                              }
-                              alt="Logo del Evento"
-                              style={styles.img}
-                              onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = imgDefault;
-                              }}
-                            />
-                          </div>
-                          <div style={styles.textContainer}>
-                            <h5 style={styles.title}>{evento.nombre}</h5>
-                            <p style={styles.description}>
-                              {evento.descripcion}
-                            </p>
-                            <p style={styles.locationText}>
-                              {evento.ubicacion} - {evento.localidad},{" "}
-                              {evento.provincia}
-                            </p>
-                          </div>
-                        </div>
-                        <div style={styles.actionContainer}>
-                          {asociacion.estado === "PendienteDeAceptacion" && (
-                            <div style={{ width: "100%" }}>
-                              <hr style={{ color: "var(--qf-naranja)" }} />
-                              <div style={styles.buttonContainer}>
-                                <button
-                                  style={styles.button}
-                                  onClick={() =>
-                                    cancelarAsociacion(asociacion.id)
-                                  }
-                                >
-                                  Cancelar Asociacion
-                                </button>
-                              </div>
-                            </div>
-                          )}
-                          <p style={styles.estadoText}>
-                            {(() => {
-                              const formatEstado = (s) =>
-                                s ? s.replace(/([A-Z])/g, " $1").trim() : "";
-                              if (asociacion.estado === "PendienteDeAceptacion") {
-                                return "Pendiente de Aceptacion";
-                              }
-                              return formatEstado(asociacion.estado);
-                            })()}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div style={styles.noAsociacionesContainer}>
-                  <div style={styles.noAsociacionesTitle}>
-                    <h2>Mis Asociaciones</h2>
-                  </div>
-                  <div style={styles.noAsociacionesDescription}>
-                    <p>
-                      Con Quickfood, asocia tu evento para hacerlo mejor.
-                      Descubre nuestras increíbles características y ofrece una
-                      experiencia única a tus consumidores.
-                    </p>
-                  </div>
-                  <Link
-                    to={`/asociarPuestoAEvento`}
-                    style={styles.linkAgregarEvento}
-                  >
-                    Asociarme a Evento
-                  </Link>
-                </div>
-              )}
-          </div>
-            </div>
-            {/* sidebar */}
-            <div style={{...styles.filtersContainer, flex:'0 0 calc(30% - 0px)', width: 'calc(30% - 0px)',paddingTop:"10px"}}>
-              <div style={{...styles.searchFilterContainer, marginTop: '10px'}}>
+      <div style={styles.pagina}>
+        {/* Título centrado */}
+        <h1 style={styles.tituloSeccion}>Mis Asociaciones</h1>
+
+        {/* HR que ocupa el 100% del viewport */}
+        <hr style={styles.hrFull} />
+
+        {/* Breadcrumb a ancho completo */}
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "100%", margin: "8px 0" }}
+          />
+        </div>
+
+        {/* Layout principal */}
+        <div ref={contentRef} style={styles.mainLayout}>
+          {/* Columna izquierda: listado */}
+          <div style={styles.listadoContainer}>
+            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
+            {isNarrowLayout && (
+              <div style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "8px",
+              }}>
                 <Buscador
                   placeholder="Buscar eventos..."
                   onBuscar={setSearchTerm}
-                  style={{ display: 'flex', width: '100%' }}
+                  botonBuscar={false}
+                />
+                <Filtros
+                  gruposFiltros={[estadoGroup]}
+                  onFiltrar={(f) => setFilterState(f.estado || '')}
+                  titulo="ESTADOS"
+                  collapsible={true}
+                  defaultCollapsed={true}
+                />
+              </div>
+            )}
+
+            {isLoading ? (
+              <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
+                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
+              </div>
+            ) : filteredEventos.length > 0 ? (
+              filteredEventos.map((evento, index) => {
+                const asociacion = asociaciones.find(
+                  (asoc) => asoc.eventoId === evento.id
+                );
+                return (
+                  <EventoCard
+                    key={index}
+                    evento={evento}
+                    asociacion={asociacion}
+                    onCancelar={cancelarAsociacion}
+                    formatEstado={formatEstado}
+                  />
+                );
+              })
+            ) : (
+              <div style={styles.noAsociacionesContainer}>
+                <div style={styles.noAsociacionesTitle}>
+                  <h2>Mis Asociaciones</h2>
+                </div>
+                <div style={styles.noAsociacionesDescription}>
+                  <p>
+                    Con Quickfood, asocia tu evento para hacerlo mejor.
+                    Descubre nuestras increíbles características y ofrece una
+                    experiencia única a tus consumidores.
+                  </p>
+                </div>
+                <Link
+                  to={`/asociarPuestoAEvento`}
+                  style={styles.linkAgregarEvento}
+                >
+                  Asociarme a Evento
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Sidebar de filtros (solo en modo ancho) */}
+          {!isNarrowLayout && (
+            <div style={styles.filtersContainer}>
+              <div style={styles.searchFilterContainer}>
+                <Buscador
+                  placeholder="Buscar eventos..."
+                  onBuscar={setSearchTerm}
+                  botonBuscar={false}
                 />
                 <Filtros
                   gruposFiltros={[estadoGroup]}
@@ -407,7 +311,8 @@ const AsociacionesEPC = () => {
                 />
               </div>
             </div>
-          </div>
+          )}
+        </div>
       </div>
       <ConfirmDialog
         open={confirmOpen}
@@ -418,6 +323,149 @@ const AsociacionesEPC = () => {
       />
       <Footer />
     </PageLayout>
+  );
+};
+
+/* --- Subcomponente EventoCard con ResizeObserver --- */
+const EventoCard = ({ evento, asociacion, onCancelar, formatEstado }) => {
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const isNarrow = cardWidth > 0 && cardWidth < 550;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const estadoLabel = asociacion.estado === "PendienteDeAceptacion"
+    ? "Pendiente de Aceptacion"
+    : formatEstado(asociacion.estado);
+
+  return (
+    <div ref={cardRef} style={{
+      border: "1px solid var(--qf-naranja)",
+      borderRadius: "10px",
+      backgroundColor: "var(--qf-bg-secondary)",
+      display: "flex",
+      flexDirection: "column",
+      position: "relative",
+      width: "100%",
+      boxSizing: "border-box",
+    }}>
+      {/* Card body: horizontal o vertical según isNarrow */}
+      <div style={{
+        padding: "10px",
+        width: "100%",
+        display: "flex",
+        flexDirection: isNarrow ? "column" : "row",
+        boxSizing: "border-box",
+      }}>
+        {/* Imagen */}
+        <div style={{
+          width: isNarrow ? "100%" : "200px",
+          minWidth: isNarrow ? "100%" : "200px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: isNarrow ? "10px" : "0",
+        }}>
+          <img
+            src={
+              evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
+                ? evento.img
+                : imgDefault
+            }
+            alt="Logo del Evento"
+            style={{
+              width: "100%",
+              maxHeight: "200px",
+              objectFit: "cover",
+              borderRadius: "10px",
+              aspectRatio: isNarrow ? "16/9" : "auto",
+            }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = imgDefault;
+            }}
+          />
+        </div>
+
+        {/* Texto + botón */}
+        <div style={{
+          flex: "1",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: isNarrow ? "0 10px" : "0 20px",
+        }}>
+          <h5 style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            marginBottom: "0.5rem",
+            color: "var(--qf-naranja)",
+            textAlign: "center",
+            width: "100%",
+          }}>{evento.nombre}</h5>
+          <p style={{
+            color: "var(--qf-blanco-puro)",
+            width: "100%",
+            textAlign: "center",
+            margin: "0.25rem 0",
+          }}>{evento.descripcion}</p>
+          <p style={{
+            color: "var(--qf-blanco-puro)",
+            width: "100%",
+            textAlign: "center",
+            margin: "0.25rem 0",
+          }}>{evento.ubicacion} - {evento.localidad}, {evento.provincia}</p>
+
+          {/* Botón de cancelar debajo de los datos, centrado */}
+          {asociacion.estado === "PendienteDeAceptacion" && (
+            <div style={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              marginTop: "12px",
+            }}>
+              <button
+                style={{
+                  backgroundColor: "var(--qf-rojo)",
+                  color: "var(--qf-blanco-puro)",
+                  padding: "0.5rem 1rem",
+                  border: "none",
+                  cursor: "pointer",
+                  borderRadius: "10px",
+                }}
+                onClick={() => onCancelar(asociacion.id)}
+              >
+                Cancelar Asociacion
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Etiqueta de estado en la parte superior derecha */}
+      <span style={{
+        fontWeight: "bold",
+        backgroundColor: "var(--qf-green)",
+        color: "var(--qf-blanco-puro)",
+        borderRadius: "10px",
+        padding: "5px 10px",
+        fontSize: "0.9rem",
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+      }}>
+        {estadoLabel}
+      </span>
+    </div>
   );
 };
 

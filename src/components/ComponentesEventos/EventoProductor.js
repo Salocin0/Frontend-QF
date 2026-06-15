@@ -1,13 +1,25 @@
-import { default as React, useEffect, useState } from "react";
+import { default as React, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import imgDefault from "../img/logoevento.webp";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
-import useBreakpoint from "../../useBreakpoint";
 
 const EventoProductor = ({ evento, recargarComponente }) => {
   const navigate = useNavigate();
-  const { isMobile } = useBreakpoint();
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(999);
+  const isCardNarrow = cardWidth <= 550;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const [isEnPreparacion, setIsEnPreparacion] = useState(false);
   const [isConfirmado, setIsConfirmado] = useState(false);
   const [isEnCurso, setIsEnCurso] = useState(false);
@@ -149,6 +161,15 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   };
 
   const cancelarEvento = () => {
+    setPendingAction({
+      type: 'cancelar',
+      message: '¿Estás seguro de que deseas cancelar este evento? Esta acción no se puede deshacer.',
+      title: 'Cancelar Evento'
+    });
+    setConfirmOpen(true);
+  };
+
+  const executeCancelarEvento = () => {
     fetch(
       `${process.env?.REACT_APP_BACK_URL}evento/cambiarEstado/${evento.id}/cancelarEvento`,
       {
@@ -160,7 +181,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         toast.success("Evento Cancelado con éxito");
         handleRecargar();
       })
-      .catch((error) => toast.error("Error al confirmar evento"));
+      .catch((error) => toast.error("Error al cancelar evento"));
   };
 
   const pausarEvento = () => {
@@ -234,6 +255,9 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       case 'continuar':
         executeContinuarEvento();
         break;
+      case 'cancelar':
+        executeCancelarEvento();
+        break;
       default:
         break;
     }
@@ -261,20 +285,20 @@ const EventoProductor = ({ evento, recargarComponente }) => {
     },
     card: {
       display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      alignItems: isMobile ? "center" : "flex-start",
+      flexDirection: isCardNarrow ? "column" : "row",
+      alignItems: isCardNarrow ? "center" : "flex-start",
     },
     imageContainer: {
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      width: isMobile ? "100%" : "auto",
-      marginBottom: isMobile ? "12px" : "0",
+      width: isCardNarrow ? "100%" : "auto",
+      marginBottom: isCardNarrow ? "12px" : "0",
     },
     img: {
       width: "100%",
-      maxWidth: isMobile ? "200px" : "150px",
+      maxWidth: isCardNarrow ? "200px" : "150px",
       height: "auto",
       objectFit: "cover",
       borderRadius: "10px",
@@ -285,11 +309,11 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       flexDirection: "column",
       justifyContent: "center",
       color: "var(--qf-naranja)",
-      width: isMobile ? "100%" : "100%",
-      marginRight: isMobile ? "0" : "150px",
+      width: isCardNarrow ? "100%" : "100%",
+      marginRight: isCardNarrow ? "0" : "150px",
     },
     cardTitle: {
-      fontSize: isMobile ? "20px" : "24px",
+      fontSize: isCardNarrow ? "20px" : "24px",
       fontWeight: "bold",
       textAlign: "center",
     },
@@ -311,17 +335,17 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       textAlign: "center",
     },
     cardEstadoProductor: {
-      position: isMobile ? "relative" : "absolute",
-      top: isMobile ? "0" : "10px",
-      right: isMobile ? "0" : "20px",
+      position: isCardNarrow ? "relative" : "absolute",
+      top: isCardNarrow ? "0" : "10px",
+      right: isCardNarrow ? "0" : "20px",
       color: "var(--qf-text-primary)",
       backgroundColor: "var(--qf-green)",
       padding: "5px 10px",
       borderRadius: "5px",
       fontSize: "14px",
       fontWeight: "bold",
-      marginBottom: isMobile ? "8px" : "0",
-      alignSelf: isMobile ? "center" : "auto",
+      marginBottom: isCardNarrow ? "8px" : "0",
+      alignSelf: isCardNarrow ? "center" : "auto",
     },
     buttonContainer: {
       display: "flex",
@@ -329,8 +353,8 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       alignItems: "center",
       flexWrap: "wrap",
       gap: "10px",
-      flexDirection: isMobile ? "column" : "row",
-      marginTop: isMobile ? "12px" : "0",
+      flexDirection: isCardNarrow ? "column" : "row",
+      marginTop: isCardNarrow ? "12px" : "0",
     },
     successButton: {
       backgroundColor: "var(--qf-green)",
@@ -339,7 +363,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       padding: "10px 20px",
       borderRadius: "5px",
       cursor: "pointer",
-      width: isMobile ? "100%" : "auto",
+      width: isCardNarrow ? "100%" : "auto",
     },
     dangerButton: {
       backgroundColor: "var(--qf-rojo)",
@@ -348,7 +372,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       padding: "10px 20px",
       borderRadius: "5px",
       cursor: "pointer",
-      width: isMobile ? "100%" : "auto",
+      width: isCardNarrow ? "100%" : "auto",
     },
     primaryButton: {
       backgroundColor: "var(--qf-blue)",
@@ -357,7 +381,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       padding: "10px 20px",
       borderRadius: "5px",
       cursor: "pointer",
-      width: isMobile ? "100%" : "auto",
+      width: isCardNarrow ? "100%" : "auto",
     },
     secondaryButton: {
       backgroundColor: "var(--qf-bg-neutral)",
@@ -366,12 +390,12 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       padding: "10px 20px",
       borderRadius: "5px",
       cursor: "pointer",
-      width: isMobile ? "100%" : "auto",
+      width: isCardNarrow ? "100%" : "auto",
     },
   };
 
   return (
-    <div style={styles.container}>
+    <div ref={cardRef} style={styles.container}>
       <div style={{ ...styles.card }}>
         <div style={styles.imageContainer}>
           <img
@@ -411,7 +435,18 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         </p>
       </div>
 
+      <hr style={{
+        border: 'none',
+        height: '1px',
+        backgroundColor: 'var(--qf-naranja)',
+        margin: '16px 0 8px',
+        opacity: 0.4,
+      }} />
+
       <div style={styles.buttonContainer}>
+        <button style={styles.primaryButton} onClick={() => navigate(`/evento-detalle/${evento.id}`)}>
+          Ver Info
+        </button>
         {isEnPreparacion && (
           <button style={styles.successButton} onClick={confirmarEvento}>
             Confirmar Evento

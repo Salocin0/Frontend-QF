@@ -1,5 +1,5 @@
 import React from 'react';
-import "./../sass/main.css";
+import "./../sass/main.scss";
 
 const FiltrosEventosEncargado = () => {
     return (

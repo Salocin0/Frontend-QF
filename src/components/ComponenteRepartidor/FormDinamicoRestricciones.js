@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
-import "./../sass/main.css";
+import "./../sass/main.scss";
 import "./asociarAEventos.css";
 
 function FormDinamicoRestricciones({ data, userType }) {

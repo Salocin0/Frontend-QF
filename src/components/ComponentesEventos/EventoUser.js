@@ -1,12 +1,23 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logoevento from "./../img/logoevento.webp";
 import { toast } from "react-toastify";
-import useBreakpoint from "../../useBreakpoint";
 
 const EventoUser = ({ evento }) => {
   const navigate = useNavigate();
-  const { isMobile } = useBreakpoint();
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(9999);
+  const isNarrow = cardWidth < 700;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const calcularTiempoRestante = (fecha) => {
     const ahora = new Date();
@@ -97,15 +108,15 @@ const EventoUser = ({ evento }) => {
     cardBody: {
       flex: 1,
       display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      gap: isMobile ? "8px" : "12px",
-      alignItems: isMobile ? "stretch" : "center",
+      flexDirection: isNarrow ? "column" : "row",
+      gap: isNarrow ? "8px" : "12px",
+      alignItems: isNarrow ? "stretch" : "center",
       cursor: "pointer",
       padding: "10px 18px",
     },
     imageContainer: {
-      width: isMobile ? "100%" : "140px",
-      minWidth: isMobile ? "auto" : "140px",
+      width: isNarrow ? "100%" : "140px",
+      minWidth: isNarrow ? "auto" : "140px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -114,8 +125,8 @@ const EventoUser = ({ evento }) => {
     },
     img: {
       width: "100%",
-      maxWidth: isMobile ? "200px" : "110px",
-      height: isMobile ? "120px" : "auto",
+      maxWidth: isNarrow ? "200px" : "110px",
+      height: isNarrow ? "120px" : "auto",
       objectFit: "cover",
       borderRadius: "8px",
       marginLeft: "0",
@@ -170,12 +181,12 @@ const EventoUser = ({ evento }) => {
     },
     estadoContainer: {
       display: "flex",
-      position: isMobile ? "relative" : "absolute",
-      top: isMobile ? "0" : "10px",
-      right: isMobile ? "0" : "10px",
-      width: isMobile ? "100%" : "180px",
-      marginBottom: isMobile ? "8px" : "0",
-      justifyContent: isMobile ? "center" : "flex-start",
+      position: isNarrow ? "relative" : "absolute",
+      top: isNarrow ? "0" : "10px",
+      right: isNarrow ? "0" : "10px",
+      width: isNarrow ? "100%" : "180px",
+      marginBottom: isNarrow ? "8px" : "0",
+      justifyContent: isNarrow ? "center" : "flex-start",
     },
     preventa: {
       fontSize: "16px",
@@ -198,7 +209,7 @@ const EventoUser = ({ evento }) => {
   };
 
   return (
-    <div style={styles.container}>
+    <div ref={cardRef} style={styles.container}>
       <div style={styles.card} onClick={handleCardClick}>
         <div style={styles.cardLink}>
           <div style={styles.cardBody}>

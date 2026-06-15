@@ -27,11 +27,14 @@ const GraficaTortaProductos = ({ height, productos }) => {
     { symbol: "line" },
   ];
 
+  const tortaHeight = height || "40vh";
+
   const option = {
-    backgroundColor: "var(--qf-bg-secondary)",
+    backgroundColor: "transparent",
     tooltip: {
       trigger: "item",
       formatter: "{b}: {c}% ({d}%)",
+      confine: true,
     },
     legend: {
       top: isMobile ? "auto" : "7%",
@@ -39,14 +42,14 @@ const GraficaTortaProductos = ({ height, productos }) => {
       bottom: isMobile ? 0 : "auto",
       orient: isMobile ? "horizontal" : "vertical",
       textStyle: {
-        color: "var(--qf-naranja)",
+        color: "#ffffff",
       }
     },
     series: [
       {
         name: "Recaudación",
         type: "pie",
-        radius: ["25%", "40%"],
+        radius: ["35%", "60%"],
         avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 0,
@@ -54,11 +57,15 @@ const GraficaTortaProductos = ({ height, productos }) => {
         },
         label: {
           show: true,
-          fontSize: "10px",
-          color: "var(--qf-naranja)",
+          fontSize: "11px",
+          fontWeight: "bold",
+          color: "#ffffff",
         },
         labelLine: {
           show: true,
+          lineStyle: {
+            color: "rgba(255,255,255,0.4)",
+          },
         },
         data: chartData.map((item, index) => ({
           ...item,
@@ -71,7 +78,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
   };
 
   return (
-    <div style={{ position: "relative", height: "32vh", width: "100%", maxWidth: isMobile ? "100%" : "800px" }} data-testid="grafica-wrapper">
+    <div style={{ position: "relative", height: tortaHeight, width: "100%", maxWidth: isMobile ? "100%" : "800px", minHeight: "300px", overflow: "visible" }} data-testid="grafica-wrapper">
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
@@ -90,7 +97,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
       >
         <span>{decalEnabled ? <FaEye /> : <FaEyeSlash />}</span>
       </button>
-      <ReactECharts option={option} theme="dark" style={{ height: "100%", width: "100%" }} />
+      <ReactECharts option={option} theme="dark" notMerge={true} style={{ height: "100%", width: "100%" }} />
     </div>
   );
 };

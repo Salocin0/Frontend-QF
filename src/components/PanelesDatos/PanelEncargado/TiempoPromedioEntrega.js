@@ -11,11 +11,12 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const styles = {
     div3Encargado: {
       gridArea: "div3",
-      marginTop: "20px",
       borderRadius: "20px",
       backgroundColor: "var(--qf-bg-secondary)",
       alignItems: "center",
       border: `2px solid var(--qf-naranja)`,
+      height: "100%",
+      width: "100%",
     },
     contentContainer: {
       display: "flex",
@@ -23,12 +24,14 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       alignItems: "center",
       justifyContent: "center",
       height: "100%",
+      width: "100%",
     },
     textWhite: {
       color: "var(--qf-naranja)",
       margin: 0,
       padding: 0,
       fontWeight: "bold",
+      textAlign: "center",
     },
     textBold: {
       fontWeight: "bold",
@@ -41,6 +44,7 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       margin:0,
       padding:0,
       fontSize: "2rem",
+      textAlign: "center",
     },
   };
 
@@ -82,6 +86,8 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     }
   }, [puestoId, eventoId, user?.consumidorId]);
 
+  const sinDatos = error || !tiempoPromedio || tiempoPromedio === 0;
+
   if (isLoading) {
     return (
       <div style={styles.div3Encargado}>
@@ -92,16 +98,11 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     );
   }
 
-  if (error) {
+  if (sinDatos) {
     return (
       <div style={styles.div3Encargado}>
         <div style={styles.contentContainer}>
-          <h1 style={styles.valoracionText}>Error</h1>
-          <p>
-            <strong style={styles.textWhite}>
-              No se pudo obtener el tiempo promedio
-            </strong>
-          </p>
+          <h1 style={styles.valoracionText}>Sin datos</h1>
         </div>
       </div>
     );
@@ -111,7 +112,7 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     <div style={styles.div3Encargado}>
       <div style={styles.contentContainer}>
         <h1 style={styles.valoracionText}>
-          {tiempoPromedio ? `${tiempoPromedio} minutos` : "Sin datos"}
+          {tiempoPromedio} minutos
         </h1>
         <p style={styles.textWhite}>
             Tiempo Promedio de entrega

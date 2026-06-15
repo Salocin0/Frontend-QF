@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
+import { FaChevronDown } from "react-icons/fa";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import EventoUser from "./EventoUser";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
@@ -7,7 +8,6 @@ import Footer from "../ComponentesGenerales/Footer";
 import FiltersEventosConsumidor from "../Filtros y Buscadores/filtersEventosConsumidor";
 import Buscador from "../Filtros y Buscadores/BuscadorEventosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import useBreakpoint from "../../useBreakpoint";
 
 const haversineDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -40,7 +40,6 @@ const filtrarFinalizados = (eventosList) => {
 };
 
 const ListadoEventosUsers = () => {
-  const { isMobile, isTablet } = useBreakpoint();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [eventos, setEventos] = useState([]);
@@ -48,7 +47,21 @@ const ListadoEventosUsers = () => {
   const { user } = useContext(UserContext);
   const [userLocation, setUserLocation] = useState(null);
 
-  
+  const contentRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(999);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const isNarrowLayout = contentWidth <= 780;
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContentWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const [distancia, setDistancia] = useState(null);
   const [nombre, setNombre] = useState("");
   const [preventa, setPreventa] = useState({ conPreventa: true, sinPreventa: true });
@@ -203,111 +216,98 @@ const ListadoEventosUsers = () => {
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={{
-        width: isMobile ? "100%" : "80%",
-        height: "100%",
-        padding: 0,
         display: "flex",
         flexDirection: "column",
-        boxSizing: "border-box",
+        height: "100%",
         flex: 1,
+        minHeight: 0,
+        boxSizing: "border-box",
       }}>
-        {/* Header */}
-        <div className="qf-page-header">
-          <h1 className="qf-page-title" style={{ fontSize: "1.75rem" }}>Eventos</h1>
-          <hr className="qf-separator" />
+        {/* Header: título centrado + línea divisoria */}
+        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
+          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
+            Eventos
+          </h1>
+          <hr className="qf-separator qf-separator--spaced" />
         </div>
 
-        {/* Contenido scrollable con dos columnas */}
-        <div style={{
-          flex: 1,
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-        }}>
-          <div style={{
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            gap: "20px",
-            alignItems: isMobile ? "stretch" : "flex-start",
-            height: isMobile ? "auto" : "100%",
-            overflow: isMobile ? "visible" : "hidden",
-          }}>
-            {/* Columna izquierda: listado de eventos */}
-            <div style={{
-              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
-              boxSizing: "border-box",
-            }}>
-              <div style={{ paddingLeft: "16px" }}>
-                <Breadcrumb items={breadcrumbItems} />
-              </div>
+        {/* Dos columnas: izquierda (breadcrumb + listado) | derecha (buscador + filtros) */}
+        <div ref={contentRef} className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`} style={{ flex: 1, minHeight: 0 }}>
+          {/* Columna izquierda */}
+          <div className="qf-page-content__main">
+            <Breadcrumb items={breadcrumbItems} style={{
+              margin: '0px auto 8px',
+              backgroundColor: 'var(--qf-bg-secondary)',
+              width: '98%',
+              paddingRight: '16px',
+              padding: '8px',
+              paddingLeft: '16px',
+              borderRadius: '10px',
+              border: '1px solid var(--qf-naranja)',
+              boxSizing: 'border-box',
+            }} />
 
-              <div style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                height: "100%",
-                width: "100%",
-                overflowY: "auto",
-                overflowX: "hidden",
-              }}>
-                <div style={{
-                  minHeight: "100%",
-                  width: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                  boxSizing: "border-box",
-                  overflowY: "auto",
-                  overflowX: "hidden",
-                  scrollbarWidth: "none",
-                  msOverflowStyle: "none",
-                }}>
-                  {!loanding ? (
-                    <LoandingComponent />
-                  ) : Array.isArray(filteredEventos) && filteredEventos.length > 0 ? (
-                    rows.length > 0 &&
-                    rows.map((row, rowIndex) => (
-                      <div key={rowIndex} style={{ width: "100%" }}>
-                        {row.map((evento, index) => (
-                          <div
-                            key={evento?.id ?? `empty-${rowIndex}-${index}`}
-                            style={{ marginBottom: "10px", width: "100%" }}
-                          >
-                            {evento !== null ? (
-                              <EventoUser evento={evento} />
-                            ) : null}
-                          </div>
-                        ))}
-                      </div>
-                    ))
-                  ) : (
-                    <h2 style={{
-                      fontSize: "24px",
-                      color: "var(--qf-naranja)",
-                      textAlign: "center",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      height: "80%",
-                      width: "80%",
-                    }}>
-                      No hay eventos activos en este momento.
-                    </h2>
+            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
+            {isNarrowLayout && (
+              <div className="qf-narrow-filters" style={{ width: "98%", margin: "0 auto 0 auto" }}>
+                <div className="qf-search-box" style={{ marginBottom: "8px" }}>
+                  <Buscador setNombre={setNombre} />
+                </div>
+                <div className="qf-filter-box" style={{ margin: 0 }}>
+                  <div
+                    className="qf-collapsible-header"
+                    onClick={() => setFiltersOpen((prev) => !prev)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
+                  >
+                    <span className="qf-collapsible-title">FILTROS</span>
+                    <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
+                  </div>
+                  {filtersOpen && (
+                    <div className="qf-collapsible-body">
+                      <FiltersEventosConsumidor
+                        distancia={distancia}
+                        setDistancia={setDistancia}
+                        setPreventa={setPreventa}
+                        hideTitle
+                      />
+                    </div>
                   )}
                 </div>
               </div>
-            </div>
+            )}
 
-            {/* Columna derecha: buscador + filtros */}
-            <div style={{
-              width: isMobile ? "100%" : isTablet ? "35%" : "30%",
-              boxSizing: "border-box",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              alignItems: "center",
-              order: isMobile ? -1 : 0,
-            }}>
+            <div className="qf-scrollable" style={{ paddingTop: "8px" }}>
+              {!loanding ? (
+                <LoandingComponent />
+              ) : Array.isArray(filteredEventos) && filteredEventos.length > 0 ? (
+                rows.length > 0 &&
+                rows.map((row, rowIndex) => (
+                  <div key={rowIndex} style={{ width: "100%" }}>
+                    {row.map((evento, index) => (
+                      <div
+                        key={evento?.id ?? `empty-${rowIndex}-${index}`}
+                        style={{ marginBottom: "10px", width: "100%" }}
+                      >
+                        {evento !== null ? (
+                          <EventoUser evento={evento} />
+                        ) : null}
+                      </div>
+                    ))}
+                  </div>
+                ))
+              ) : (
+                <h2 className="qf-no-results">
+                  No hay eventos activos en este momento.
+                </h2>
+              )}
+            </div>
+          </div>
+
+          {/* Columna derecha: buscador + filtros */}
+          {!isNarrowLayout && (
+            <aside className="qf-page-content__aside">
               <div className="qf-search-box">
                 <Buscador setNombre={setNombre} />
               </div>
@@ -318,8 +318,8 @@ const ListadoEventosUsers = () => {
                   setPreventa={setPreventa}
                 />
               </div>
-            </div>
-          </div>
+            </aside>
+          )}
         </div>
       </div>
 

@@ -123,12 +123,12 @@ const Main = () => {
         <Route path="/evento/:id" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ConsultarEvento} name="ConsultarEvento" /></PrivateRoute>} />
         <Route path="/eventoPrueba" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={EventoPrueba} name="EventoPrueba" /></PrivateRoute>} />
 
-        {/* ─── Solo consumidor ─── */}
-        <Route path="/pedidos" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={ListadoPedidos} name="ListadoPedidos" /></PrivateRoute>} />
-        <Route path="/tipo-compra/:id" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={Preventa} name="Preventa" /></PrivateRoute>} />
-        <Route path="/adquirir-nuevo-rolR" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={AdquirirNuevoRolR} name="AdquirirNuevoRolR" /></PrivateRoute>} />
-        <Route path="/adquirir-nuevo-rolPE" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={AdquirirNuevoRolPE} name="AdquirirNuevoRolPE" /></PrivateRoute>} />
-        <Route path="/adquirir-nuevo-rolEPC" element={<PrivateRoute requiredRoles={["consumidor"]}><SafeRoute component={AdquirirNuevoRolEPC} name="AdquirirNuevoRolEPC" /></PrivateRoute>} />
+        {/* ─── Todos los roles (antes solo consumidor) ─── */}
+        <Route path="/pedidos" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={ListadoPedidos} name="ListadoPedidos" /></PrivateRoute>} />
+        <Route path="/tipo-compra/:id" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={Preventa} name="Preventa" /></PrivateRoute>} />
+        <Route path="/adquirir-nuevo-rolR" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={AdquirirNuevoRolR} name="AdquirirNuevoRolR" /></PrivateRoute>} />
+        <Route path="/adquirir-nuevo-rolPE" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={AdquirirNuevoRolPE} name="AdquirirNuevoRolPE" /></PrivateRoute>} />
+        <Route path="/adquirir-nuevo-rolEPC" element={<PrivateRoute requiredRoles={ALL_ROLES}><SafeRoute component={AdquirirNuevoRolEPC} name="AdquirirNuevoRolEPC" /></PrivateRoute>} />
 
         {/* ─── Solo repartidor ─── */}
         <Route path="/pedidos-asignados" element={<PrivateRoute requiredRoles={["repartidor"]}><SafeRoute component={ListadoPedidosRepartidor} name="ListadoPedidosRepartidor" /></PrivateRoute>} />

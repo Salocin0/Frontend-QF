@@ -5,10 +5,8 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
-import useBreakpoint from "../../useBreakpoint";
 
 const AsociarPuestoAEvento = () => {
-  const { isMobile } = useBreakpoint();
   const { puestoId } = useParams();
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
@@ -41,24 +39,27 @@ const AsociarPuestoAEvento = () => {
   }, [user, recargar]);
 
   const styles = {
-    mainContent: {
-      width: isMobile ? "100%" : "80%",
-      padding: "0 2rem",
-      marginLeft: isMobile ? "0" : "20%",
-    },
-    titleContainer: {
+    pagina: {
       display: "flex",
-      justifyContent: "center",
-      marginBottom: "1rem",
+      flexDirection: "column",
     },
-    title: {
+    tituloSeccion: {
+      textAlign: "center",
       paddingTop: "1rem",
-      paddingBottom: "0.5rem",
       fontSize: "2rem",
       color: "var(--qf-naranja)",
+      margin: 0,
     },
-    separator: {
-      color: "var(--qf-naranja)",
+    hrFull: {
+      border: "none",
+      borderTop: "1px solid var(--qf-naranja)",
+      margin: "10px 0",
+      width: "100vw",
+      marginLeft: "calc(-50vw + 50%)",
+    },
+    breadcrumbWrapper: {
+      width: "100%",
+      marginBottom: "10px",
     },
     eventsContainer: {
       display: "flex",
@@ -66,7 +67,9 @@ const AsociarPuestoAEvento = () => {
       justifyContent: "center",
     },
     eventsList: {
-      paddingTop: "1rem",
+      display: "flex",
+      flexDirection: "column",
+      gap: "10px",
       paddingBottom: "1.5rem",
       width: "100%",
     },
@@ -74,11 +77,6 @@ const AsociarPuestoAEvento = () => {
       fontSize: "1.5rem",
       color: "var(--qf-naranja)",
       textAlign: "center",
-    },
-    breadcrumbWrapper: {
-      width: "Calc(100%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
   };
 
@@ -90,33 +88,35 @@ const AsociarPuestoAEvento = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.mainContent}>
-        <div style={styles.titleContainer}>
-          <h1 style={styles.title}>Asociate a un Evento</h1>
-        </div>
-        <hr style={styles.separator} />
+      <div style={styles.pagina}>
+        {/* Título centrado */}
+        <h1 style={styles.tituloSeccion}>Asociate a un Evento</h1>
+
+        {/* HR que ocupa el 100% del viewport */}
+        <hr style={styles.hrFull} />
+
+        {/* Breadcrumb a ancho completo */}
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
-            style={{ width: "Calc(100%)" }}
+            style={{ width: "100%", margin: "8px 0" }}
           />
         </div>
+
+        {/* Lista de eventos */}
         <div style={styles.eventsContainer}>
           <div style={styles.eventsList}>
             {isLoading ? (
               <LoandingComponent />
             ) : Array.isArray(eventos) && eventos.length > 0 ? (
-              <div>
-                {eventos.map((evento, index) => (
-                  <div key={index}>
-                    <EventoEncargado
-                      evento={evento}
-                      puestoId={puestoId}
-                      recargar={recargarComponente}
-                    />
-                  </div>
-                ))}
-              </div>
+                eventos.map((evento, index) => (
+                  <EventoEncargado
+                    key={index}
+                    evento={evento}
+                    puestoId={puestoId}
+                    recargar={recargarComponente}
+                  />
+                ))
             ) : (
               <h2 style={styles.noEventsMessage}>
                 No hay eventos activos en este momento.

@@ -877,7 +877,7 @@ h2 {
   height: 100vh;
   position: sticky;
   top: 0;
-  width: 250px;
+  width: 270px;
   background: #0F2027;
   background: linear-gradient(to top, #172b34, #12242b, #0f1b20);
   box-shadow: 10px 0 10px rgba(0, 0, 0, 0.15);
@@ -911,7 +911,8 @@ h2 {
   align-items: center;
   border-radius: 5px 5px 5px 5px;
   padding-right: 5px;
-  margin-bottom: 10px;
+  padding-block: 2px;
+  margin-bottom: 4px;
   width: 100%;
   color: #888B9A;
 }
@@ -934,7 +935,7 @@ h2 {
 }
 
 .navlink span {
-  font-size: 20px;
+  font-size: 16px;
   color: #888B9A;
 }
 
@@ -962,18 +963,6 @@ h2 {
   margin-left: 0;
 }
 
-@media screen and (max-width: 576px) {
-  .sidebar {
-    font-family: Arial, sans-serif;
-    height: 100vh;
-    position: sticky;
-    top: 0;
-    width: 80px;
-    background: #0F2027;
-    background: linear-gradient(to top, #172b34, #12242b, #0f1b20);
-    box-shadow: 10px 0 10px rgba(0, 0, 0, 0.15);
-  }
-}
 * {
   margin: 0;
   padding: 0;

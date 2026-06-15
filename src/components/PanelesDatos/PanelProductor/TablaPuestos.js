@@ -44,22 +44,25 @@ const EstadisticasTable = ({ id }) => {
           textAlign: 'left',
           borderCollapse: 'collapse',
           tableLayout: 'fixed',
-          color: "var(--qf-blanco-puro)"
+          color: "var(--qf-blanco-puro)",
+          border: `1px solid var(--qf-naranja)`,
         }}
       >
         <thead>
           <tr>
-            <th style={{ textAlign: 'center', borderBottom: `1px solid var(--qf-naranja)` }}>Nombre</th>
+            <th style={{ textAlign: 'center', border: `1px solid var(--qf-naranja)`, padding: '8px', color: "var(--qf-naranja)" }}>Nombre</th>
             <th
               style={{
                 textAlign: 'center',
-                borderBottom: `1px solid var(--qf-naranja)`,
+                border: `1px solid var(--qf-naranja)`,
                 width: '80px',
+                padding: '8px',
+                color: "var(--qf-naranja)",
               }}
             >
               Pedidos
             </th>
-            <th style={{ textAlign: 'center', borderBottom: `1px solid var(--qf-naranja)`,width: '120px'}}>Total</th>
+            <th style={{ textAlign: 'center', border: `1px solid var(--qf-naranja)`,width: '120px', padding: '8px', color: "var(--qf-naranja)" }}>Total</th>
           </tr>
         </thead>
         <tbody>
@@ -71,6 +74,8 @@ const EstadisticasTable = ({ id }) => {
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                   maxWidth: '200px',
+                  border: `1px solid var(--qf-naranja)`,
+                  padding: '8px',
                 }}
                 title={row.nombre}
               >
@@ -80,11 +85,13 @@ const EstadisticasTable = ({ id }) => {
                 style={{
                   textAlign: 'center',
                   width: '80px',
+                  border: `1px solid var(--qf-naranja)`,
+                  padding: '8px',
                 }}
               >
                 {row.cantidadpedidos}
               </td>
-              <td style={{ textAlign: 'center',width: '120px' }}>
+              <td style={{ textAlign: 'center', width: '120px', border: `1px solid var(--qf-naranja)`, padding: '8px' }}>
                 {parseFloat(row.total).toLocaleString('es-ES', { style: 'currency', currency: 'ARS' })}
               </td>
             </tr>

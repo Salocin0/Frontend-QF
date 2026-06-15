@@ -4,6 +4,7 @@ const FiltersEventosConsumidor = ({
   distancia: externalDistancia,
   setDistancia: externalSetDistancia,
   setPreventa: externalSetPreventa,
+  hideTitle,
 }) => {
   // Estado interno para cuando se usa standalone (sin props externas)
   const [internalDistancia, setInternalDistancia] = useState(100);
@@ -40,8 +41,12 @@ const FiltersEventosConsumidor = ({
 
   return (
     <div className="qf-filter-panel">
-      <h2 className="qf-filter-panel__title">FILTROS</h2>
-      <hr className="qf-filter-panel__divider" />
+      {!hideTitle && (
+        <>
+          <h2 className="qf-filter-panel__title">FILTROS</h2>
+          <hr className="qf-filter-panel__divider" />
+        </>
+      )}
 
       <h3 className="qf-filter-panel__section-title">DISTANCIA</h3>
       <div className="qf-filter-panel__group">

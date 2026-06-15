@@ -1,15 +1,36 @@
-﻿import { default as React, useContext, useEffect, useState } from "react";
+import { default as React, useContext, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import imgDefault from "../img/logoevento.webp";
 
 const EventoEncargado = ({ evento, puestoId, recargar }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const isNarrow = cardWidth > 0 && cardWidth < 1200;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const [isEnPreparacion, setIsEnPreparacion] = useState(false);
   const [tieneAsociacionPendiente, setTieneAsociacionPendiente] =
     useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const formatEstado = (str) => {
+    if (!str) return "";
+    return str.replace(/([A-Z])/g, " $1").trim();
+  };
 
   useEffect(() => {
     if (evento) {
@@ -130,47 +151,48 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
       display: "flex",
       flexWrap: "wrap",
       width: "100%",
-      flexDirection: "row",
+      flexDirection: isNarrow ? "column" : "row",
     },
     colMd3: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "20%",
+      width: isNarrow ? "100%" : "20%",
     },
     colMd8: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       flexDirection: "column",
-      width: "80%",
+      width: isNarrow ? "100%" : "80%",
     },
-    imgFluid: { maxWidth: "80%", borderRadius: "10px" },
-    cardTitle: { fontSize: "2rem", fontWeight: "bold", color: "var(--qf-naranja)" },
-    cardDescripcion: { fontSize: "1.5rem", color: "var(--qf-blanco-puro)" },
+    imgFluid: {
+      maxWidth: "250px",
+      width: "100%",
+      aspectRatio: "1 / 1",
+      objectFit: "cover",
+      borderRadius: "10px",
+    },
+    cardTitle: { fontSize: "2rem", fontWeight: "bold", color: "var(--qf-naranja)", textAlign: "center" },
+    cardDescripcion: { fontSize: "1.5rem", color: "var(--qf-blanco-puro)", textAlign: "center" },
     cardText: {
       fontSize: "1.5rem",
       marginBottom: "1rem",
       color: "var(--qf-blanco-puro)",
+      textAlign: "center",
     },
     cardEstado: {
       fontSize: "18px",
       color: "var(--qf-blanco-puro)",
       fontWeight: "bold",
       backgroundColor: "var(--qf-green)",
-      padding: "5px",
+      padding: "5px 10px",
       borderRadius: "5px",
-      position: "absolute", // Cambiar a absolute
-      top: "30px", // Posiciona en la parte superior
-      right: "30px", // Posiciona en la esquina derecha
-    },
-    mt2: { marginTop: "10px" },
-    dFlex: { display: "flex" },
-    justifyCenter: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "100%",
+      position: "absolute",
+      top: "15px",
+      right: "15px",
+      margin: 0,
+      zIndex: 1,
     },
     btnSuccess: {
       backgroundColor: "var(--qf-green)",
@@ -192,7 +214,8 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
 
   return (
     <div style={styles.container}>
-      <div style={styles.card}>
+      <div ref={cardRef} style={styles.card}>
+        <p style={styles.cardEstado}>{formatEstado(evento.estado)}</p>
         <div style={styles.cardBody}>
           <div style={styles.row}>
             <div style={styles.colMd3}>
@@ -216,26 +239,32 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
               <p style={styles.cardText}>
                 {evento.ubicacion} - {evento.localidad}, {evento.provincia}
               </p>
-              <p style={styles.cardEstado}>{evento.estado}</p>
-            </div>
-          </div>
-          <div style={styles.dFlex}>
-            <div style={styles.justifyCenter}>
+
               {!tieneAsociacionPendiente && isEnPreparacion && (
-                <div style={{ width: "100%" }}>
+                <div style={{ width: "100%", marginTop: "10px" }}>
                   <hr style={{ color: "var(--qf-naranja)" }} />
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <button
                       style={styles.btnSuccess}
-                      onClick={handleTieneRestriciones}
+                      onClick={() => setShowConfirm(true)}
                     >
                       Asociarme a Evento
                     </button>
+                    <ConfirmDialog
+                      open={showConfirm}
+                      title="Asociarse a Evento"
+                      message={`¿Estás seguro de que querés asociarte al evento "${evento?.nombre}"?`}
+                      onConfirm={() => {
+                        setShowConfirm(false);
+                        handleTieneRestriciones();
+                      }}
+                      onCancel={() => setShowConfirm(false)}
+                    />
                   </div>
                 </div>
               )}
               {tieneAsociacionPendiente && (
-                <div style={styles.justifyCenter}>
+                <div style={{ width: "100%", marginTop: "10px" }}>
                   <hr style={{ color: "var(--qf-naranja)" }} />
                   <p style={styles.cardTextYellow}>
                     Tiene una asociación pendiente
@@ -243,9 +272,9 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
                 </div>
               )}
             </div>
-          </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

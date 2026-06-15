@@ -11,12 +11,13 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
   const styles = {
     div2Encargado: {
       gridArea: "div2",
-      marginTop: 20,
       borderRadius: 20,
       backgroundColor: "var(--qf-bg-secondary)", 
       alignItems: "center",
       border: `2px solid var(--qf-naranja)`,
       position: "relative",
+      height: "100%",
+      width: "100%",
     },
     loadingText: {
       color: "var(--qf-naranja)",
@@ -85,6 +86,8 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     fetchValoracionPromedio();
   }, [puestoId, eventoId, user?.consumidorId]);
 
+  const sinDatos = error || !valoracion || valoracion === 0;
+
   if (loading) {
     return (
       <div style={styles.div2Encargado}>
@@ -95,10 +98,12 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     );
   }
 
-  if (error) {
+  if (sinDatos) {
     return (
       <div style={styles.div2Encargado}>
-        <p style={styles.errorText}>{error}</p>
+        <div style={styles.contentContainer}>
+          <h1 style={styles.valoracionText}>Sin datos</h1>
+        </div>
       </div>
     );
   }
@@ -107,7 +112,7 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     <div style={styles.div2Encargado}>
       <div style={styles.contentContainer}>
         <h1 style={styles.valoracionText}>
-          {valoracion ? `${valoracion}/5` : "N/A"}
+          {valoracion}/5
         </h1>
         <p style={styles.strongText}>
           Valoración Promedio

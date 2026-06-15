@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import KanbanBoard from "../../ComponentesEPC/KanbanBoard.js";
 import PageLayout from "../../ComponentesGenerales/PageLayout";
@@ -17,7 +17,6 @@ const ListadoPedidosEncargado = () => {
   const { id } = useParams();
   const location = useLocation();
   const carrito = location.state;
-  console.log(carrito);
 
   const recargarComponente = () => {
     setRecargar((prevRecargar) => prevRecargar + 1);
@@ -35,7 +34,6 @@ const ListadoPedidosEncargado = () => {
         .then((response) => response.json())
         .then((data) => {
           setPedidos(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.log("No existen pedidos.", error));
     }
@@ -104,44 +102,38 @@ const ListadoPedidosEncargado = () => {
   };
 
   const styles = {
-    container: {
-      marginBottom: "0",
-      width: "Calc(100% - 30px)",
-      marginLeft: "20px",
-      marginRight: "20px"
+    pagina: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+      flex: 1,
+      minHeight: 0,
     },
     tituloSeccion: {
-      display: "flex",
-      justifyContent: "center",
+      textAlign: "center",
       paddingTop: "1rem",
       fontSize: "2rem",
       color: "var(--qf-naranja)",
+      margin: 0,
     },
-    colContent: {
-      marginLeft: isMobile ? "0" : "20%",
-      width: isMobile ? "100%" : "80%",
-      height: "100%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "column",
-    },
-    boardContainer: {
-      paddingBottom: "4rem",
-      width: "100%",
-      height: "100%",
-    },
-    tituloSeccionNegativo: {
-      fontSize: "2rem",
-      color: "var(--qf-naranja)",
-      textAlign: "center",
+    hrFull: {
+      border: "none",
+      borderTop: "1px solid var(--qf-naranja)",
+      margin: 0,
+      width: "100vw",
+      marginLeft: "calc(-50vw + 50%)",
     },
     breadcrumbWrapper: {
-      width: "Calc(100%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      width: "100%",
+    },
+    boardWrapper: {
+      display: "flex",
+      justifyContent: "center",
+      flex: 1,
+      minHeight: 0,
     },
   };
+
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Puestos", url: "/listado-puestos-encargado" },
@@ -150,31 +142,36 @@ const ListadoPedidosEncargado = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.colContent}>
-        <div style={styles.tituloSeccion}>
-          <h1>Pedidos {carrito?.nombreCarro}</h1>
-        </div>
-        <hr style={{ color: "var(--qf-naranja)" }} />
+      <div style={styles.pagina}>
+        {/* Título centrado */}
+        <h1 style={styles.tituloSeccion}>
+          Pedidos {carrito?.nombreCarro}
+        </h1>
+
+        {/* HR a ancho completo */}
+        <hr style={styles.hrFull} />
+
+        {/* Breadcrumb a ancho completo */}
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+            style={{ width: "100%", margin: "8px 0" }}
           />
         </div>
-        <div style={styles.container}>
-          <div style={styles.boardContainer}>
-            {Array.isArray(pedidos) && pedidos.length > 0 ? (
-              <KanbanBoard
-                initialData={initialData}
-                onUpdateState={updatePedidoState}
-                id={id}
-              />
-            ) : (
-              <h2 style={styles.tituloSeccionNegativo}>
-                No hay Pedidos hechos.
-              </h2>
-            )}
-          </div>
+
+        {/* Kanban board */}
+        <div style={styles.boardWrapper}>
+          {Array.isArray(pedidos) && pedidos.length > 0 ? (
+            <KanbanBoard
+              initialData={initialData}
+              onUpdateState={updatePedidoState}
+              id={id}
+            />
+          ) : (
+            <h2 style={{ fontSize: "2rem", color: "var(--qf-naranja)", textAlign: "center" }}>
+              No hay Pedidos hechos.
+            </h2>
+          )}
         </div>
       </div>
       <Footer />

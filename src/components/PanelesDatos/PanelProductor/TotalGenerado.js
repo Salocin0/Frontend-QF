@@ -28,8 +28,6 @@ const TotalQuickFood = ({ eventId }) => {
 
   const styles = {
     container: {
-      gridArea: "div1",
-      marginTop: "20px",
       borderRadius: "20px",
       backgroundColor: "var(--qf-bg-secondary)",
       display: "flex",
@@ -42,7 +40,8 @@ const TotalQuickFood = ({ eventId }) => {
       backgroundPosition: "70% 25%",
       border: `2px solid var(--qf-naranja)`,
       position: "relative",
-      
+      height: "100%",
+      boxSizing: "border-box",
     },
     heading: {
       color: "var(--qf-naranja)",

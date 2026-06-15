@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Logo from "../img/adaptive-icon.png";
 import MenuItems from "./MenuItems";
 import UserProfile from "./UserProfile";
 import Panel from "../ComponentesLandingPage/ChatPanel";
 import useBreakpoint from "../../useBreakpoint";
+import { FaTimes } from "react-icons/fa";
 
-const Sidebar = ({ tipoUsuario }) => {
-  const { isMobile, isTablet } = useBreakpoint();
+const Sidebar = ({ tipoUsuario, onClose, isCollapsed }) => {
+  const { isMobile } = useBreakpoint();
   const [usuario, setUsuario] = useState("consumidor");
   const [isResponsable, setIsResponsable] = useState(false);
   const [isProductor, setIsProductor] = useState(false);
@@ -32,7 +34,18 @@ const Sidebar = ({ tipoUsuario }) => {
   }, [tipoUsuario, usuario]);
 
   return (
-    <div className="sidebar" style={{ width: isMobile ? "100%" : isTablet ? "200px" : "250px" }}>
+    <div className="sidebar">
+      {/* X para cerrar en mobile */}
+      {isMobile && onClose && (
+        <button
+          className="sidebar-close-btn"
+          onClick={onClose}
+          aria-label="Cerrar menú"
+        >
+          <FaTimes />
+        </button>
+      )}
+
       <div className="logocontainer">
         <a href="/inicio">
           <img src={Logo} alt="Logo" className="logo" style={{ borderRadius: "10px" }} />
@@ -45,14 +58,15 @@ const Sidebar = ({ tipoUsuario }) => {
           isRepartidor={isRepartidor}
           togglePanel={togglePanel}
         />
-        {showPanel && (
+        {showPanel && createPortal(
           <SafePanel
             onClose={togglePanel}
             position="fixed"
-            bottom="56px"
-            left="306px "
+            bottom={isMobile ? "80px" : "44px"}
+            left={isMobile || isCollapsed ? "0" : "280px"}
             isLogin={true}
-          />
+          />,
+          document.body
         )}
         <SafeUserProfile haveRol={haveRol} />
       </div>

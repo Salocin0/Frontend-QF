@@ -45,12 +45,12 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     container: {
       position: "relative",
       gridArea: "div1",
-      marginTop: "20px",
       borderRadius: "20px",
       alignItems: "center",
       border: `2px solid var(--qf-naranja)`,
       background: "var(--qf-bg-secondary)",
-      marginLeft: "20px",
+      height: "100%",
+      width: "100%",
     },
     loadingContainer: {
       display: "flex",
@@ -99,20 +99,22 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     },
   };
 
+  const sinDatos = error || !totalRecaudado || totalRecaudado === 0;
+
   return (
     <div style={styles.container}>
       {isLoading ? (
         <div style={styles.loadingContainer}>
           <CircularProgress style={{ color: "var(--qf-naranja)" }} />
         </div>
-      ) : error ? (
+      ) : sinDatos ? (
         <div style={styles.errorContainer}>
-          <p style={styles.errorText}>Error al cargar los datos</p>
+          <p style={styles.errorText}>Sin datos</p>
         </div>
       ) : (
         <div style={styles.resultContainer}>
           <h1 style={styles.resultText}>
-            ${totalRecaudado?.toLocaleString("es-ES") || "0"}
+            ${totalRecaudado?.toLocaleString("es-ES")}
           </h1>
           <p style={styles.label}>
             <strong>Total Recaudado</strong>

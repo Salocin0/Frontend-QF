@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useState } from "react";
+﻿import React, { useContext, useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
@@ -9,10 +9,20 @@ import EncargadoPuesto from "./FormEncargadoPerfil";
 import RepartidorComponent from "./FormRepartidorPerfil";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import EstadisticasPerfil from "./estadisticasPerfil/EstadisticasPerfil";
-import useBreakpoint from "../../useBreakpoint";
-
 const ConsultarUsuario = () => {
-  const { isMobile } = useBreakpoint();
+  const contentRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(999);
+  const isNarrowLayout = contentWidth <= 780;
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContentWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   const [showModal, setShowModal] = useState(false);
   const { user, updateUser } = useContext(UserContext);
   const [mostrarContenidoProductor, setMostrarContenidoProductor] =
@@ -270,64 +280,7 @@ const ConsultarUsuario = () => {
     }
   };
 
-  const styles = {
-    breadcrumbWrapper: {
-      marginLeft: isMobile ? "0" : "20%",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    contentWrapper: { display: "flex", flexDirection: isMobile ? "column" : "row", height: "100%" },
-    mainContent: {
-      display: "flex",
-      marginRight: isMobile ? "0" : "Calc(25% + 20px)",
-      flexDirection: "column",
-      marginLeft: isMobile ? "0" : "calc(20% + 20px)",
-      marginBottom: "20px",
-    },
-    placeholderWrapper: {
-      width: isMobile ? "100%" : "25%",
-      position: isMobile ? "relative" : "absolute",
-      top: isMobile ? "auto" : "160px",
-      right: isMobile ? "auto" : "0",
-      height: isMobile ? "auto" : "Calc(100vh - 250px)",
-      backgroundColor: "var(--qf-bg-secondary)",
-      borderRadius: "10px",
-      border: `1px solid var(--qf-naranja)`,
-      color: "var(--qf-text-primary)",
-      margin: "20px",
-      marginLeft: isMobile ? "20px" : "0px",
-      padding: "20px",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      order: isMobile ? -1 : 0,
-    },
-    card: {
-      marginBottom: "50px",
-      marginTop: "15px",
-      display: "flex",
-      flexDirection: "column",
-      backgroundColor: "var(--qf-bg-main)",
-    },
-    cardBody: { paddingRight: "20px", marginBottom: "1.5rem" },
-    formWrapper: { width: "100%" },
-    titleSection: {
-      display: "flex",
-      justifyContent: "center",
-      marginLeft: isMobile ? "0" : "20%",
-      marginBottom: "5px",
-      color: "var(--qf-naranja)",
-    },
-    sectionTitleText: {
-      paddingTop: "20px",
-    },
-    sectionTitleNegative: {
-      color: "var(--qf-naranja)",
-      textAlign: "center",
-    },
-    separator: {
-      border: "none",
-      borderTop: `1px solid var(--qf-naranja)`,
-    },
-  };
+
   
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
@@ -336,68 +289,114 @@ const ConsultarUsuario = () => {
   
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.titleSection}>
-          <h1 style={styles.sectionTitleText}>Mi Perfil</h1>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        flex: 1,
+        minHeight: 0,
+        boxSizing: "border-box",
+      }}>
+        {/* Header full-width centrado */}
+        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
+          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
+            Mi Perfil
+          </h1>
+          <hr className="qf-separator qf-separator--spaced" />
         </div>
-        <hr style={styles.separator} />
-      <div style={styles.breadcrumbWrapper}>
-        <Breadcrumb items={breadcrumbItems} style={{width:"Calc(100% - 40px)",margin: '0px 20px',}}/>
-      </div>
-  
-      <div style={styles.contentWrapper}>
-        <div style={styles.mainContent}>
-          <div style={styles.card}>
-            <div style={styles.cardBody}>
-              <div className="needs-validation">
-                <section style={styles.formWrapper}>
-                  <UserProfileForm
-                    mostrarBotonHabilitarDeNuevoR={mostrarBotonHabilitarDeNuevoR}
-                    handleVolverAHabilitarR={handleVolverAHabilitarR}
-                    mostrarBotonHabilitarDeNuevoEPC={mostrarBotonHabilitarDeNuevoEPC}
-                    handleVolverAHabilitarEPC={handleVolverAHabilitarEPC}
-                    mostrarBotonHabilitarDeNuevoPE={mostrarBotonHabilitarDeNuevoPE}
-                    handleVolverAHabilitarPE={handleVolverAHabilitarPE}
-                  />
-                  <EventProducerForm
-                    mostrarContenidoProductor={mostrarContenidoProductor}
-                    showModal={showModal}
-                    setShowModal={setShowModal}
-                    confirmarDeshabilitarPE={confirmarDeshabilitarPE}
-                    setMostrarContenidoProductor={setMostrarContenidoProductor}
-                    isCuitValid={isCuitValid}
-                  />
-                  <EncargadoPuesto
-                    mostrarContenidoEncargadoPuesto={
-                      mostrarContenidoEncargadoPuesto
-                    }
-                    confirmarDeshabilitarEPC={confirmarDeshabilitarEPC}
-                    showModal={showModal}
-                    setShowModal={setShowModal}
-                    setMostrarContenidoEncargadoPuesto={
-                      setMostrarContenidoEncargadoPuesto
-                    }
-                    isCuitValid={isCuitValid}
-                    setMostrarBotonHabilitarDeNuevoEPC={
-                      setMostrarBotonHabilitarDeNuevoEPC
-                    }
-                  />
-                  <RepartidorComponent
-                    mostrarContenidoRepartidor={mostrarContenidoRepartidor}
-                    confirmarDeshabilitarR={confirmarDeshabilitarR}
-                    showModal={showModal}
-                    setShowModal={setShowModal}
-                    setMostrarContenidoRepartidor={setMostrarContenidoRepartidor}
-                    setMostrarBotonHabilitarDeNuevoR={setMostrarBotonHabilitarDeNuevoR}
-                  />
-                </section>
-              </div>
-            </div>
+
+        {/* Breadcrumb full-width (siempre arriba) */}
+        <Breadcrumb items={breadcrumbItems} style={{
+          margin: 0,
+          marginBottom: "20px",
+          backgroundColor: 'var(--qf-bg-secondary)',
+          width: '100%',
+          padding: '8px 16px',
+          borderRadius: '10px',
+          border: '1px solid var(--qf-naranja)',
+          boxSizing: 'border-box',
+        }} />
+
+        {/* Contenido: dos columnas responsive */}
+        <div
+          ref={contentRef}
+          style={{
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: isNarrowLayout ? "column" : "row",
+            gap: "20px",
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          {/* Columna izquierda: forms */}
+          <div style={{ flex: 1, minWidth: 0, order: isNarrowLayout ? 1 : 0 }}>
+            <section style={{ width: "100%" }}>
+              <UserProfileForm
+                mostrarBotonHabilitarDeNuevoR={mostrarBotonHabilitarDeNuevoR}
+                handleVolverAHabilitarR={handleVolverAHabilitarR}
+                mostrarBotonHabilitarDeNuevoEPC={mostrarBotonHabilitarDeNuevoEPC}
+                handleVolverAHabilitarEPC={handleVolverAHabilitarEPC}
+                mostrarBotonHabilitarDeNuevoPE={mostrarBotonHabilitarDeNuevoPE}
+                handleVolverAHabilitarPE={handleVolverAHabilitarPE}
+              />
+              <EventProducerForm
+                mostrarContenidoProductor={mostrarContenidoProductor}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                confirmarDeshabilitarPE={confirmarDeshabilitarPE}
+                setMostrarContenidoProductor={setMostrarContenidoProductor}
+                isCuitValid={isCuitValid}
+              />
+              <EncargadoPuesto
+                mostrarContenidoEncargadoPuesto={
+                  mostrarContenidoEncargadoPuesto
+                }
+                confirmarDeshabilitarEPC={confirmarDeshabilitarEPC}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                setMostrarContenidoEncargadoPuesto={
+                  setMostrarContenidoEncargadoPuesto
+                }
+                isCuitValid={isCuitValid}
+                setMostrarBotonHabilitarDeNuevoEPC={
+                  setMostrarBotonHabilitarDeNuevoEPC
+                }
+              />
+              <RepartidorComponent
+                mostrarContenidoRepartidor={mostrarContenidoRepartidor}
+                confirmarDeshabilitarR={confirmarDeshabilitarR}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                setMostrarContenidoRepartidor={setMostrarContenidoRepartidor}
+                setMostrarBotonHabilitarDeNuevoR={setMostrarBotonHabilitarDeNuevoR}
+              />
+            </section>
           </div>
-        </div>
-        
-        {/* Placeholder a la derecha */}
-        <div style={styles.placeholderWrapper}>
-          <EstadisticasPerfil/>
+
+          {/* Columna derecha: estadísticas (no se estira) */}
+          <aside style={{
+            order: isNarrowLayout ? -1 : 0,
+            width: isNarrowLayout ? "100%" : "320px",
+            minWidth: isNarrowLayout ? "100%" : "320px",
+            flexShrink: 0,
+            alignSelf: "flex-start",
+            position: isNarrowLayout ? "static" : "sticky",
+            top: "20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+          }}>
+            <div style={{
+              border: "1px solid var(--qf-naranja)",
+              borderRadius: "10px",
+              backgroundColor: "var(--qf-bg-secondary)",
+              padding: "20px",
+            }}>
+              <EstadisticasPerfil />
+            </div>
+          </aside>
         </div>
       </div>
       <Footer />

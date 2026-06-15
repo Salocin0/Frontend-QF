@@ -3,7 +3,7 @@ import { default as React, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import FiltersEventosConsumidor from "../../Filtros y Buscadores/filtersEventosConsumidor";
-import "./../../sass/main.css";
+import "./../../sass/main.scss";
 import { FaClipboardCheck, FaInfoCircle, FaTimesCircle } from "react-icons/fa";
 
 const PedidoEncargado = ({ pedido, recargar }) => {

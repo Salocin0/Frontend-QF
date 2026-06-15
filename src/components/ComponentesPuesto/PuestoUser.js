@@ -1,8 +1,22 @@
-﻿import imgDefault from "./../img/puestoLogoDefault.jpg";
+﻿import React, { useRef, useState, useEffect } from "react";
+import imgDefault from "./../img/puestoLogoDefault.jpg";
 import { useNavigate } from "react-router-dom";
 
 const PuestoUser = ({ carrito, selectedDay, evento }) => {
   const navigate = useNavigate();
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const isNarrow = cardWidth < 600;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   const handleClick = () => {
     navigate(`/productos-puesto/${carrito?.id}`, {
       state: { selectedDay, evento },
@@ -24,11 +38,13 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
       transition: "transform 0.2s ease-in-out",
       cursor: "pointer",
       display: "flex",
-      flexDirection: "row",
+      flexDirection: isNarrow ? "column" : "row",
+      alignItems: isNarrow ? "stretch" : "center",
       paddingTop: "12px",
       paddingBottom: "12px",
       paddingLeft: "16px",
       paddingRight: "16px",
+      gap: isNarrow ? "12px" : "0",
     },
     cardBody: {
       display: "flex",
@@ -38,8 +54,8 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
       cursor: "pointer",
     },
     imageContainer: {
-      width: "140px",
-      minWidth: "140px",
+      width: isNarrow ? "100%" : "140px",
+      minWidth: isNarrow ? "auto" : "140px",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -48,11 +64,12 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
     },
     img: {
       width: "100%",
-      maxWidth: "150px",
+      maxWidth: isNarrow ? "200px" : "150px",
+      height: isNarrow ? "120px" : "auto",
+      objectFit: "cover",
       borderRadius: "8px",
       marginLeft: "0",
-      marginRight: "16px",
-      objectFit: "cover",
+      marginRight: isNarrow ? "0" : "16px",
       boxShadow: "none",
       display: "block",
     },
@@ -92,7 +109,7 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
 
   return (
     <div onClick={() => handleClick()} style={styles.cardLink}>
-      <div style={styles.card}>
+      <div ref={cardRef} style={styles.card}>
         <div style={styles.imageContainer}>
           <img
             src={carrito?.img || imgDefault}

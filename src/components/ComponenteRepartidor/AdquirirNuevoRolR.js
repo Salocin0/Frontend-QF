@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-
 
 const AdquirirNuevoRolR = () => {
   const navigate = useNavigate();
@@ -13,52 +13,6 @@ const AdquirirNuevoRolR = () => {
   const [,setNuevorol] = useState(false);
   const { user,updateUser } = useContext(UserContext);
 
-  const styles = {
-    mainContent: {
-      flexGrow: 1,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    form: {
-      background: "var(--qf-bg-secondary)",
-      borderRadius: "8px",
-      padding: "20px",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    },
-    title: {
-      fontSize: "1.5rem",
-      fontWeight: "bold",
-      marginBottom: "1rem",
-      color: "var(--qf-naranja)",
-    },
-    divider: {
-      marginBottom: "1rem",
-      color: "var(--qf-naranja)",
-    },
-    formCheck: {
-      marginBottom: "1rem",
-      marginLeft: "1rem",
-    },
-    formCheckLabel: {
-      color: "var(--qf-text-white)",
-    },
-    buttonContainer: {
-      display: "grid",
-    },
-    submitButton: {
-      backgroundColor: "green",
-      color: "white",
-      border: "none",
-      padding: "0.5rem 1rem",
-      borderRadius: "4px",
-      cursor: "pointer",
-    },
-    submitButtonDisabled: {
-      opacity: 0.6,
-      cursor: "not-allowed",
-    },
-  };
   const handleLogout = () => {
       if (user.id) {
         fetch(`${process.env?.REACT_APP_BACK_URL}user/cerrarWeb`, {
@@ -105,65 +59,127 @@ const AdquirirNuevoRolR = () => {
     }
   };
 
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Adquirir Nuevo Rol", url: "/adquirir-nuevo-rolR" },
+  ];
+
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.mainContent}>
-        <div style={styles.form}>
-          <div>
-            <h1 style={styles.title}>
-              Adquirir Nuevo Rol - Repartidor
-            </h1>
-            <hr style={styles.divider} />
-            <form
-              onSubmit={handleSubmit}
-              className="needs-validation"
-              encType="multipart/form-data"
-            >
-              <div style={styles.formCheck}>
-                <input
-                  type="checkbox"
-                  id="confirmacionMayorDeEdad"
-                  name="confirmacionMayorDeEdad"
-                  checked={confirmacionMayorDeEdad}
-                  onChange={() =>
-                    setConfirmacionMayorDeEdad(!confirmacionMayorDeEdad)
-                  }
-                />
-                <label
-                  htmlFor="confirmacionMayorDeEdad"
-                  style={styles.formCheckLabel}
-                >
-                  Confirmo que tengo más de 18 años
-                </label>
-              </div>
-
-              <div style={styles.buttonContainer}>
-                <button
-                  type="submit"
-                  style={{
-                    ...styles.submitButton,
-                    ...(confirmacionMayorDeEdad ? {} : styles.submitButtonDisabled),
-                  }}
-                  disabled={!confirmacionMayorDeEdad}
-                  data-testid="submit-button"
-                >
-                  Solicitar Nuevo Rol - Repartidor
-                </button>
-
-                <button
-                  onClick={() => navigate("/inicio")}
-                  style={{
-                    ...styles.submitButton, backgroundColor: "var(--qf-blue)", marginTop: "10px"
-                  }}
-                >
-                  Volver
-                </button>
-              </div>
-            </form>
-          </div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        flex: 1,
+        minHeight: 0,
+        boxSizing: "border-box",
+      }}>
+        {/* Header centrado */}
+        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
+          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
+            Adquirir Nuevo Rol
+          </h1>
+          <hr className="qf-separator qf-separator--spaced" />
         </div>
-        <Footer />
+
+        {/* Breadcrumb */}
+        <Breadcrumb items={breadcrumbItems} style={{
+          margin: 0,
+          marginBottom: "20px",
+          backgroundColor: 'var(--qf-bg-secondary)',
+          width: '100%',
+          padding: '8px 16px',
+          borderRadius: '10px',
+          border: '1px solid var(--qf-naranja)',
+          boxSizing: 'border-box',
+        }} />
+
+        {/* Formulario */}
+        <div style={{
+          width: "100%",
+          margin: "0 auto",
+          backgroundColor: "var(--qf-bg-secondary)",
+          borderRadius: "10px",
+          padding: "20px",
+          border: "1px solid var(--qf-naranja)",
+          boxSizing: "border-box",
+        }}>
+          <h1 style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            marginBottom: "1rem",
+            color: "var(--qf-naranja)",
+            textAlign: "center",
+          }}>
+            Repartidor
+          </h1>
+          <form
+            onSubmit={handleSubmit}
+            className="needs-validation"
+            encType="multipart/form-data"
+          >
+            <div style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "8px",
+              marginBottom: "1rem",
+            }}>
+              <input
+                type="checkbox"
+                id="confirmacionMayorDeEdad"
+                name="confirmacionMayorDeEdad"
+                checked={confirmacionMayorDeEdad}
+                onChange={() =>
+                  setConfirmacionMayorDeEdad(!confirmacionMayorDeEdad)
+                }
+                style={{ marginTop: "3px", flexShrink: 0 }}
+              />
+              <label
+                htmlFor="confirmacionMayorDeEdad"
+                style={{ color: "var(--qf-text-white)" }}
+              >
+                Confirmo que tengo más de 18 años
+              </label>
+            </div>
+
+            <div style={{ display: "grid" }}>
+              <button
+                type="submit"
+                style={{
+                  backgroundColor: "green",
+                  color: "white",
+                  border: "none",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "4px",
+                  cursor: confirmacionMayorDeEdad ? "pointer" : "not-allowed",
+                  opacity: confirmacionMayorDeEdad ? 1 : 0.6,
+                }}
+                disabled={!confirmacionMayorDeEdad}
+                data-testid="submit-button"
+              >
+                Solicitar Nuevo Rol - Repartidor
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigate("/inicio")}
+                style={{
+                  backgroundColor: "var(--qf-blue)",
+                  color: "white",
+                  border: "none",
+                  padding: "0.5rem 1rem",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                  marginTop: "10px",
+                }}
+              >
+                Volver
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
+      <Footer />
     </PageLayout>
   );
 };

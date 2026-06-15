@@ -4,9 +4,11 @@ import botImageURL from "../bot-img.png";
 import "./../ComponenteRegister/placeholder.css";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import useBreakpoint from "../../useBreakpoint";
 
 const Chatbot = () => {
   const { user } = useContext(UserContext);
+  const { isMobile } = useBreakpoint();
   const [messages, setMessages] = useState([]);
   console.log(user);
   const styles = {
@@ -21,7 +23,7 @@ const Chatbot = () => {
     header: {
       backgroundColor: "var(--qf-bg-dark)",
       textAlign: "center",
-      padding: "20px 0",
+      padding: "20px 50px",
       borderBottom: `5px solid var(--qf-naranja)`,
       borderRadius: "20px",
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
@@ -29,7 +31,10 @@ const Chatbot = () => {
     headerTitle: {
       margin: 0,
       color: "var(--qf-naranja)",
-      fontSize: "1.5em",
+      fontSize: isMobile ? "1em" : "1.5em",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
     },
     chatContainer: {
       width: "100%",
@@ -90,6 +95,7 @@ const Chatbot = () => {
     },
     chatInput: {
       flex: 1,
+      minWidth: 0,
       padding: "10px",
       border: `2px solid var(--qf-naranja)`,
       borderRadius: "20px",
@@ -98,12 +104,14 @@ const Chatbot = () => {
       transition: "border 0.3s ease, box-shadow 0.3s ease",
     },
     sendBtn: {
-      padding: "10px 20px",
+      padding: isMobile ? "10px 12px" : "10px 20px",
+      fontSize: isMobile ? "0.85em" : "1em",
       backgroundColor: "var(--qf-naranja)",
       color: "white",
       border: "none",
       borderRadius: "20px",
       cursor: "pointer",
+      whiteSpace: "nowrap",
       transition: "background-color 0.3s ease",
     },
     footer: {

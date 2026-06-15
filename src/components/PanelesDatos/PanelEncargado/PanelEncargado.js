@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import PageLayout from "../../ComponentesGenerales/PageLayout";
 import Footer from "../../ComponentesGenerales/Footer";
 import GraficaLineas from "../GraficaLineas";
@@ -19,82 +19,99 @@ const PanelEncargado = () => {
   const [puestos, setPuestos] = useState([]);
   const [puestoSeleccionado, setPuestoSeleccionado] = useState(null);
 
+  const windowWidth = useBreakpoint().width;
+
+  // Layout de grilla según el ancho de ventana:
+  //   >= 1200px → 9 columnas (div1|div2|div3 a la izquierda, toppuestos a la derecha, grafica abajo)
+  //   768-1199px → 3 columnas (div1|div2|div3 arriba, toppuestos full width, grafica abajo)
+  //   < 768px → 1 columna (todo apilado)
+  let gridCols, gridRows, gridAreas;
+  if (windowWidth >= 1200) {
+    gridCols = "repeat(9, 1fr)";
+    gridRows = "auto auto 1fr 1fr 1fr 1fr";
+    gridAreas = `
+      "div1 div1 div2 div2 div3 div3 toppuestos toppuestos toppuestos"
+      "div1 div1 div2 div2 div3 div3 toppuestos toppuestos toppuestos"
+      "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+      "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+      "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+      "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
+    `;
+  } else if (windowWidth >= 768) {
+    // Tablet: 3 cards arriba, toppuestos abajo full, grafica al final
+    gridCols = "repeat(3, 1fr)";
+    gridRows = "auto";
+    gridAreas = `
+      "div1 div2 div3"
+      "toppuestos toppuestos toppuestos"
+      "grafica grafica grafica"
+    `;
+  } else {
+    gridCols = "1fr";
+    gridRows = "auto";
+    gridAreas = `
+      "div1"
+      "div2"
+      "div3"
+      "toppuestos"
+      "grafica"
+    `;
+  }
+
   const styles = {
-    header: {
-      color: "var(--qf-naranja)",
-      textAlign: "center",
-      marginLeft: isMobile ? "0" : "20%",
-      paddingTop: "10px",
+    pagina: {
       display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      flexDirection: "column",
+      gap: "20px",
     },
-    select1: {
-      borderRadius: "5px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      position: "absolute",
-      top: "25px",
-      right: "20px",
-      border: "none",
-      color: "white",
-      padding: "5px",
-      marginLeft: "20px",
-      width: "200px",
-    },
-    select2: {
-      borderRadius: "5px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      position: "absolute",
-      top: "25px",
-      right: "230px",
-      border: "none",
-      color: "white",
-      padding: "5px",
-      marginLeft: "20px",
-      width: "150px",
-    },
-    hr: {
+    tituloSeccion: {
+      textAlign: "center",
+      paddingTop: "1rem",
+      fontSize: "2rem",
       color: "var(--qf-naranja)",
+      margin: 0,
+    },
+    hrFull: {
+      border: "none",
+      borderTop: "1px solid var(--qf-naranja)",
+      margin: 0,
+      width: "100vw",
+      marginLeft: "calc(-50vw + 50%)",
+    },
+    breadcrumbWrapper: {
       width: "100%",
-      paddingBottom: "0",
+    },
+    selectsContainer: {
+      display: "flex",
+      flexDirection: isMobile ? "column" : "row",
+      gap: isMobile ? "10px" : "20px",
+      justifyContent: isMobile ? "stretch" : "flex-end",
+      alignItems: "center",
+      padding: "0 20px",
+      marginBottom: "20px",
+    },
+    select: {
+      borderRadius: "5px",
+      backgroundColor: "var(--qf-bg-secondary)",
+      border: "none",
+      color: "white",
+      padding: "5px",
+      width: isMobile ? "100%" : "200px",
     },
     mainContent: {
       display: "flex",
-      height: isMobile ? "auto" : "Calc(100% - 200px)",
-      width: isMobile ? "100%" : "80%",
+      flexDirection: "column",
       backgroundColor: "var(--qf-bg-main)",
       marginBottom: "50px",
-      marginLeft: isMobile ? "0" : "20%",
     },
     graficaContainer: {
       display: "grid",
       width: "100%",
       height: "100%",
-      gridTemplateColumns: isMobile ? "1fr" : "repeat(9, 1fr)",
-      gridTemplateRows: isMobile ? "auto" : "repeat(6, 1fr)",
+      gridTemplateColumns: gridCols,
+      gridTemplateRows: gridRows,
       gap: "20px",
-      gridTemplateAreas: isMobile ? `
-        "div1"
-        "div2"
-        "div3"
-        "toppuestos"
-        "grafica"
-      ` : `
-        "div1 div1 div2 div2 div3 div3 toppuestos toppuestos toppuestos"
-        "div1 div1 div2 div2 div3 div3 toppuestos toppuestos toppuestos"
-        "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
-        "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
-        "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
-        "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
-      `,
-    },
-    footer: {
-      marginTop: "auto",
-    },
-    breadcrumbWrapper: {
-      width: "Calc(100%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      gridTemplateAreas: gridAreas,
     },
   };
 
@@ -103,10 +120,12 @@ const PanelEncargado = () => {
       setEventoSeleccionado({ nombre: "Todos", id: "Todos" });
       return;
     }
-    setEventoSeleccionado({
-      nombre: eventos[e.target.value].nombre,
-      id: eventos[e.target.value].id,
-    });
+    const evento = eventos.find(
+      (ev) => String(ev.id) === e.target.value
+    );
+    if (evento) {
+      setEventoSeleccionado({ nombre: evento.nombre, id: evento.id });
+    }
   };
 
   const handlePuestoChange = (e) => {
@@ -114,38 +133,65 @@ const PanelEncargado = () => {
       setPuestoSeleccionado({ nombre: "Todos", id: "Todos" });
       return;
     }
-    setPuestoSeleccionado({
-      nombre: puestos[e.target.value].nombreCarro,
-      id: puestos[e.target.value].id,
-    });
+    const puesto = puestos.find(
+      (p) => String(p.id) === e.target.value
+    );
+    if (puesto) {
+      setPuestoSeleccionado({
+        nombre: puesto.nombreCarro,
+        id: puesto.id,
+      });
+    }
   };
 
   useEffect(() => {
     const fetchEventos = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BACK_URL}evento/all`,
+          `${process.env.REACT_APP_BACK_URL}estadisticas/eventos-con-pedidos/${user.consumidorId}`,
           {
             headers: {
               "Content-Type": "application/json",
-              consumidorId: user?.id,
             },
           }
         );
 
         if (response.ok) {
           const data = await response.json();
-          setEventos([{ nombre: "Todos", id: "Todos" }, ...data?.data] || []);
-          setEventoSeleccionado({ nombre: "Todos", id: "Todos" });
+          const eventosConPedidos = data?.data || [];
+          setEventos([
+            { nombre: "Todos", id: "Todos" },
+            ...eventosConPedidos,
+          ]);
         } else {
-          console.error("Error al obtener eventos");
+          throw new Error("New endpoint failed");
         }
       } catch (error) {
-        console.error("Error en el fetch de eventos:", error);
+        console.warn("Falling back to old endpoint for eventos", error);
+        try {
+          const fallbackResponse = await fetch(
+            `${process.env.REACT_APP_BACK_URL}evento/all`,
+            { headers: { "Content-Type": "application/json" } }
+          );
+          if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            const allEventos = fallbackData?.data || [];
+            setEventos([
+              { nombre: "Todos", id: "Todos" },
+              ...allEventos,
+            ]);
+          } else {
+            setEventos([{ nombre: "Todos", id: "Todos" }]);
+          }
+        } catch (fallbackError) {
+          console.error("Fallback for eventos also failed", fallbackError);
+          setEventos([{ nombre: "Todos", id: "Todos" }]);
+        }
       }
+      setEventoSeleccionado({ nombre: "Todos", id: "Todos" });
     };
 
-    if (user?.id) {
+    if (user?.consumidorId) {
       fetchEventos();
     }
   }, [user]);
@@ -154,30 +200,55 @@ const PanelEncargado = () => {
     const fetchPuestos = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_BACK_URL}puesto/`,
+          `${process.env.REACT_APP_BACK_URL}estadisticas/puestos-con-pedidos/${user.consumidorId}`,
           {
             headers: {
               "Content-Type": "application/json",
-              consumidorId: user?.id,
             },
           }
         );
 
         if (response.ok) {
           const data = await response.json();
-          setPuestos(
-            [{ nombreCarro: "Todos", id: "Todos" }, ...data?.data] || []
-          );
-          setPuestoSeleccionado({ nombre: "Todos", id: "Todos" });
+          const puestosConPedidos = data?.data || [];
+          setPuestos([
+            { nombreCarro: "Todos", id: "Todos" },
+            ...puestosConPedidos,
+          ]);
         } else {
-          console.error("Error al obtener puestos");
+          throw new Error("New endpoint failed");
         }
       } catch (error) {
-        console.error("Error en el fetch de puestos:", error);
+        console.warn("Falling back to old endpoint for puestos", error);
+        try {
+          const fallbackResponse = await fetch(
+            `${process.env.REACT_APP_BACK_URL}puesto/creados`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                consumidorid: user.consumidorId,
+              },
+            }
+          );
+          if (fallbackResponse.ok) {
+            const fallbackData = await fallbackResponse.json();
+            const allPuestos = fallbackData?.data || [];
+            setPuestos([
+              { nombreCarro: "Todos", id: "Todos" },
+              ...allPuestos,
+            ]);
+          } else {
+            setPuestos([{ nombreCarro: "Todos", id: "Todos" }]);
+          }
+        } catch (fallbackError) {
+          console.error("Fallback for puestos also failed", fallbackError);
+          setPuestos([{ nombreCarro: "Todos", id: "Todos" }]);
+        }
       }
+      setPuestoSeleccionado({ nombre: "Todos", id: "Todos" });
     };
 
-    if (user?.id) {
+    if (user?.consumidorId) {
       fetchPuestos();
     }
   }, [user]);
@@ -189,38 +260,39 @@ const PanelEncargado = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <h1 style={styles.header}>Estadísticas Encargado</h1>
-      <select
-        style={styles.select1}
-        value={eventoSeleccionado?.id}
-        onChange={handleEventoChange}
-      >
-        {eventos.map((evento) => (
-          <option key={evento.id} value={evento.id}>
-            {evento.nombre}
-          </option>
-        ))}
-      </select>
-      <select
-        style={styles.select2}
-        value={puestoSeleccionado?.id}
-        onChange={handlePuestoChange}
-      >
-        {puestos.map((puesto) => (
-          <option key={puesto.id} value={puesto.id}>
-            {puesto.nombreCarro}
-          </option>
-        ))}
-      </select>
-      <hr style={styles.hr} />
-      <div style={styles.breadcrumbWrapper}>
-        <Breadcrumb
-          items={breadcrumbItems}
-          style={{
-            width: "Calc(80% - 40px)",
-            marginLeft: "Calc(20% + 20px)",
-          }}
-        />
+      <div style={styles.pagina}>
+        <h1 style={styles.tituloSeccion}>Estadísticas Encargado</h1>
+        <hr style={styles.hrFull} />
+        <div style={styles.breadcrumbWrapper}>
+          <Breadcrumb
+            items={breadcrumbItems}
+            style={{ width: "100%", margin: "8px 0" }}
+          />
+        </div>
+        <div style={styles.selectsContainer}>
+          <select
+            style={styles.select}
+            value={eventoSeleccionado?.id}
+            onChange={handleEventoChange}
+          >
+            {eventos.map((evento) => (
+              <option key={evento.id} value={evento.id}>
+                {evento.nombre}
+              </option>
+            ))}
+          </select>
+          <select
+            style={styles.select}
+            value={puestoSeleccionado?.id}
+            onChange={handlePuestoChange}
+          >
+            {puestos.map((puesto) => (
+              <option key={puesto.id} value={puesto.id}>
+                {puesto.nombreCarro}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div style={styles.mainContent}>
         <div style={styles.graficaContainer}>
@@ -242,7 +314,7 @@ const PanelEncargado = () => {
           />
           <div
             className="graficaBarrasEncargado"
-            style={{ marginLeft: "20px" }}
+            style={{ gridArea: "grafica" }}
           >
             <GraficaLineas
               key={eventoSeleccionado?.id}

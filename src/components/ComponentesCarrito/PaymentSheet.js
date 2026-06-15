@@ -95,12 +95,12 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
 
   const cardStyle = {
     base: {
-      color: "var(--qf-text-primary)",
+      color: "#ffffff",
       backgroundColor: "var(--qf-bg-main)",
       fontSize: "16px",
       fontFamily: "Arial, sans-serif",
       "::placeholder": {
-        color: "var(--qf-text-primary)" + "80",
+        color: "#ffffff" + "80",
       },
     },
     invalid: {
@@ -263,7 +263,7 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
       textAlign: "center",
       marginTop: "1rem",
       fontSize: "12px",
-      color: "var(--qf-text-primary)" + "88",
+      color: "#ffffff",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",

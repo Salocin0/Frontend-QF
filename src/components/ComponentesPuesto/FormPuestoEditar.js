@@ -1,8 +1,10 @@
 ﻿import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import useBreakpoint from "../../useBreakpoint";
 
 function FormPuestoEditar({ carrito }) {
+  const { isMobile } = useBreakpoint();
   const [editMode, setEditMode] = useState(false);
   const [numeroCarro, setNumeroCarro] = useState("");
   const [nombreCarro, setNombreCarro] = useState("");
@@ -64,32 +66,40 @@ function FormPuestoEditar({ carrito }) {
     form: {
       display: "flex",
       flexDirection: "column",
-      gap: "16px",
+      gap: isMobile ? "12px" : "16px",
       border: `1px solid var(--qf-naranja)`,
       borderRadius: "8px",
-      padding: "16px",
+      padding: isMobile ? "16px 12px" : "24px",
       backgroundColor: "var(--qf-bg-secondary)",
       position: "relative",
-      width: "Calc(100% - 40px)",
+      width: "100%",
+    },
+    titleRow: {
+      display: "flex",
+      flexDirection: isMobile ? "column" : "row",
+      alignItems: isMobile ? "stretch" : "center",
+      gap: "10px",
     },
     title: {
       flex: 1,
       textAlign: "center",
-      fontSize: "1.5em",
+      fontSize: isMobile ? "1.3em" : "1.5em",
       fontWeight: "bold",
+      color: "var(--qf-text-primary)",
+      margin: 0,
     },
     buttonContainer: {
-      position: "absolute",
       display: "flex",
       gap: "10px",
-      right: "16px",
-      top: "16px",
+      justifyContent: isMobile ? "center" : "flex-end",
     },
     button: {
-      padding: "10px",
+      padding: isMobile ? "8px 16px" : "10px 20px",
       border: "none",
       borderRadius: "4px",
       cursor: "pointer",
+      fontWeight: "bold",
+      fontSize: isMobile ? "0.9rem" : "1rem",
     },
     editButton: { backgroundColor: "var(--qf-blue)", color: "var(--qf-blanco-puro)" },
     saveButton: { backgroundColor: "var(--qf-green)", color: "var(--qf-blanco-puro)" },
@@ -97,35 +107,82 @@ function FormPuestoEditar({ carrito }) {
       backgroundColor: "var(--qf-rojo)",
       color: "var(--qf-blanco-puro)",
     },
-    row: { display: "flex", flexWrap: "wrap", gap: "16px" },
-    column: { flex: "1", minWidth: "250px" },
-    label: { marginBottom: "8px", fontWeight: "bold", color: "var(--qf-text-primary)" },
+    fieldGroup: {
+      display: "flex",
+      flexDirection: isMobile ? "column" : "row",
+      flexWrap: "wrap",
+      gap: "16px",
+    },
+    field: {
+      flex: "1",
+      minWidth: isMobile ? "100%" : "250px",
+    },
+    label: {
+      display: "block",
+      marginBottom: "6px",
+      fontWeight: "bold",
+      color: "var(--qf-text-primary)",
+      fontSize: isMobile ? "0.9rem" : "1rem",
+    },
     input: {
       width: "100%",
-      padding: "8px",
+      padding: "10px 12px",
       border: "none",
       borderRadius: "4px",
       color: "var(--qf-blanco-puro)",
       backgroundColor: "var(--qf-bg-card)",
+      fontSize: "1rem",
+      boxSizing: "border-box",
     },
     link: {
       display: "inline-block",
-      marginTop: "10px",
-      padding: "8px 12px",
-      backgroundColor: "#007bff",
-      color: "white",
+      padding: "10px 20px",
+      backgroundColor: "var(--qf-blue)",
+      color: "var(--qf-blanco-puro)",
       textDecoration: "none",
       borderRadius: "5px",
       textAlign: "center",
       cursor: "pointer",
+      fontWeight: "bold",
+      alignSelf: isMobile ? "stretch" : "flex-start",
     },
   };
 
   return (
-    <form style={styles.form}>
-      <h2 style={styles.title}>Datos Puesto</h2>
-      <div style={styles.row}>
-        <div style={styles.column}>
+    <form style={styles.form} onSubmit={(e) => e.preventDefault()}>
+      {/* Título + botones en la misma línea en desktop, apilados en mobile */}
+      <div style={styles.titleRow}>
+        <h2 style={styles.title}>Datos Puesto</h2>
+        <div style={styles.buttonContainer}>
+          {!editMode ? (
+            <button
+              style={{ ...styles.button, ...styles.editButton }}
+              onClick={(e) => handleEditar(e)}
+            >
+              Editar
+            </button>
+          ) : (
+            <>
+              <button
+                style={{ ...styles.button, ...styles.saveButton }}
+                onClick={(e) => handleSave(e)}
+              >
+                Guardar
+              </button>
+              <button
+                style={{ ...styles.button, ...styles.cancelButton }}
+                onClick={(e) => handleCancel(e)}
+              >
+                Cancelar
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Fila: ID Carro + Nombre Carro */}
+      <div style={styles.fieldGroup}>
+        <div style={styles.field}>
           <label style={styles.label} htmlFor="idCarro">
             N° ID Carro
           </label>
@@ -139,7 +196,7 @@ function FormPuestoEditar({ carrito }) {
             required
           />
         </div>
-        <div style={styles.column}>
+        <div style={styles.field}>
           <label style={styles.label} htmlFor="nombreCarro">
             Nombre Carro
           </label>
@@ -154,6 +211,8 @@ function FormPuestoEditar({ carrito }) {
           />
         </div>
       </div>
+
+      {/* Tipo de Negocio */}
       <div>
         <label style={styles.label} htmlFor="tipoNegocio">
           Tipo de Negocio
@@ -168,6 +227,8 @@ function FormPuestoEditar({ carrito }) {
           required
         />
       </div>
+
+      {/* Teléfono */}
       <div>
         <label style={styles.label} htmlFor="telefonoCarro">
           Teléfono del Carro de Comida
@@ -182,34 +243,11 @@ function FormPuestoEditar({ carrito }) {
           required
         />
       </div>
+
+      {/* Volver */}
       <Link to={`/listado-puestos-encargado`} style={styles.link}>
         Volver
       </Link>
-      <div style={styles.buttonContainer}>
-        {!editMode ? (
-          <button
-            style={{ ...styles.button, ...styles.editButton }}
-            onClick={(e) => handleEditar(e)}
-          >
-            Editar
-          </button>
-        ) : (
-          <>
-            <button
-              style={{ ...styles.button, ...styles.saveButton }}
-              onClick={(e)=>handleSave(e)}
-            >
-              Guardar
-            </button>
-            <button
-              style={{ ...styles.button, ...styles.cancelButton }}
-              onClick={(e)=>handleCancel(e)}
-            >
-              Cancelar
-            </button>
-          </>
-        )}
-      </div>
     </form>
   );
 }

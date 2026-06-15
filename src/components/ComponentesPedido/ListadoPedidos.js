@@ -1,16 +1,13 @@
-﻿import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState, useContext } from "react";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Pedido from "./Pedido";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
-import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Tabs from "./PedidosRepartidor/Tabs";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Footer from "../ComponentesGenerales/Footer";
-import useBreakpoint from "../../useBreakpoint";
 
 const ListadoPedidos = () => {
-  const { isMobile } = useBreakpoint();
   const [loanding, setLoanding] = useState(false);
   const [rows, setRows] = useState([]);
   const [pedidos, setPedidos] = useState([]);
@@ -83,50 +80,37 @@ const ListadoPedidos = () => {
   }, [pedidosFiltrados]);
 
   const styles = {
-    contentCol: {
-      padding: 0,
-      margin: 0,
-      marginLeft: isMobile ? "0" : "20%",
+    mainContent: {
+      width: "100%",
+      padding: "0 20px",
+      height: "100%",
+      marginBottom: "5rem",
     },
-    tituloSeccion: {
+    titleSection: {
       display: "flex",
       justifyContent: "center",
       marginBottom: "1rem",
     },
-    tituloTexto: {
-      paddingTop: "0.5rem",
-      color: "var(--qf-naranja)",
-    },
     seccionNegativo: {
       color: "var(--qf-naranja)",
     },
-    divider: {
-      color: "var(--qf-naranja)",
+    separator: {
+      border: "none",
+      borderTop: `1px solid var(--qf-naranja)`,
     },
     contentWrapper: {
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      marginLeft: "30px",
-      width: "Calc(100% - 50px)",
     },
     pedidosWrapper: {
+      width: "100%",
       paddingTop: "0.5rem",
       paddingBottom: "3rem",
-      width: "100%",
-      margin: "0",
-      overflowY: "scroll",
+      overflowY: "auto",
       height: "calc(100vh - 250px)",
       scrollbarWidth: "none",
       msOverflowStyle: "none",
-    },
-    breadcrumbWrapper: {
-      width: "Calc(100% - 20px)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-      marginLeft: "10px",
-      display: "flex",
-      justifyContent: "center",
     },
   };
 
@@ -137,14 +121,15 @@ const ListadoPedidos = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.contentCol}>
-        <div style={styles.tituloSeccion}>
-          <h1 style={styles.tituloTexto}>Pedidos</h1>
+      <div style={styles.mainContent}>
+        <div style={styles.titleSection}>
+          <h1 className="qf-page-title">Pedidos</h1>
         </div>
-        <hr style={styles.divider} />
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb items={breadcrumbItems} />
-        </div>
+        <hr className="qf-separator" style={{ marginLeft: "-40px", marginRight: "-40px", width: "auto", marginBottom: "20px" }} />
+        <Breadcrumb
+          items={breadcrumbItems}
+          style={{ width: "100%", margin: "10px 0" }}
+        />
 
         <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
         <div style={styles.contentWrapper}>

@@ -1,6 +1,5 @@
-﻿import { default as React, useState, useEffect } from "react";
+﻿import { default as React, useState, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import Footer from "../../ComponentesGenerales/Footer";
 import { FaStore, FaCalendarAlt, FaUser, FaMapMarkedAlt, FaInfoCircle, FaCheckCircle, FaHourglassStart, FaTruck, FaBox, FaBan } from "react-icons/fa";
 
 const PedidoRepartidor = ({ pedido, recargar }) => {
@@ -14,6 +13,20 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
   const mostrarBotonEntregar = estadoLocal === "EnCamino";
   const mostrarBotonMapa = estadoLocal === "EnCamino";
   const [codigo, setCodigo] = useState("");
+  const cardRef = useRef(null);
+  const [isCardNarrow, setIsCardNarrow] = useState(false);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setIsCardNarrow(entry.contentRect.width <= 450);
+      }
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const traducirEstado = (estado) => {
     return estado.replace(/([a-z])([A-Z])/g, "$1 $2");
@@ -69,14 +82,14 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
 
   const styles = {
     container: {
-      marginBottom: "1rem",
+      margin: 0,
     },
     card: {
       borderRadius: "10px",
       backgroundColor: "var(--qf-bg-secondary)",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       border: `1px solid var(--qf-naranja)`,
-      margin: "10px 20px",
+      margin: 0,
     },
     cardBody: {
       padding: "1rem",
@@ -371,11 +384,11 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
   };
 
   return (
-    <div style={styles.container}>
+    <div ref={cardRef} style={styles.container}>
       <div style={styles.card}>
         <div style={styles.cardBody}>
-          <div className="row">
-            <div className="position-relative">
+          <div className={isCardNarrow ? "" : "row"}>
+            <div className={isCardNarrow ? "" : "position-relative"}>
               <h5 style={styles.cardTitle}>Pedido #{pedido?.id}</h5>
               <h5 style={styles.cardSubTitle}>
                 <span><FaStore /></span>
@@ -398,15 +411,15 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
                 {pedido?.puntoEncuentro?.nombre || "Punto de encuentro 3"}
               </h5>
 
-              <h5 style={styles.price}>${pedido.total.toFixed(2)}</h5>
-              <p style={styles.cardEstado}>{traducirEstado(estadoLocal)}</p>
+              <h5 style={{...styles.price, position: isCardNarrow ? "static" : "absolute", ...(isCardNarrow ? { justifyContent: "flex-start", marginTop: "0.5rem" } : {})}}>${pedido.total.toFixed(2)}</h5>
+              <p style={{...styles.cardEstado, position: isCardNarrow ? "static" : "absolute", ...(isCardNarrow ? { marginTop: "1rem" } : {})}}>{traducirEstado(estadoLocal)}</p>
             </div>
           </div>
           <hr style={styles.separator} />
-          <div style={styles.buttonGroup}>
+          <div style={{...styles.buttonGroup, flexDirection: isCardNarrow ? "column" : "row", ...(isCardNarrow ? { alignItems: "stretch" } : {})}}>
               {mostrarBotonInfo && (
               <button
-                style={styles.buttonInfo}
+                style={{...styles.buttonInfo, ...(isCardNarrow ? { width: "100%" } : {})}}
                 onClick={() => setModalDetalleVisible(true)}
               >
                 <span><FaInfoCircle /></span> Detalle
@@ -414,7 +427,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
             )}
             {mostrarBotonMapa && (
               <button
-                style={styles.buttonMap}
+                style={{...styles.buttonMap, ...(isCardNarrow ? { width: "100%" } : {})}}
                 onClick={() => setModalMapaVisible(true)}
               >
                 <span><FaMapMarkedAlt /></span> Ver Mapa
@@ -422,7 +435,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
             )}
             {mostrarBotonEntregar && (
               <button
-                style={styles.buttonSolicitar}
+                style={{...styles.buttonSolicitar, ...(isCardNarrow ? { width: "100%" } : {})}}
                 onClick={() => setModalEntregarVisible(true)}
               >
                 <span><FaCheckCircle /></span> Entregar
@@ -579,13 +592,13 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
                 <div style={styles.infoValue}>{pedido?.puntoEncuentro?.nombre}</div>
               </div>
             </div>
-            <div style={{width: "100%", height: "300px", marginBottom: "1rem"}}>
+            <div style={{width: "100%", height: "300px", marginBottom: "1rem", pointerEvents: "none"}}>
               <iframe
                 title="mapa-punto"
                 width="100%"
                 height="100%"
                 frameBorder="0"
-                style={{border:0}}
+                style={{border: 0, pointerEvents: "none"}}
                 src={
                   pedido?.puntoEncuentro?.latitud && pedido?.puntoEncuentro?.longitud
                     ? `https://www.google.com/maps?q=${pedido.puntoEncuentro.latitud},${pedido.puntoEncuentro.longitud}&z=15&output=embed`
@@ -605,7 +618,6 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
           </div>
         </div>
       )}
-      <Footer />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-﻿import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -15,36 +15,36 @@ const ConsultarPuestoSolicitud = () => {
   const { user } = useContext(UserContext);
 
   const styles = {
-    hrStyle: {
-      border: `1px solid var(--qf-naranja)`,
-      padding: 0,
-      margin: 0,
-    },
-    content: {
-      marginTop: "10px",
-      marginLeft: isMobile ? "0" : "20%",
-      width: isMobile ? "100%" : "80%",
+    pagina: {
       display: "flex",
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "var(--qf-bg-main)",
+      flexDirection: "column",
+      gap: "20px",
     },
     tituloSeccion: {
-      display: "flex",
-      justifyContent: "center",
+      textAlign: "center",
       paddingTop: "1rem",
-      paddingBottom: "1rem",
       fontSize: "2rem",
       color: "var(--qf-naranja)",
-      marginLeft: isMobile ? "0" : "20%",
+      margin: 0,
+    },
+    hrFull: {
+      border: "none",
+      borderTop: "1px solid var(--qf-naranja)",
+      margin: 0,
+      width: "100vw",
+      marginLeft: "calc(-50vw + 50%)",
     },
     breadcrumbWrapper: {
-      width: "Calc(100%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      width: "100%",
+    },
+    content: {
+      display: "flex",
+      justifyContent: "center",
+      backgroundColor: "var(--qf-bg-main)",
+      padding: isMobile ? "0" : "0",
     },
   };
+
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Puestos", url: "/listado-puestos-encargado" },
@@ -53,23 +53,24 @@ const ConsultarPuestoSolicitud = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
-      <div>
+      <div style={styles.pagina}>
+        {/* Título centrado */}
         <h1 style={styles.tituloSeccion}>
           Informacion Puesto {carrito?.nombreCarro}
         </h1>
-        <hr style={styles.hrStyle} />
+
+        {/* HR que ocupa el 100% del viewport */}
+        <hr style={styles.hrFull} />
+
+        {/* Breadcrumb a ancho completo */}
         <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{
-              width: "Calc(80% - 40px)",
-              marginLeft: "Calc(20% + 20px)",
-            }}
-          />
+          <Breadcrumb items={breadcrumbItems} style={{ width: "100%", margin: "8px 0" }} />
         </div>
-      </div>
-      <div style={styles.content}>
-        <FormPuestoEditar carrito={carrito} />
+
+        {/* Formulario centrado */}
+        <div style={styles.content}>
+          <FormPuestoEditar carrito={carrito} />
+        </div>
       </div>
       <Footer />
     </PageLayout>

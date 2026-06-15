@@ -1,4 +1,4 @@
-﻿import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 
 const CardNotificaciones = ({ notificacion, recargarComponente }) => {
 
@@ -16,7 +16,7 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
 
       if (response.ok) {
         console.log("Notificación marcada como leída.");
-        recargarComponente(); // Recarga el componente después de actualizar
+        recargarComponente();
       } else {
         console.error("Error al marcar la notificación como leída.");
       }
@@ -25,22 +25,15 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
     }
   }, [notificacion.id, recargarComponente]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      marcarComoLeida();
-    }, 3000);
-    return () => clearTimeout(timeout);
-  }, [marcarComoLeida]);
-
   const styles = {
     card: {
       backgroundColor: "var(--qf-bg-secondary)",
       padding: "20px",
-      margin: "10px 0px",
+      margin: "10px 0",
       borderRadius: "8px",
       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
       color: "var(--qf-text-primary)",
-      width: "Calc(100% - 40px)",
+      width: "100%",
       position: "relative",
       border:
         notificacion.estado === "pendiente"
@@ -98,9 +91,14 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
   };
 
   return (
-    <div style={styles.card}>
-      {/* Estado en la esquina superior derecha */}
-
+    <div
+      style={{ ...styles.card, cursor: notificacion.estado === "pendiente" ? "pointer" : "default" }}
+      onClick={() => {
+        if (notificacion.estado === "pendiente") {
+          marcarComoLeida();
+        }
+      }}
+    >
       {/* Título de la notificación */}
       <div style={styles.titulo}>{notificacion.titulo}</div>
 

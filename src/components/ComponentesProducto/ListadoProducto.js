@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
@@ -8,11 +8,23 @@ import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
-import { FaEyeSlash, FaPlus, FaSearch } from "react-icons/fa";
-import useBreakpoint from "../../useBreakpoint";
+import { FaEyeSlash, FaPlus } from "react-icons/fa";
 
 const ListadoProducto = () => {
-  const { isMobile, isTablet } = useBreakpoint();
+  const contentRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(0);
+  const isNarrowLayout = contentWidth < 768 && contentWidth > 0;
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContentWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const { id } = useParams();
   const { user } = useContext(UserContext);
   const [productos, setProductos] = useState([]);
@@ -52,8 +64,8 @@ const ListadoProducto = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        width: isMobile ? "100%" : "80%",
+      <div ref={contentRef} style={{
+        width: "100%",
         height: "100%",
         padding: 0,
         display: "flex",
@@ -61,37 +73,26 @@ const ListadoProducto = () => {
         boxSizing: "border-box",
         flex: 1,
       }}>
-        {/* Header con título + link a deshabilitados */}
-        <div className="qf-page-header" style={{
-          position: "relative",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+        {/* Título centrado */}
+        <h1 style={{
+          textAlign: "center",
+          paddingTop: "1rem",
+          paddingBottom: "1rem",
+          fontSize: "2rem",
+          color: "var(--qf-naranja)",
+          margin: 0,
         }}>
-          <h1 className="qf-page-title" style={{ fontSize: "1.75rem" }}>
-            {carrito?.nombreCarro
-              ? "Productos de " + carrito?.nombreCarro
-              : "Productos"}
-          </h1>
-          <Link
-            to={`/listado-productos-deshabilitados/${id}`}
-            style={{
-              position: "absolute",
-              top: "10px",
-              right: "20px",
-              backgroundColor: "var(--qf-bg-secondary)",
-              padding: "10px",
-              borderRadius: "10px",
-              color: "var(--qf-blanco-puro)",
-              fontWeight: "bold",
-              cursor: "pointer",
-              textDecoration: "none",
-            }}
-          >
-            <FaEyeSlash /> Productos Deshabilitados
-          </Link>
-        </div>
-        <hr className="qf-separator" style={{ marginRight: "1rem" }} />
+          {carrito?.nombreCarro
+            ? "Productos de " + carrito?.nombreCarro
+            : "Productos"}
+        </h1>
+        <hr style={{
+          border: "none",
+          borderTop: "1px solid var(--qf-naranja)",
+          margin: 0,
+          width: "100vw",
+          marginLeft: "calc(-50vw + 50%)",
+        }} />
 
         {/* Contenido scrollable con dos columnas */}
         <div style={{
@@ -102,35 +103,20 @@ const ListadoProducto = () => {
         }}>
           <div style={{
             display: "flex",
-            flexDirection: isMobile ? "column" : "row",
+            flexDirection: isNarrowLayout ? "column" : "row",
             gap: "20px",
-            alignItems: isMobile ? "stretch" : "flex-start",
+            alignItems: isNarrowLayout ? "stretch" : "flex-start",
             padding: "1rem 20px 50px 20px",
           }}>
             {/* Columna izquierda: breadcrumb + productos */}
             <div style={{
-              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
+              width: isNarrowLayout ? "100%" : "70%",
               boxSizing: "border-box",
             }}>
-              <div style={{
-                margin: "0 0 10px 0",
-                backgroundColor: "var(--qf-bg-secondary)",
-                width: "100%",
-                padding: "8px 16px",
-                borderRadius: "10px",
-                border: "1px solid var(--qf-naranja)",
-              }}>
-                <Breadcrumb
-                  items={breadcrumbItems}
-                  style={{
-                    width: "100%",
-                    margin: "0",
-                    padding: "0",
-                    backgroundColor: "transparent",
-                    border: "none",
-                  }}
-                />
-              </div>
+              <Breadcrumb
+                items={breadcrumbItems}
+                style={{ width: "100%", margin: "0 0 10px 0" }}
+              />
 
               <div style={{
                 flex: 1,
@@ -170,38 +156,29 @@ const ListadoProducto = () => {
 
             {/* Columna derecha: buscador + botón agregar */}
             <div style={{
-              width: isMobile ? "100%" : "30%",
-              minWidth: isMobile ? "auto" : "260px",
+              width: isNarrowLayout ? "100%" : "30%",
+              minWidth: isNarrowLayout ? "auto" : "260px",
               boxSizing: "border-box",
               display: "flex",
               flexDirection: "column",
               gap: "10px",
-              order: isMobile ? -1 : 0,
+              order: isNarrowLayout ? -1 : 0,
             }}>
-              <div style={{ display: "flex", gap: "5px" }}>
-                <input
-                  type="text"
-                  placeholder="Buscar productos..."
-                  value={busqueda}
-                  onChange={(e) => setBusqueda(e.target.value)}
-                  style={{
-                    flex: 1,
-                    padding: "8px",
-                    borderRadius: "4px",
-                    border: `1px solid var(--qf-text-muted)`,
-                    backgroundColor: "var(--qf-bg-main)",
-                    color: "var(--qf-text-primary)",
-                  }}
-                />
-                <button
-                  onClick={() => { /* filtering already automatic */ }}
-                  className="qf-btn qf-btn--success"
-                  style={{ padding: "8px 12px", display: "flex", alignItems: "center", gap: "4px" }}
-                >
-                  <FaSearch />
-                  Buscar
-                </button>
-              </div>
+              <input
+                type="text"
+                placeholder="Buscar productos..."
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  borderRadius: "4px",
+                  border: `1px solid var(--qf-text-muted)`,
+                  backgroundColor: "var(--qf-bg-main)",
+                  color: "var(--qf-text-primary)",
+                  boxSizing: "border-box",
+                }}
+              />
               <Link
                 to={`/registrar-productos/${id}`}
                 className="qf-btn qf-btn--primary"
@@ -209,6 +186,21 @@ const ListadoProducto = () => {
               >
                 <FaPlus style={{ marginRight: "6px" }} />
                 Agregar Producto
+              </Link>
+              <Link
+                to={`/listado-productos-deshabilitados/${id}`}
+                className="qf-btn"
+                style={{
+                  textDecoration: "none",
+                  textAlign: "center",
+                  backgroundColor: "var(--qf-bg-secondary)",
+                  padding: "10px",
+                  borderRadius: "10px",
+                  color: "var(--qf-blanco-puro)",
+                  fontWeight: "bold",
+                }}
+              >
+                <FaEyeSlash style={{ marginRight: "6px" }} /> Productos Deshabilitados
               </Link>
             </div>
           </div>

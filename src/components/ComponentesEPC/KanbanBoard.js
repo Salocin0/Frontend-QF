@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState, useRef } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -47,6 +47,7 @@ const initialData = {
 };
 
 const KanbanBoard = ({id}) => {
+  const scrollRef = useRef(null);
   const [data, setData] = useState(initialData);
   const { user } = useContext(UserContext);
   const { isMobile } = useBreakpoint();
@@ -260,7 +261,13 @@ const KanbanBoard = ({id}) => {
       .catch((error) => console.error("Error canceling pedido:", error));
   };
 
-  const sensors = useSensors(useSensor(PointerSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 0,
+      },
+    })
+  );
 
   const SortableItem = ({task}) => {
     const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id});
@@ -269,6 +276,7 @@ const KanbanBoard = ({id}) => {
       transform: CSS.Transform.toString(transform),
       transition,
       userSelect: 'none',
+      touchAction: 'none',
       padding: '8px',
       margin: '0 0 8px 0',
       minHeight: '120px',
@@ -306,9 +314,9 @@ const KanbanBoard = ({id}) => {
     if (id === 'column-3') column.title = 'En Prep.';
 
     return (
-      <div key={column.id} style={{ flex: '0 0 auto', width: isMobile ? '80vw' : '280px', minWidth: isMobile ? '80vw' : '250px', margin: '0 6px', opacity: allowedColumns && !allowedColumns.includes(column.id) ? 0.4 : 1 }}>
+      <div key={column.id} style={{ flex: '0 0 auto', width: isMobile ? '80vw' : '280px', minWidth: isMobile ? '80vw' : '250px', margin: '0 6px', opacity: allowedColumns && !allowedColumns.includes(column.id) ? 0.4 : 1, display: 'flex', flexDirection: 'column' }}>
         <h3 style={{ textAlign: 'center', color: '#FFF', backgroundColor: headerColors[column.id], padding: '8px', borderRadius: '4px', margin: 0 }}>{column.title}</h3>
-        <div ref={setNodeRef} style={{ background: '#333', padding: '8px', minHeight: isMobile ? '50vh' : '55vh', maxHeight: isMobile ? '50vh' : '55vh', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <div ref={setNodeRef} style={{ background: '#333', padding: '8px', flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           <SortableContext items={column.taskIds} strategy={verticalListSortingStrategy}>
             {tasks.map((task) => (
               <SortableItem key={task.id} task={task} />
@@ -317,6 +325,24 @@ const KanbanBoard = ({id}) => {
         </div>
       </div>
     );
+  };
+
+  const handleDragMove = (event) => {
+    const { activatorEvent } = event;
+    if (!activatorEvent || !('clientX' in activatorEvent)) return;
+
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const clientX = activatorEvent.clientX;
+    const rect = container.getBoundingClientRect();
+    const threshold = 60;
+
+    if (clientX < rect.left + threshold) {
+      container.scrollLeft -= 12;
+    } else if (clientX > rect.right - threshold) {
+      container.scrollLeft += 12;
+    }
   };
 
   const handleDragStart = (event) => {
@@ -424,8 +450,8 @@ const KanbanBoard = ({id}) => {
   }, [infoDialog]);
 
   return (
-    <div style={{ display: 'flex', height: isMobile ? 'auto' : '75vh', margin: 0, padding: '4px 0', overflowX: 'auto', overflowY: 'hidden', gap: 0 }}>
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragCancel={() => { setAllowedColumns(null); setActiveTask(null); }} onDragEnd={handleDragEnd}>
+    <div ref={scrollRef} style={{ display: 'flex', flex: 1, minHeight: 0, height: isMobile ? 'auto' : '100%', margin: 0, padding: '4px 0', overflowX: 'auto', overflowY: 'hidden', gap: 0 }}>
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragMove={handleDragMove} onDragCancel={() => { setAllowedColumns(null); setActiveTask(null); }} onDragEnd={handleDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];
           return <Column key={columnId} column={column} />;

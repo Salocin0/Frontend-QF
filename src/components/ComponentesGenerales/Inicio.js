@@ -15,9 +15,11 @@ import estadisticas from "../img/Estadísticas.jpg";
 import { useNavigate } from "react-router-dom";
 import useBreakpoint from "../../useBreakpoint";
 import { UserContext } from "./UserContext";
+import LoandingComponent from "./LoandingComponent";
 
 const Inicio = () => {
   const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(!!sessionStorage.getItem("sessionId"));
   const navigate = useNavigate();
   const { isMobile } = useBreakpoint();
   const { clearUser } = useContext(UserContext);
@@ -57,7 +59,10 @@ const Inicio = () => {
             setSession(data.data);
           }
         })
-        .catch((error) => console.error("Error fetching session:", error));
+        .catch((error) => console.error("Error fetching session:", error))
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -255,6 +260,16 @@ const Inicio = () => {
       return <div>Error: Footer no cargó</div>;
     }
   };
+
+  if (loading) {
+    return (
+      <PageLayout sidebarProps={{}}>
+        <div className="qf-dashboard-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+          <LoandingComponent />
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>

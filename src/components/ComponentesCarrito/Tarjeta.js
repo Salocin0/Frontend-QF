@@ -1,10 +1,9 @@
-﻿import React, { useState, useContext, useEffect } from "react";
+﻿import React, { useState, useContext, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 import { FaTrash, FaMinus, FaPlus, FaShoppingCart, FaArrowRight, FaCheckCircle } from "react-icons/fa";
-import useBreakpoint from "../../useBreakpoint";
 
 const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   console.log(productos);
@@ -12,7 +11,20 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   const { user } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [productosLocal, setProductosLocal] = useState(productos);
-  const { isMobile } = useBreakpoint();
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const isNarrow = cardWidth < 850;
+  const isProductNarrow = cardWidth < 550;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     setProductosLocal(productos);
@@ -234,12 +246,12 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
 
   const styles = {
     card: {
-      padding: "20px",
       border: `2px solid var(--qf-naranja)`,
       borderRadius: "12px",
       backgroundColor: "var(--qf-bg-secondary)",
-      margin: "15px auto",
-      width: "calc(100% - 40px)",
+      margin: "15px 0",
+      padding: "16px",
+      width: "100%",
       position: "relative",
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
       display: "flex",
@@ -469,7 +481,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   };
 
   return (
-    <div key={productosLocal?.puestoId} style={styles.card}>
+      <div ref={cardRef} key={productosLocal?.puestoId} style={styles.card}>
       <div style={styles.cardHeader}>
         <h3 style={styles.cardTitle}>
           {productosLocal[0]?.producto?.puesto?.nombreCarro} - {productosLocal[0]?.evento?.nombre}
@@ -479,14 +491,14 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
         </span>
       </div>
 
-      <div style={{ ...styles.contentWrapper, flexDirection: isMobile ? "column" : "row" }} data-testid="cart-content-wrapper">
+      <div style={{ ...styles.contentWrapper, flexDirection: isNarrow ? "column" : "row" }} data-testid="cart-content-wrapper">
         {/* Sección izquierda: Productos */}
         <div style={styles.leftSection}>
           <div style={styles.productsContainer}>
             {productosLocal?.map((item, index) => (
-              <div key={index} style={{ ...styles.productCard, flexDirection: isMobile ? "column" : "row" }} data-testid="cart-product-card">
+              <div key={index} style={{ ...styles.productCard, flexDirection: isProductNarrow ? "column" : "row" }} data-testid="cart-product-card">
                 {/* Imagen del producto */}
-                <div style={styles.productImage}>
+                <div style={{ ...styles.productImage, width: isProductNarrow ? "100%" : "100px", height: isProductNarrow ? "140px" : "100px" }}>
                   {item.producto.img ? (
                     <div
                       style={{
@@ -514,7 +526,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
                 </div>
 
                 {/* Controles */}
-                <div style={styles.productControls}>
+                <div style={{ ...styles.productControls, justifyContent: isProductNarrow ? "center" : "flex-end", width: isProductNarrow ? "100%" : "auto" }}>
                   <div style={styles.quantityControl}>
                     <button
                       style={styles.quantityButton}
@@ -546,7 +558,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
         </div>
 
         {/* Sección derecha: Resumen y botones */}
-        <div style={{ ...styles.rightSection, width: isMobile ? "100%" : "320px" }} data-testid="cart-right-section">
+        <div style={{ ...styles.rightSection, width: isNarrow ? "100%" : "320px" }} data-testid="cart-right-section">
           <div>
             <div style={styles.summaryRow}>
               <span style={styles.summaryLabel}>Subtotal:</span>

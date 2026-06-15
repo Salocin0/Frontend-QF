@@ -1,15 +1,12 @@
-﻿import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useState, useContext } from "react";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
-import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import CardNotificaciones from "./CardNotificaicones";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { CircularProgress } from "@mui/material";
-import useBreakpoint from "../../useBreakpoint";
 
 const Notificaciones = () => {
-  const { isMobile } = useBreakpoint();
   const { user } = useContext(UserContext);
   const [notificaciones, setNotificaciones] = useState([]);
   const [recargar, setRecargar] = useState(0);
@@ -46,29 +43,16 @@ const Notificaciones = () => {
   }, [user.consumidorId, recargar]);
 
   const styles = {
-    content: {
+    mainContent: {
+      width: "100%",
+      padding: "0 20px",
+      height: "100%",
+      marginBottom: "5rem",
+    },
+    titleSection: {
       display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      marginLeft: isMobile ? "0" : "calc(20%)",
-      marginBottom: "60px",
-      overflowY: "scroll",
-      overflowX: "hidden",
-      height: "calc(100vh - 60px)",
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
-    },
-    hr: {
-      color: "var(--qf-naranja)",
-      border: "1px solid",
-      width: "100%",
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-      margin: "0",
-      padding: "0",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      justifyContent: "center",
+      marginBottom: "1rem",
     },
     loadingContainer: {
       display: "flex",
@@ -93,20 +77,15 @@ const Notificaciones = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
-      <div
-        style={styles.content}
-        className="custom-scroll" // Clase CSS opcional
-      >
-        <h2 style={{ color: "var(--qf-text-primary)", marginTop: "20px" }}>
-          Notificaciones
-        </h2>
-        <hr style={styles.hr} />
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
-          />
+      <div style={styles.mainContent}>
+        <div style={styles.titleSection}>
+          <h1 className="qf-page-title">Notificaciones</h1>
         </div>
+        <hr className="qf-separator" style={{ marginLeft: "-40px", marginRight: "-40px", width: "auto", marginBottom: "20px" }} />
+        <Breadcrumb
+          items={breadcrumbItems}
+          style={{ width: "100%", margin: "10px 0" }}
+        />
         {isLoading ? (
           <div style={styles.loadingContainer}>
             <CircularProgress style={{ color: "var(--qf-naranja)" }} size={50} />

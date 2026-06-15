@@ -3,10 +3,8 @@ import { Modal, Button } from "react-bootstrap"; // Utilizando Bootstrap para el
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt } from 'react-icons/fa';
 import { toast } from "react-toastify";
-import useBreakpoint from "../../useBreakpoint";
 
 const CardPreCompra = ({ evento }) => {
-  const { isMobile } = useBreakpoint();
   const [selectedDay, setSelectedDay] = useState(null); // Día seleccionado
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
   const navigate = useNavigate();
@@ -56,16 +54,16 @@ const CardPreCompra = ({ evento }) => {
 
   const styles = {
     card: {
-      width: "calc(80% - 40px)",
+      width: "100%",
       padding: "20px",
       backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "8px",
       boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
       textAlign: "center",
-      height: "55vh",
-      marginLeft: isMobile ? "0" : "calc(20% + 20px)",
+      flex: 1,
       border: `1px solid var(--qf-naranja)`,
-      position:"relative"
+      display: "flex",
+      flexDirection: "column",
     },
     icon: {
       color: "var(--qf-naranja)",
@@ -112,10 +110,9 @@ const CardPreCompra = ({ evento }) => {
       padding: "10px 20px",
       borderRadius: "5px",
       cursor: "pointer",
-      position: "absolute",
-      bottom: "20px",
+      marginTop: "auto",
       width: "200px",
-      right: "calc(50% - 100px)",
+      alignSelf: "center",
     },
     modalHeader: {
       backgroundColor: "var(--qf-bg-secondary)",
@@ -129,6 +126,16 @@ const CardPreCompra = ({ evento }) => {
     modalFooter: {
       backgroundColor: "var(--qf-bg-secondary)",
       borderTop: `1px solid var(--qf-naranja)`,
+    },
+    disabledContainer: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      flexDirection: "column",
+      height: "100%",
+      opacity: 0.45,
+      cursor: "not-allowed",
+      userSelect: "none",
     },
     modalButton: {
       backgroundColor: "var(--qf-naranja)",
@@ -175,7 +182,7 @@ const CardPreCompra = ({ evento }) => {
           </button>
         </>
       ) : (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", height: "100%"}}>
+        <div style={styles.disabledContainer}>
           <span style={styles.icon}><FaCalendarAlt /></span>
           <h2 style={styles.title}>Precompra no disponible</h2>
           <p style={styles.description}>

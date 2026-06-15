@@ -74,48 +74,46 @@ const ConsultarProducto = () => {
   }, [id]);
 
   const styles = {
+    pagina: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+    },
+    tituloSeccion: {
+      textAlign: "center",
+      paddingTop: "1rem",
+      fontSize: "2rem",
+      color: "var(--qf-naranja)",
+      margin: 0,
+    },
+    hrFull: {
+      border: "none",
+      borderTop: "1px solid var(--qf-naranja)",
+      margin: 0,
+      width: "100vw",
+      marginLeft: "calc(-50vw + 50%)",
+    },
+    breadcrumbWrapper: {
+      width: "100%",
+    },
     content: {
       display: "flex",
       justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "column",
-      width: isMobile ? "100%" : "80%",
-      marginLeft: isMobile ? "0" : "20%",
+      backgroundColor: "var(--qf-bg-main)",
+      padding: isMobile ? "0" : "0",
     },
     card: {
       backgroundColor: "var(--qf-bg-secondary)",
       borderRadius: "10px",
       color: "var(--qf-text-primary)",
-      width: "Calc(100% - 40px)",
+      width: "100%",
       padding: "20px",
       border: `1px solid var(--qf-naranja)`,
+      boxSizing: "border-box",
     },
     label: { color: "var(--qf-text-primary)", padding: 0, margin: 0 },
     buttonContainer: { display: "grid" },
     button: { margin: "0.5rem 0" },
-    breadcrumbWrapper: {
-      width: "Calc(100%)",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    header: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "100%",
-      padding: "20px",
-      backgroundColor: "var(--qf-bg-main)",
-    },
-    divider: {
-      borderColor: "var(--qf-naranja)",
-      width: "100%",
-      margin: "10px 0",
-    },
-    title: {
-      color: "var(--qf-naranja)",
-      fontWeight: "bold",
-      textAlign: "center",
-    },
     row: {
       display: "flex",
       flexDirection: "row",
@@ -130,6 +128,11 @@ const ConsultarProducto = () => {
       borderRadius: "0.375rem",
       border: "1px solid #ccc",
       marginBottom: "0.25rem",
+      color: "var(--qf-blanco-puro)",
+      backgroundColor: "var(--qf-bg-secondary)",
+      boxSizing: "border-box",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
     },
     submitButton: {
       backgroundColor: "var(--qf-green)",
@@ -158,109 +161,114 @@ const ConsultarProducto = () => {
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Puestos", url: "/listado-puestos-encargado" },
-    { title: "Mis Productos", url: `/listado-productos/${producto.puestoId}` },
-    { title: "Actualizar Producto", url: `/producto/${producto.id}` },
+    { title: "Mis Productos", url: `/listado-productos/${producto?.puestoId ?? ""}` },
+    { title: "Actualizar Producto", url: `/producto/${producto?.id ?? ""}` },
   ];
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.content}>
-        <div style={styles.header}>
-          <h1 style={styles.title}>Actualizar Producto</h1>
-        </div>
-        <hr style={styles.divider} />
+      <div style={styles.pagina}>
+        {/* Título centrado */}
+        <h1 style={styles.tituloSeccion}>Actualizar Producto</h1>
+
+        {/* HR que ocupa el 100% del viewport */}
+        <hr style={styles.hrFull} />
+
+        {/* Breadcrumb a ancho completo */}
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+            style={{ width: "100%", margin: "8px 0" }}
           />
         </div>
-      </div>
-      <div style={styles.content}>
-        <div style={styles.card}>
-          <form onSubmit={handleSaveChanges}>
-            <div style={styles.row}>
-              <div style={{ width: "50%", marginRight: "10px" }}>
-                <label style={styles.label}>Nombre</label>
+
+        {/* Formulario centrado */}
+        <div style={styles.content}>
+          <div style={styles.card}>
+            <form onSubmit={handleSaveChanges}>
+              <div style={styles.row}>
+                <div style={{ width: "50%", marginRight: "10px" }}>
+                  <label style={styles.label}>Nombre</label>
+                  <input
+                    type="text"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    disabled={!editMode}
+                    style={styles.input}
+                  />
+                </div>
+                <div style={{ width: "50%" }}>
+                <label style={styles.label}>Precio</label>
                 <input
-                  type="text"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
+                  type="number"
+                  value={precio}
+                  onChange={(e) => setPrecio(e.target.value)}
                   disabled={!editMode}
                   style={styles.input}
                 />
               </div>
-              <div style={{ width: "50%" }}>
-              <label style={styles.label}>Precio</label>
-              <input
-                type="number"
-                value={precio}
-                onChange={(e) => setPrecio(e.target.value)}
-                disabled={!editMode}
-                style={styles.input}
-              />
-            </div>
-            </div>
-            <div>
-                <label style={styles.label}>Descripción</label>
+              </div>
+              <div>
+                  <label style={styles.label}>Descripción</label>
+                  <input
+                    type="text"
+                    value={descripcion}
+                    onChange={(e) => setDescripcion(e.target.value)}
+                    disabled={!editMode}
+                    style={styles.input}
+                  />
+                </div>
+              <div>
+                <label style={styles.label}>Aderezos</label>
                 <input
                   type="text"
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
+                  value={aderezos}
+                  onChange={(e) => setAderezos(e.target.value)}
                   disabled={!editMode}
                   style={styles.input}
                 />
               </div>
-            <div>
-              <label style={styles.label}>Aderezos</label>
-              <input
-                type="text"
-                value={aderezos}
-                onChange={(e) => setAderezos(e.target.value)}
-                disabled={!editMode}
-                style={styles.input}
-              />
-            </div>
-            
-            <div>
-              <label style={styles.label}>Estado</label>
-              <select
-                value={estado}
-                onChange={(e) => setEstado(e.target.value)}
-                style={styles.input}
-                disabled={!editMode}
+              
+              <div>
+                <label style={styles.label}>Estado</label>
+                <select
+                  value={estado}
+                  onChange={(e) => setEstado(e.target.value)}
+                  style={styles.input}
+                  disabled={!editMode}
+                >
+                  <option value={false}>Standby</option>
+                  <option value={true}>Listo para la venta</option>
+                </select>
+              </div>
+              <div style={styles.buttonContainer}>
+                {!editMode && (
+                  <button
+                    type="button"
+                    onClick={handleEditModeToggle}
+                    style={styles.submitButton}
+                  >
+                    Editar
+                  </button>
+                )}
+                {editMode && (
+                  <button
+                    type="submit"
+                    style={styles.submitButton}
+                  >
+                    Guardar Cambios
+                  </button>
+                )}
+                <Link
+                to={`/listado-productos/${producto?.puestoId}`}
+                style={styles.backButton}
               >
-                <option value={false}>Standby</option>
-                <option value={true}>Listo para la venta</option>
-              </select>
-            </div>
-            <div style={styles.buttonContainer}>
-              {!editMode && (
-                <button
-                  type="button"
-                  onClick={handleEditModeToggle}
-                  style={styles.submitButton}
-                >
-                  Editar
-                </button>
-              )}
-              {editMode && (
-                <button
-                  type="submit"
-                  style={styles.submitButton}
-                >
-                  Guardar Cambios
-                </button>
-              )}
-              <Link
-              to={`/listado-productos/${producto?.puestoId}`}
-              style={styles.backButton}
-            >
-              Volver
-            </Link>
-            </div>
-            
-          </form>
+                Volver
+              </Link>
+              </div>
+              
+            </form>
+          </div>
         </div>
       </div>
       <Footer />

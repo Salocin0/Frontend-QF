@@ -1,8 +1,9 @@
-﻿import { default as React, useEffect } from "react";
+﻿import { default as React, useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import imgDefault from "../img/productoDefecto.png";
 const Producto = ({
   producto,
@@ -12,6 +13,20 @@ const Producto = ({
   onEnable,
 }) => {
   const { user } = useContext(UserContext);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const isNarrow = cardWidth > 0 && cardWidth < 400;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleDelete = () => {
     const headers = new Headers();
@@ -58,7 +73,6 @@ const Producto = ({
       display: "flex",
       flexDirection: "row",
       width: "100%",
-      margin: "0 auto",
       marginBottom: "10px",
       height: "auto",
     },
@@ -68,12 +82,12 @@ const Producto = ({
       overflow: "hidden",
       backgroundColor: "var(--qf-bg-secondary)",
       display: "flex",
+      flexDirection: isNarrow ? "column" : "row",
       width: "100%",
-      /* height auto to fit content */
     },
     cardImgTop: {
-      width: "30%",
-      height: "100%",
+      width: isNarrow ? "100%" : "30%",
+      height: isNarrow ? "180px" : "100%",
       overflow: "hidden",
       resizeMode: "cover",
       backgroundColor: "var(--qf-blanco-puro)",
@@ -84,7 +98,7 @@ const Producto = ({
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
-      width: "70%",
+      width: isNarrow ? "100%" : "70%",
     },
     cardTitle: {
       fontSize: "1.25rem",
@@ -140,7 +154,7 @@ const Producto = ({
 
   return (
     <div style={styles.cardLink}>
-      <div style={styles.card}>
+      <div ref={cardRef} style={styles.card}>
         <img
           src={producto?.img || imgDefault}
           alt="Thumbnail"
@@ -194,7 +208,7 @@ const Producto = ({
                   Editar
                 </Link>
                 <button
-                  onClick={handleDelete}
+                  onClick={() => setShowConfirm(true)}
                   style={{
                     ...styles.actionButton,
                     ...styles.dangerButton,
@@ -206,6 +220,16 @@ const Producto = ({
               </>
             )}
           </div>
+          <ConfirmDialog
+            open={showConfirm}
+            title="Deshabilitar Producto"
+            message={`¿Estás seguro de que querés deshabilitar el producto "${producto?.nombre}"?`}
+            onConfirm={() => {
+              setShowConfirm(false);
+              handleDelete();
+            }}
+            onCancel={() => setShowConfirm(false)}
+          />
         </div>
       </div>
     </div>

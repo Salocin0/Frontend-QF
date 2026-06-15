@@ -1,5 +1,5 @@
 ﻿import banner from "../ComponentesProducto/banner.jpg";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
@@ -11,10 +11,22 @@ import BuscadorProductoConsumidor from "../Filtros y Buscadores/BuscadorProducto
 import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useLocation } from "react-router-dom";
-import useBreakpoint from "../../useBreakpoint";
 
 const ListadoProductoUser = () => {
-  const { isMobile, isTablet } = useBreakpoint();
+  const contentRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(0);
+  const isNarrowLayout = contentWidth < 768 && contentWidth > 0;
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContentWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const { id } = useParams();
   const [loanding, setLoanding] = useState(false);
   const [productos, setProductos] = useState([]);
@@ -82,8 +94,8 @@ const ListadoProductoUser = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        width: isMobile ? "100%" : "80%",
+      <div ref={contentRef} style={{
+        width: "100%",
         height: "100%",
         padding: 0,
         display: "flex",
@@ -95,14 +107,18 @@ const ListadoProductoUser = () => {
         <div style={{
           backgroundImage: `url(${banner})`,
           height: "120px",
-          backgroundSize: "100%",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
           borderBottom: "2px solid var(--qf-blanco-puro)",
+          marginLeft: "-20px",
+          marginRight: "-20px",
+          marginTop: "-20px",
           marginBottom: "20px",
-          paddingLeft: "16px",
+          paddingLeft: "36px",
         }}>
           <h1 className="qf-page-title" style={{
             fontSize: "1.5rem",
@@ -127,26 +143,23 @@ const ListadoProductoUser = () => {
         }}>
           <div style={{
             display: "flex",
-            flexDirection: isMobile ? "column" : "row",
+            flexDirection: isNarrowLayout ? "column" : "row",
             gap: "20px",
-            alignItems: isMobile ? "stretch" : "flex-start",
-            height: isMobile ? "auto" : "100%",
-            overflow: isMobile ? "visible" : "hidden",
+            alignItems: isNarrowLayout ? "stretch" : "flex-start",
+            height: isNarrowLayout ? "auto" : "100%",
+            overflow: isNarrowLayout ? "visible" : "hidden",
           }}>
             {/* Columna izquierda: breadcrumb + productos */}
             <div style={{
-              width: isMobile ? "100%" : isTablet ? "65%" : "70%",
+              width: isNarrowLayout ? "100%" : "70%",
               boxSizing: "border-box",
             }}>
-              <div style={{ paddingLeft: "16px" }}>
-                <Breadcrumb items={breadcrumbItems} />
-              </div>
+              <Breadcrumb items={breadcrumbItems} style={{ width: "100%", margin: "8px 0" }} />
 
               <div style={{
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center",
-                padding: "0",
+                alignItems: "flex-start",
                 paddingBottom: "80px",
                 overflow: "visible",
                 width: "100%",
@@ -156,7 +169,7 @@ const ListadoProductoUser = () => {
                   <LoandingComponent />
                 ) : Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
                   filteredProductos.map((producto, index) => (
-                    <div key={index} style={{ width: "100%", display: "flex", justifyContent: "center", boxSizing: "border-box" }}>
+                    <div key={index} style={{ width: "100%", display: "flex", justifyContent: "flex-start", boxSizing: "border-box" }}>
                       <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} evento={evento}/>
                     </div>
                   ))
@@ -170,13 +183,13 @@ const ListadoProductoUser = () => {
 
             {/* Columna derecha: buscador + botón carrito */}
             <div style={{
-              width: isMobile ? "100%" : isTablet ? "35%" : "30%",
+              width: isNarrowLayout ? "100%" : "30%",
               boxSizing: "border-box",
               display: "flex",
               flexDirection: "column",
               gap: "12px",
-              alignItems: isMobile ? "stretch" : "flex-start",
-              order: isMobile ? -1 : 0,
+              alignItems: isNarrowLayout ? "stretch" : "flex-start",
+              order: isNarrowLayout ? -1 : 0,
             }}>
               <div className="qf-search-box">
                 <BuscadorProductoConsumidor onSearch={handleSearch} />

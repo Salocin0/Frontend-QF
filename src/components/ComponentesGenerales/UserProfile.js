@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import { UserContext } from "./UserContext";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
@@ -8,9 +8,10 @@ import useBreakpoint from "../../useBreakpoint";
 
 const UserProfile = ({ haveRol }) => {
   const navigate = useNavigate();
-  const [isHovered, setIsHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { user, updateUser } = useContext(UserContext);
   const [isHoveredIndex, setIsHoveredIndex] = useState(null);
+  const wrapperRef = useRef(null);
   const { isMobile } = useBreakpoint();
 
   const handleLogout = () => {
@@ -50,25 +51,41 @@ const UserProfile = ({ haveRol }) => {
     }
   };
 
+  // Posición del dropdown relativa al wrapper
+  const [dropdownPos, setDropdownPos] = useState(null);
+
+  useEffect(() => {
+    if (isOpen && wrapperRef.current) {
+      const r = wrapperRef.current.getBoundingClientRect();
+      setDropdownPos({
+        bottom: window.innerHeight - r.top + 4,
+        left: r.left,
+      });
+    } else {
+      setDropdownPos(null);
+    }
+  }, [isOpen]);
+
   const styles = {
     icon: {
-      fontSize: "1.5rem",
+      fontSize: "1.3rem",
       cursor: "pointer",
-      color: isHovered ? "black" : "var(--qf-naranja)",
+      color: isOpen ? "black" : "var(--qf-naranja)",
     },
     dropdownMenu: {
       position: "absolute",
-      bottom: "15px",
+      bottom: "100%",
       left: "50%",
-      zIndex: "1000",
-      display: "none",
+      transform: "translateX(-50%)",
+      zIndex: "99999",
       padding: "0.5rem 0",
-      marginTop: "0.125rem",
       backgroundColor: "var(--qf-bg-main)",
       border: "1px solid rgba(255,255,255,0.60)",
       borderRadius: "0.25rem",
       boxShadow: "0 0.5rem 1rem rgba(0, 0, 0, 0.175)",
       listStyleType: "none",
+      marginBottom: "4px",
+      minWidth: "200px",
     },
     dropdownItem: {
       display: "block",
@@ -120,8 +137,9 @@ const UserProfile = ({ haveRol }) => {
       bottom: "70px",
       width: "85%",
       margin: "0 auto",
-      padding: "0",
+      padding: "8px 0",
       border: "2px solid var(--qf-naranja)",
+      minHeight: "60px",
     },
   };
 
@@ -146,76 +164,96 @@ const UserProfile = ({ haveRol }) => {
 
   return (
     <li
+      ref={wrapperRef}
       data-testid="user-profile-nav"
       style={{
         ...styles.navItem,
         position: isMobile ? "relative" : styles.navItem.position,
         bottom: isMobile ? "auto" : styles.navItem.bottom,
         width: isMobile ? "100%" : styles.navItem.width,
-        backgroundColor: isHovered ? "var(--qf-naranja)" : "transparent",
+        backgroundColor: isOpen ? "var(--qf-naranja)" : "transparent",
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div
         className="navlink"
         id="dropdown"
         style={styles.navItemmasicon}
-        onClick={(e) => {
-          const dropdown = e.currentTarget.nextSibling;
-          dropdown.style.display =
-            dropdown.style.display === "block" ? "none" : "block";
-        }}
+        onClick={() => setIsOpen(!isOpen)}
       >
         <span className="icono" style={styles.icon}><FaUser /></span>
-        <span
-          className="ms-1 d-none d-sm-inline text-center"
-          style={{ color: isHovered ? "var(--qf-text-primary)" : "var(--qf-naranja)" }}
+        <div
+          className="ms-1 text-center"
+          style={{
+            color: isOpen ? "var(--qf-text-primary)" : "var(--qf-naranja)",
+            lineHeight: 1.3,
+          }}
         >
-          Mi Perfil
-        </span>
+          <div style={{ fontSize: "15px", fontWeight: "bold" }}>{user?.usuario || "Usuario"}</div>
+          <div style={{ fontSize: "13px", opacity: 0.8, textTransform: "capitalize" }}>{user?.tipoUsuario || ""}</div>
+        </div>
       </div>
-      <ul
-        style={{
-          ...styles.dropdownMenu,
-          display: isHovered ? "block" : "none",
-        }}
-        aria-labelledby="dropdown"
-      >
-        {menuItems
-          .filter((item) => !haveRol || item.showWhenNoRol)
-          .map((item, index) => (
-            <li
-              key={index}
-              onMouseEnter={() => setIsHoveredIndex(index)}
-              onMouseLeave={() => setIsHoveredIndex(null)}
-            >
-              <a
-                href={item.href}
+      {isOpen && dropdownPos && createPortal(
+        <>
+          {/* Backdrop */}
+          <div
+            style={{ position: "fixed", inset: 0, zIndex: 99998 }}
+            onClick={() => setIsOpen(false)}
+          />
+          {/* Dropdown */}
+          <ul
+            style={{
+              position: "fixed",
+              bottom: `${dropdownPos.bottom}px`,
+              left: `${dropdownPos.left}px`,
+              zIndex: 99999,
+              padding: "0.5rem 0",
+              backgroundColor: "var(--qf-bg-main)",
+              border: "1px solid rgba(255,255,255,0.60)",
+              borderRadius: "0.25rem",
+              boxShadow: "0 0.5rem 1rem rgba(0, 0, 0, 0.175)",
+              listStyleType: "none",
+              minWidth: "200px",
+              margin: 0,
+            }}
+            aria-labelledby="dropdown"
+          >
+            {menuItems
+              .filter((item) => !haveRol || item.showWhenNoRol)
+              .map((item, index) => (
+                <li
+                  key={index}
+                  onMouseEnter={() => setIsHoveredIndex(index)}
+                  onMouseLeave={() => setIsHoveredIndex(null)}
+                >
+                  <a
+                    href={item.href}
+                    style={{
+                      ...styles.dropdownItem,
+                      ...(isHoveredIndex === index && styles.dropdownItemHovered),
+                    }}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            <li style={styles.divider}></li>
+            <li>
+              <span
                 style={{
                   ...styles.dropdownItem,
-                  ...(isHoveredIndex === index && styles.dropdownItemHovered),
+                  ...(isHoveredIndex === "logout" && styles.dropdownItemHovered),
                 }}
+                onMouseEnter={() => setIsHoveredIndex("logout")}
+                onMouseLeave={() => setIsHoveredIndex(null)}
+                onClick={handleLogout}
               >
-                {item.label}
-              </a>
+                Cerrar Sesión
+              </span>
             </li>
-          ))}
-        <li style={styles.divider}></li>
-        <li>
-          <span
-            style={{
-              ...styles.dropdownItem,
-              ...(isHoveredIndex === "logout" && styles.dropdownItemHovered),
-            }}
-            onMouseEnter={() => setIsHoveredIndex("logout")}
-            onMouseLeave={() => setIsHoveredIndex(null)}
-            onClick={handleLogout}
-          >
-            Cerrar Sesión
-          </span>
-        </li>
-      </ul>
+          </ul>
+        </>,
+        document.body
+      )}
     </li>
   );
 };

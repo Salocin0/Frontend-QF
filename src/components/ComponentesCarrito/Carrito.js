@@ -5,10 +5,8 @@ import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { CircularProgress } from "@mui/material";
-import useBreakpoint from "../../useBreakpoint";
 
 const Carrito = () => {
-  const { isMobile } = useBreakpoint();
   const [carrito, setCarrito] = useState(null);
   const { user } = useContext(UserContext);
   const [recargar, setRecargar] = useState(0);
@@ -65,10 +63,8 @@ const Carrito = () => {
 
   const styles = {
     mainContent: {
-      width: isMobile ? "100%" : "80%",
-      marginLeft: isMobile ? "0" : "20%",
-      paddingLeft: isMobile ? "12px" : "20px",
-      paddingRight: isMobile ? "12px" : "20px",
+      width: "100%",
+      padding: "0 20px",
       height: "100%",
       marginBottom: "5rem",
     },
@@ -89,11 +85,6 @@ const Carrito = () => {
     },
     productList: {
       width: "100%",
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     loadingContainer: {
       height: "30rem",
@@ -120,15 +111,13 @@ const Carrito = () => {
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <div style={styles.mainContent}>
         <div style={styles.titleSection}>
-          <h1>Carrito</h1>
+          <h1 className="qf-page-title">Carrito</h1>
         </div>
-        <hr style={styles.separator} />
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
-          />
-        </div>
+        <hr className="qf-separator" style={{ marginLeft: "-40px", marginRight: "-40px", width: "auto", marginBottom: "20px" }} />
+        <Breadcrumb
+          items={breadcrumbItems}
+          style={{ width: "100%", margin: "10px 0" }}
+        />
 
         <div style={styles.productContainer}>
           <div style={styles.productList}>

@@ -1,8 +1,8 @@
-﻿import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState, useContext } from "react";
+﻿import React, { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
@@ -46,72 +46,68 @@ const AdquirirNuevoRolEPC = () => {
     }
   };
 
-  const styles = {
-    main: {
-      flex: "1",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    formCard: {
-      width: "100%",
-      maxWidth: "400px",
-      padding: "20px",
-      borderRadius: "10px",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      backgroundColor: "var(--qf-bg-secondary)",
-    },
-    title: {
-      fontSize: "1.25rem",
-      fontWeight: "bold",
-      marginBottom: "20px",
-      color: "var(--qf-naranja)",
-    },
-    formGroup: {
-      marginBottom: "15px",
-    },
-    label: {
-      margin: "0px",
-
-      display: "block",
-      fontSize: "0.875rem",
-      color: "var(--qf-text-white)",
-    },
-    input: {
-      width: "100%",
-      padding: "10px",
-      fontSize: "1rem",
-      borderRadius: "5px",
-    },
-    select: {
-      width: "100%",
-      padding: "10px",
-      fontSize: "1rem",
-      borderRadius: "5px",
-    },
-    button: {
-      display: "block",
-      width: "100%",
-      padding: "10px",
-      fontSize: "1rem",
-      color: "var(--qf-text-white)",
-      backgroundColor: "var(--qf-green)",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer",
-    },
-  };
+  const breadcrumbItems = [
+    { title: "Inicio", url: "/inicio" },
+    { title: "Adquirir Nuevo Rol", url: "/adquirir-nuevo-rolEPC" },
+  ];
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.main}>
-        <div style={styles.formCard}>
-          <h1 style={styles.title}>
-            Adquirir Nuevo Rol - Encargado de Puesto de Comida
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        flex: 1,
+        minHeight: 0,
+        boxSizing: "border-box",
+      }}>
+        {/* Header centrado */}
+        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
+          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
+            Adquirir Nuevo Rol
+          </h1>
+          <hr className="qf-separator qf-separator--spaced" />
+        </div>
+
+        {/* Breadcrumb */}
+        <Breadcrumb items={breadcrumbItems} style={{
+          margin: 0,
+          marginBottom: "20px",
+          backgroundColor: 'var(--qf-bg-secondary)',
+          width: '100%',
+          padding: '8px 16px',
+          borderRadius: '10px',
+          border: '1px solid var(--qf-naranja)',
+          boxSizing: 'border-box',
+        }} />
+
+        {/* Formulario */}
+        <div style={{
+          width: "100%",
+          margin: "0 auto",
+          backgroundColor: "var(--qf-bg-secondary)",
+          borderRadius: "10px",
+          padding: "20px",
+          border: "1px solid var(--qf-naranja)",
+          boxSizing: "border-box",
+        }}>
+          <h1 style={{
+            fontSize: "1.5rem",
+            fontWeight: "bold",
+            marginBottom: "1rem",
+            color: "var(--qf-naranja)",
+            textAlign: "center",
+          }}>
+            Encargado de Puesto de Comida
           </h1>
           <form onSubmit={handleSubmit}>
-            <div style={styles.formGroup}>
-              <label htmlFor="cuit" style={styles.label}>
+            <div style={{ marginBottom: "15px" }}>
+              <label htmlFor="cuit" style={{
+                display: "block",
+                fontSize: "0.875rem",
+                color: "var(--qf-text-white)",
+                marginBottom: "4px",
+              }}>
                 CUIT
               </label>
               <input
@@ -120,12 +116,23 @@ const AdquirirNuevoRolEPC = () => {
                 value={cuit}
                 onChange={handleCuitChange}
                 required
-                style={styles.input}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  fontSize: "1rem",
+                  borderRadius: "5px",
+                  boxSizing: "border-box",
+                }}
               />
             </div>
 
-            <div style={styles.formGroup}>
-              <label htmlFor="razonSocial" style={styles.label}>
+            <div style={{ marginBottom: "15px" }}>
+              <label htmlFor="razonSocial" style={{
+                display: "block",
+                fontSize: "0.875rem",
+                color: "var(--qf-text-white)",
+                marginBottom: "4px",
+              }}>
                 Razón Social
               </label>
               <input
@@ -134,19 +141,36 @@ const AdquirirNuevoRolEPC = () => {
                 value={razonSocial}
                 onChange={handleRazonSocialChange}
                 required
-                style={styles.input}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  fontSize: "1rem",
+                  borderRadius: "5px",
+                  boxSizing: "border-box",
+                }}
               />
             </div>
 
-            <div style={styles.formGroup}>
-              <label htmlFor="ivaCondicion" style={styles.label}>
+            <div style={{ marginBottom: "15px" }}>
+              <label htmlFor="ivaCondicion" style={{
+                display: "block",
+                fontSize: "0.875rem",
+                color: "var(--qf-text-white)",
+                marginBottom: "4px",
+              }}>
                 Condición frente al IVA
               </label>
               <select
                 id="ivaCondicion"
                 value={condicionIva}
                 onChange={handleCondicionIvaChange}
-                style={styles.select}
+                style={{
+                  width: "100%",
+                  padding: "10px",
+                  fontSize: "1rem",
+                  borderRadius: "5px",
+                  boxSizing: "border-box",
+                }}
               >
                 <option value="">Seleccionar</option>
                 <option value="responsable_inscripto">
@@ -156,16 +180,37 @@ const AdquirirNuevoRolEPC = () => {
               </select>
             </div>
 
-            <button type="submit" style={styles.button}>
+            <button type="submit" style={{
+              display: "block",
+              width: "100%",
+              padding: "10px",
+              fontSize: "1rem",
+              color: "var(--qf-text-white)",
+              backgroundColor: "var(--qf-green)",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}>
               Solicitar Nuevo Rol - Encargado Puesto de Comida
             </button>
-            <button type="submit" onClick={() => navigate("/inicio")} style={{...styles.button, backgroundColor: "var(--qf-blue)",marginTop:"10px"}}>
+            <button type="button" onClick={() => navigate("/inicio")} style={{
+              display: "block",
+              width: "100%",
+              padding: "10px",
+              fontSize: "1rem",
+              color: "var(--qf-text-white)",
+              backgroundColor: "var(--qf-blue)",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              marginTop: "10px",
+            }}>
               Volver
             </button>
           </form>
         </div>
-        <Footer />
       </div>
+      <Footer />
     </PageLayout>
   );
 };

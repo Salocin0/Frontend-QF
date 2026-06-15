@@ -67,23 +67,37 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       width: "100%",
       height: "auto",
     },
-    topProductos:{
+      topProductos:{
       gridArea: "toppuestos",
       padding: "20px",
-      marginTop: "20px",
-      marginRight: "20px",
       borderRadius: "20px",
       background: "var(--qf-bg-secondary)",
       backgroundSize: "cover",
-      marginBottom: "20px",
       position: "relative",
       border: `2px solid var(--qf-naranja)`,
-       overflow: "hidden"
+      overflow: "hidden",
     },
-    tablaTexto: {
+    tabla: {
+      width: "100%",
+      borderCollapse: "collapse",
       color: "var(--qf-naranja)",
-    }
+    },
+    thTd: {
+      border: "1px solid var(--qf-naranja)",
+      padding: "8px",
+      textAlign: "left",
+      color: "var(--qf-naranja)",
+    },
+    th: {
+      border: "1px solid var(--qf-naranja)",
+      padding: "8px",
+      textAlign: "left",
+      color: "var(--qf-naranja)",
+      fontWeight: "bold",
+    },
   };
+
+  const sinDatos = error || productos.length === 0;
 
   if (isLoading) {
     return (
@@ -95,11 +109,11 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     );
   }
 
-  if (error) {
+  if (sinDatos) {
     return (
       <div style={styles.topProductos}>
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "200px", width: "100%", color: "var(--qf-naranja)" }}>
-          Error al cargar los productos. Por favor, intenta nuevamente.
+          Sin datos
         </div>
       </div>
     );
@@ -109,21 +123,21 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     <div style={styles.topProductos}>
       <h2 style={{ color: "var(--qf-naranja)", margin: 0, padding: 0 }}>Top Productos</h2>
       <hr style={{ color: "var(--qf-naranja)", borderColor: "var(--qf-naranja)" }} />
-      <div>
-        <table id="miTabla" className="w-100">
+      <div style={{ overflowX: "auto" }}>
+        <table style={styles.tabla}>
           <thead>
             <tr>
-              <th style={styles.tablaTexto}>Nombre</th>
-              <th style={styles.tablaTexto}>Pedidos</th>
-              <th style={styles.tablaTexto}>Dinero</th>
+              <th style={styles.th}>Nombre</th>
+              <th style={styles.th}>Pedidos</th>
+              <th style={styles.th}>Dinero</th>
             </tr>
           </thead>
           <tbody>
             {productos.map((producto, index) => (
               <tr key={index}>
-                <td style={styles.tablaTexto}>{producto.nombre}</td>
-                <td style={styles.tablaTexto}>{producto.pedidos}</td>
-                <td style={styles.tablaTexto}>${producto.dinero}</td>
+                <td style={styles.thTd}>{producto.nombre}</td>
+                <td style={styles.thTd}>{producto.pedidos}</td>
+                <td style={styles.thTd}>${Number(producto.dinero).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

@@ -6,18 +6,19 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify"; // Importa Toastify
-import useBreakpoint from "../../useBreakpoint";
+import { toast } from "react-toastify";
+import { CircularProgress } from "@mui/material";
 
 const Preventa = () => {
   const [evento, setEvento] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isMobile, isTablet } = useBreakpoint();
 
   useEffect(() => {
     if (user) {
+      setIsLoading(true);
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
       fetch(`${process.env?.REACT_APP_BACK_URL}evento/${id}`, {
@@ -27,9 +28,9 @@ const Preventa = () => {
         .then((response) => response.json())
         .then((data) => {
           setEvento(data.data);
-          console.log(data.data);
         })
-        .catch((error) => console.log("No existen eventos.", error));
+        .catch((error) => console.log("No existen eventos.", error))
+        .finally(() => setIsLoading(false));
     }
   }, [user,id]);
 
@@ -59,23 +60,35 @@ const Preventa = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
-      <div
-        data-testid="preventa-cards-grid"
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile
-            ? "1fr"
-            : isTablet
-            ? "repeat(2, 1fr)"
-            : "repeat(3, 1fr)",
-          gap: "16px",
-        }}
-      >
-        <div onClick={() => irACompraInstantanea()}>
-          <CardCompraInstantanea evento={evento} />
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
+            minHeight: 0,
+          }}
+        >
+          <CircularProgress style={{ color: "var(--qf-naranja)" }} size={50} />
         </div>
-        <CardPreCompra evento={evento} />
-      </div>
+      ) : (
+        <div
+          data-testid="preventa-cards-grid"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+            flex: 1,
+            minHeight: 0,
+          }}
+        >
+          <div onClick={() => irACompraInstantanea()}>
+            <CardCompraInstantanea evento={evento} />
+          </div>
+          <CardPreCompra evento={evento} />
+        </div>
+      )}
       <Footer />
     </PageLayout>
   );

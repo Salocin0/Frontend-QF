@@ -1,6 +1,7 @@
-﻿import { default as React, useState, useEffect } from "react";
+﻿import { default as React, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import imgDefault from "../img/puestoLogoDefault.jpg";
 import {
   FaIdBadge,
@@ -15,6 +16,23 @@ import {
 
 const PuestoEncargado = ({ carrito, actualizarListado }) => {
   const navigate = useNavigate();
+  const cardRef = useRef(null);
+  const [cardWidth, setCardWidth] = useState(0);
+  const isNarrow = cardWidth < 620;
+  const isVeryNarrow = cardWidth < 350;
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setCardWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const [showConfirm, setShowConfirm] = useState(false);
+
   const [isCreado, setIsCreado] = useState(carrito.estado === "Creado");
   const [isDeshabilitado, setIsDeshabilitado] = useState(
     carrito.estado === "Deshabilitado"
@@ -103,9 +121,10 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
     cardBody: {
       display: "flex",
       flexDirection: "row",
-      alignItems: "center",
+      alignItems: isNarrow ? "flex-start" : "center",
       position: "relative",
       width: "100%",
+      gap: isNarrow ? "12px" : "0",
     },
     contenedor: {
       display: "flex",
@@ -114,21 +133,26 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
     },
     imgContainer: {
       display: "flex",
-      width: "20%",
+      width: isVeryNarrow ? "33%" : isNarrow ? "30%" : "20%",
+      justifyContent: isNarrow ? "center" : "flex-start",
+      flexShrink: 0,
     },
     img: {
       width: "100%",
-      height: "auto",
+      maxWidth: isNarrow ? "200px" : "none",
+      height: isNarrow ? "100px" : "auto",
+      objectFit: "cover",
       borderRadius: "10px",
     },
     detailsContainer: {
       display: "flex",
-      width: "60%",
+      width: isVeryNarrow ? "66%" : isNarrow ? "70%" : "60%",
       flexDirection: "column",
       justifyContent: "flex-start",
       alignItems: "flex-start",
-      padding: "0 1rem",
+      padding: isNarrow ? "0" : "0 1rem",
       gap: "6px",
+      flex: 1,
     },
     title: {
       fontSize: "1.5rem",
@@ -143,10 +167,12 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
     buttonsContainer: {
       marginTop: "1rem",
       display: "flex",
+      flexDirection: isNarrow ? "column" : "row",
       justifyContent: "center",
       gap: "0.5rem",
       width: "100%",
       minWidth: "100%",
+      alignItems: "stretch",
     },
     button: {
       padding: "0.4rem 0.8rem",
@@ -179,15 +205,29 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
       backgroundColor: "var(--qf-green)",
       padding: "5px 10px",
       borderRadius: "5px",
-      position: "absolute",
-      top: "5px",
-      right: "5px",
+      position: isNarrow ? "relative" : "absolute",
+      top: isNarrow ? "0" : "5px",
+      right: isNarrow ? "0" : "5px",
+      alignSelf: isNarrow ? "flex-start" : "auto",
+    },
+    estadoLabel: {
+      fontSize: "14px",
+      color: "var(--qf-blanco-puro)",
+      backgroundColor: "var(--qf-green)",
+      padding: "4px 12px",
+      borderRadius: "5px",
+      display: "inline-block",
+      marginBottom: "8px",
+      width: "fit-content",
     },
   };
 
   return (
-    <div style={styles.container}>
+    <div ref={cardRef} style={styles.container}>
       <div style={styles.contenedor}>
+        {isVeryNarrow && (
+          <span style={styles.estadoLabel}>{formatEstado(carrito.estado)}</span>
+        )}
         <div style={styles.cardBody}>
           <div style={styles.imgContainer}>
             <img
@@ -206,7 +246,7 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
               <FaPhone style={{marginRight:"6px"}} /> {carrito.telefonoCarro}
             </p>
           </div>
-          <span style={styles.estado}>{formatEstado(carrito.estado)}</span>
+          {!isVeryNarrow && <span style={styles.estado}>{formatEstado(carrito.estado)}</span>}
         </div>
         <div style={styles.buttonsContainer}>
             {isCreado && (
@@ -251,12 +291,22 @@ const PuestoEncargado = ({ carrito, actualizarListado }) => {
           {isCreado && (
             <button
               style={{ ...styles.button, ...styles.dangerButton }}
-              onClick={deshabilitarPuesto}
+              onClick={() => setShowConfirm(true)}
             >
               <FaToggleOff style={{ marginRight: "6px" }} />
               Deshabilitar Puesto
             </button>
           )}
+          <ConfirmDialog
+            open={showConfirm}
+            title="Deshabilitar Puesto"
+            message={`¿Estás seguro de que querés deshabilitar el puesto "${carrito.nombreCarro}"?`}
+            onConfirm={() => {
+              setShowConfirm(false);
+              deshabilitarPuesto();
+            }}
+            onCancel={() => setShowConfirm(false)}
+          />
         </div>
       </div>
     </div>
