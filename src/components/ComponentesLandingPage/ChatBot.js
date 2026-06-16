@@ -225,6 +225,45 @@ const Chatbot = () => {
 
 
 
+  // Convierte un texto plano que puede contener links Markdown [texto](url) o URLs
+  // sueltas (http/https) en nodos de React, renderizando los links como <a> clickeables.
+  const renderRichText = (text) => {
+    if (typeof text !== "string") return text;
+
+    const pattern =
+      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
+    const nodes = [];
+    let lastIndex = 0;
+    let match;
+    let key = 0;
+
+    while ((match = pattern.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        nodes.push(text.slice(lastIndex, match.index));
+      }
+      const href = match[2] || match[3];
+      const label = match[1] || match[3];
+      nodes.push(
+        <a
+          key={`chat-link-${key++}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={styles.footerLink}
+        >
+          {label}
+        </a>
+      );
+      lastIndex = pattern.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      nodes.push(text.slice(lastIndex));
+    }
+
+    return nodes.length ? nodes : text;
+  };
+
   const renderMessageContent = (msg) => {
     if (msg === MenssageLogin) {
       return (
@@ -242,7 +281,7 @@ const Chatbot = () => {
       );
     }
 
-    return msg;
+    return renderRichText(msg);
   };
 
   return (
