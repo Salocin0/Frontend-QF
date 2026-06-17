@@ -94,11 +94,12 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     headers.append("ConsumidorId", user.consumidorId);
     headers.append("Content-Type", "application/json")
     const body = {
-      fecha: productosLocal[0]?.fecha
+      fecha: producto.fecha || productosLocal[0]?.fecha,
+      eventoId: producto.eventoId || productosLocal[0]?.eventoId,
     }
 
     fetch(
-      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductToCart/${productosLocal[0]?.producto?.puestoId}`,
+      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductToCart/${producto.producto.id}`,
       {
         method: "PUT",
         headers: headers,
@@ -268,7 +269,8 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     cardTitle: {
       fontSize: "22px",
       fontWeight: "bold",
-      color: "var(--qf-text-primary)",
+      color: "var(--qf-negro-puro)",
+      WebkitTextFillColor: "var(--qf-negro-puro)",
       margin: 0,
     },
     preventaText: {
@@ -483,9 +485,9 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   return (
       <div ref={cardRef} key={productosLocal?.puestoId} style={styles.card}>
       <div style={styles.cardHeader}>
-        <h3 style={styles.cardTitle}>
+        <p style={styles.cardTitle}>
           {productosLocal[0]?.producto?.puesto?.nombreCarro} - {productosLocal[0]?.evento?.nombre}
-        </h3>
+        </p>
         <span style={styles.preventaText}>
           {obtenerTextoPreventa()}
         </span>

@@ -32,7 +32,7 @@ const CardCompraInstantanea = ({ evento }) => {
         title: {
             fontSize: "24px",
             fontWeight: "bold",
-            marginBottom: "10px",
+            margin: "0 0 10px 0",
             color: "var(--qf-negro-puro)",
         },
         text: {
@@ -45,7 +45,7 @@ const CardCompraInstantanea = ({ evento }) => {
         <div style={styles.card}>
             <div style={styles.content}>
                 <span style={styles.icon}><FaBolt size={30} /></span>
-                <h3 style={styles.title}>Compra Instantánea</h3>
+                <p style={styles.title}>Compra Instantánea</p>
                 <p style={styles.text}>
                     {eventMessage}
                 </p>
