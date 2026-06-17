@@ -40,9 +40,10 @@ const Tabs = ({ activeTab, setActiveTab }) => {
       whiteSpace: "nowrap",
     },
     activeTab: {
-      backgroundColor: "var(--qf-bg-secondary)",
-      color: "var(--qf-text-white)",
+      backgroundColor: "var(--qf-naranja)",
+      color: "var(--qf-negro-puro)",
       border: `1px solid var(--qf-naranja)`,
+      fontWeight: "bold",
     },
   };
 

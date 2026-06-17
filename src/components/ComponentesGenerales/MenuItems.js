@@ -154,18 +154,42 @@ const MenuItems = ({
         </span>
       </li>
 
-      {/* Botón de cambiar tema (sincronizado en toda la app) */}
-      <li
-        className="navitem"
-        onClick={toggleTheme}
-        style={{ cursor: "pointer" }}
-        role="switch"
-        aria-checked={isDark}
-        title="Cambiar entre modo claro y oscuro"
-      >
-        <span className="navlink text-truncate">
+      {/* Toggle de tema — pill switch visual */}
+      <li className="navitem" style={{ cursor: "pointer" }} onClick={toggleTheme}>
+        <span className="navlink text-truncate" style={{ pointerEvents: "none" }}>
           {isDark ? <FaSun className="icono" /> : <FaMoon className="icono" />}
-          <span className="ms-1 w-100">{isDark ? "Modo claro" : "Modo oscuro"}</span>
+          <span className="ms-1" style={{ flex: 1 }}>
+            {isDark ? "Modo claro" : "Modo oscuro"}
+          </span>
+          {/* Pill toggle */}
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              width: "42px",
+              height: "24px",
+              borderRadius: "12px",
+              backgroundColor: isDark ? "var(--qf-naranja)" : "transparent",
+              border: "2px solid var(--qf-naranja)",
+              position: "relative",
+              flexShrink: 0,
+              marginRight: "4px",
+              transition: "background-color 0.3s",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                top: "2px",
+                left: isDark ? "18px" : "2px",
+                width: "16px",
+                height: "16px",
+                borderRadius: "50%",
+                backgroundColor: isDark ? "var(--qf-negro-puro)" : "var(--qf-naranja)",
+                transition: "left 0.3s",
+              }}
+            />
+          </span>
         </span>
       </li>
     </ul>

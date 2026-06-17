@@ -202,18 +202,18 @@ const Pedido = ({ pedido,recargar }) => {
       fontSize: "18px",
       fontWeight: "bold",
       marginBottom: "0.75rem",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
     },
     cardDescripcion: {
       fontSize: "1rem",
       marginBottom: "0.5rem",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
     },
     cardText: {
       fontSize: "1rem",
       fontWeight: "bold",
       marginBottom: "0.5rem",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
     },
     cardEstado: {
       fontSize: "16px",
@@ -289,7 +289,7 @@ const Pedido = ({ pedido,recargar }) => {
       fontWeight: "bold",
     },
     price: {
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       fontSize: "1.5rem",
       fontWeight: "bold",
       display: "flex",

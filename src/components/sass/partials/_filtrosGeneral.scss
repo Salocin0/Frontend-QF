@@ -5,15 +5,21 @@
 
 input[type="checkbox"] {
     appearance: none;
-    width: 10px;
-    height: 10px;
-    border: 1px solid #ccc;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--qf-naranja);
     border-radius: 3px;
     cursor: pointer;
+    flex-shrink: 0;
+    vertical-align: middle;
   }
 
   input[type="checkbox"]:checked {
-    background-color: $color-amarillo-QF;
+    background-color: var(--qf-naranja);
+  }
+
+  input[type="radio"] {
+    accent-color: var(--qf-naranja);
   }
 
   label {

@@ -14,7 +14,7 @@ const Footer = () => {
       bottom: "0",
       width: "100%",
       left: "0",
-      borderTop: "1px solid var(--qf-blanco-puro)",
+      borderTop: "1px solid var(--qf-naranja)",
       zIndex: 900,
     },
     containerStyle: {
@@ -58,7 +58,7 @@ const Footer = () => {
     },
     textStyle: {
       fontSize: "0.875rem",
-      color: "var(--qf-blanco-puro)",
+      color: "var(--qf-text-primary)",
       margin: 0,
     },
   };

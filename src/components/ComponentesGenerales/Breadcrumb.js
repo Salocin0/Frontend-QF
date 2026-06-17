@@ -35,11 +35,11 @@ const Breadcrumb = ({ items, style }) => {
       cursor: 'pointer',
     },
     breadcrumbItemActive: {
-      color: 'var(--qf-text-white)',
+      color: 'var(--qf-text-primary)',
     },
     breadcrumbDivider: {
       margin: isMobile ? '0 4px' : '0 10px',
-      color: 'var(--qf-text-white)',
+      color: 'var(--qf-text-primary)',
     },
   };
 

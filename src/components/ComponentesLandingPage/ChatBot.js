@@ -324,17 +324,6 @@ const Chatbot = () => {
   return (
     <div style={styles.global}>
       <header style={styles.header}>
-        <button
-          type="button"
-          onClick={toggleTheme}
-          role="switch"
-          aria-checked={isDark}
-          aria-label="Cambiar entre modo claro y oscuro"
-          title={isDark ? "Modo claro (clic para oscuro)" : "Modo oscuro (clic para claro)"}
-          style={styles.themeSwitch}
-        >
-          <span style={styles.themeSwitchThumb}>{isDark ? "☀️" : "🌙"}</span>
-        </button>
         <h1 style={styles.headerTitle}>Bienvenido al ChatFood!</h1>
       </header>
       <div style={styles.chatContainer}>
