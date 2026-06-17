@@ -94,7 +94,7 @@ const PanelEncargado = () => {
       borderRadius: "5px",
       backgroundColor: "var(--qf-bg-secondary)",
       border: "none",
-      color: "white",
+      color: "var(--qf-text-primary)",
       padding: "5px",
       width: isMobile ? "100%" : "200px",
     },

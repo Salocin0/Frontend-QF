@@ -30,7 +30,7 @@
 }
 
 body {
-    background-color: black;
+    background-color: var(--qf-bg-main);
   }
 
   .background-login {
@@ -56,7 +56,8 @@ body {
   }
 
   body{
-    background-color: $color-azul-fondo;
+    background-color: var(--qf-bg-main);
+    color: var(--qf-text-primary);
   }
 
   .img-fluid {

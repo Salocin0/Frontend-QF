@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser, FaMoon } from "react-icons/fa";
+import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser, FaMoon, FaSun } from "react-icons/fa";
 import useTheme from "../../useTheme";
 
 const MenuItems = ({
@@ -8,7 +8,7 @@ const MenuItems = ({
   isRepartidor,
   togglePanel,
 }) => {
-  const { toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
 
    const handleBotonChat = () => {
     togglePanel();
@@ -153,15 +153,21 @@ const MenuItems = ({
           </span>
         </span>
       </li>
-      
-      {/* Botón de cambiar tema — oculto temporalmente
-      <li className="navitem" onClick={toggleTheme} style={{ cursor: "pointer" }}>
+
+      {/* Botón de cambiar tema (sincronizado en toda la app) */}
+      <li
+        className="navitem"
+        onClick={toggleTheme}
+        style={{ cursor: "pointer" }}
+        role="switch"
+        aria-checked={isDark}
+        title="Cambiar entre modo claro y oscuro"
+      >
         <span className="navlink text-truncate">
-          <FaMoon className="icono" />
-          <span className="ms-1 w-100">Cambiar Tema</span>
+          {isDark ? <FaSun className="icono" /> : <FaMoon className="icono" />}
+          <span className="ms-1 w-100">{isDark ? "Modo claro" : "Modo oscuro"}</span>
         </span>
       </li>
-      */}
     </ul>
   );
 };

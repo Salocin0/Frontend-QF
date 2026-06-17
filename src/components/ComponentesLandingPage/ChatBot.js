@@ -5,10 +5,12 @@ import "./../ComponenteRegister/placeholder.css";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useBreakpoint from "../../useBreakpoint";
+import useTheme from "../../useTheme";
 
 const Chatbot = () => {
   const { user } = useContext(UserContext);
   const { isMobile } = useBreakpoint();
+  const { isDark, toggleTheme } = useTheme();
   const [messages, setMessages] = useState([]);
   console.log(user);
   const styles = {
@@ -21,9 +23,12 @@ const Chatbot = () => {
       padding: 0,
     },
     header: {
+      position: "relative",
       backgroundColor: "var(--qf-bg-dark)",
-      textAlign: "center",
-      padding: "20px 50px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "16px 50px",
       borderBottom: `5px solid var(--qf-naranja)`,
       borderRadius: "20px",
       boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
@@ -35,6 +40,38 @@ const Chatbot = () => {
       whiteSpace: "nowrap",
       overflow: "hidden",
       textOverflow: "ellipsis",
+    },
+    themeSwitch: {
+      position: "absolute",
+      left: "16px",
+      top: "50%",
+      transform: "translateY(-50%)",
+      width: "52px",
+      height: "28px",
+      padding: 0,
+      borderRadius: "20px",
+      border: `2px solid var(--qf-naranja)`,
+      backgroundColor: "var(--qf-bg-main)",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      transition: "background-color 0.3s ease",
+    },
+    themeSwitchThumb: {
+      position: "absolute",
+      top: "50%",
+      left: isDark ? "26px" : "2px",
+      transform: "translateY(-50%)",
+      width: "20px",
+      height: "20px",
+      borderRadius: "50%",
+      backgroundColor: "var(--qf-naranja)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: "11px",
+      lineHeight: 1,
+      transition: "left 0.3s ease",
     },
     chatContainer: {
       width: "100%",
@@ -100,7 +137,7 @@ const Chatbot = () => {
       border: `2px solid var(--qf-naranja)`,
       borderRadius: "20px",
       backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-blanco-puro)",
+      color: "var(--qf-text-primary)",
       transition: "border 0.3s ease, box-shadow 0.3s ease",
     },
     sendBtn: {
@@ -130,12 +167,12 @@ const Chatbot = () => {
       cursor: "pointer",
     },
     footerLink2: {
-      color: "var(--qf-text-primary)",
-      textDecoration: "none",
+      color: "var(--qf-naranja)",
+      textDecoration: "underline",
       cursor: "pointer",
     },
     text: {
-      color: "var(--qf-blanco-puro)",
+      color: "var(--qf-text-primary)",
     },
   };
   const MenssageLogin = `Puedes loguearte haciendo click aquí.`;
@@ -287,6 +324,17 @@ const Chatbot = () => {
   return (
     <div style={styles.global}>
       <header style={styles.header}>
+        <button
+          type="button"
+          onClick={toggleTheme}
+          role="switch"
+          aria-checked={isDark}
+          aria-label="Cambiar entre modo claro y oscuro"
+          title={isDark ? "Modo claro (clic para oscuro)" : "Modo oscuro (clic para claro)"}
+          style={styles.themeSwitch}
+        >
+          <span style={styles.themeSwitchThumb}>{isDark ? "☀️" : "🌙"}</span>
+        </button>
         <h1 style={styles.headerTitle}>Bienvenido al ChatFood!</h1>
       </header>
       <div style={styles.chatContainer}>

@@ -76,7 +76,7 @@ const ListadoPuestos = () => {
         <div className="container pt-2 h-100">
           <div className={`d-flex justify-content-between align-items-center mb-3`}>
             <div>
-              <h1 className="pt-3" style={{ color: "white" }}>
+              <h1 className="pt-3" style={{ color: "var(--qf-naranja)" }}>
                 Puestos
               </h1>
             </div>
@@ -86,7 +86,7 @@ const ListadoPuestos = () => {
               </Link>
             </div>
           </div>
-          <hr style={{ color: "white" }} className="me-4" />
+          <hr style={{ color: "var(--qf-naranja)" }} className="me-4" />
           {Array.isArray(carritos) && carritos.length > 0 ? (
             rows.length > 0 &&
             rows.map((row, rowIndex) => (

@@ -40,7 +40,7 @@ const Imagenes = () => {
       textAlign: "center",
     },
     text: {
-      color: "#E0E0E0",
+      color: "var(--qf-text-primary)",
     }
   };
   

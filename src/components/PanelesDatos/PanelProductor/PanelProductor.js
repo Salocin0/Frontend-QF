@@ -153,7 +153,7 @@ const PanelProductor = () => {
                   borderRadius: "5px",
                   backgroundColor: "var(--qf-bg-secondary)",
                   border: "1px solid var(--qf-naranja)",
-                  color: "white",
+                  color: "var(--qf-text-primary)",
                   padding: "8px 12px",
                   width: isMobileLayout ? "100%" : "200px",
                   fontSize: "0.95rem",
