@@ -130,7 +130,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
     button: {
       backgroundColor: "var(--qf-green)",
       border: "none",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       padding: "10px 25px",
       borderRadius: "8px",
       cursor: "pointer",

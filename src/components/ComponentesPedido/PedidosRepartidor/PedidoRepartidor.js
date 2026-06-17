@@ -199,7 +199,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
     },
     buttonInfo: {
       backgroundColor: "var(--qf-info)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -209,7 +209,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
     },
     buttonDanger: {
       backgroundColor: "var(--qf-rojo)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -219,7 +219,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
     },
     buttonMap: {
       backgroundColor: "var(--qf-blue)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -229,7 +229,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
     },
     buttonValorar: {
       backgroundColor: "var(--qf-green)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -239,7 +239,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
     },
     buttonSolicitar: {
       backgroundColor: "var(--qf-green)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -293,7 +293,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
       color: "var(--qf-naranja)",
     },
     tableCell: {
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       padding: "12px 8px",
       borderBottom: `1px solid var(--qf-naranja)33`,
       textAlign: "center",
@@ -301,7 +301,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
     },
     tableHeaderCell: {
       backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       padding: "12px 8px",
       fontWeight: "bold",
       textAlign: "center",
@@ -351,7 +351,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
       fontSize: "14px",
     },
     infoValue: {
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       fontSize: "15px",
     },
     dialogButtons: {

@@ -122,7 +122,7 @@ const Login = () => {
     },
     label: {
       fontSize: "1rem",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       fontWeight: "bold",
       margin: 0,
       cursor: "default",

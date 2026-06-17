@@ -115,7 +115,7 @@ const UserProfile = ({ haveRol }) => {
       width: "100%",
       clear: "both",
       fontWeight: "400",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       textAlign: "inherit",
       textDecoration: "none",
       whiteSpace: "nowrap",

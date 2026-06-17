@@ -25,7 +25,7 @@
 
   // ── Textos ────────────────────────────────────────────────
   --qf-text-primary:   #000000; // Colors.Blanco    (dark) — texto principal sobre fondo claro
-  --qf-text-white:     #ffffff; // Colors.Negro     (dark) — siempre blanco en ambos modos
+  --qf-text-white:     #000000; // En modo claro (data-theme=dark) las letras blancas pasan a negro
   --qf-text-muted:     #616161; // Colors.Gris      (dark)
   --qf-text-secondary: #A4A8AA; // Colors.GrisOscuro (dark)
 

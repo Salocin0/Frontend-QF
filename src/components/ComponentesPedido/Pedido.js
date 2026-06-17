@@ -239,7 +239,7 @@ const Pedido = ({ pedido,recargar }) => {
     },
     buttonInfo: {
       backgroundColor: "var(--qf-info)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -250,7 +250,7 @@ const Pedido = ({ pedido,recargar }) => {
     },
     buttonDanger: {
       backgroundColor: "var(--qf-rojo)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -260,7 +260,7 @@ const Pedido = ({ pedido,recargar }) => {
     },
     buttonMap: {
       backgroundColor: "var(--qf-blue)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -270,7 +270,7 @@ const Pedido = ({ pedido,recargar }) => {
     },
     buttonValorar: {
       backgroundColor: "var(--qf-green)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -280,7 +280,7 @@ const Pedido = ({ pedido,recargar }) => {
     },
     buttonSolicitar: {
       backgroundColor: "var(--qf-green)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
@@ -356,7 +356,7 @@ const Pedido = ({ pedido,recargar }) => {
       borderRadius: "4px",
       border: `1px solid var(--qf-naranja)`,
       backgroundColor: "var(--qf-bg-secondary)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       marginBottom: "12px",
     },
     codigoInput: {
@@ -365,7 +365,7 @@ const Pedido = ({ pedido,recargar }) => {
       borderRadius: "4px",
       border: `1px solid var(--qf-naranja)`,
       backgroundColor: "var(--qf-bg-secondary)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       marginBottom: "1rem",
     },
     textareaContainer: {
@@ -384,11 +384,11 @@ const Pedido = ({ pedido,recargar }) => {
       borderRadius: "4px",
       border: `1px solid var(--qf-naranja)`,
       backgroundColor: "var(--qf-bg-secondary)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       resize: "vertical",
     },
     tableCell: {
-      color: "var(--qf-text-white)",
+      color: "var(--qf-blanco-puro)",
       padding: "12px 8px",
       borderBottom: `1px solid var(--qf-naranja)33`,
       textAlign: "center",
@@ -396,7 +396,7 @@ const Pedido = ({ pedido,recargar }) => {
     },
     tableHeaderCell: {
       backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       padding: "12px 8px",
       fontWeight: "bold",
       textAlign: "center",
@@ -451,7 +451,7 @@ const Pedido = ({ pedido,recargar }) => {
       fontSize: "14px",
     },
     infoValue: {
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       fontSize: "15px",
     },
     dialogButtons: {

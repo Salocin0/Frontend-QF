@@ -34,7 +34,7 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
       backgroundColor: "var(--qf-bg-secondary)",
       marginBottom: "16px",
       margin: "0 auto 16px auto",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       transition: "transform 0.2s ease-in-out",
       cursor: "pointer",
       display: "flex",
@@ -90,7 +90,7 @@ const PuestoUser = ({ carrito, selectedDay, evento }) => {
     },
     descripcion: {
       fontSize: "18px",
-      color: "var(--qf-text-white)",
+      color: "var(--qf-text-primary)",
       marginBottom: "10px",
     },
     text: {
