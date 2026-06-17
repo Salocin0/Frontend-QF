@@ -778,14 +778,14 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 15px;
-  color: var(--qf-text-primary);
+  color: var(--qf-text-primary) !important;
 }
 
 .qf-filter-panel__section-title {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 15px;
-  color: var(--qf-text-primary);
+  color: var(--qf-text-primary) !important;
 }
 
 .qf-filter-panel__divider {
@@ -804,7 +804,7 @@
   margin-bottom: 10px;
   font-size: 16px;
   cursor: pointer;
-  color: var(--qf-text-primary);
+  color: var(--qf-text-primary) !important;
 }
 
 .qf-filter-panel__checkbox {

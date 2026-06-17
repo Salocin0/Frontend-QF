@@ -37,7 +37,7 @@ const ComoFunciona = () => {
           style={{
             textAlign: "center",
             marginBottom: "1rem",
-            color: "var(--qf-text-white)",
+            color: "var(--qf-text-primary)",
             fontWeight: 700,
             fontSize: "2rem",
           }}
@@ -47,7 +47,7 @@ const ComoFunciona = () => {
 
         <p
           style={{
-            color: "var(--qf-text-white)",
+            color: "var(--qf-text-primary)",
             textAlign: "center",
             marginBottom: "2rem",
             fontSize: "1.05rem",
@@ -67,7 +67,7 @@ const ComoFunciona = () => {
                 alignItems: "center",
                 gap: "1rem",
                 padding: "0.6rem 0",
-                color: "var(--qf-text-white)",
+                color: "var(--qf-text-primary)",
               }}
             >
               <span
@@ -90,7 +90,7 @@ const ComoFunciona = () => {
               <p
                 style={{
                   margin: 0,
-                  color: "var(--qf-text-white)",
+                  color: "var(--qf-text-primary)",
                   flex: 1,
                   fontSize: "0.95rem",
                   lineHeight: 1.5,

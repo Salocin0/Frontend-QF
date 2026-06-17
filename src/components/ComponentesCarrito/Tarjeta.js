@@ -268,7 +268,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     cardTitle: {
       fontSize: "22px",
       fontWeight: "bold",
-      color: "var(--qf-naranja)",
+      color: "var(--qf-text-primary)",
       margin: 0,
     },
     preventaText: {

@@ -144,7 +144,7 @@ const Chatbot = () => {
       padding: isMobile ? "10px 12px" : "10px 20px",
       fontSize: isMobile ? "0.85em" : "1em",
       backgroundColor: "var(--qf-naranja)",
-      color: "white",
+      color: "var(--qf-negro-puro)",
       border: "none",
       borderRadius: "20px",
       cursor: "pointer",

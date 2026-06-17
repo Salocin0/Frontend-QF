@@ -63,7 +63,7 @@ const Navbar = () => {
     },
     navItemYellow: {
       backgroundColor: "var(--qf-naranja)",
-      color: "var(--qf-blanco-puro)",
+      color: "var(--qf-negro-puro)",
       cursor: "pointer",
       textDecoration: "none",
       borderRadius: "10px",
