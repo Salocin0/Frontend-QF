@@ -33,11 +33,11 @@ const CardCompraInstantanea = ({ evento }) => {
             fontSize: "24px",
             fontWeight: "bold",
             marginBottom: "10px",
-            color: "var(--qf-text-primary)",
+            color: "var(--qf-negro-puro)",
         },
         text: {
             fontSize: "16px",
-            color: "var(--qf-text-primary)"
+            color: "var(--qf-negro-puro)"
         }
     };
 
