@@ -269,8 +269,8 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     cardTitle: {
       fontSize: "22px",
       fontWeight: "bold",
-      color: "var(--qf-negro-puro)",
-      WebkitTextFillColor: "var(--qf-negro-puro)",
+      color: "var(--qf-text-white)",
+      WebkitTextFillColor: "var(--qf-text-white)",
       margin: 0,
     },
     preventaText: {
