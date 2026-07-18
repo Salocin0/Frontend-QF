@@ -62,6 +62,7 @@ const Preventa = () => {
     <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
       {isLoading ? (
         <div
+          className="qf-main-content--padded"
           style={{
             display: "flex",
             justifyContent: "center",
@@ -75,6 +76,7 @@ const Preventa = () => {
       ) : (
         <div
           data-testid="preventa-cards-grid"
+          className="qf-main-content--padded"
           style={{
             display: "flex",
             flexDirection: "column",
