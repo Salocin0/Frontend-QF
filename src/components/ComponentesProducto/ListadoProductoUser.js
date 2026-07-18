@@ -97,7 +97,10 @@ const ListadoProductoUser = () => {
       <div ref={contentRef} style={{
         width: "100%",
         height: "100%",
-        padding: 0,
+        paddingTop: "20px",
+        paddingLeft: "20px",
+        paddingRight: "20px",
+        paddingBottom: 0,
         display: "flex",
         flexDirection: "column",
         boxSizing: "border-box",
