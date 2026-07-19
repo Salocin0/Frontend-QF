@@ -116,7 +116,7 @@ const ListadoPuestosEncargado = () => {
       <hr className="qf-separator" style={{ margin: "0 0 20px", width: "100vw", marginLeft: "calc(-50vw + 50%)" }} />
 
       {/* Contenido en dos columnas */}
-      <div className="qf-page-content" style={{ padding: isMobile ? "0 12px" : "0 20px 0 0", flex: 1, minHeight: 0, flexDirection: isVeryNarrow ? "column" : "row" }}>
+      <div className="qf-page-content" style={{ padding: isMobile ? "0 12px" : "0 20px", flex: 1, minHeight: 0, flexDirection: isVeryNarrow ? "column" : "row" }}>
         {/* Columna principal: breadcrumb + aside (si es angosto) + listado */}
         <div className="qf-page-content__main">
           <Breadcrumb items={breadcrumbItems} style={{ width: "calc(100% - 20px)", margin: "0 20px 10px 20px" }} />
