@@ -149,27 +149,38 @@ const RegistrarEvento4 = () => {
   };
 
   const styles = {
+    pageWrapper: {
+      display: "flex",
+      flexDirection: "column",
+      flex: 1,
+      minHeight: 0,
+      height: "100%",
+      boxSizing: "border-box",
+    },
     rowFormEvento: {
       display: "flex",
       flexWrap: "wrap",
     },
     colForm: {
-      height: "Calc(75% - 60px)",
+      flex: 1,
+      minHeight: 0,
       padding: 0,
       display: "flex",
-      width: "Calc(100% - 20%)",
-      marginLeft: isMobile ? "0" : "20%",
-      marginBottom: "70px",
+      boxSizing: "border-box",
+      overflowY: "auto",
+      width: "100%",
     },
     formWrapper: {
       color: "var(--qf-text-primary)",
       padding: "2rem",
-      width: "100%",
+      boxSizing: "border-box",
+      flex: 1,
+      minWidth: 0,
       border: `1px solid var(--qf-naranja)`,
       borderRadius: "10px",
       backgroundColor: "var(--qf-bg-secondary)",
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      margin: "0 20px",
+      margin: isMobile ? "0 12px 20px" : "0 20px 20px",
     },
     formGroup: {
       marginBottom: "1rem",
@@ -218,9 +229,8 @@ const RegistrarEvento4 = () => {
       justifyContent: "center",
       marginTop: "20px",
       fontSize: "24px",
-      marginLeft: isMobile ? "0" : "20%",
       color: "var(--qf-text-primary)",
-      width: isMobile ? "100%" : "80%",
+      width: "100%",
     },
     separator: {
       border: "none",
@@ -229,9 +239,9 @@ const RegistrarEvento4 = () => {
       borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
-      marginLeft: isMobile ? "0" : "20%",
-      width: isMobile ? "100%" : "80%",
-      paddingTop: "10px",
+      width: "100%",
+      boxSizing: "border-box",
+      padding: isMobile ? "10px 12px 0" : "10px 20px 0",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     hr: {
@@ -249,6 +259,7 @@ const RegistrarEvento4 = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+      <div style={styles.pageWrapper}>
         <div style={styles.tituloSeccion}>
           <h1 style={{ textAlign: "center" }}>Crear un Evento</h1>
         </div>
@@ -256,7 +267,7 @@ const RegistrarEvento4 = () => {
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+            style={{ width: "100%" }}
           />
         </div>
         <div style={styles.colForm}>
@@ -332,6 +343,7 @@ const RegistrarEvento4 = () => {
             </form>
           </div>
         </div>
+      </div>
       <Footer />
     </PageLayout>
   );

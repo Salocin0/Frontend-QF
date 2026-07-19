@@ -336,9 +336,14 @@ const RegistrarEvento5 = () => {
 
   const styles = {
     contentCol: {
-      width: "calc(100% - 20%)",
-      marginLeft: isMobile ? "0" : "20%",
-      paddingBottom: "70px",
+      display: "flex",
+      flexDirection: "column",
+      flex: 1,
+      minHeight: 0,
+      overflowY: "auto",
+      width: "100%",
+      boxSizing: "border-box",
+      padding: isMobile ? "0 12px 70px" : "0 20px 70px",
     },
     titleWrap: {
       display: "flex",
@@ -535,7 +540,7 @@ const RegistrarEvento5 = () => {
           <div style={styles.breadcrumbWrapper}>
             <Breadcrumb
               items={breadcrumbItems}
-              style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+              style={{ width: "100%" }}
             />
           </div>
 
