@@ -340,7 +340,8 @@ const RegistrarEvento2 = () => {
       height: "Calc(75% - 60px)",
       padding: 0,
       display: "flex",
-      width: "Calc(100% - 20%)",
+      boxSizing: "border-box",
+      width: isMobile ? "100%" : "Calc(100% - 20%)",
       marginLeft: isMobile ? "0" : "20%",
     },
     darkFormWrapper: {
@@ -348,9 +349,10 @@ const RegistrarEvento2 = () => {
       border: `1px solid var(--qf-naranja)`,
       padding: "1rem",
       borderRadius: "10px",
-      width: "100%",
-      marginLeft: "20px",
-      marginRight: "20px",
+      boxSizing: "border-box",
+      flex: 1,
+      minWidth: 0,
+      margin: isMobile ? "0 12px" : "0 20px",
     },
     formGroup: {
       marginBottom: "0.5rem",
@@ -607,8 +609,8 @@ const RegistrarEvento2 = () => {
                   </div>
                 </div>
               </div>
-              <div style={{display: "flex", displayDirection: "row"}}>
-                <div style={{...styles.formGroup, width: "50%", marginRight: "10px"}}>
+              <div style={{display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "0.5rem" : 0}}>
+                <div style={{...styles.formGroup, width: isMobile ? "100%" : "50%", marginRight: isMobile ? 0 : "10px"}}>
                   <label htmlFor="ubicacion" style={styles.formLabel}>
                     Ubicación Del Evento*
                   </label>
@@ -634,7 +636,7 @@ const RegistrarEvento2 = () => {
                   )}
                 </div>
 
-                <div style={{...styles.formGroup, width: "50%"}}>
+                <div style={{...styles.formGroup, width: isMobile ? "100%" : "50%"}}>
                   <label htmlFor="imagen" style={styles.formLabel}>
                     Imagen del Evento
                   </label>
