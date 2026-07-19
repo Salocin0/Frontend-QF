@@ -333,16 +333,20 @@ const RegistrarEvento2 = () => {
     rowFormEvento: {
       display: "flex",
       flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
+      flex: 1,
+      minHeight: 0,
+      height: "100%",
+      boxSizing: "border-box",
     },
     colForm: {
-      height: "Calc(75% - 60px)",
+      flex: 1,
+      minHeight: 0,
       padding: 0,
       display: "flex",
+      justifyContent: "center",
       boxSizing: "border-box",
-      width: isMobile ? "100%" : "Calc(100% - 20%)",
-      marginLeft: isMobile ? "0" : "20%",
+      overflowY: "auto",
+      width: "100%",
     },
     darkFormWrapper: {
       backgroundColor: "var(--qf-bg-secondary)",
@@ -350,9 +354,10 @@ const RegistrarEvento2 = () => {
       padding: "1rem",
       borderRadius: "10px",
       boxSizing: "border-box",
-      flex: 1,
-      minWidth: 0,
-      margin: isMobile ? "0 12px" : "0 20px",
+      width: "100%",
+      maxWidth: "800px",
+      height: "fit-content",
+      margin: isMobile ? "0 12px 20px" : "0 20px 20px",
     },
     formGroup: {
       marginBottom: "0.5rem",
@@ -469,7 +474,6 @@ const RegistrarEvento2 = () => {
       justifyContent: "center",
       marginTop: "20px",
       fontSize: "24px",
-      marginLeft: isMobile ? "0" : "20%",
       color: "var(--qf-text-primary)",
     },
     separator: {
@@ -479,9 +483,9 @@ const RegistrarEvento2 = () => {
       borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
-      marginLeft: isMobile ? "0" : "20%",
-      width: isMobile ? "100%" : "80%",
-      paddingTop: "10px",
+      width: "100%",
+      boxSizing: "border-box",
+      padding: isMobile ? "10px 12px 0" : "10px 20px 0",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     hr: {
@@ -507,7 +511,7 @@ const RegistrarEvento2 = () => {
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+            style={{ width: "100%" }}
           />
         </div>
         <div style={styles.colForm}>
