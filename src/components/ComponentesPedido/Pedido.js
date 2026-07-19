@@ -622,7 +622,7 @@ const Pedido = ({ pedido,recargar }) => {
                 src={
                   pedido?.puntoEncuentro?.latitud && pedido?.puntoEncuentro?.longitud
                     ? `https://www.google.com/maps?q=${pedido.puntoEncuentro.latitud},${pedido.puntoEncuentro.longitud}&z=15&output=embed`
-                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(pedido?.puntoEncuentro?.nombre || "")}`
+                    : `https://www.google.com/maps?q=${encodeURIComponent(pedido?.puntoEncuentro?.nombre || "")}&output=embed`
                 }
                 allowFullScreen
               ></iframe>
