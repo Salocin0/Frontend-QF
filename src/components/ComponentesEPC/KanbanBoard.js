@@ -110,11 +110,11 @@ const KanbanBoard = ({id}) => {
               },
               'column-3': {
                 ...initialData.columns['column-3'],
-                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'EnPreparacion'),
+                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'En Preparacion'),
               },
               'column-4': {
                 ...initialData.columns['column-4'],
-                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'EnCamino'),
+                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'En Camino'),
               },
               'column-5': {
                 ...initialData.columns['column-5'],
@@ -166,8 +166,8 @@ const KanbanBoard = ({id}) => {
   const allowedMovesMap = {
     'Pendiente': ['column-1','column-2','column-3','column-5','column-6'],
     'Aceptado': ['column-2','column-3','column-4','column-5','column-6'],
-    'EnPreparacion': ['column-3','column-4','column-5','column-6'],
-    'EnCamino': ['column-4','column-5','column-6'],
+    'En Preparacion': ['column-3','column-4','column-5','column-6'],
+    'En Camino': ['column-4','column-5','column-6'],
     'Entregado': ['column-5'],
     'Cancelado': ['column-6'],
   };
@@ -176,9 +176,9 @@ const KanbanBoard = ({id}) => {
     switch (estado) {
       case 'Pendiente':
         return '#FFC107'; // Amarillo
-      case 'EnPreparacion':
+      case 'En Preparacion':
         return 'lightblue'; // Azul
-      case 'EnCamino':
+      case 'En Camino':
         return 'pink'; // Azul
       case 'Entregado':
         return 'green'; // Verde
