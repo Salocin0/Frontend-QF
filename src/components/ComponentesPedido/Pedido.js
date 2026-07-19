@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import { toast } from "react-toastify";
-import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay, FaHourglassStart, FaCheckCircle, FaTruck, FaBox, FaBan } from "react-icons/fa";
+import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay, FaHourglassStart, FaCheckCircle, FaTruck, FaBox, FaBan, FaKey } from "react-icons/fa";
 
 const Pedido = ({ pedido,recargar }) => {
   const cardRef = useRef(null);
@@ -511,6 +511,12 @@ const Pedido = ({ pedido,recargar }) => {
                 <h5 style={styles.cardSubTitle}>
                   <span><FaMapMarkedAlt /></span>
                   {pedido?.puntoEncuentro?.nombre}
+                </h5>
+              )}
+              {pedido.estado === "EnCamino" && pedido?.codigoEntrega && (
+                <h5 style={styles.cardSubTitle}>
+                  <span><FaKey /></span>
+                  {" Código de entrega: " + pedido.codigoEntrega}
                 </h5>
               )}
 
