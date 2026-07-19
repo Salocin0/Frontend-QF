@@ -299,22 +299,31 @@ const RegistrarEvento3 = () => {
   };
 
   const styles = {
+    rowFormEvento: {
+      display: "flex",
+      flexDirection: "column",
+      flex: 1,
+      minHeight: 0,
+      height: "100%",
+      boxSizing: "border-box",
+    },
     formCol: {
-      height: "Calc(75% - 60px)",
+      flex: 1,
+      minHeight: 0,
       padding: 0,
       display: "flex",
-      width: "Calc(100% - 20%)",
-      marginLeft: isMobile ? "0" : "20%",
-      
+      boxSizing: "border-box",
+      overflowY: "auto",
+      width: "100%",
     },
     formWrapper: {
       padding: "1rem",
       borderRadius: "10px",
       boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      marginLeft: "20px",
-      marginRight: "20px",
-      marginBottom: "20px",
-      width: "100%",
+      boxSizing: "border-box",
+      flex: 1,
+      minWidth: 0,
+      margin: isMobile ? "0 12px 20px" : "0 20px 20px",
       backgroundColor: "var(--qf-bg-secondary)",
       border: `1px solid var(--qf-naranja)`,
     },
@@ -407,9 +416,8 @@ const RegistrarEvento3 = () => {
       justifyContent: "center",
       marginTop: "20px",
       fontSize: "24px",
-      marginLeft: isMobile ? "0" : "20%",
       color: "var(--qf-text-primary)",
-      width: isMobile ? "100%" : "80%",
+      width: "100%",
     },
     separator: {
       border: "none",
@@ -418,9 +426,9 @@ const RegistrarEvento3 = () => {
       borderTop: `1px solid var(--qf-naranja)`,
     },
     breadcrumbWrapper: {
-      marginLeft: isMobile ? "0" : "20%",
-      width: isMobile ? "100%" : "80%",
-      paddingTop: "10px",
+      width: "100%",
+      boxSizing: "border-box",
+      padding: isMobile ? "10px 12px 0" : "10px 20px 0",
       boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
     },
     hr: {
@@ -438,6 +446,7 @@ const RegistrarEvento3 = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+      <div style={styles.rowFormEvento}>
         <div style={styles.tituloSeccion}>
           <h1 style={{ textAlign: "center" }}>Crear un Evento</h1>
         </div>
@@ -445,7 +454,7 @@ const RegistrarEvento3 = () => {
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
-            style={{ width: "Calc(100% - 40px)", marginLeft: "20px" }}
+            style={{ width: "100%" }}
           />
         </div>
         <div style={styles.formCol}>
@@ -660,6 +669,7 @@ const RegistrarEvento3 = () => {
             </form>
           </div>
         </div>
+      </div>
     </PageLayout>
   );
 };
