@@ -108,6 +108,9 @@ const ListadoPedidosEncargado = () => {
       gap: "20px",
       flex: 1,
       minHeight: 0,
+      paddingTop: "20px",
+      paddingLeft: "20px",
+      paddingRight: "20px",
     },
     tituloSeccion: {
       textAlign: "center",
