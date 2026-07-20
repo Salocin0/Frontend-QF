@@ -284,7 +284,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
           grid: { bottom: isMobile ? 40 : 100 },
           legend: { 
             data: Object.keys(seriesData), 
-            bottom: isMobile ? 0 : "auto",
+            bottom: isMobile ? 0 : "horizontal",
             orient: isMobile ? "horizontal" : "vertical",
             textStyle: { color: "#ffffff" }
           },
