@@ -173,27 +173,40 @@ const RegistrarEvento2 = () => {
       };
 
       const existingEventoId = localStorage.getItem(EVENTO_CREACION_ID_KEY);
-      const endpoint = existingEventoId
+      let endpoint = existingEventoId
         ? `${process.env?.REACT_APP_BACK_URL}evento/preparacion/${existingEventoId}`
         : `${process.env?.REACT_APP_BACK_URL}evento`;
-      const method = existingEventoId ? "PUT" : "POST";
+      let method = existingEventoId ? "PUT" : "POST";
+
+      const doSave = () =>
+        fetch(endpoint, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user?.token}`,
+            ConsumidorId: String(user?.consumidorId || user?.consumidoreId || ""),
+          },
+          body: JSON.stringify(eventoParcial),
+        });
 
       // Crear una sola vez y luego actualizar por id en cada paso.
-      const saveResponse = await fetch(endpoint, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-          ConsumidorId: String(user?.consumidorId || user?.consumidoreId || ""),
-        },
-        body: JSON.stringify(eventoParcial),
-      });
+      let saveResponse = await doSave();
+
+      // El borrador guardado en localStorage puede apuntar a un evento que ya
+      // no existe (por ejemplo, si se reseteó la base de datos). En ese caso
+      // reintentamos creando uno nuevo en vez de dejar al usuario trabado.
+      if (saveResponse.status === 404 && existingEventoId) {
+        localStorage.removeItem(EVENTO_CREACION_ID_KEY);
+        endpoint = `${process.env?.REACT_APP_BACK_URL}evento`;
+        method = "POST";
+        saveResponse = await doSave();
+      }
 
       const saveData = await saveResponse.json().catch(() => ({}));
 
       if (saveResponse.ok) {
         toast.success("Evento guardado correctamente");
-        const eventoId = existingEventoId || saveData?.data?.eventoId || saveData?.data?.id;
+        const eventoId = saveData?.data?.eventoId || saveData?.data?.id || existingEventoId;
         if (eventoId) {
           localStorage.setItem(EVENTO_CREACION_ID_KEY, String(eventoId));
         }
