@@ -37,10 +37,9 @@ const GraficaTortaProductos = ({ height, productos }) => {
       confine: true,
     },
     legend: {
-      top: isMobile ? "auto" : "7%",
+      top: 0,
       left: "center",
-      bottom: isMobile ? 0 : "auto",
-      orient: isMobile ? "horizontal" : "vertical",
+      orient: "horizontal",
       textStyle: {
         color: "#ffffff",
       }
@@ -50,7 +49,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
         name: "Recaudación",
         type: "pie",
         radius: ["25%", "45%"],
-        center: ["50%", isMobile ? "45%" : "58%"],
+        center: ["50%", "60%"],
         avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 0,

@@ -88,6 +88,23 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
       itemStyle: {
         decal: decalEnabled ? { symbol: patterns[index % patterns.length] } : undefined,
       },
+      // Solo la última serie del stack muestra el total de la barra completa
+      label:
+        index === puestos.length - 1
+          ? {
+              show: true,
+              position: "top",
+              color: "#ffffff",
+              fontWeight: "bold",
+              formatter: (params) => {
+                const total = puestos.reduce(
+                  (sum, p) => sum + (Number(groupedData[categorias[params.dataIndex]]?.[p]) || 0),
+                  0
+                );
+                return `$${Math.round(total).toLocaleString("es-AR")}`;
+              },
+            }
+          : { show: false },
     }));
 
     const formatMonto = (valor) => `$${Math.round(Number(valor) || 0).toLocaleString("es-AR")}`;

@@ -168,9 +168,9 @@ const GraficaBarras = ({ eventId }) => {
       },
     },
     legend: {
-      top: isMobile ? "auto" : "20%",
-      bottom: isMobile ? 0 : "auto",
-      orient: isMobile ? "horizontal" : "vertical",
+      top: "16%",
+      left: "center",
+      orient: "horizontal",
       textStyle: {
         color: naranja,
       },
@@ -179,7 +179,7 @@ const GraficaBarras = ({ eventId }) => {
       left: "3%",
       right: "4%",
       bottom: "3%",
-      top: "30%",
+      top: "28%",
       containLabel: true,
     },
     yAxis: {
