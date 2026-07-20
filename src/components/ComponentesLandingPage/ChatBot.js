@@ -267,8 +267,9 @@ const Chatbot = () => {
   const renderRichText = (text) => {
     if (typeof text !== "string") return text;
 
+    // Captura: [label](url-absoluta-o-relativa)  |  url absoluta suelta
     const pattern =
-      /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
+      /\[([^\]]+)\]\(((?:https?:\/\/|\/)[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
     const nodes = [];
     let lastIndex = 0;
     let match;
@@ -280,12 +281,14 @@ const Chatbot = () => {
       }
       const href = match[2] || match[3];
       const label = match[1] || match[3];
+      // Las rutas relativas abren en la misma pestaña; las absolutas en una nueva
+      const isRelative = href.startsWith("/");
       nodes.push(
         <a
           key={`chat-link-${key++}`}
           href={href}
-          target="_blank"
-          rel="noopener noreferrer"
+          target={isRelative ? "_self" : "_blank"}
+          rel={isRelative ? undefined : "noopener noreferrer"}
           style={styles.footerLink}
         >
           {label}
