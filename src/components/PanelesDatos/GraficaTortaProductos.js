@@ -9,10 +9,9 @@ const GraficaTortaProductos = ({ height, productos }) => {
   const { isMobile } = useBreakpoint();
   useEffect(() => {
     if (productos.length > 0) {
-      const totalRecaudado = productos.reduce((sum, producto) => sum + producto.dinero, 0);
       const dataFormatted = productos.map((producto) => ({
         name: producto.nombre,
-        value: ((producto.dinero / totalRecaudado) * 100).toFixed(2),
+        value: producto.dinero, // Guardamos el valor real del dinero
       }));
       setChartData(dataFormatted);
     }
@@ -33,8 +32,9 @@ const GraficaTortaProductos = ({ height, productos }) => {
     backgroundColor: "transparent",
     tooltip: {
       trigger: "item",
-      formatter: "{b}: {c}% ({d}%)",
       confine: true,
+      formatter: (params) =>
+        `${params.seriesName}<br/>${params.marker} ${params.name}: <b>$${Math.round(Number(params.value) || 0).toLocaleString("es-AR")}</b> (${params.percent}%)`,
     },
     legend: {
       top: 0,
