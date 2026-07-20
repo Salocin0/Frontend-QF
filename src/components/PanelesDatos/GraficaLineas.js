@@ -90,8 +90,21 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
       },
     }));
 
+    const formatMonto = (valor) => `$${Math.round(Number(valor) || 0).toLocaleString("es-AR")}`;
+
     setChartData({
-      tooltip: { trigger: "axis", axisPointer: { type: "shadow" }, confine: true },
+      tooltip: {
+        trigger: "axis",
+        axisPointer: { type: "shadow" },
+        confine: true,
+        formatter: (params) => {
+          const total = params.reduce((sum, p) => sum + (Number(p.value) || 0), 0);
+          const lineas = params
+            .map((p) => `${p.marker} ${p.seriesName}: <b>${formatMonto(p.value)}</b>`)
+            .join("<br/>");
+          return `${params[0]?.axisValueLabel || ""}<br/>${lineas}<br/><hr style="margin:4px 0;border-color:rgba(255,255,255,0.2)"/><b>Total: ${formatMonto(total)}</b>`;
+        },
+      },
       title: { 
         text: "Recaudación por Día", 
         left: "center", 
@@ -113,7 +126,10 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
       },
       yAxis: { 
         type: "value",
-        axisLabel: { color: "#ffffff" },
+        axisLabel: {
+          color: "#ffffff",
+          formatter: (value) => `$${Math.round(value).toLocaleString("es-AR")}`,
+        },
         axisLine: { lineStyle: { color: "#ffffff" } },
         splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
       },

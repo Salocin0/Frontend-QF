@@ -137,7 +137,7 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
               <tr key={index}>
                 <td style={styles.thTd}>{producto.nombre}</td>
                 <td style={styles.thTd}>{producto.pedidos}</td>
-                <td style={styles.thTd}>${Number(producto.dinero).toFixed(2)}</td>
+                <td style={styles.thTd}>${Math.round(Number(producto.dinero)).toLocaleString("es-AR")}</td>
               </tr>
             ))}
           </tbody>

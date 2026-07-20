@@ -70,7 +70,7 @@ const TotalQuickFood = ({ eventId }) => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.heading}>ARS$ {totalRecaudado}</h1>
+      <h1 style={styles.heading}>ARS$ {Math.round(Number(totalRecaudado) || 0).toLocaleString("es-AR")}</h1>
       <p style={styles.paragraph}>Total Generado en evento</p>
     </div>
   );

@@ -92,7 +92,7 @@ const EstadisticasTable = ({ id }) => {
                 {row.cantidadpedidos}
               </td>
               <td style={{ textAlign: 'center', width: '120px', border: `1px solid var(--qf-naranja)`, padding: '8px' }}>
-                {parseFloat(row.total).toLocaleString('es-ES', { style: 'currency', currency: 'ARS' })}
+                {`$${Math.round(parseFloat(row.total) || 0).toLocaleString('es-AR')}`}
               </td>
             </tr>
           ))}

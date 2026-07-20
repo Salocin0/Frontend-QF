@@ -49,7 +49,8 @@ const GraficaTortaProductos = ({ height, productos }) => {
       {
         name: "Recaudación",
         type: "pie",
-        radius: ["35%", "60%"],
+        radius: ["25%", "45%"],
+        center: ["50%", isMobile ? "45%" : "58%"],
         avoidLabelOverlap: true,
         itemStyle: {
           borderRadius: 0,
@@ -60,9 +61,14 @@ const GraficaTortaProductos = ({ height, productos }) => {
           fontSize: "11px",
           fontWeight: "bold",
           color: "#ffffff",
+          alignTo: "labelLine",
+          overflow: "truncate",
+          width: 90,
         },
         labelLine: {
           show: true,
+          length: 12,
+          length2: 10,
           lineStyle: {
             color: "rgba(255,255,255,0.4)",
           },

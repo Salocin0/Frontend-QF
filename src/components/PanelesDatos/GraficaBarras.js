@@ -76,10 +76,7 @@ const GraficaBarras = ({ eventId }) => {
             name: puesto,
             type: "bar",
             stack: "total",
-            label: { 
-              show: true,
-              color: cssVar("--qf-naranja"),
-            },
+            label: { show: false },
             emphasis: { focus: "series" },
             data,
             itemStyle: {
@@ -122,10 +119,7 @@ const GraficaBarras = ({ eventId }) => {
 
     const updatedSeries = chartData.seriesData.map((series, index) => ({
       ...series,
-      label: {
-        show: true,
-        color: cssVar("--qf-naranja"),
-      },
+      label: { show: false },
       itemStyle: {
         decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null,
       },
@@ -146,10 +140,19 @@ const GraficaBarras = ({ eventId }) => {
 
   const naranja = cssVar("--qf-naranja");
   const bgSecondary = cssVar("--qf-bg-secondary");
+  const formatMonto = (valor) => `$${Math.round(Number(valor) || 0).toLocaleString("es-AR")}`;
   const option = chartData ? {
     tooltip: {
       trigger: "axis",
       axisPointer: { type: "shadow" },
+      confine: true,
+      formatter: (params) => {
+        const total = params.reduce((sum, p) => sum + (Number(p.value) || 0), 0);
+        const lineas = params
+          .map((p) => `${p.marker} ${p.seriesName}: <b>${formatMonto(p.value)}</b>`)
+          .join("<br/>");
+        return `${params[0]?.axisValueLabel || ""}<br/>${lineas}<br/><hr style="margin:4px 0;border-color:rgba(255,255,255,0.2)"/><b>Total: ${formatMonto(total)}</b>`;
+      },
     },
     backgroundColor: bgSecondary,
     title: {
@@ -183,6 +186,7 @@ const GraficaBarras = ({ eventId }) => {
       type: "value",
       axisLabel: {
         color: naranja,
+        formatter: (value) => `$${Math.round(value).toLocaleString("es-AR")}`,
       },
       axisLine: {
         lineStyle: {
@@ -202,7 +206,26 @@ const GraficaBarras = ({ eventId }) => {
         },
       },
     },
-    series: chartData.seriesData,
+    series: chartData.seriesData.map((serie, idx) => {
+      if (idx !== chartData.seriesData.length - 1) return serie;
+      // Última serie del stack: mostrar el total de la barra completa arriba
+      return {
+        ...serie,
+        label: {
+          show: true,
+          position: "top",
+          color: naranja,
+          fontWeight: "bold",
+          formatter: (params) => {
+            const total = chartData.seriesData.reduce(
+              (sum, s) => sum + (Number(s.data[params.dataIndex]) || 0),
+              0
+            );
+            return `$${Math.round(total).toLocaleString("es-AR")}`;
+          },
+        },
+      };
+    }),
   } : null;
 
   return (

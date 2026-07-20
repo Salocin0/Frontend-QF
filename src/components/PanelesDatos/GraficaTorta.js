@@ -61,7 +61,9 @@ const GraficaTorta = ({ id }) => {
     height: "90%",
     tooltip: {
       trigger: "item",
-      formatter: "{a} <br/>{b}: {c} ({d}%)",
+      confine: true,
+      formatter: (params) =>
+        `${params.seriesName}<br/>${params.marker} ${params.name}: <b>$${Math.round(Number(params.value) || 0).toLocaleString("es-AR")}</b> (${params.percent}%)`,
     },
     backgroundColor: bgSecondary,
     title: {
@@ -78,23 +80,31 @@ const GraficaTorta = ({ id }) => {
     },
     legend: {
       show: true,
-      bottom: isMobile ? 0 : "auto",
-      orient: isMobile ? "horizontal" : "vertical",
+      bottom: 0,
+      left: "center",
+      orient: "horizontal",
       textStyle: {
         color: naranja,
       },
     },
     series: [
       {
-        top: "15%",
+        top: "18%",
+        bottom: "12%",
         name: "Total Recaudado",
         type: "pie",
-        radius: ["30%", "60%"],
-        center: ["50%", "50%"],
+        radius: ["25%", "48%"],
+        center: ["50%", "55%"],
+        avoidLabelOverlap: true,
         label: {
           color: naranja,
+          alignTo: "labelLine",
+          overflow: "truncate",
+          width: 90,
         },
         labelLine: {
+          length: 10,
+          length2: 8,
           lineStyle: {
             color: naranja,
           },

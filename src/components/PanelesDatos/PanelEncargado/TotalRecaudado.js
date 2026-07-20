@@ -114,7 +114,7 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
       ) : (
         <div style={styles.resultContainer}>
           <h1 style={styles.resultText}>
-            ${totalRecaudado?.toLocaleString("es-ES")}
+            ${Math.round(Number(totalRecaudado)).toLocaleString("es-AR")}
           </h1>
           <p style={styles.label}>
             <strong>Total Recaudado</strong>
