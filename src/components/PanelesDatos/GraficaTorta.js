@@ -80,7 +80,7 @@ const GraficaTorta = ({ id }) => {
     },
     legend: {
       show: true,
-      bottom: 0,
+      top: 0,
       left: "center",
       orient: "horizontal",
       textStyle: {
@@ -90,11 +90,11 @@ const GraficaTorta = ({ id }) => {
     series: [
       {
         top: "18%",
-        bottom: "12%",
+        bottom: "8%",
         name: "Total Recaudado",
         type: "pie",
         radius: ["25%", "48%"],
-        center: ["50%", "55%"],
+        center: ["50%", "58%"],
         avoidLabelOverlap: true,
         label: {
           color: naranja,
