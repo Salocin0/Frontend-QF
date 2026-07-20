@@ -223,7 +223,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
 
   const formatFecha = (fecha) => {
     const [day, month, year] = fecha.split("/");
-    return `${year}-${day}-${month}`;
+    return `${year}-${month}-${day}`;
   };
 
   useEffect(() => {
