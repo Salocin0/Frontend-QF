@@ -144,10 +144,19 @@ const PanelProductor = () => {
             {/* Select de eventos */}
             <div style={{
               display: "flex",
-              justifyContent: isMobileLayout ? "stretch" : "flex-end",
+              flexDirection: "column",
+              alignItems: isMobileLayout ? "stretch" : "flex-end",
               marginTop: "12px",
               marginBottom: "12px",
+              gap: "5px",
             }}>
+              <label style={{
+                color: "var(--qf-naranja)",
+                fontSize: "0.9rem",
+                fontWeight: "bold",
+              }}>
+                Evento:
+              </label>
               <select
                 style={{
                   borderRadius: "5px",

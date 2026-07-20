@@ -90,6 +90,17 @@ const PanelEncargado = () => {
       padding: "0 20px",
       marginBottom: "20px",
     },
+    selectWrapper: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "5px",
+      width: isMobile ? "100%" : "auto",
+    },
+    selectLabel: {
+      color: "var(--qf-naranja)",
+      fontSize: "0.9rem",
+      fontWeight: "bold",
+    },
     select: {
       borderRadius: "5px",
       backgroundColor: "var(--qf-bg-secondary)",
@@ -270,28 +281,34 @@ const PanelEncargado = () => {
           />
         </div>
         <div style={styles.selectsContainer}>
-          <select
-            style={styles.select}
-            value={eventoSeleccionado?.id}
-            onChange={handleEventoChange}
-          >
-            {eventos.map((evento) => (
-              <option key={evento.id} value={evento.id}>
-                {evento.nombre}
-              </option>
-            ))}
-          </select>
-          <select
-            style={styles.select}
-            value={puestoSeleccionado?.id}
-            onChange={handlePuestoChange}
-          >
-            {puestos.map((puesto) => (
-              <option key={puesto.id} value={puesto.id}>
-                {puesto.nombreCarro}
-              </option>
-            ))}
-          </select>
+          <div style={styles.selectWrapper}>
+            <label style={styles.selectLabel}>Evento:</label>
+            <select
+              style={styles.select}
+              value={eventoSeleccionado?.id}
+              onChange={handleEventoChange}
+            >
+              {eventos.map((evento) => (
+                <option key={evento.id} value={evento.id}>
+                  {evento.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div style={styles.selectWrapper}>
+            <label style={styles.selectLabel}>Puesto:</label>
+            <select
+              style={styles.select}
+              value={puestoSeleccionado?.id}
+              onChange={handlePuestoChange}
+            >
+              {puestos.map((puesto) => (
+                <option key={puesto.id} value={puesto.id}>
+                  {puesto.nombreCarro}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
       <div style={styles.mainContent}>
