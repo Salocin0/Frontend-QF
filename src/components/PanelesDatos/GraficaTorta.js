@@ -80,7 +80,7 @@ const GraficaTorta = ({ id }) => {
     },
     legend: {
       show: true,
-      top: "6%",
+      top: "38%",
       left: "center",
       orient: "horizontal",
       textStyle: {
