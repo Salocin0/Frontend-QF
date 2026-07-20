@@ -558,7 +558,11 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
                 type="text"
                 id="codigo"
                 style={styles.codigoInput}
-                onChange={(e) => setCodigo(e.target.value)}
+                onChange={(e) => setCodigo(e.target.value.toUpperCase())}
+                placeholder="Ingrese el código"
+                autoCapitalize="characters"
+                autoComplete="off"
+                autoCorrect="off"
               />
             </div>
 
