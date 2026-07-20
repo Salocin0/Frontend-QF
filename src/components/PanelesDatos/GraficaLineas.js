@@ -130,9 +130,9 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
       },
       legend: { 
         data: puestos, 
-        top: isMobile ? "auto" : 30,
-        bottom: isMobile ? 0 : "auto",
-        orient: isMobile ? "horizontal" : "vertical",
+        top: "8%",
+        left: "center",
+        orient: "horizontal",
         textStyle: { color: "#ffffff" }
       },
       xAxis: { 
