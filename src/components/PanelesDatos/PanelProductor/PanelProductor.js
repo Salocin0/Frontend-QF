@@ -7,6 +7,7 @@ import { UserContext } from "../../ComponentesGenerales/UserContext";
 import TotalQuickFood from "./TotalGenerado";
 import ValoracionPromedio from "./ValoracionPromedio";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
+import BotonDescargaPDF from "../BotonDescargaPDF";
 
 const PanelProductor = () => {
   const { user } = useContext(UserContext);
@@ -14,6 +15,7 @@ const PanelProductor = () => {
   const [eventoSeleccionado, setEventoSeleccionado] = useState("Todos");
 
   const contentRef = useRef(null);
+  const dashboardRef = useRef(null);
   const [contentWidth, setContentWidth] = useState(999);
   const isNarrowLayout = contentWidth <= 780;
   const isMobileLayout = contentWidth <= 600;
@@ -178,8 +180,26 @@ const PanelProductor = () => {
               </select>
             </div>
 
-            {/* Grid de gráficas */}
+            {/* Botón de descarga PDF */}
             <div style={{
+              display: "flex",
+              justifyContent: isMobileLayout ? "stretch" : "flex-end",
+              marginBottom: "16px",
+            }}>
+              <BotonDescargaPDF
+                dashboardRef={dashboardRef}
+                tipo="productor"
+                idConsumidor={user?.id}
+                idEvento={eventoSeleccionado || "Todos"}
+                nombreEvento={
+                  eventos.find((e) => String(e.id) === String(eventoSeleccionado))?.nombre ||
+                  "Todos los eventos"
+                }
+              />
+            </div>
+
+            {/* Grid de gráficas */}
+            <div ref={dashboardRef} style={{
               display: "grid",
               gridTemplateColumns: gridCols,
               gridTemplateRows: gridRows,

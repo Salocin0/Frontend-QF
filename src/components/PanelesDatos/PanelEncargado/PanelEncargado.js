@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import PageLayout from "../../ComponentesGenerales/PageLayout";
 import Footer from "../../ComponentesGenerales/Footer";
 import GraficaLineas from "../GraficaLineas";
@@ -9,6 +9,7 @@ import ValoracionPromedio from "./ValoracionPromedio";
 import TotalRecaudadoEvento from "./TotalRecaudado";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
 import useBreakpoint from "../../../useBreakpoint";
+import BotonDescargaPDF from "../BotonDescargaPDF";
 
 const PanelEncargado = () => {
   const { user } = useContext(UserContext);
@@ -19,6 +20,7 @@ const PanelEncargado = () => {
   const [puestos, setPuestos] = useState([]);
   const [puestoSeleccionado, setPuestoSeleccionado] = useState(null);
 
+  const dashboardRef = useRef(null);
   const windowWidth = useBreakpoint().width;
 
   // Layout de grilla según el ancho de ventana:
@@ -86,7 +88,7 @@ const PanelEncargado = () => {
       flexDirection: isMobile ? "column" : "row",
       gap: isMobile ? "10px" : "20px",
       justifyContent: isMobile ? "stretch" : "flex-end",
-      alignItems: "center",
+      alignItems: isMobile ? "stretch" : "flex-end",
       padding: "0 20px",
       marginBottom: "20px",
     },
@@ -309,10 +311,19 @@ const PanelEncargado = () => {
               ))}
             </select>
           </div>
+          <BotonDescargaPDF
+            dashboardRef={dashboardRef}
+            tipo="encargado"
+            idConsumidor={user?.consumidorId}
+            idEvento={eventoSeleccionado?.id || "Todos"}
+            idPuesto={puestoSeleccionado?.id || "Todos"}
+            nombreEvento={eventoSeleccionado?.nombre || "Todos los eventos"}
+            nombrePuesto={puestoSeleccionado?.nombre || "Todos los puestos"}
+          />
         </div>
       </div>
       <div style={styles.mainContent}>
-        <div style={styles.graficaContainer}>
+        <div ref={dashboardRef} style={styles.graficaContainer}>
           <TotalRecaudadoEvento
             puestoId={puestoSeleccionado?.id}
             eventoId={eventoSeleccionado?.id}
