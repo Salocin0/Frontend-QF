@@ -190,7 +190,7 @@ const BotonDescargaPDF = ({
       pdf.setFont("helvetica", "bold");
       pdf.setFontSize(13);
       pdf.setTextColor(230, 95, 0);
-      pdf.text("INFORME EJECUTIVO  (Generado con IA — GPT-4o)", marginLeft, currentY);
+      pdf.text("INFORME EJECUTIVO  (Generado con FoodyAnalyst)", marginLeft, currentY);
       currentY += 7;
 
       currentY = renderAnalysisText(pdf, analisisTexto, currentY, pageWidth, marginLeft, contentWidth);
