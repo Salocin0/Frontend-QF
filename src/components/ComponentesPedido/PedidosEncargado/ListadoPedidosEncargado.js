@@ -108,6 +108,7 @@ const ListadoPedidosEncargado = () => {
       gap: "20px",
       flex: 1,
       minHeight: 0,
+      overflow: "hidden", // necesario para que el flex:1 anclado funcione en toda la cadena
       paddingTop: "20px",
       paddingLeft: "20px",
       paddingRight: "20px",
@@ -134,6 +135,7 @@ const ListadoPedidosEncargado = () => {
       justifyContent: "center",
       flex: 1,
       minHeight: 0,
+      overflow: "hidden", // ancla el board al espacio restante; el scroll horizontal queda siempre visible
     },
   };
 

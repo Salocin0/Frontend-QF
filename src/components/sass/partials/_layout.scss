@@ -331,7 +331,8 @@
 
 .page-layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;       // altura fija al viewport — evita que el board crezca fuera de pantalla
+  overflow: hidden;    // el scroll lo maneja cada sección hija
   background-color: var(--qf-bg-main);
 }
 
@@ -362,8 +363,9 @@
   padding-bottom: 80px; // espacio para footer fijo
   display: flex;
   flex-direction: column;
-  min-height: 0; // permite que flex:1 en hijos funcione con overflow
-  overflow: hidden; // evita scroll vertical en la pagina
+  min-height: 0;    // permite que flex:1 en hijos funcione con overflow
+  overflow-x: hidden;
+  overflow-y: auto; // páginas normales pueden scrollear verticalmente; el kanban lo sobreescribe con overflow:hidden en su wrapper
 }
 
 // ── Mobile (< 768px) — sidebar como drawer superpuesto ───────
