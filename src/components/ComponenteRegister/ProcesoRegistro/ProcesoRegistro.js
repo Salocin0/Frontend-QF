@@ -18,6 +18,7 @@ const STEP_LABELS = {
 const ProcesoRegistro = () => {
   const { isMobile } = useBreakpoint();
   const { tipoUsuario } = useParams();
+  const totalSteps = tipoUsuario === "consumidor" ? 2 : 3;
   const [step, setStep] = useState(1);
   const [userData, setUserData] = useState({});
   const [consumidorData, setConsumidorData] = useState({});
@@ -149,7 +150,7 @@ const ProcesoRegistro = () => {
         margin: "0 auto",
       }}
     >
-      {[1, 2, 3].map((s) => (
+      {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
         <div
           key={s}
           style={{
@@ -187,7 +188,7 @@ const ProcesoRegistro = () => {
               {STEP_LABELS[s]}
             </span>
           )}
-          {s < 3 && (
+          {s < totalSteps && (
             <div
               style={{
                 width: isMobile ? "24px" : "40px",
