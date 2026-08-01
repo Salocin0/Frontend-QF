@@ -23,18 +23,21 @@ const AsociarPuestoAEvento = () => {
       headers.append("ConsumidorId", user.consumidorId);
 
       setIsLoading(true);
-      fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/EnPreparacion`, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setEventos(data.data);
-        })
-        .catch((error) => console.log("No existen carritos.", error))
+      const estadosEnPreparacion = ["EnPreparacion1", "EnPreparacion2", "EnPreparacion3"];
+      Promise.all(
+        estadosEnPreparacion.map((estado) =>
+          fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/${estado}`, {
+            method: "GET",
+            headers: headers,
+          })
+            .then((response) => response.json())
+            .then((data) => (Array.isArray(data.data) ? data.data : []))
+            .catch(() => [])
+        )
+      )
+        .then((resultados) => setEventos(resultados.flat()))
+        .catch((error) => console.log("No existen eventos.", error))
         .finally(() => setIsLoading(false));
-
-
     }
   }, [user, recargar]);
 

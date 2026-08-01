@@ -65,9 +65,11 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         break;
       case "EnPreparacion1":
         setIsProcesoDeCreacion1(true);
+        setIsEnPreparacion(true);
         break;
       case "EnPreparacion2":
         setIsProcesoDeCreacion2(true);
+        setIsEnPreparacion(true);
         break;
       case "EnPreparacion3":
         setIsProcesoDeCreacion3(true);
