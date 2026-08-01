@@ -8,6 +8,7 @@ import { useContext } from "react";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
 import useBreakpoint from "../../useBreakpoint";
+import Footer from "../ComponentesGenerales/Footer";
 
 const RegistrarEvento3 = () => {
   const { isMobile } = useBreakpoint();
@@ -670,6 +671,7 @@ const RegistrarEvento3 = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </PageLayout>
   );
 };
