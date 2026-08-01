@@ -257,7 +257,18 @@ const ProcesoRegistro = () => {
   };
 
   return (
-    <div data-testid="proceso-registro">
+    <div
+      data-testid="proceso-registro"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundImage: "url(/../QuickFoodFondo.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {stepperDots}
       {renderForm()}
     </div>

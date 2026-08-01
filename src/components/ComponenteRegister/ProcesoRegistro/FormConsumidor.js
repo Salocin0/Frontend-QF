@@ -157,11 +157,8 @@ const FormConsumidor = ({ nextStep, backStep, handleRegistro, tipoUsuario, isReg
       display: "flex",
       alignItems: "center",
       padding: "20px",
-      minHeight: "100vh",
-      backgroundImage: "url(/../QuickFoodFondo.png)",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
+      flex: 1,
+      width: "100%",
       paddingBottom: "70px",
     },
     container: {

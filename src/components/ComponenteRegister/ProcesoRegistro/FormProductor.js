@@ -56,7 +56,9 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      minHeight: "100vh",
+      flex: 1,
+      width: "100%",
+      padding: "20px",
     },
     card: {
       width: "100%",
@@ -121,7 +123,7 @@ const FormProductor = ({ nextStep, backStep, handleRegistro }) => {
   };
 
   return (
-    <div className="background-prelogin" style={styles.container}>
+    <div style={styles.container}>
       <div style={styles.card} data-testid="form-card-productor">
         <div style={styles.cardHeader}>
           <h2 style={styles.title}>Datos Productor - Paso 3</h2>
