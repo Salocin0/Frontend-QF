@@ -258,15 +258,7 @@ const ProcesoRegistro = () => {
   return (
     <div data-testid="proceso-registro">
       {stepperDots}
-      <div
-        style={{
-          width: "100%",
-          maxWidth: isMobile ? "100%" : "700px",
-          margin: "0 auto",
-        }}
-      >
-        {renderForm()}
-      </div>
+      {renderForm()}
     </div>
   );
 };
