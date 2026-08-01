@@ -108,29 +108,25 @@ const ProcesoRegistro = () => {
         },
         body: JSON.stringify(datosRegistro),
       })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Respuesta de servidor no exitosa");
+        .then(async (response) => {
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok || data.status !== "success") {
+            throw new Error(data.msg || "No se pudo completar el registro");
           }
+          return data;
         })
-        .then((data) => {
+        .then(() => {
           setIsRegistering(false);
-          if (data.status === "success") {
-            toast.success("Registro exitoso");
-            toast.info("Se envio un email de validacion a su correo");
-            navigate(`/login`);
-          } else {
-            throw new Error(data.msg || "Error en el servidor");
-          }
+          setRegistrar(false);
+          toast.success("Registro exitoso");
+          toast.info("Se envio un email de validacion a su correo");
+          navigate(`/login`);
         })
         .catch((error) => {
           setIsRegistering(false);
+          setRegistrar(false);
           console.error("Error en la solicitud:", error);
-          toast.error("Error al registrar. Por favor, vuelva a intentar.");
-          //toast.success("Registro exitoso");
-          navigate(`/`);
+          toast.error(error.message || "Error al registrar. Por favor, vuelva a intentar.");
         });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
