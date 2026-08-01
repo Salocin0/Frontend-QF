@@ -95,36 +95,39 @@ const AsociarPuestoAEvento = () => {
         {/* Título centrado */}
         <h1 style={styles.tituloSeccion}>Asociate a un Evento</h1>
 
-        {/* HR que ocupa el 100% del viewport */}
         <hr style={styles.hrFull} />
 
-        {/* Breadcrumb a ancho completo */}
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%", margin: "8px 0" }}
-          />
-        </div>
+        <div className="qf-page-content">
+          <div className="qf-page-content__main">
+            {/* Breadcrumb a ancho completo */}
+            <div style={styles.breadcrumbWrapper}>
+              <Breadcrumb
+                items={breadcrumbItems}
+                style={{ width: "100%", margin: "8px 0" }}
+              />
+            </div>
 
-        {/* Lista de eventos */}
-        <div style={styles.eventsContainer}>
-          <div style={styles.eventsList}>
-            {isLoading ? (
-              <LoandingComponent />
-            ) : Array.isArray(eventos) && eventos.length > 0 ? (
-                eventos.map((evento, index) => (
-                  <EventoEncargado
-                    key={index}
-                    evento={evento}
-                    puestoId={puestoId}
-                    recargar={recargarComponente}
-                  />
-                ))
-            ) : (
-              <h2 style={styles.noEventsMessage}>
-                No hay eventos activos en este momento.
-              </h2>
-            )}
+            {/* Lista de eventos */}
+            <div style={styles.eventsContainer}>
+              <div style={styles.eventsList}>
+                {isLoading ? (
+                  <LoandingComponent />
+                ) : Array.isArray(eventos) && eventos.length > 0 ? (
+                    eventos.map((evento, index) => (
+                      <EventoEncargado
+                        key={index}
+                        evento={evento}
+                        puestoId={puestoId}
+                        recargar={recargarComponente}
+                      />
+                    ))
+                ) : (
+                  <h2 style={styles.noEventsMessage}>
+                    No hay eventos activos en este momento.
+                  </h2>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

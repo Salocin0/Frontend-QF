@@ -4,10 +4,12 @@ import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import imgDefault from "../img/logoevento.webp";
 
+const ESTADOS_ASOCIABLES = ["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];
+
 const EventoRepartidor = ({ evento, recargar }) => {
   const navigate = useNavigate();
   const [isEnPreparacion,] = useState(
-    evento.estado === "EnPreparacion"
+    ESTADOS_ASOCIABLES.includes(evento.estado)
   );
   const [tieneAsociacionPendiente, setTieneAsociacionPendiente] =
     useState(false);

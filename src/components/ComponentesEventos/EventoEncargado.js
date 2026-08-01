@@ -5,6 +5,8 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import imgDefault from "../img/logoevento.webp";
 
+const ESTADOS_ASOCIABLES = ["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];
+
 const EventoEncargado = ({ evento, puestoId, recargar }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
@@ -34,13 +36,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
 
   useEffect(() => {
     if (evento) {
-      switch (evento.estado) {
-        case "EnPreparacion":
-          setIsEnPreparacion(true);
-          break;
-        default:
-          break;
-      }
+      setIsEnPreparacion(ESTADOS_ASOCIABLES.includes(evento.estado));
     }
   }, [evento]);
 
