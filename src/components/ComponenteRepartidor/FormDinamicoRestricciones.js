@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
+import Footer from "../ComponentesGenerales/Footer";
 import "./../sass/main.scss";
 import "./asociarAEventos.css";
 
@@ -151,6 +152,7 @@ function FormDinamicoRestricciones({ data, userType }) {
       </div>
     </div>
   </div>
+  <Footer />
 </PageLayout>
 
   );

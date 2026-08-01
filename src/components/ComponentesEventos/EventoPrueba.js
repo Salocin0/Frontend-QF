@@ -1,6 +1,7 @@
 import { format } from "date-fns";
 import React from "react";
 import PageLayout from "../ComponentesGenerales/PageLayout";
+import Footer from "../ComponentesGenerales/Footer";
 import "./../sass/main.scss";
 import imgdefault from "./img/villa maria.png";
 import useBreakpoint from "../../useBreakpoint";
@@ -51,6 +52,7 @@ const EventoPrueba = ({ session }) => {
           </div>
         </div>
       </div>
+        <Footer />
         </PageLayout>
     );
 };

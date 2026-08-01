@@ -5,6 +5,7 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
+import Footer from "../ComponentesGenerales/Footer";
 
 const AsociarPuestoAEvento = () => {
   const { puestoId } = useParams();
@@ -127,6 +128,7 @@ const AsociarPuestoAEvento = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </PageLayout>
   );
 };
