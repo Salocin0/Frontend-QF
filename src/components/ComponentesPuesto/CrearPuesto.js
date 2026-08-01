@@ -99,8 +99,7 @@ const CrearNuevoPuesto = () => {
       border: "none",
       borderTop: "1px solid var(--qf-naranja)",
       margin: 0,
-      width: "100vw",
-      marginLeft: "calc(-50vw + 50%)",
+      width: "100%",
     },
     breadcrumbWrapper: {
       width: "100%",
@@ -194,22 +193,23 @@ const CrearNuevoPuesto = () => {
         {/* Título centrado */}
         <h1 style={styles.tituloSeccion}>Crear un Puesto</h1>
 
-        {/* HR que ocupa el 100% del viewport */}
         <hr style={styles.hrFull} />
 
-        {/* Breadcrumb a ancho completo */}
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%", margin: "8px 0" }}
-          />
-        </div>
+        <div className="qf-page-content">
+          <div className="qf-page-content__main">
+            {/* Breadcrumb a ancho completo */}
+            <div style={styles.breadcrumbWrapper}>
+              <Breadcrumb
+                items={breadcrumbItems}
+                style={{ width: "100%", margin: "8px 0" }}
+              />
+            </div>
 
-        {/* Formulario centrado */}
-        <div style={styles.content}>
-          <div style={styles.cardBody}>
-            <h1 style={styles.formTitle}>Registrar Carro de Comida</h1>
-            <form onSubmit={handleSubmit}>
+            {/* Formulario centrado */}
+            <div style={styles.content}>
+              <div style={styles.cardBody}>
+                <h1 style={styles.formTitle}>Registrar Carro de Comida</h1>
+                <form onSubmit={handleSubmit}>
               {/* Fila 1: N° Carro, Nombre, Teléfono */}
               <div style={styles.row}>
                 <div className="mb-3" style={{ width: col3, marginRight: isMobile ? "0" : "10px" }}>
@@ -355,6 +355,8 @@ const CrearNuevoPuesto = () => {
                 Volver
               </Link>
             </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
