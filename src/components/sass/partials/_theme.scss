@@ -17,26 +17,26 @@
   --qf-blanco-puro:  #ffffff;   // Colors.BlancoEnBlanco
 
   // ── Fondos ────────────────────────────────────────────────
-  --qf-bg-main:      #e5e5e5;   // Colors.GrisAzuladoOscuro (dark)  → fondo principal de páginas/sidebar
-  --qf-bg-secondary: #efefef;   // Colors.GrisAzuladoClaro  (dark)  → fondos secundarios
-  --qf-bg-card:      #2F2F2F;   // Colors.GrisClaro         (dark)  → fondo de tarjetas/cards
-  --qf-bg-dark:      #0D1E32;   // Colors.GrisAzulado       (dark)  → fondos oscuros
-  --qf-bg-neutral:   #333333;   // Colors.GrisClaroPeroNoTanClaro (dark)
+  --qf-bg-main:      #1a1a1a;   // Colors.GrisAzuladoOscuro (dark)  → fondo principal de páginas/sidebar
+  --qf-bg-secondary: #2b2b2b;   // Colors.GrisAzuladoClaro  (dark)  → fondos secundarios
+  --qf-bg-card:      #101010;   // Colors.GrisClaro         (dark)  → fondo de tarjetas/cards
+  --qf-bg-dark:      #101010;   // Colors.GrisAzulado       (dark)  → fondos oscuros
+  --qf-bg-neutral:   #212121;   // Colors.GrisClaroPeroNoTanClaro (dark)
 
   // ── Textos ────────────────────────────────────────────────
-  --qf-text-primary:   #000000; // Colors.Blanco    (dark) — texto principal sobre fondo claro
-  --qf-text-white:     #000000; // En modo claro (data-theme=dark) las letras blancas pasan a negro
-  --qf-text-muted:     #616161; // Colors.Gris      (dark)
-  --qf-text-secondary: #A4A8AA; // Colors.GrisOscuro (dark)
+  --qf-text-primary:   #ffffff; // Colors.Blanco    (dark) — texto principal sobre fondo oscuro
+  --qf-text-white:     #ffffff; // En modo oscuro (data-theme=dark) las letras se mantienen blancas
+  --qf-text-muted:     #ffffff; // Colors.Gris      (dark)
+  --qf-text-secondary: #101010; // Colors.GrisOscuro (dark)
 
   // ── Colores de acción/estado ───────────────────────────────
-  --qf-blue:          #0085fa;  // Colors.Azul          (dark)
-  --qf-rosa:          #BE185D;  // Colors.Rosa          (dark)
-  --qf-purple:        #7E22CE;  // Colors.Purpura       (dark)
-  --qf-accent-orange: #ff6d05;  // Colors.NaranjaDetalle (dark)
-  --qf-orange-dark:   #af6e0e;  // Colors.NaranjaOscuro  (dark)
-  --qf-green:         #45a145;  // Colors.Verde         (dark)
-  --qf-info:          #45d0e8;  // Colors.Info          (dark)
+  --qf-blue:          #028AFF;  // Colors.Azul          (dark)
+  --qf-rosa:          #EC4899;  // Colors.Rosa          (dark)
+  --qf-purple:        #A855F7;  // Colors.Purpura       (dark)
+  --qf-accent-orange: #ffd600;  // Colors.NaranjaDetalle (dark)
+  --qf-orange-dark:   #ffd600;  // Colors.NaranjaOscuro  (dark)
+  --qf-green:         #4caf50;  // Colors.Verde         (dark)
+  --qf-info:          #17a2b8;  // Colors.Info          (dark)
 
   // ── Sidebar específico ─────────────────────────────────────
   --qf-sidebar-width:         250px;
@@ -55,24 +55,24 @@
 
 [data-theme="light"] {
   // ── Fondos ────────────────────────────────────────────────
-  --qf-bg-main:      #1a1a1a;   // Colors.GrisAzuladoOscuro (light)
-  --qf-bg-secondary: #2b2b2b;   // Colors.GrisAzuladoClaro  (light)
-  --qf-bg-card:      #101010;   // Colors.GrisClaro         (light)
-  --qf-bg-dark:      #101010;   // Colors.GrisAzulado       (light)
-  --qf-bg-neutral:   #212121;   // Colors.GrisClaroPeroNoTanClaro (light)
+  --qf-bg-main:      #e5e5e5;   // Colors.GrisAzuladoOscuro (light)
+  --qf-bg-secondary: #efefef;   // Colors.GrisAzuladoClaro  (light)
+  --qf-bg-card:      #2F2F2F;   // Colors.GrisClaro         (light)
+  --qf-bg-dark:      #0D1E32;   // Colors.GrisAzulado       (light)
+  --qf-bg-neutral:   #333333;   // Colors.GrisClaroPeroNoTanClaro (light)
 
   // ── Textos ────────────────────────────────────────────────
-  --qf-text-primary:   #ffffff; // Colors.Blanco    (light)
-  --qf-text-white:     #ffffff; // Colors.Negro     (light) — igual
-  --qf-text-muted:     #ffffff; // Colors.Gris      (light)
-  --qf-text-secondary: #101010; // Colors.GrisOscuro (light)
+  --qf-text-primary:   #000000; // Colors.Blanco    (light) — texto principal sobre fondo claro
+  --qf-text-white:     #000000; // En modo claro (data-theme=light) las letras blancas pasan a negro
+  --qf-text-muted:     #616161; // Colors.Gris      (light)
+  --qf-text-secondary: #A4A8AA; // Colors.GrisOscuro (light)
 
   // ── Colores de acción/estado ───────────────────────────────
-  --qf-blue:          #028AFF;  // Colors.Azul          (light)
-  --qf-rosa:          #EC4899;  // Colors.Rosa          (light)
-  --qf-purple:        #A855F7;  // Colors.Purpura       (light)
-  --qf-accent-orange: #ffd600;  // Colors.NaranjaDetalle (light)
-  --qf-orange-dark:   #ffd600;  // Colors.NaranjaOscuro  (light)
-  --qf-green:         #4caf50;  // Colors.Verde         (light)
-  --qf-info:          #17a2b8;  // Colors.Info          (light)
+  --qf-blue:          #0085fa;  // Colors.Azul          (light)
+  --qf-rosa:          #BE185D;  // Colors.Rosa          (light)
+  --qf-purple:        #7E22CE;  // Colors.Purpura       (light)
+  --qf-accent-orange: #ff6d05;  // Colors.NaranjaDetalle (light)
+  --qf-orange-dark:   #af6e0e;  // Colors.NaranjaOscuro  (light)
+  --qf-green:         #45a145;  // Colors.Verde         (light)
+  --qf-info:          #45d0e8;  // Colors.Info          (light)
 }
