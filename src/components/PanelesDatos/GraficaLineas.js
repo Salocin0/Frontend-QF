@@ -5,6 +5,16 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 import useBreakpoint from "../../useBreakpoint";
 
+// Formato fijo DD/MM/YYYY, independiente del locale del navegador
+// (toLocaleDateString() devuelve M/D/YYYY en locales en-US, rompiendo el parseo posterior).
+const formatDiaEvento = (fecha) => {
+  const d = new Date(fecha);
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+};
+
 const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   const [chartData, setChartData] = useState(null);
   const [selectedDay, setSelectedDay] = useState(null);
@@ -45,7 +55,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
         const puestosSet = new Set();
 
         data.data.forEach((item) => {
-          const dia = new Date(item.diaevento).toLocaleDateString();
+          const dia = formatDiaEvento(item.diaevento);
           const puesto = item.nombrepuesto || "Desconocido"; // Nombre del puesto
           puestosSet.add(puesto);
 
