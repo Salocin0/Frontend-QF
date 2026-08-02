@@ -291,11 +291,12 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
             axisLine: { lineStyle: { color: "#ffffff" } },
             splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
           },
-          grid: { bottom: isMobile ? 40 : 100 },
-          legend: { 
-            data: Object.keys(seriesData), 
-            bottom: isMobile ? 0 : "horizontal",
-            orient: isMobile ? "horizontal" : "vertical",
+          grid: { bottom: isMobile ? 70 : 100, top: 60 },
+          legend: {
+            data: Object.keys(seriesData),
+            bottom: 0,
+            left: "center",
+            orient: "horizontal",
             textStyle: { color: "#ffffff" }
           },
           series: Object.keys(seriesData).map((key) => ({
