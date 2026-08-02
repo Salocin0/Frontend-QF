@@ -1,11 +1,14 @@
-﻿import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { FaChevronDown } from "react-icons/fa";
 import EventoEncargado from "../ComponentesEventos/EventoEncargado";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import Footer from "../ComponentesGenerales/Footer";
+import Buscador from "../Filtros y Buscadores/Buscador";
+import Filtros from "../Filtros y Buscadores/Filtros";
 
 const AsociarPuestoAEvento = () => {
   const { puestoId } = useParams();
@@ -13,6 +16,23 @@ const AsociarPuestoAEvento = () => {
   const [eventos, setEventos] = useState([]);
   const [recargar, setRecargar] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterState, setFilterState] = useState("");
+
+  const contentRef = useRef(null);
+  const [contentWidth, setContentWidth] = useState(999);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const isNarrowLayout = contentWidth <= 780;
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => {
+      setContentWidth(entry.contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const recargarComponente = () => {
     setRecargar(+1);
@@ -41,6 +61,31 @@ const AsociarPuestoAEvento = () => {
         .finally(() => setIsLoading(false));
     }
   }, [user, recargar]);
+
+  const normalizarEstadoFiltro = (estado) => {
+    if (!estado) return estado;
+    return estado.startsWith("EnPreparacion") ? "EnPreparacion" : estado;
+  };
+
+  const estadoGroup = {
+    nombre: "estado",
+    opciones: Array.from(
+      new Set(eventos.map((e) => normalizarEstadoFiltro(e.estado)))
+    ).map((estado) => ({
+      valor: estado,
+      etiqueta: estado ? estado.replace(/([A-Z])/g, " $1").trim() : estado,
+    })),
+  };
+
+  const filteredEventos = eventos.filter((evento) => {
+    const matchesSearch = searchTerm
+      ? evento.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
+    const matchesState = filterState
+      ? normalizarEstadoFiltro(evento.estado) === filterState
+      : true;
+    return matchesSearch && matchesState;
+  });
 
   const styles = {
     pagina: {
@@ -97,7 +142,10 @@ const AsociarPuestoAEvento = () => {
 
         <hr style={styles.hrFull} />
 
-        <div className="qf-page-content">
+        <div
+          ref={contentRef}
+          className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`}
+        >
           <div className="qf-page-content__main">
             {/* Breadcrumb a ancho completo */}
             <div style={styles.breadcrumbWrapper}>
@@ -107,13 +155,47 @@ const AsociarPuestoAEvento = () => {
               />
             </div>
 
+            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
+            {isNarrowLayout && (
+              <div className="qf-narrow-filters" style={{ marginBottom: "8px" }}>
+                <div className="qf-search-box" style={{ marginBottom: "8px" }}>
+                  <Buscador
+                    placeholder="Buscar eventos..."
+                    onBuscar={setSearchTerm}
+                    botonBuscar={false}
+                  />
+                </div>
+                <div className="qf-filter-box" style={{ margin: 0 }}>
+                  <div
+                    className="qf-collapsible-header"
+                    onClick={() => setFiltersOpen((prev) => !prev)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
+                  >
+                    <span className="qf-collapsible-title">ESTADOS</span>
+                    <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
+                  </div>
+                  {filtersOpen && (
+                    <div className="qf-collapsible-body">
+                      <Filtros
+                        gruposFiltros={[estadoGroup]}
+                        onFiltrar={(f) => setFilterState(f.estado || "")}
+                        titulo="ESTADOS"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Lista de eventos */}
             <div style={styles.eventsContainer}>
               <div style={styles.eventsList}>
                 {isLoading ? (
                   <LoandingComponent />
-                ) : Array.isArray(eventos) && eventos.length > 0 ? (
-                    eventos.map((evento, index) => (
+                ) : filteredEventos.length > 0 ? (
+                    filteredEventos.map((evento, index) => (
                       <EventoEncargado
                         key={index}
                         evento={evento}
@@ -129,6 +211,26 @@ const AsociarPuestoAEvento = () => {
               </div>
             </div>
           </div>
+
+          {/* Aside: buscador + filtros (solo en layout ancho) */}
+          {!isNarrowLayout && (
+            <aside className="qf-page-content__aside">
+              <div className="qf-search-box">
+                <Buscador
+                  placeholder="Buscar eventos..."
+                  onBuscar={setSearchTerm}
+                  botonBuscar={false}
+                />
+              </div>
+              <div className="qf-filter-box">
+                <Filtros
+                  gruposFiltros={[estadoGroup]}
+                  onFiltrar={(f) => setFilterState(f.estado || "")}
+                  titulo="ESTADOS"
+                />
+              </div>
+            </aside>
+          )}
         </div>
       </div>
       <Footer />
