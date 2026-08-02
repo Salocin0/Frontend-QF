@@ -1,7 +1,6 @@
 ﻿import React, { useEffect, useState, useRef } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
 import { toast } from "react-toastify";
 import PedidoDetalleDialog from './PedidoDetalleDialog';
 import { UserContext } from '../ComponentesGenerales/UserContext';
@@ -302,11 +301,9 @@ const KanbanBoard = ({id}) => {
   );
 
   const SortableItem = ({task}) => {
-    const {attributes, listeners, setNodeRef, transform, transition} = useSortable({id: task.id});
+    const {attributes, listeners, setNodeRef} = useSortable({id: task.id});
     const statusColor = getStatusColor(task.estado);
     const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
       userSelect: 'none',
       touchAction: 'none',
       padding: '8px',
