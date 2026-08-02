@@ -80,7 +80,7 @@ const ListadoPuestosEncargado = () => {
   ];
 
   const asideContent = (
-    <aside className="qf-page-content__aside" style={isVeryNarrow ? { width: "calc(100% - 20px)", margin: "0 20px 10px 20px", minWidth: 0, order: 0 } : undefined}>
+    <aside className="qf-page-content__aside" style={isVeryNarrow ? { width: "100%", margin: "0 0 10px 0", minWidth: 0, order: 0 } : undefined}>
       <div className="qf-search-box">
         <Buscador
           placeholder="Buscar puestos..."
@@ -119,7 +119,7 @@ const ListadoPuestosEncargado = () => {
       <div className="qf-page-content" style={{ padding: isMobile ? "0 12px" : "0 20px", flex: 1, minHeight: 0, flexDirection: isVeryNarrow ? "column" : "row" }}>
         {/* Columna principal: breadcrumb + aside (si es angosto) + listado */}
         <div className="qf-page-content__main">
-          <Breadcrumb items={breadcrumbItems} style={{ width: "calc(100% - 20px)", margin: "0 20px 10px 20px" }} />
+          <Breadcrumb items={breadcrumbItems} style={{ width: "100%", margin: "0 0 10px 0" }} />
           {isVeryNarrow && asideContent}
 
           <div className="qf-scrollable" style={{ paddingBottom: "60px" }}>

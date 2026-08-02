@@ -110,8 +110,6 @@ const ListadoPedidosEncargado = () => {
       minHeight: 0,
       overflow: "hidden", // necesario para que el flex:1 anclado funcione en toda la cadena
       paddingTop: "20px",
-      paddingLeft: "20px",
-      paddingRight: "20px",
     },
     tituloSeccion: {
       textAlign: "center",
