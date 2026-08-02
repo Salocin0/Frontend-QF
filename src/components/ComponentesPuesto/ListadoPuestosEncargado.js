@@ -113,7 +113,7 @@ const ListadoPuestosEncargado = () => {
       <div className="qf-page-header" style={{ textAlign: "center", paddingLeft: 0 }}>
         <h1 className="qf-page-title" style={{ textAlign: "center", paddingBottom: "20px" }}>Puestos</h1>
       </div>
-      <hr className="qf-separator" style={{ margin: "0 0 20px", width: "100vw", marginLeft: "calc(-50vw + 50%)" }} />
+      <hr className="qf-separator" style={{ margin: "0 0 20px", width: "100%" }} />
 
       {/* Contenido en dos columnas */}
       <div className="qf-page-content" style={{ padding: isMobile ? "0 12px" : "0 20px", flex: 1, minHeight: 0, flexDirection: isVeryNarrow ? "column" : "row" }}>

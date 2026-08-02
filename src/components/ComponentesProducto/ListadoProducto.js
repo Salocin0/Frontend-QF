@@ -90,8 +90,7 @@ const ListadoProducto = () => {
           border: "none",
           borderTop: "1px solid var(--qf-naranja)",
           margin: 0,
-          width: "100vw",
-          marginLeft: "calc(-50vw + 50%)",
+          width: "100%",
         }} />
 
         {/* Contenido scrollable con dos columnas */}
