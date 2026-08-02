@@ -92,6 +92,7 @@ const KanbanBoard = ({id}) => {
               total: pedido.total,
               estado: pedido.estado,
               consumerName,
+              detalles: pedido.detalles || [],
             };
           });
 
@@ -202,7 +203,7 @@ const KanbanBoard = ({id}) => {
   };
 
   // Visual card content — reused in SortableItem and DragOverlay
-  const TaskCardContent = ({ task }) => (
+  const TaskCardContent = ({ task, onVerDetalle }) => (
     <>
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }} />
       {(task.consumerName || task.consumidorId) && (
@@ -210,12 +211,43 @@ const KanbanBoard = ({id}) => {
           Consumidor: {task.consumerName || task.consumidorId}
         </div>
       )}
-      <div style={{ marginTop: '4px', marginBottom: '4px', fontSize:'0.9em' }}>
+      <div style={{ marginTop: '4px', marginBottom: '4px', fontSize: '0.9em' }}>
         {formatDate(task.fecha)}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
-        <div style={{ fontWeight: 'bold', fontSize: '1.2em' }}>${Number(task.total).toFixed(2)}</div>
-      </div>
+      {task.detalles && task.detalles.length > 0 && (
+        <ul style={{ margin: '4px 0', paddingLeft: '18px', fontSize: '0.9em' }}>
+          {task.detalles.map((d) => (
+            <li key={d.id}>
+              {d.cantidad}x {d.producto?.nombre || d.productoId}
+            </li>
+          ))}
+        </ul>
+      )}
+      {onVerDetalle && (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto', paddingTop: '8px' }}>
+          <button
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              onVerDetalle();
+            }}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              backgroundColor: 'var(--qf-naranja)',
+              color: 'var(--qf-text-white)',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '0.85em',
+            }}
+          >
+            <FaEye /> Ver detalle
+          </button>
+        </div>
+      )}
     </>
   );
 
@@ -291,7 +323,7 @@ const KanbanBoard = ({id}) => {
     };
     return (
       <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
-        <TaskCardContent task={task} />
+        <TaskCardContent task={task} onVerDetalle={() => setInfoDialog({ open: true, task })} />
       </div>
     );
   };
