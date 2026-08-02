@@ -215,7 +215,7 @@ const KanbanBoard = ({id}) => {
         {formatDate(task.fecha)}
       </div>
       {task.detalles && task.detalles.length > 0 && (
-        <ul style={{ margin: '4px 0', paddingLeft: '18px', fontSize: '0.9em' }}>
+        <ul style={{ margin: '4px 0', paddingLeft: '18px', fontSize: '0.9em', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
           {task.detalles.map((d) => (
             <li key={d.id}>
               {d.cantidad}x {d.producto?.nombre || d.productoId}
@@ -312,6 +312,11 @@ const KanbanBoard = ({id}) => {
       padding: '8px',
       margin: '0 0 8px 0',
       minHeight: '120px',
+      width: '100%',
+      minWidth: 0,
+      boxSizing: 'border-box',
+      overflowWrap: 'break-word',
+      wordBreak: 'break-word',
       backgroundColor: "var(--qf-bg-secondary)",
       color: '#F7B813',
       border: `1px solid ${statusColor}`,
@@ -390,6 +395,9 @@ const KanbanBoard = ({id}) => {
 
   const handleDragEnd = (event) => {
     setActiveTask(null);
+    const currentAllowedColumns = allowedColumns;
+    setAllowedColumns(null);
+
     const {active, over} = event;
     if (!over) return;
 
@@ -408,14 +416,12 @@ const KanbanBoard = ({id}) => {
     if (!destColumnId && data.columns[overId]) destColumnId = overId;
 
     if (!sourceColumnId || !destColumnId) {
-      setAllowedColumns(null);
       return;
     }
 
     // disallow move if destination not permitted
-    if (allowedColumns && !allowedColumns.includes(destColumnId)) {
+    if (currentAllowedColumns && !currentAllowedColumns.includes(destColumnId)) {
       toast.error('Movimiento no permitido en ese estado');
-      setAllowedColumns(null);
       return;
     }
 
@@ -445,24 +451,23 @@ const KanbanBoard = ({id}) => {
     const destTaskIds = Array.from(data.columns[destColumnId].taskIds);
     destTaskIds.push(activeId);
 
-        // immediately update state without confirmation
-        const newState = {
-          ...data,
-          columns: {
-            ...data.columns,
-            [sourceColumnId]: {
-              ...data.columns[sourceColumnId],
-              taskIds: sourceTaskIds,
-            },
-            [destColumnId]: {
-              ...data.columns[destColumnId],
-              taskIds: destTaskIds,
-            },
-          },
-        };
-        setData(newState);
-        updatePedidoState(activeId, destColumnId);
-        setAllowedColumns(null);
+    // immediately update state without confirmation
+    const newState = {
+      ...data,
+      columns: {
+        ...data.columns,
+        [sourceColumnId]: {
+          ...data.columns[sourceColumnId],
+          taskIds: sourceTaskIds,
+        },
+        [destColumnId]: {
+          ...data.columns[destColumnId],
+          taskIds: destTaskIds,
+        },
+      },
+    };
+    setData(newState);
+    updatePedidoState(activeId, destColumnId);
   };
   useEffect(() => {
     if (infoDialog.open && infoDialog.task) {
@@ -495,6 +500,9 @@ const KanbanBoard = ({id}) => {
               margin: '0',
               minHeight: '120px',
               width: isMobile ? '80vw' : '280px',
+              boxSizing: 'border-box',
+              overflowWrap: 'break-word',
+              wordBreak: 'break-word',
               backgroundColor: 'var(--qf-bg-secondary)',
               color: '#F7B813',
               border: `1px solid ${getStatusColor(activeTask.estado)}`,

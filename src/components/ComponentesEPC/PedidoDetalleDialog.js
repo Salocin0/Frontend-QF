@@ -1,4 +1,5 @@
 ﻿import React from 'react';
+import useBreakpoint from "../../useBreakpoint";
 
 const formatStatus = (s) => {
   if (!s) return '';
@@ -6,6 +7,7 @@ const formatStatus = (s) => {
 };
 
 const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
+  const { isMobile } = useBreakpoint();
 
   if (!infoDialog.open) return null;
 
@@ -21,25 +23,31 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
           background: 'rgba(0,0,0,0.5)',
           zIndex: 1099,
         }}
+        onClick={onClose}
       />
       <div
         style={{
           position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%,-50%)',
+          top: isMobile ? 'auto' : '50%',
+          left: isMobile ? 0 : '50%',
+          bottom: isMobile ? 0 : 'auto',
+          transform: isMobile ? 'none' : 'translate(-50%,-50%)',
           background: "var(--qf-bg-main)",
           color: "var(--qf-text-primary)",
           padding: '20px',
           zIndex: 1100,
-          borderRadius: '8px',
-          width: '80%',
-          maxWidth: '600px',
+          borderRadius: isMobile ? '12px 12px 0 0' : '8px',
+          width: isMobile ? '100%' : '80%',
+          maxWidth: isMobile ? '100%' : '600px',
           overflowY: 'auto',
           maxHeight: '80vh',
+          boxSizing: 'border-box',
         }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <h3 style={{ marginTop: 0 }}>Pedido #{infoDialog.task.id.replace('task-', '')}</h3>
+        <h3 style={{ marginTop: 0, textAlign: 'center', color: 'var(--qf-naranja)' }}>
+          Pedido #{infoDialog.task.id.replace('task-', '')}
+        </h3>
 
         {/* datos basicos card */}
         <div
@@ -185,12 +193,23 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
           </div>
         )}
 
-        <button
-          onClick={onClose}
-          style={{ marginTop: '10px', padding: '8px 16px', backgroundColor: "var(--qf-naranja)", border: 'none', cursor: 'pointer', color: "var(--qf-text-white)" }}
-        >
-          Cerrar
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <button
+            onClick={onClose}
+            style={{
+              marginTop: '10px',
+              padding: '8px 16px',
+              backgroundColor: "var(--qf-naranja)",
+              border: 'none',
+              cursor: 'pointer',
+              color: "var(--qf-text-white)",
+              borderRadius: '10px',
+              fontWeight: 'bold',
+            }}
+          >
+            Cerrar
+          </button>
+        </div>
       </div>
     </>
   );
