@@ -152,30 +152,33 @@ const ListadoPedidosEncargado = () => {
           Pedidos {carrito?.nombreCarro}
         </h1>
 
-        {/* HR a ancho completo */}
         <hr style={styles.hrFull} />
 
-        {/* Breadcrumb a ancho completo */}
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%", margin: "8px 0" }}
-          />
-        </div>
+        <div className="qf-page-content" style={{ flex: 1, minHeight: 0 }}>
+          <div className="qf-page-content__main">
+            {/* Breadcrumb a ancho completo */}
+            <div style={styles.breadcrumbWrapper}>
+              <Breadcrumb
+                items={breadcrumbItems}
+                style={{ width: "100%", margin: "8px 0" }}
+              />
+            </div>
 
-        {/* Kanban board */}
-        <div style={styles.boardWrapper}>
-          {Array.isArray(pedidos) && pedidos.length > 0 ? (
-            <KanbanBoard
-              initialData={initialData}
-              onUpdateState={updatePedidoState}
-              id={id}
-            />
-          ) : (
-            <h2 style={{ fontSize: "2rem", color: "var(--qf-naranja)", textAlign: "center" }}>
-              No hay Pedidos hechos.
-            </h2>
-          )}
+            {/* Kanban board */}
+            <div style={styles.boardWrapper}>
+              {Array.isArray(pedidos) && pedidos.length > 0 ? (
+                <KanbanBoard
+                  initialData={initialData}
+                  onUpdateState={updatePedidoState}
+                  id={id}
+                />
+              ) : (
+                <h2 style={{ fontSize: "2rem", color: "var(--qf-naranja)", textAlign: "center" }}>
+                  No hay Pedidos hechos.
+                </h2>
+              )}
+            </div>
+          </div>
         </div>
       </div>
       <Footer />

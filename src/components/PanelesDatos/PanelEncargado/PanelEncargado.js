@@ -275,6 +275,8 @@ const PanelEncargado = () => {
       <div style={styles.pagina}>
         <h1 style={styles.tituloSeccion}>Estadísticas Encargado</h1>
         <hr style={styles.hrFull} />
+        <div className="qf-page-content">
+          <div className="qf-page-content__main">
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
             items={breadcrumbItems}
@@ -320,8 +322,10 @@ const PanelEncargado = () => {
             nombrePuesto={puestoSeleccionado?.nombre || "Todos los puestos"}
           />
         </div>
+          </div>
+        </div>
       </div>
-      <div style={styles.mainContent}>
+      <div style={{ ...styles.mainContent, padding: "0 20px" }}>
         <div ref={dashboardRef} style={styles.graficaContainer}>
           <TotalRecaudadoEvento
             puestoId={puestoSeleccionado?.id}

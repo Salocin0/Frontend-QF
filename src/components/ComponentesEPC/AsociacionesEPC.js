@@ -215,9 +215,10 @@ const AsociacionesEPC = () => {
         {/* Título centrado */}
         <h1 style={styles.tituloSeccion}>Mis Asociaciones</h1>
 
-        {/* HR que ocupa el 100% del viewport */}
         <hr style={styles.hrFull} />
 
+        <div className="qf-page-content">
+          <div className="qf-page-content__main">
         {/* Breadcrumb a ancho completo */}
         <div style={styles.breadcrumbWrapper}>
           <Breadcrumb
@@ -311,6 +312,8 @@ const AsociacionesEPC = () => {
               </div>
             </div>
           )}
+        </div>
+          </div>
         </div>
       </div>
       <ConfirmDialog

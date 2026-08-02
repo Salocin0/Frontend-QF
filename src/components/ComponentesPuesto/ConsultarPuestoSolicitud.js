@@ -58,17 +58,20 @@ const ConsultarPuestoSolicitud = () => {
           Informacion Puesto {carrito?.nombreCarro}
         </h1>
 
-        {/* HR que ocupa el 100% del viewport */}
         <hr style={styles.hrFull} />
 
-        {/* Breadcrumb a ancho completo */}
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb items={breadcrumbItems} style={{ width: "100%", margin: "8px 0" }} />
-        </div>
+        <div className="qf-page-content">
+          <div className="qf-page-content__main">
+            {/* Breadcrumb a ancho completo */}
+            <div style={styles.breadcrumbWrapper}>
+              <Breadcrumb items={breadcrumbItems} style={{ width: "100%", margin: "8px 0" }} />
+            </div>
 
-        {/* Formulario centrado */}
-        <div style={styles.content}>
-          <FormPuestoEditar carrito={carrito} />
+            {/* Formulario centrado */}
+            <div style={styles.content}>
+              <FormPuestoEditar carrito={carrito} />
+            </div>
+          </div>
         </div>
       </div>
       <Footer />

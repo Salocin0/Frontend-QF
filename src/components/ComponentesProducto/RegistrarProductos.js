@@ -186,22 +186,23 @@ const RegistrarProductos = () => {
         {/* Título centrado */}
         <h1 style={styles.tituloSeccion}>Crear Producto Nuevo</h1>
 
-        {/* HR que ocupa el 100% del viewport */}
         <hr style={styles.hrFull} />
 
-        {/* Breadcrumb a ancho completo */}
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%", margin: "8px 0" }}
-          />
-        </div>
+        <div className="qf-page-content">
+          <div className="qf-page-content__main">
+            {/* Breadcrumb a ancho completo */}
+            <div style={styles.breadcrumbWrapper}>
+              <Breadcrumb
+                items={breadcrumbItems}
+                style={{ width: "100%", margin: "8px 0" }}
+              />
+            </div>
 
-        {/* Formulario centrado */}
-        <div style={styles.content}>
-          <div style={styles.cardBody}>
-            <h1 style={styles.formTitle}>Registrar Producto</h1>
-            <form onSubmit={handleSubmit} className="needs-validation">
+            {/* Formulario centrado */}
+            <div style={styles.content}>
+              <div style={styles.cardBody}>
+                <h1 style={styles.formTitle}>Registrar Producto</h1>
+                <form onSubmit={handleSubmit} className="needs-validation">
               <div style={styles.row}>
                 <div className="mb-3" style={{ width: "50%", marginRight: "20px" }}>
                   <label style={styles.formLabel} htmlFor="nombre">
@@ -294,6 +295,8 @@ const RegistrarProductos = () => {
                 </button>
               </div>
             </form>
+              </div>
+            </div>
           </div>
         </div>
       </div>
