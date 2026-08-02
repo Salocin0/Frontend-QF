@@ -311,6 +311,7 @@ const KanbanBoard = ({id}) => {
       minHeight: '120px',
       width: '100%',
       minWidth: 0,
+      flexShrink: 0,
       boxSizing: 'border-box',
       overflowWrap: 'break-word',
       wordBreak: 'break-word',
