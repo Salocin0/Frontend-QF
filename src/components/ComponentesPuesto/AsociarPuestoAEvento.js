@@ -44,7 +44,7 @@ const AsociarPuestoAEvento = () => {
       headers.append("ConsumidorId", user.consumidorId);
 
       setIsLoading(true);
-      const estadosEnPreparacion = ["EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];
+      const estadosEnPreparacion = ["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];
       Promise.all(
         estadosEnPreparacion.map((estado) =>
           fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/${estado}`, {

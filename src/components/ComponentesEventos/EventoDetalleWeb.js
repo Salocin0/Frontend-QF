@@ -172,10 +172,9 @@ const EventoDetalleWeb = () => {
   const doradoBorder = "1px solid var(--qf-naranja)";
 
   const containerStyles = {
-    width: isMobile ? "100%" : "80%",
-    maxWidth: isMobile ? "100%" : "900px",
-    margin: "0 auto",
+    width: "100%",
     padding: "20px",
+    boxSizing: "border-box",
   };
 
   if (loading) {
