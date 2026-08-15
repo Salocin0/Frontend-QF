@@ -94,7 +94,8 @@
       "node_modules/(?!(msw|until-async|@mswjs|whatwg-fetch|abort-controller)/)"
     ],
     "transform": {
-      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+      "^.+\\.(js|jsx|ts|tsx)$": "babel-jest",
+      "^(?!.*\\.(js|jsx|ts|tsx|css|scss|sass|less|json)$)": "<rootDir>/node_modules/react-scripts/config/jest/fileTransform.js"
     }
   },
   "devDependencies": {

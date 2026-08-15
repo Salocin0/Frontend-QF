@@ -229,7 +229,7 @@ const GraficaBarras = ({ eventId }) => {
   } : null;
 
   return (
-    <div className="h-100 w-100" style={{position:"relative", width: "100%"}} data-testid="grafica-wrapper">
+    <div className="h-100 w-100" style={{position:"relative", width: "100%", maxWidth: isMobile ? "100%" : "800px"}} data-testid="grafica-wrapper">
       {option ? (
         <>
           <ReactECharts

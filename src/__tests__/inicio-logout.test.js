@@ -68,9 +68,11 @@ describe('Inicio — logout', () => {
   // ── Logout cleans localStorage.user ──
   test('logout removes user from localStorage', async () => {
     renderInicio({ tipoUsuario: 'consumidor', nombre: 'Test' });
-    // Wait for the useEffect fetch to settle
+    // Wait for the useEffect session fetch to settle (loading spinner gone,
+    // the logout button rendered) — PageLayout mounts immediately regardless
+    // of loading state, so waiting on it doesn't actually wait for the fetch.
     await waitFor(() => {
-      expect(screen.getByTestId('mock-PageLayout')).toBeInTheDocument();
+      expect(screen.getByTestId('action-Cerrar-Sesión')).toBeInTheDocument();
     });
 
     // Before logout, user IS in localStorage
@@ -91,7 +93,7 @@ describe('Inicio — logout', () => {
   test('logout removes sessionId from sessionStorage', async () => {
     renderInicio({ tipoUsuario: 'consumidor', nombre: 'Test' });
     await waitFor(() => {
-      expect(screen.getByTestId('mock-PageLayout')).toBeInTheDocument();
+      expect(screen.getByTestId('action-Cerrar-Sesión')).toBeInTheDocument();
     });
 
     act(() => {
@@ -107,7 +109,7 @@ describe('Inicio — logout', () => {
   test('logout navigates to /login with replace: true', async () => {
     renderInicio({ tipoUsuario: 'consumidor', nombre: 'Test' });
     await waitFor(() => {
-      expect(screen.getByTestId('mock-PageLayout')).toBeInTheDocument();
+      expect(screen.getByTestId('action-Cerrar-Sesión')).toBeInTheDocument();
     });
 
     act(() => {

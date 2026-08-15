@@ -409,6 +409,7 @@ const RegistrarEvento5 = () => {
     actionsCell: {
       display: "flex",
       gap: "8px",
+      justifyContent: "flex-end",
     },
     modalOverlay: {
       position: "fixed",

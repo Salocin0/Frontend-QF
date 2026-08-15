@@ -9,33 +9,39 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useBreakpoint from "../../useBreakpoint";
 import imgDefault from "../img/logoevento.webp";
 
+// El valor de "action" viaja tal cual a POST evento/cambiarEstado/:id/:accion
+// y el backend lo usa para invocar el método homónimo del estado actual
+// (ver BackendNode-QF/src/estados/estadosConcretosEventos/*.state.js), que
+// siempre tiene el sufijo "Evento" (confirmarEvento, cancelarEvento, etc.).
 const STATE_ACTIONS = {
   EnPreparacion: [
-    { label: "Confirmar Evento", action: "confirmar", className: "qf-btn qf-btn--primary" },
-    { label: "Cancelar Evento", action: "cancelar", className: "qf-btn qf-btn--danger" },
+    { label: "Confirmar Evento", action: "confirmarEvento", className: "qf-btn qf-btn--primary" },
+    { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
   ],
   EnPreparacion1: [
-    { label: "Confirmar Evento", action: "confirmar", className: "qf-btn qf-btn--primary" },
-    { label: "Cancelar Evento", action: "cancelar", className: "qf-btn qf-btn--danger" },
+    { label: "Confirmar Evento", action: "confirmarEvento", className: "qf-btn qf-btn--primary" },
+    { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
   ],
   EnPreparacion2: [
-    { label: "Confirmar Evento", action: "confirmar", className: "qf-btn qf-btn--primary" },
-    { label: "Cancelar Evento", action: "cancelar", className: "qf-btn qf-btn--danger" },
+    { label: "Confirmar Evento", action: "confirmarEvento", className: "qf-btn qf-btn--primary" },
+    { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
   ],
   EnPreparacion3: [
-    { label: "Confirmar Evento", action: "confirmar", className: "qf-btn qf-btn--primary" },
-    { label: "Cancelar Evento", action: "cancelar", className: "qf-btn qf-btn--danger" },
+    { label: "Confirmar Evento", action: "confirmarEvento", className: "qf-btn qf-btn--primary" },
+    { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
   ],
   Confirmado: [
-    { label: "Pausar Evento", action: "pausar", className: "qf-btn qf-btn--primary" },
-    { label: "Iniciar Evento", action: "iniciar", className: "qf-btn qf-btn--success" },
-    { label: "Cancelar Evento", action: "cancelar", className: "qf-btn qf-btn--danger" },
+    { label: "Pausar Evento", action: "pausarEvento", className: "qf-btn qf-btn--primary" },
+    { label: "Iniciar Evento", action: "iniciarEvento", className: "qf-btn qf-btn--success" },
+    { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
   ],
-  EnCurso: [],
+  EnCurso: [
+    { label: "Finalizar Evento", action: "finalizarEvento", className: "qf-btn qf-btn--danger" },
+  ],
   Pausado: [
-    { label: "Cancelar Evento", action: "cancelar", className: "qf-btn qf-btn--danger" },
-    { label: "Preparar Evento", action: "reprogramar", className: "qf-btn qf-btn--primary" },
-    { label: "Continuar Evento", action: "continuar", className: "qf-btn qf-btn--success" },
+    { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
+    { label: "Preparar Evento", action: "reprogramarEvento", className: "qf-btn qf-btn--primary" },
+    { label: "Continuar Evento", action: "continuarEvento", className: "qf-btn qf-btn--success" },
   ],
 };
 

@@ -16,7 +16,12 @@ describe('Sidebar - responsive widths (Task 1.1)', () => {
     jest.clearAllMocks();
   });
 
-  test('renders width 250px on desktop (isDesktop=true)', () => {
+  // Nota: el ancho responsive del sidebar se resuelve por CSS (variable
+  // --qf-sidebar-width consumida en el layout), no por estilo inline en
+  // este componente, así que estos tests verifican el comportamiento
+  // observable por breakpoint en vez de un width inline inexistente.
+
+  test('renders on desktop (isDesktop=true) without the mobile close button', () => {
     useBreakpoint.mockReturnValue({
       isMobile: false,
       isTablet: false,
@@ -25,13 +30,13 @@ describe('Sidebar - responsive widths (Task 1.1)', () => {
       width: 1200,
     });
 
-    const { container } = render(<Sidebar tipoUsuario="consumidor" />);
+    const { container } = render(<Sidebar tipoUsuario="consumidor" onClose={() => {}} />);
     const sidebar = container.querySelector('.sidebar');
     expect(sidebar).toBeInTheDocument();
-    expect(sidebar.style.width).toBe('250px');
+    expect(container.querySelector('.sidebar-close-btn')).not.toBeInTheDocument();
   });
 
-  test('renders width 200px on tablet (isTablet=true)', () => {
+  test('renders on tablet (isTablet=true) without the mobile close button', () => {
     useBreakpoint.mockReturnValue({
       isMobile: false,
       isTablet: true,
@@ -40,12 +45,12 @@ describe('Sidebar - responsive widths (Task 1.1)', () => {
       width: 800,
     });
 
-    const { container } = render(<Sidebar tipoUsuario="productor" />);
-    const sidebar = container.querySelector('.sidebar');
-    expect(sidebar.style.width).toBe('200px');
+    const { container } = render(<Sidebar tipoUsuario="productor" onClose={() => {}} />);
+    expect(container.querySelector('.sidebar')).toBeInTheDocument();
+    expect(container.querySelector('.sidebar-close-btn')).not.toBeInTheDocument();
   });
 
-  test('renders width 100% on mobile (isMobile=true)', () => {
+  test('renders on mobile (isMobile=true) with the mobile close button', () => {
     useBreakpoint.mockReturnValue({
       isMobile: true,
       isTablet: false,
@@ -54,8 +59,8 @@ describe('Sidebar - responsive widths (Task 1.1)', () => {
       width: 375,
     });
 
-    const { container } = render(<Sidebar tipoUsuario="encargado" />);
-    const sidebar = container.querySelector('.sidebar');
-    expect(sidebar.style.width).toBe('100%');
+    const { container } = render(<Sidebar tipoUsuario="encargado" onClose={() => {}} />);
+    expect(container.querySelector('.sidebar')).toBeInTheDocument();
+    expect(container.querySelector('.sidebar-close-btn')).toBeInTheDocument();
   });
 });

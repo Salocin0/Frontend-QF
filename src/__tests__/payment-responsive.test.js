@@ -109,9 +109,23 @@ const mockProductos = [
 // Phase 6: Payment Components — Responsive Tests
 // ============================================================
 
+// Tarjeta mide su propio ancho (container query) con ResizeObserver en vez
+// de leer el width de useBreakpoint, así que para simular mobile/desktop
+// hay que controlar el ancho que reporta el contenedor medido.
+const originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+const mockContainerWidth = (width) => {
+  Element.prototype.getBoundingClientRect = jest.fn(() => ({
+    width, height: 0, top: 0, left: 0, right: width, bottom: 0, x: 0, y: 0, toJSON: () => {},
+  }));
+};
+
 describe('Phase 6 — Payment Responsive', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
   });
 
   const mockUser = {
@@ -143,6 +157,7 @@ describe('Phase 6 — Payment Responsive', () => {
         isMobile: true, isTablet: false, isDesktop: false,
         breakpoint: 'xs', width: 375,
       });
+      mockContainerWidth(375);
 
       const { container } = render(
         <RenderizarTarjeta {...defaultProps} />,
@@ -159,6 +174,7 @@ describe('Phase 6 — Payment Responsive', () => {
         isMobile: true, isTablet: false, isDesktop: false,
         breakpoint: 'xs', width: 375,
       });
+      mockContainerWidth(375);
 
       const { container } = render(
         <RenderizarTarjeta {...defaultProps} />,
@@ -175,6 +191,7 @@ describe('Phase 6 — Payment Responsive', () => {
         isMobile: true, isTablet: false, isDesktop: false,
         breakpoint: 'xs', width: 375,
       });
+      mockContainerWidth(375);
 
       const { container } = render(
         <RenderizarTarjeta {...defaultProps} />,
@@ -191,6 +208,7 @@ describe('Phase 6 — Payment Responsive', () => {
         isMobile: false, isTablet: false, isDesktop: true,
         breakpoint: 'xl', width: 1200,
       });
+      mockContainerWidth(1200);
 
       const { container } = render(
         <RenderizarTarjeta {...defaultProps} />,
@@ -206,6 +224,7 @@ describe('Phase 6 — Payment Responsive', () => {
         isMobile: false, isTablet: false, isDesktop: true,
         breakpoint: 'xl', width: 1200,
       });
+      mockContainerWidth(1200);
 
       const { container } = render(
         <RenderizarTarjeta {...defaultProps} />,
@@ -221,6 +240,7 @@ describe('Phase 6 — Payment Responsive', () => {
         isMobile: false, isTablet: false, isDesktop: true,
         breakpoint: 'xl', width: 1200,
       });
+      mockContainerWidth(1200);
 
       render(
         <RenderizarTarjeta {...defaultProps} />,

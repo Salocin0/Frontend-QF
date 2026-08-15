@@ -18,7 +18,10 @@ describe('Adquirir nuevo rol (Puesto de Comida) - integracion', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Adquirir Nuevo Rol - Encargado de Puesto de Comida')).toBeInTheDocument();
+    // El título se muestra partido en dos headings ("Adquirir Nuevo Rol" +
+    // "Encargado de Puesto de Comida"), no como un único string combinado.
+    expect(screen.getByRole('heading', { name: 'Adquirir Nuevo Rol' })).toBeInTheDocument();
+    expect(screen.getByText('Encargado de Puesto de Comida')).toBeInTheDocument();
   });
 
   test('envío exitoso', async () => {
@@ -37,6 +40,7 @@ describe('Adquirir nuevo rol (Puesto de Comida) - integracion', () => {
     fireEvent.change(screen.getByLabelText('CUIT'), { target: { value: '123456789' } });
     fireEvent.click(screen.getByRole('button', { name: 'Solicitar Nuevo Rol - Encargado Puesto de Comida' }));
 
-    await waitFor(() => expect(screen.getByText('Adquirir Nuevo Rol - Encargado de Puesto de Comida')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Adquirir Nuevo Rol' })).toBeInTheDocument());
+    expect(screen.getByText('Encargado de Puesto de Comida')).toBeInTheDocument();
   });
 });

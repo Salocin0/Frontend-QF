@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
+import useBreakpoint from "../../useBreakpoint";
 
 const Preventa = () => {
   const [evento, setEvento] = useState([]);
@@ -15,6 +16,8 @@ const Preventa = () => {
   const { user } = useContext(UserContext);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isMobile, isTablet } = useBreakpoint();
+  const gridTemplateColumns = isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(3, 1fr)";
 
   useEffect(() => {
     if (user) {
@@ -78,8 +81,8 @@ const Preventa = () => {
           data-testid="preventa-cards-grid"
           className="qf-main-content--padded"
           style={{
-            display: "flex",
-            flexDirection: "column",
+            display: "grid",
+            gridTemplateColumns,
             gap: "16px",
             flex: 1,
             minHeight: 0,

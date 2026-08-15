@@ -173,7 +173,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
       </div>
       <div style={styles.cardBody}>
         <div style={styles.infoSection}>
-          <h2 style={styles.title}>{producto?.nombre}</h2>
+          <h2 style={styles.title}>{producto?.nombre?.trim()}</h2>
           <p style={styles.description}>{producto?.descripcion}</p>
           {producto?.aderezos && (
             <p style={styles.aderezos}>Aderezos: {producto.aderezos}</p>

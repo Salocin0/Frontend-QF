@@ -53,6 +53,26 @@ if (typeof global.TransformStream === 'undefined') {
   };
 }
 
+// Polyfill de ResizeObserver (jsdom no lo implementa; varios componentes lo
+// usan para medir su propio ancho y aplicar layout responsive)
+if (typeof global.ResizeObserver === 'undefined') {
+  class _ResizeObserver {
+    constructor(callback) {
+      this.callback = callback;
+    }
+    observe(target) {
+      const rect = target.getBoundingClientRect
+        ? target.getBoundingClientRect()
+        : { width: 0, height: 0 };
+      this.callback([{ target, contentRect: rect }]);
+    }
+    unobserve() {}
+    disconnect() {}
+  }
+  global.ResizeObserver = _ResizeObserver;
+  window.ResizeObserver = _ResizeObserver;
+}
+
 // Try to load real MSW runtime *now* and expose to shims via globals
 try {
   const { createRequire } = require('module');

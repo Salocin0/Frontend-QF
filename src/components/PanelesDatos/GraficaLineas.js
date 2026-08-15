@@ -181,7 +181,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   );
 
   return (
-    <div style={{ position: "relative", height: "100%", width: "100%", minHeight: "400px", overflow: "visible" }} data-testid="grafica-wrapper">
+    <div style={{ position: "relative", height: "100%", width: "100%", maxWidth: isMobile ? "100%" : "800px", minHeight: "400px", overflow: "visible" }} data-testid="grafica-wrapper">
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{

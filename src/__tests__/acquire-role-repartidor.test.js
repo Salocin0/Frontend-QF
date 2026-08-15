@@ -37,6 +37,9 @@ describe('Adquirir nuevo rol (Repartidor) - integracion', () => {
     fireEvent.click(screen.getByLabelText(/Confirmo que tengo/i));
     fireEvent.click(screen.getByTestId('submit-button'));
 
-    await waitFor(() => expect(screen.getByText('Adquirir Nuevo Rol - Repartidor')).toBeInTheDocument());
+    // El título se muestra partido en dos headings ("Adquirir Nuevo Rol" +
+    // "Repartidor"), no como un único string combinado.
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Adquirir Nuevo Rol' })).toBeInTheDocument());
+    expect(screen.getByText('Repartidor')).toBeInTheDocument();
   });
 });

@@ -122,11 +122,13 @@ describe('Main — route protection', () => {
     expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
   });
 
-  // ── Consumidor-exclusive: /pedidos ──
-  test('protected route /pedidos redirects for wrong role (repartidor)', () => {
+  // /pedidos está habilitada para ALL_ROLES en Main.js (todos los tipos de
+  // usuario pueden comprar y ver su historial de pedidos como consumidores),
+  // así que un repartidor también debe poder acceder.
+  test('protected route /pedidos renders for repartidor (shared consumer route)', () => {
     renderRoute('/pedidos', { tipoUsuario: 'repartidor', nombre: 'Test' });
-    expect(screen.getByTestId('mock-navigate')).toHaveAttribute('data-to', '/inicio');
-    expect(screen.queryByTestId('comp-ListadoPedidos')).not.toBeInTheDocument();
+    expect(screen.getByTestId('comp-ListadoPedidos')).toBeInTheDocument();
+    expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
   });
 
   test('protected route /pedidos renders for consumidor', () => {

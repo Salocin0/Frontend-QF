@@ -11,10 +11,14 @@ describe("Pruebas para AdquirirNuevoRolEPC", () => {
       </MemoryRouter>
     );
 
-  const titulo = screen.getByText("Adquirir Nuevo Rol - Encargado de Puesto de Comida");
+  // El título se muestra partido en dos headings ("Adquirir Nuevo Rol" +
+  // "Encargado de Puesto de Comida"), no como un único string combinado.
+  const titulo = screen.getByRole("heading", { name: "Adquirir Nuevo Rol" });
+  const subtitulo = screen.getByText("Encargado de Puesto de Comida");
   const boton = screen.getByText("Solicitar Nuevo Rol - Encargado Puesto de Comida");
 
   expect(titulo).toBeInTheDocument();
+  expect(subtitulo).toBeInTheDocument();
   expect(boton).toBeInTheDocument();
   });
 });

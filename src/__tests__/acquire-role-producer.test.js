@@ -37,6 +37,9 @@ describe('Adquirir nuevo rol (Productor) - integracion', () => {
     fireEvent.change(screen.getByLabelText('CUIT'), { target: { value: '123456789' } });
     fireEvent.click(screen.getByRole('button', { name: 'Solicitar Nuevo Rol - Productor de Eventos' }));
 
-    await waitFor(() => expect(screen.getByText('Adquirir Nuevo Rol - Productor de Eventos')).toBeInTheDocument());
+    // El título se muestra partido en dos headings ("Adquirir Nuevo Rol" +
+    // "Productor de Eventos"), no como un único string combinado.
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Adquirir Nuevo Rol' })).toBeInTheDocument());
+    expect(screen.getByText('Productor de Eventos')).toBeInTheDocument();
   });
 });

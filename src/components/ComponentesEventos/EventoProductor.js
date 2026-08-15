@@ -317,24 +317,24 @@ const EventoProductor = ({ evento, recargarComponente }) => {
     cardTitle: {
       fontSize: isCardNarrow ? "20px" : "24px",
       fontWeight: "bold",
-      textAlign: "center",
+      textAlign: "left",
     },
     cardDescripcion: {
       fontSize: "16px",
       marginBottom: "10px",
       color: "var(--qf-text-primary)",
-      textAlign: "center",
+      textAlign: "left",
     },
     cardText: {
       fontSize: "14px",
       color: "var(--qf-text-primary)",
-      textAlign: "center",
+      textAlign: "left",
     },
     cardDistance: {
       fontSize: "14px",
       fontStyle: "italic",
       color: "var(--qf-text-primary)",
-      textAlign: "center",
+      textAlign: "left",
     },
     cardEstadoProductor: {
       position: isCardNarrow ? "relative" : "absolute",

@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import AsociarRepartidorAEvento from '../components/ComponenteRepartidor/AsociarRepartidorAEvento';
 import { MemoryRouter } from 'react-router-dom';
+import { UserContext } from '../components/ComponentesGenerales/UserContext';
 import { server } from '../mocks';
 import { rest } from 'msw';
 
@@ -20,10 +21,16 @@ describe('Asociar Repartidor (Productor) - integracion', () => {
 
     render(
       <MemoryRouter>
-        <AsociarRepartidorAEvento />
+        <UserContext.Provider value={{ user: { consumidorId: 1, tipoUsuario: 'productor' }, updateUser: jest.fn(), clearUser: jest.fn() }}>
+          <AsociarRepartidorAEvento />
+        </UserContext.Provider>
       </MemoryRouter>
     );
 
-    expect(screen.getByText('No hay eventos activos en este momento.')).toBeInTheDocument();
+    // El listado de eventos se carga async (fetch mockeado por MSW), hay
+    // que esperar a que resuelva antes de que aparezca el estado vacío.
+    await waitFor(() =>
+      expect(screen.getByText('No hay eventos activos en este momento.')).toBeInTheDocument()
+    );
   });
 });

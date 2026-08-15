@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 // Mock useBreakpoint
@@ -232,15 +232,19 @@ describe('Phase 5 — Shared UI Responsive', () => {
       expect(li.style.width).toBe('85%');
     });
 
-    test('renders Mi Perfil text', () => {
+    test('renders Perfil text after opening the dropdown', () => {
       useBreakpoint.mockReturnValue({
         isMobile: false, isTablet: false, isDesktop: true,
         breakpoint: 'xl', width: 1200,
       });
 
-      render(<UserProfile haveRol={false} />, { wrapper });
+      const { container } = render(<UserProfile haveRol={false} />, { wrapper });
 
-      expect(screen.getByText('Mi Perfil')).toBeInTheDocument();
+      // El menú (con "Perfil" y "Cerrar Sesión") se monta vía portal recién
+      // al abrir el dropdown haciendo click en el toggle.
+      fireEvent.click(container.querySelector('#dropdown'));
+
+      expect(screen.getByText('Perfil')).toBeInTheDocument();
       expect(screen.getByText('Cerrar Sesión')).toBeInTheDocument();
     });
   });
@@ -291,7 +295,13 @@ describe('Phase 5 — Shared UI Responsive', () => {
   // ---- 5.4 Preventa ----
 
   describe('5.4 Preventa', () => {
-    test('mobile: option cards grid 1 column', () => {
+    beforeEach(() => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({ ok: true, json: () => Promise.resolve({ data: { id: 1, diaEventos: [] } }) })
+      );
+    });
+
+    test('mobile: option cards grid 1 column', async () => {
       useBreakpoint.mockReturnValue({
         isMobile: true, isTablet: false, isDesktop: false,
         breakpoint: 'xs', width: 375,
@@ -305,12 +315,16 @@ describe('Phase 5 — Shared UI Responsive', () => {
         </MemoryRouter>
       );
 
-      const gridContainer = container.querySelector('[data-testid="preventa-cards-grid"]');
+      const gridContainer = await waitFor(() => {
+        const el = container.querySelector('[data-testid="preventa-cards-grid"]');
+        if (!el) throw new Error('not found');
+        return el;
+      });
       expect(gridContainer).toBeInTheDocument();
       expect(gridContainer.style.gridTemplateColumns).toBe('1fr');
     });
 
-    test('tablet: option cards grid 2 columns', () => {
+    test('tablet: option cards grid 2 columns', async () => {
       useBreakpoint.mockReturnValue({
         isMobile: false, isTablet: true, isDesktop: false,
         breakpoint: 'md', width: 800,
@@ -324,11 +338,15 @@ describe('Phase 5 — Shared UI Responsive', () => {
         </MemoryRouter>
       );
 
-      const gridContainer = container.querySelector('[data-testid="preventa-cards-grid"]');
+      const gridContainer = await waitFor(() => {
+        const el = container.querySelector('[data-testid="preventa-cards-grid"]');
+        if (!el) throw new Error('not found');
+        return el;
+      });
       expect(gridContainer.style.gridTemplateColumns).toBe('repeat(2, 1fr)');
     });
 
-    test('desktop: option cards grid 3 columns', () => {
+    test('desktop: option cards grid 3 columns', async () => {
       useBreakpoint.mockReturnValue({
         isMobile: false, isTablet: false, isDesktop: true,
         breakpoint: 'xl', width: 1200,
@@ -342,7 +360,11 @@ describe('Phase 5 — Shared UI Responsive', () => {
         </MemoryRouter>
       );
 
-      const gridContainer = container.querySelector('[data-testid="preventa-cards-grid"]');
+      const gridContainer = await waitFor(() => {
+        const el = container.querySelector('[data-testid="preventa-cards-grid"]');
+        if (!el) throw new Error('not found');
+        return el;
+      });
       expect(gridContainer.style.gridTemplateColumns).toBe('repeat(3, 1fr)');
     });
   });

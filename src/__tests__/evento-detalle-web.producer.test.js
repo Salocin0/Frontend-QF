@@ -115,7 +115,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     expect(screen.getByText('Una gran feria de comida')).toBeInTheDocument();
     expect(screen.getByText('Confirmado')).toBeInTheDocument();
@@ -131,9 +131,10 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
     expect(screen.getByText('Entrada Norte')).toBeInTheDocument();
     expect(screen.getByText('Entrada Sur')).toBeInTheDocument();
 
-    const mapsLinks = screen.getAllByText('Ver en Google Maps');
-    expect(mapsLinks).toHaveLength(2);
-    expect(mapsLinks[0]).toHaveAttribute('href', expect.stringContaining('maps.google.com'));
+    // El mapa se abre en un modal embebido (iframe de Google Maps), no con
+    // un link externo, así que cada punto tiene su propio botón "Ver Mapa".
+    const mapsButtons = screen.getAllByText('Ver Mapa');
+    expect(mapsButtons).toHaveLength(2);
   });
 
   // ── ED-H1b: State actions for "Confirmado" ──
@@ -144,7 +145,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     expect(screen.getByText('Iniciar Evento')).toBeInTheDocument();
     expect(screen.getByText('Pausar Evento')).toBeInTheDocument();
@@ -159,7 +160,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     expect(screen.getByText('Finalizar Evento')).toBeInTheDocument();
     expect(screen.queryByText('Iniciar Evento')).toBeNull();
@@ -174,7 +175,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     const img = screen.getByAltText('Feria Gastronomica');
     expect(img).toHaveAttribute('src', expect.stringContaining('logoevento.webp'));
@@ -188,7 +189,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     expect(screen.getByText(/registrados para este evento/i)).toBeInTheDocument();
   });
@@ -204,7 +205,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     fireEvent.click(screen.getByText('Iniciar Evento'));
 
@@ -233,7 +234,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     fireEvent.click(screen.getByText('Finalizar Evento'));
 
@@ -257,7 +258,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     fireEvent.click(screen.getByText('Iniciar Evento'));
 
@@ -265,7 +266,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     fireEvent.click(screen.getByText('Cancelar'));
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
     expect(screen.queryByText('Confirmar')).toBeNull();
   });
 
@@ -288,7 +289,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     expect(screen.getByText('Confirmar Evento')).toBeInTheDocument();
     expect(screen.getByText('Cancelar Evento')).toBeInTheDocument();
@@ -304,7 +305,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     renderWithContext(<EventoDetalleWeb />);
 
-    await waitFor(() => expect(screen.getByText('Feria Gastronomica')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     expect(screen.getByText('Cancelar Evento')).toBeInTheDocument();
     expect(screen.getByText('Preparar Evento')).toBeInTheDocument();

@@ -54,6 +54,26 @@ if (typeof global.TransformStream === 'undefined') {
   };
 }
 
+// ResizeObserver (jsdom doesn't implement it; several components use it to
+// measure their own width for responsive layout)
+if (typeof global.ResizeObserver === 'undefined') {
+  class _ResizeObserver {
+    constructor(callback) {
+      this.callback = callback;
+    }
+    observe(target) {
+      const rect = target.getBoundingClientRect
+        ? target.getBoundingClientRect()
+        : { width: 0, height: 0 };
+      this.callback([{ target, contentRect: rect }]);
+    }
+    unobserve() {}
+    disconnect() {}
+  }
+  global.ResizeObserver = _ResizeObserver;
+  window.ResizeObserver = _ResizeObserver;
+}
+
 // WHATWG fetch objects
 if (typeof global.Response === 'undefined' || typeof global.Request === 'undefined' || typeof global.Headers === 'undefined') {
   try {
