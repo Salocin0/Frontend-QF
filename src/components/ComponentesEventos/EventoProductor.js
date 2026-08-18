@@ -312,6 +312,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       justifyContent: "center",
       color: "var(--qf-naranja)",
       width: isCardNarrow ? "100%" : "100%",
+      marginLeft: isCardNarrow ? "0" : "20px",
       marginRight: isCardNarrow ? "0" : "150px",
     },
     cardTitle: {
