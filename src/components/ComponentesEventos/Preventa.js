@@ -16,8 +16,10 @@ const Preventa = () => {
   const { user } = useContext(UserContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isMobile, isTablet } = useBreakpoint();
-  const gridTemplateColumns = isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(3, 1fr)";
+  // Compra Instantánea y Precompra van apiladas en columna siempre: son
+  // solo 2 opciones fijas, no una grilla de items — en fila queda una
+  // tercera columna vacía y descuadrada en desktop/tablet.
+  const gridTemplateColumns = "1fr";
 
   useEffect(() => {
     if (user) {

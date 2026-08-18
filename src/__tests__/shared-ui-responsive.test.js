@@ -324,7 +324,7 @@ describe('Phase 5 — Shared UI Responsive', () => {
       expect(gridContainer.style.gridTemplateColumns).toBe('1fr');
     });
 
-    test('tablet: option cards grid 2 columns', async () => {
+    test('tablet: option cards stay in 1 column', async () => {
       useBreakpoint.mockReturnValue({
         isMobile: false, isTablet: true, isDesktop: false,
         breakpoint: 'md', width: 800,
@@ -343,10 +343,10 @@ describe('Phase 5 — Shared UI Responsive', () => {
         if (!el) throw new Error('not found');
         return el;
       });
-      expect(gridContainer.style.gridTemplateColumns).toBe('repeat(2, 1fr)');
+      expect(gridContainer.style.gridTemplateColumns).toBe('1fr');
     });
 
-    test('desktop: option cards grid 3 columns', async () => {
+    test('desktop: option cards stay in 1 column', async () => {
       useBreakpoint.mockReturnValue({
         isMobile: false, isTablet: false, isDesktop: true,
         breakpoint: 'xl', width: 1200,
@@ -365,7 +365,7 @@ describe('Phase 5 — Shared UI Responsive', () => {
         if (!el) throw new Error('not found');
         return el;
       });
-      expect(gridContainer.style.gridTemplateColumns).toBe('repeat(3, 1fr)');
+      expect(gridContainer.style.gridTemplateColumns).toBe('1fr');
     });
   });
 

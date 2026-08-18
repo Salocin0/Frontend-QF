@@ -100,6 +100,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
       margin: 0,
       color: "var(--qf-text-primary)",
       letterSpacing: "0.3px",
+      textAlign: "left",
     },
     description: {
       fontSize: "13px",
@@ -111,6 +112,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
       WebkitLineClamp: "1",
       WebkitBoxOrient: "vertical",
       overflow: "hidden",
+      textAlign: "left",
     },
     aderezos: {
       fontSize: "12px",
