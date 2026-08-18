@@ -12,6 +12,7 @@ const UserProfile = ({ haveRol }) => {
   const { user, updateUser } = useContext(UserContext);
   const [isHoveredIndex, setIsHoveredIndex] = useState(null);
   const wrapperRef = useRef(null);
+  const menuRef = useRef(null);
   const { isMobile } = useBreakpoint();
 
   const handleLogout = () => {
@@ -64,6 +65,28 @@ const UserProfile = ({ haveRol }) => {
     } else {
       setDropdownPos(null);
     }
+  }, [isOpen]);
+
+  // Cierra al clickear afuera. Antes había un backdrop fullscreen con
+  // onClick para esto: cualquier click (incluso uno que caía sobre el
+  // propio botón que acababa de abrir el menú, o un leve movimiento del
+  // mouse entre mousedown y mouseup) lo cerraba al toque, dando la
+  // sensación de que "se abre y se cierra instantáneamente". Con mousedown
+  // + chequeo de refs se ignoran los clicks sobre el botón (ya los maneja
+  // su propio onClick) y sobre el menú mismo.
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleClickOutside = (event) => {
+      if (
+        wrapperRef.current?.contains(event.target) ||
+        menuRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+      setIsOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
   const styles = {
@@ -194,13 +217,9 @@ const UserProfile = ({ haveRol }) => {
       </div>
       {isOpen && dropdownPos && createPortal(
         <>
-          {/* Backdrop */}
-          <div
-            style={{ position: "fixed", inset: 0, zIndex: 99998 }}
-            onClick={() => setIsOpen(false)}
-          />
           {/* Dropdown */}
           <ul
+            ref={menuRef}
             style={{
               position: "fixed",
               bottom: `${dropdownPos.bottom}px`,
