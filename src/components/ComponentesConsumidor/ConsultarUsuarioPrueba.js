@@ -38,7 +38,6 @@ const ConsultarUsuario = () => {
   const [mostrarBotonHabilitarDeNuevoPE, setMostrarBotonHabilitarDeNuevoPE] =
     useState(false);
   const isCuitValid = (cuitEPC) => {
-    console.log("Entre" + cuitEPC);
     const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
     if (!cuitEPC.trim()) {
       return false;
@@ -240,7 +239,6 @@ const ConsultarUsuario = () => {
 
       if (response1.ok) {
         const data1 = await response1.json();
-        console.log(data1);
         if (
           data1.data.productor?.habilitado === true &&
           (data1.data.productor?.cuit || data1.data.productor?.razonSocial)
@@ -296,6 +294,7 @@ const ConsultarUsuario = () => {
         flex: 1,
         minHeight: 0,
         boxSizing: "border-box",
+        padding: "0 15px",
       }}>
         {/* Header full-width centrado */}
         <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>

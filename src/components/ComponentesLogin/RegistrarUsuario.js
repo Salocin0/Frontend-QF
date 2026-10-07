@@ -146,7 +146,6 @@ const RegistroUsuario = () => {
         return;
       }
 
-      console.log(currentToken);
 
       const usuario = {
         contraseña: password,

@@ -3,6 +3,7 @@ import { Modal, Button } from "react-bootstrap"; // Utilizando Bootstrap para el
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt } from 'react-icons/fa';
 import { toast } from "react-toastify";
+import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
 
 const CardPreCompra = ({ evento }) => {
   const [selectedDay, setSelectedDay] = useState(null); // Día seleccionado
@@ -36,6 +37,10 @@ const CardPreCompra = ({ evento }) => {
 
   // Manejador para el botón "Siguiente" que muestra el modal de advertencia
   const handleNext = () => {
+    if (!selectedDay) {
+      toast.warn("Seleccioná una fecha para continuar con la precompra.");
+      return;
+    }
     setShowModal(true);
   };
 
@@ -167,7 +172,7 @@ const CardPreCompra = ({ evento }) => {
                       ...(selectedDay === dia ? styles.activeDay : {}),
                     }}
                   >
-                    {new Date(dia).toLocaleDateString()}
+                    {formatDateAR(dia)}
                   </div>
                 );
               })}
@@ -175,8 +180,8 @@ const CardPreCompra = ({ evento }) => {
 
           <button
             onClick={handleNext}
-            style={styles.button}
-            disabled={!selectedDay}
+            style={{ ...styles.button, ...(selectedDay ? {} : { opacity: 0.6 }) }}
+            aria-disabled={!selectedDay}
           >
             Siguiente
           </button>
@@ -199,7 +204,7 @@ const CardPreCompra = ({ evento }) => {
         <Modal.Body style={styles.modalBody}>
           <p style={styles.description}>
             ¿Está seguro de que desea continuar con la compra para el día{" "}
-            {new Date(selectedDay).toLocaleDateString()}? Su compra será válida
+            {formatDateAR(selectedDay)}? Su compra será válida
             únicamente para ese día del evento.
           </p>
         </Modal.Body>

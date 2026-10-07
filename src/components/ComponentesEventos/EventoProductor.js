@@ -1,8 +1,9 @@
 import { default as React, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import imgDefault from "../img/logoevento.webp";
+import imgDefault from "../img/QuickFood_LogoYellow.png";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
+import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 const EventoProductor = ({ evento, recargarComponente }) => {
   const navigate = useNavigate();
@@ -32,7 +33,6 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   const [recargar, setRecargar] = useState(0);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
-  console.log(evento);
 
   const handleRecargar = () => {
     setRecargar(recargar + 1);
@@ -114,10 +114,18 @@ const EventoProductor = ({ evento, recargarComponente }) => {
       });
   };
 
+  const futureDateWarning = (isoDate, verb) => {
+    const time = isoDate ? new Date(isoDate).getTime() : NaN;
+    if (Number.isNaN(time) || time <= Date.now()) return "";
+    return ` Atención: la fecha ${verb} del evento es el ${new Date(time).toLocaleDateString("es-AR")} y todavía no llegó.`;
+  };
+
   const iniciarEvento = () => {
     setPendingAction({
       type: 'iniciar',
-      message: '¿Estás seguro de que deseas iniciar este evento?',
+      message:
+        '¿Estás seguro de que deseas iniciar este evento?' +
+        futureDateWarning(evento?.fechaHoraInicio, "de inicio"),
       title: 'Iniciar Evento'
     });
     setConfirmOpen(true);
@@ -141,7 +149,9 @@ const EventoProductor = ({ evento, recargarComponente }) => {
   const finalizarEvento = () => {
     setPendingAction({
       type: 'finalizar',
-      message: '¿Estás seguro de que deseas finalizar este evento? Esta acción no se puede deshacer.',
+      message:
+        '¿Estás seguro de que deseas finalizar este evento? Esta acción no se puede deshacer.' +
+        futureDateWarning(evento?.fechaHoraFin, "de fin"),
       title: 'Finalizar Evento'
     });
     setConfirmOpen(true);
@@ -420,7 +430,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
           <h5 style={styles.cardTitle}>{evento.nombre}</h5>
           <p style={styles.cardDescripcion}>{evento.descripcion}</p>
           <p style={styles.cardText}>
-            {evento.ubicacion} - {evento.localidad}, {evento.provincia}
+            {formatUbicacion(evento)}
           </p>
           <p style={styles.cardDistance}>A 1km de distancia</p>
         </div>

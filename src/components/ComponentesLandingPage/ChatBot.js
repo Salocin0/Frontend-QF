@@ -12,7 +12,6 @@ const Chatbot = () => {
   const { isMobile } = useBreakpoint();
   const { isDark, toggleTheme } = useTheme();
   const [messages, setMessages] = useState([]);
-  console.log(user);
   const styles = {
     global: {
       fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
@@ -376,16 +375,7 @@ const Chatbot = () => {
         </div>
       </div>
       <footer style={styles.footer}>
-        <p style={styles.text}>&copy; 2024 QuickFood. All rights reserved.</p>
-        <p>
-          <a href="www.google.com" target="_blank" style={styles.footerLink}>
-            Privacy Policy
-          </a>{" "}
-          |{" "}
-          <a href="www.google.com" target="_blank" style={styles.footerLink}>
-            Terms of Service
-          </a>
-        </p>
+        <p style={styles.text}>&copy; {new Date().getFullYear()} QuickFood. Todos los derechos reservados.</p>
       </footer>
     </div>
   );

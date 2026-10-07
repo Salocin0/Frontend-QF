@@ -27,9 +27,6 @@ const useLogin = () => {
       tokenWeb:tokenWeb
     };
 
-    console.log(data)
-    console.log("Base backend utilizada:", base);
-    console.log("URL de login:", url);
 
     const options = {
       method: "POST",
@@ -58,7 +55,6 @@ const useLogin = () => {
         return { success: false, error: text };
       }
 
-      console.log('Login response data:', responseData);
 
       if (Number(responseData.code) === 200) {
         sessionStorage.setItem("sessionId", responseData.data.sessionId);

@@ -54,7 +54,8 @@ const ListadoPedidos = () => {
       if (activeTab === "En Preparacion")
         return pedido.estado === "EnPreparacion";
       if (activeTab === "En Camino") return pedido.estado === "EnCamino";
-      if (activeTab === "Entregados") return pedido.estado === "Entregado";
+      if (activeTab === "Entregados")
+        return pedido.estado === "Entregado" || pedido.estado === "Valorado";
       if (activeTab === "Cancelados") return pedido.estado === "Cancelado";
       return pedido.estado.toLowerCase() === activeTab.toLowerCase();
     });

@@ -9,6 +9,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
 import BuscadorProductoConsumidor from "../Filtros y Buscadores/BuscadorProductoConsumidor";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useLocation } from "react-router-dom";
 
@@ -45,12 +46,19 @@ const ListadoProductoUser = () => {
     { title: "Puestos", url: `/listado-puestos/${evento?.id || id}` },
     { title: "Productos", url: `/productos/${puesto?.id}` },
   ];
-  console.log(eventoId);
   if(evento===null){
     evento={id:eventoId}
   }
   
-  console.log(selectedDay);
+
+  // Direct URL access has no event in the navigation state: send the user to pick an event first.
+  useEffect(() => {
+    if (!evento?.id) {
+      toast.info("Elegí un evento y un puesto para ver sus productos.");
+      navigate("/Listado-eventos", { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (user) {

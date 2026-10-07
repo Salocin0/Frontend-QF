@@ -3,13 +3,15 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
+import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import { FaTrash, FaMinus, FaPlus, FaShoppingCart, FaArrowRight, FaCheckCircle } from "react-icons/fa";
+import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
 
 const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
-  console.log(productos);
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [productosLocal, setProductosLocal] = useState(productos);
   const cardRef = useRef(null);
   const [cardWidth, setCardWidth] = useState(0);
@@ -175,18 +177,15 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     recargarComponente();
     
     // Registrar pedido en background SIN bloquear la UI
-    const headers = new Headers();
-    headers.append("consumidorid", user.consumidorId);
+    // Spreading a Headers instance yields {}: use a plain object so the consumer header is really sent.
+    const headers = { consumidorid: String(user.consumidorId) };
 
     const detalles = {
         detalles: productosLocal.map((producto) => ({
             cantidad: producto.cantidad,
             productoId: producto.producto.id,
-            precio: producto.producto.precio,
             aderezos: producto.producto.aderezos,
         })),
-        consumidorId: user.consumidorId,
-        total: calcularTotal(productosLocal)*1.15,
         puestoId: productosLocal[0].producto.puestoId,
         eventoId: productosLocal[0].evento.id,
         precompra: productosLocal[0]?.fecha,
@@ -204,7 +203,6 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
         .then((response) => response.json())
         .then((data) => {
             toast.success("Pedido registrado");
-            console.log("Pedido guardado en servidor:", data);
         })
         .catch((error) => console.error("Error al registrar pedido en servidor:", error));
 };
@@ -234,8 +232,16 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   };
 
   const llevarPuesto = () => {
-    console.log(productosLocal[0].eventoId);
-    navigate(`/productos-puesto/${productosLocal[0].producto.puestoId}`, { state: { eventoid:productosLocal[0].eventoId||1,selectedDay:productosLocal[0]?.fecha } });
+    const item = productosLocal[0];
+    const eventoId = item?.eventoId ?? item?.evento?.id;
+    if (!eventoId) {
+      toast.error("No se pudo determinar el evento de este pedido. Elegí un evento desde el listado.");
+      navigate("/Listado-eventos");
+      return;
+    }
+    navigate(`/productos-puesto/${item.producto.puestoId}`, {
+      state: { eventoid: eventoId, evento: item.evento, selectedDay: item?.fecha },
+    });
   };
 
   const calcularTotal = (productos) => {
@@ -478,7 +484,7 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   const obtenerTextoPreventa = () => {
     const fechaPreventa = productosLocal[0]?.fecha;
     return fechaPreventa
-      ? `Preventa para ${new Date(fechaPreventa).toLocaleDateString("es")}`
+      ? `Preventa para ${formatDateAR(fechaPreventa)}`
       : "Compra inmediata";
   };
 
@@ -592,13 +598,24 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
             </button>
             <button
               style={{ ...styles.button, ...styles.deleteBtn }}
-              onClick={() => eliminarPedido()}
+              onClick={() => setConfirmDeleteOpen(true)}
             >
               <FaTrash /> Eliminar
             </button>
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmDeleteOpen}
+        title="Eliminar pedido"
+        message="¿Querés vaciar este carrito? Se van a quitar todos sus productos."
+        onConfirm={() => {
+          setConfirmDeleteOpen(false);
+          eliminarPedido();
+        }}
+        onCancel={() => setConfirmDeleteOpen(false)}
+      />
 
       <DialogWithPaymentSheet
         isOpen={isOpen}

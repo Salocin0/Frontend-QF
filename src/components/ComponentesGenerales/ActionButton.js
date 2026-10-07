@@ -6,6 +6,9 @@ const ActionButton = ({ title, icon, onClick, style }) => {
   const styles = {
     container: {
       ...style,
+      // Compact padding on small screens; the label may wrap instead of growing the button.
+      minHeight: 0,
+      boxSizing: "border-box",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",

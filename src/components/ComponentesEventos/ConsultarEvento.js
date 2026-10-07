@@ -7,6 +7,7 @@ import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import useBreakpoint from "../../useBreakpoint";
+import { TIPOS_EVENTO, TIPOS_PAGO } from "../../constants/eventos";
 
 const ConsultarEvento = () => {
   const { id } = useParams();
@@ -37,7 +38,7 @@ const ConsultarEvento = () => {
   const [capacidadMaxima, setCapacidadMaxima] = useState("");
   const [tipoPago, setTipoPago] = useState("");
   const [linkVentaEntradas, setLinkVentaEntradas] = useState("");
-  const [evento, setEvento] = useState({});
+  const [, setEvento] = useState({});
 
   const [provincias, setProvincias] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
@@ -104,7 +105,6 @@ const ConsultarEvento = () => {
       restricciones: restriccionesEvento,
       consumidorId: session.consumidorId,
     };
-    console.log(evento);
     // Realizar la solicitud HTTP para enviar los datos al servidor
     fetch(`${process.env?.REACT_APP_BACK_URL}evento/${id}`, {
       method: "PUT",
@@ -116,7 +116,6 @@ const ConsultarEvento = () => {
       .then((response) => response.json())
       .then((data) => {
         // Manejo de la respuesta del servidor
-        console.log(data);
         // Mostrar mensaje de éxito
         toast.success("Cambios guardados correctamente");
         // Desactivar el modo de edición
@@ -153,7 +152,6 @@ const ConsultarEvento = () => {
       })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.data);
         setEvento(data.data);
         setNombre(data.data.nombre);
         setDescripcion(data.data.descripcion);
@@ -212,7 +210,6 @@ const ConsultarEvento = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -453,9 +450,9 @@ const ConsultarEvento = () => {
                     onChange={(e) => setTipoEvento(e.target.value)}
                     disabled={!editMode}
                   >
-                    <option value={1}>Cine</option>
-                    <option value={2}>Festival</option>
-                    <option value={3}>Deporte</option>
+                    {[...(TIPOS_EVENTO.includes(tipoEvento) || !tipoEvento ? [] : [tipoEvento]), ...TIPOS_EVENTO].map((opcion) => (
+                      <option key={opcion} value={opcion}>{opcion}</option>
+                    ))}
                   </select>
                 </div>
 
@@ -540,8 +537,9 @@ const ConsultarEvento = () => {
                     onChange={(e) => setTipoPago(e.target.value)}
                     disabled={!editMode}
                   >
-                    <option value={1}>Pago</option>
-                    <option value={2}>Gratuito</option>
+                    {[...(TIPOS_PAGO.includes(tipoPago) || !tipoPago ? [] : [tipoPago]), ...TIPOS_PAGO].map((opcion) => (
+                      <option key={opcion} value={opcion}>{opcion}</option>
+                    ))}
                   </select>
                 </div>
 

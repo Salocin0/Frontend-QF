@@ -4,13 +4,14 @@ import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
-import imgDefault from "../img/logoevento.webp";
+import imgDefault from "../img/QuickFood_LogoYellow.png";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import Buscador from "../Filtros y Buscadores/Buscador";
 import Filtros from "../Filtros y Buscadores/Filtros";
 import { CircularProgress } from "@mui/material";
+import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 const AsociacionesEPC = () => {
   const { user } = useContext(UserContext);
@@ -62,7 +63,6 @@ const AsociacionesEPC = () => {
         .then((data) => {
           setEventos(data.data.eventos);
           setAsociaciones(data.data.asociaciones);
-          console.log(data.data.asociaciones);
         })
         .catch((error) => console.log("No existen eventos.", error))
         .finally(() => setIsLoading(false));
@@ -425,7 +425,7 @@ const EventoCard = ({ evento, asociacion, onCancelar, formatEstado }) => {
             width: "100%",
             textAlign: "center",
             margin: "0.25rem 0",
-          }}>{evento.ubicacion} - {evento.localidad}, {evento.provincia}</p>
+          }}>{formatUbicacion(evento)}</p>
 
           {/* Botón de cancelar debajo de los datos, centrado */}
           {asociacion.estado === "PendienteDeAceptacion" && (

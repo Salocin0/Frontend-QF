@@ -79,9 +79,15 @@ const PanelProductor = () => {
 
         if (response.ok) {
           const data = await response.json();
-          setEventos([{ nombre: "Todos", id: "Todos" }, ...data?.data] || []);
-          if (data?.data?.length > 0) {
-            setEventoSeleccionado(data.data[0]?.id || "Todos");
+          // Chronological order (soonest start first) instead of database id order.
+          const startOf = (ev) => {
+            const time = new Date(ev?.fechaHoraInicio).getTime();
+            return Number.isNaN(time) ? Number.MAX_SAFE_INTEGER : time;
+          };
+          const lista = Array.isArray(data?.data) ? [...data.data].sort((a, b) => startOf(a) - startOf(b)) : [];
+          setEventos([{ nombre: "Todos", id: "Todos" }, ...lista]);
+          if (lista.length > 0) {
+            setEventoSeleccionado(lista[0]?.id || "Todos");
           } else {
             setEventoSeleccionado("Todos");
           }

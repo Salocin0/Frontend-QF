@@ -102,10 +102,16 @@ const RegistrarEvento4 = () => {
       return;
     }
 
+    const toUtcIso = (value) => {
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? value : date.toISOString();
+    };
+
     const datosHoras = horasPorDia.map((hora) => ({
       dia: hora.dia,
-      horaInicio: hora.horaInicio,
-      horaFin: hora.horaFin,
+      // datetime-local values are wall-clock times in the browser timezone: send them as UTC ISO strings.
+      horaInicio: toUtcIso(hora.horaInicio),
+      horaFin: toUtcIso(hora.horaFin),
       tienePreventa: tienePreventa,
     }));
 

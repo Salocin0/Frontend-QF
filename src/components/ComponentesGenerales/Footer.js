@@ -7,7 +7,7 @@ const Footer = () => {
 
   const styles = {
     footerStyle: {
-      padding: "0.5rem 1rem",
+      padding: isMobile ? "0.25rem 0.5rem" : "0.5rem 1rem",
       backgroundColor: "var(--qf-bg-main)",
       textAlign: "center",
       position: "fixed",
@@ -22,7 +22,7 @@ const Footer = () => {
       margin: "0 auto",
       display: "flex",
       flexDirection: isMobile ? "column" : "row",
-      gap: isMobile ? "0.25rem" : "0",
+      gap: "0",
       justifyContent: "space-between",
       alignItems: "center",
     },
@@ -32,7 +32,7 @@ const Footer = () => {
       flexDirection: isMobile ? "column" : "row",
       justifyContent: isMobile ? "center" : "space-between",
       alignItems: "center",
-      gap: isMobile ? "0.5rem" : "0",
+      gap: isMobile ? "0.1rem" : "0",
     },
     leftSection: {
       display: "flex",
@@ -57,7 +57,7 @@ const Footer = () => {
       fontSize: "1rem",
     },
     textStyle: {
-      fontSize: "0.875rem",
+      fontSize: isMobile ? "0.7rem" : "0.875rem",
       color: "var(--qf-text-primary)",
       margin: 0,
     },
@@ -68,10 +68,10 @@ const Footer = () => {
       <div style={styles.containerStyle}>
         <div style={styles.rowStyle}>
           <div style={styles.leftSection}>
-            <a href="/" style={styles.linkStyle}>
+            <a href="/seleccion-perfil" style={styles.linkStyle}>
               Trabaja con Nosotros
             </a>
-            <a href="/registrarse" style={styles.linkStyle}>
+            <a href="mailto:consultas@QF.com" style={styles.linkStyle}>
               Contacto
             </a>
             <a

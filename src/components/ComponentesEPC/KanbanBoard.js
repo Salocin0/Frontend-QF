@@ -73,7 +73,6 @@ const KanbanBoard = ({id}) => {
         .then((response) => response.json())
         .then((data) => {
           const pedidos = data.data;
-          console.log(id);
           const newTasks = {};
           pedidos.forEach((pedido) => {
             // construct consumer name if available
@@ -473,7 +472,6 @@ const KanbanBoard = ({id}) => {
       fetch(`${process.env.REACT_APP_BACK_URL}pedido/${pedidoId}`)
         .then(res => res.json())
         .then(res => {
-          console.log('pedido detail response', res);
           if (res && res.data) {
             setDetailData(res.data);
           }

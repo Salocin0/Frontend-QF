@@ -58,7 +58,6 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
     setCardError(null);
 
     try {
-      console.log("Iniciando pago con clientSecret:", paymentIntentSecret);
       
       // Usar confirmCardPayment con el client secret
       const { error, paymentIntent: result } = await stripe.confirmCardPayment(paymentIntentSecret, {
@@ -76,7 +75,6 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
         toast.error(`Error en el pago: ${error.message || 'Error desconocido'}`);
         setIsLoading(false);
       } else if (result && (result.status === 'succeeded' || result.status === 'processing')) {
-        console.log("Pago exitoso:", result);
         toast.success("Pago realizado con éxito");
         setIsLoading(false);
         // Cerrar inmediatamente sin retraso
@@ -197,7 +195,7 @@ const PaymentSheet = ({handleCloseCompra,handleClose, paymentIntent, clientSecre
       fontSize: "13px",
     },
     userLabel: {
-      color: "var(--qf-text-primary)" + "88",
+      color: "var(--qf-text-muted)",
       marginBottom: "4px",
     },
     userName: {

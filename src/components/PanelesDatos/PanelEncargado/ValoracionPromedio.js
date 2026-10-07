@@ -75,7 +75,6 @@ const ValoracionPromedio = ({ puestoId = "Todos", eventoId = "Todos" }) => {
 
         const data = await response.json();
         setValoracion(data.data);
-        console.log(data);
       } catch (err) {
         setError(err.message);
       } finally {

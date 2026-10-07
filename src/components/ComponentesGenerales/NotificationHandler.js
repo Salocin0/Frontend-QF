@@ -12,7 +12,6 @@ const NotificationHandler = () => {
       if (!supported) return;
 
       unsubscribe = onMessage(messaging, (message) => {
-        console.log('Mensaje recibido:', message);
 
         const { notification } = message || {};
         if (notification && notification.title && notification.body) {

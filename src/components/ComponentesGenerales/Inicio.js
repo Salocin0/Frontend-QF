@@ -31,7 +31,6 @@ const Inicio = () => {
       const normalizedBase = base.startsWith("http") ? base : `https://${base}`;
       const url = normalizedBase.endsWith("/") ? `${normalizedBase}user/session` : `${normalizedBase}/user/session`;
 
-      console.log('Inicio - session fetch url:', url);
       fetch(url, {
         method: "POST",
         headers: {

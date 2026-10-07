@@ -14,7 +14,6 @@ const EstadisticasTable = ({ id }) => {
         );
         const result = await response.json();
         if (result.status === 'success') {
-          console.log(result.data);
           setData(result.data);
         } else {
           throw new Error(result.msg || 'Error fetching data');

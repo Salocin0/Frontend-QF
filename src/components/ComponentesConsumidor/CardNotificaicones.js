@@ -15,7 +15,6 @@ const CardNotificaciones = ({ notificacion, recargarComponente }) => {
       );
 
       if (response.ok) {
-        console.log("Notificación marcada como leída.");
         recargarComponente();
       } else {
         console.error("Error al marcar la notificación como leída.");

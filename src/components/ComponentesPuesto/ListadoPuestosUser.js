@@ -57,13 +57,17 @@ const ListadoPuestosUser = () => {
 
     Promise.all([fetchPuestos, fetchEvento])
       .then(([puestosData, eventoData]) => {
-        setCarritos(puestosData.data);
-        setFilteredCarritos(puestosData.data);
-        setEvento(eventoData.data);
+        // The backend may answer with an error payload ({}), so always keep an array.
+        const puestos = Array.isArray(puestosData?.data) ? puestosData.data : [];
+        setCarritos(puestos);
+        setFilteredCarritos(puestos);
+        setEvento(eventoData?.data || {});
         setLoanding(true);
       })
       .catch((error) => {
-        console.log("Error al cargar datos.", error);
+        console.error("Error al cargar datos.", error);
+        setCarritos([]);
+        setFilteredCarritos([]);
         setLoanding(true);
       });
   }, [user, idEvento]);
@@ -82,7 +86,6 @@ const ListadoPuestosUser = () => {
       if (tiempo > 0) {
         filtered = filtered.filter((carrito) => carrito.tiempo || 30 <= tiempo);
       }
-      console.log(filtered);
       // Filtrar por nombre
       if (nombre.trim() !== "") {
         const lowerCaseNombre = nombre.toLowerCase();
@@ -92,7 +95,6 @@ const ListadoPuestosUser = () => {
             carrito.tipoNegocio?.toLowerCase().includes(lowerCaseNombre)
         );
       }
-      console.log(filtered);
       setFilteredCarritos(filtered);
     };
 
@@ -128,7 +130,7 @@ const ListadoPuestosUser = () => {
         {/* Header */}
         <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
           <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
-            {`Puestos de ${evento.nombre}` || "Puestos"}
+            {evento?.nombre ? `Puestos de ${evento.nombre}` : "Puestos"}
           </h1>
           <hr className="qf-separator qf-separator--spaced" />
         </div>

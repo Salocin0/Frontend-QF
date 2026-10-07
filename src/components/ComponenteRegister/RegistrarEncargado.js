@@ -182,7 +182,6 @@ const RegistroEncargado = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.code === 200) {
           toast.success("Usuario registrado correctamente");
           setTimeout(() => {

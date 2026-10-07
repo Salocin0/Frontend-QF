@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import ProcesoRegistro from "../ComponenteRegister/ProcesoRegistro/ProcesoRegistro";
 import RegistroEncargado from "../ComponenteRegister/RegistrarEncargado";
@@ -56,28 +56,6 @@ import Inicio from "./Inicio";
 import Sidebar from "./Sidebar";
 import Preventa from "../ComponentesEventos/Preventa";
 
-console.log("Main.js - Router Diagnostic:", { Routes, Route });
-
-// Diagnostic log to find the undefined component causing the crash
-console.log("Main.js - Checking imports for undefined values:");
-const importsToCheck = {
-  ProcesoRegistro, RegistroEncargado, RegistroProductor, RegistroRepartidor, SeleccionRegister,
-  AdquirirNuevoRolR, AsociarRepartidorAEvento, FormDinamicoRestricciones, AsociacionesR,
-  Carrito, ConsultarUsuarioPrueba, Notificaciones, AdquirirNuevoRolEPC, AsociacionesEPC,
-  ConsultarEvento, EventoPrueba, ListadoEventosUsers, ListadoEventosProductor, RegistrarEvento,
-  RegistrarEvento2, RegistrarEvento3, RegistrarEvento4, VerSolicitudesEvento, LandingPage,
-  RegistrarEvento5,
-  CambiarContraseña, HabilitarUsuario, Login, RecuperarContraseña, ValidarEmail, ValidarUsuario,
-  ListadoPedidos, ListadoPedidosEncargado, ListadoPedidosRepartidor, ConsultarProducto,
-  ListadoProducto, ListadoProductoDeshabilitado, ListadoProductoUser, RegistrarProductos,
-  AdquirirNuevoRolPE, AsociarPuestoAEvento, ConsultarPuesto, ConsultarPuestoSolicitud,
-  CrearNuevoPuesto, ListadoPuestosEncargado, ListadoPuestosUser, ListadoPuestosDeshabilitados,
-  PanelEncargado, PanelProductor, DocumentUpload, Inicio, Sidebar, Preventa, EventoDetalleWeb
-};
-Object.entries(importsToCheck).forEach(([name, val]) => {
-  if (typeof val === "undefined") console.error(`CRITICAL: Import ${name} is undefined in Main.js`);
-});
-
 const SafeRoute = ({ component: Component, name }) => {
   if (typeof Component === 'function') {
     return <Component />;
@@ -106,6 +84,10 @@ const Main = () => {
         <Route path="/ser-repartidor" element={<SafeRoute component={RegistroRepartidor} name="RegistroRepartidor" />} />
         <Route path="/ser-productor" element={<SafeRoute component={RegistroProductor} name="RegistroProductor" />} />
         <Route path="/ser-encargado" element={<SafeRoute component={RegistroEncargado} name="RegistroEncargado" />} />
+        {/* Legacy / guessable URLs that used to render an empty page */}
+        <Route path="/registrarse" element={<Navigate to="/seleccion-perfil" replace />} />
+        <Route path="/recuperar-contrasena" element={<Navigate to="/recuperar" replace />} />
+        <Route path="/olvide-contrasena" element={<Navigate to="/recuperar" replace />} />
         <Route path="/subir-archivo" element={<SafeRoute component={DocumentUpload} name="DocumentUpload" />} />
 
         {/* ─── Todos autenticados ─── */}
@@ -158,6 +140,7 @@ const Main = () => {
         <Route path="/pedidos-Encargado/:id" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoPedidosEncargado} name="ListadoPedidosEncargado" /></PrivateRoute>} />
         <Route path="/grafica-encargado" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={PanelEncargado} name="PanelEncargado" /></PrivateRoute>} />
         <Route path="/puestos-deshabilitados" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoPuestosDeshabilitados} name="ListadoPuestosDeshabilitados" /></PrivateRoute>} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </main>
   );

@@ -24,7 +24,6 @@ const Puesto = ({ carrito,recargar }) => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }

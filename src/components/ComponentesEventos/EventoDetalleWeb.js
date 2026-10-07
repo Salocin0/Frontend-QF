@@ -7,7 +7,8 @@ import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useBreakpoint from "../../useBreakpoint";
-import imgDefault from "../img/logoevento.webp";
+import imgDefault from "../img/QuickFood_LogoYellow.png";
+import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 // El valor de "action" viaja tal cual a POST evento/cambiarEstado/:id/:accion
 // y el backend lo usa para invocar el método homónimo del estado actual
@@ -306,7 +307,7 @@ const EventoDetalleWeb = () => {
               <div>
                 <strong style={{ color: "var(--qf-text-primary)" }}>Ubicación:</strong>{" "}
                 <span style={{ color: "var(--qf-text-muted)" }}>
-                  {evento.ubicacion}, {evento.localidad}, {evento.provincia}
+                  {formatUbicacion(evento)}
                 </span>
               </div>
               <div>

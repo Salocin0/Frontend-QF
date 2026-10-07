@@ -37,7 +37,6 @@ const ListadoEventosProductor = () => {
   }, []);
 
   const recargarComponente = () => {
-    console.log("Recargando componente");
     setTimeout(() => {
       setRecargar(recargar + 1);
     }, 100);
@@ -51,7 +50,6 @@ const ListadoEventosProductor = () => {
 
   useEffect(() => {
     if (user) {
-      console.log("llega a pedir");
       const headers = new Headers();
       headers.append("ConsumidorId", user.consumidorId);
 

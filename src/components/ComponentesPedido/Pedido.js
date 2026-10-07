@@ -2,8 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import Footer from "../ComponentesGenerales/Footer";
 import { toast } from "react-toastify";
 import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay, FaHourglassStart, FaCheckCircle, FaTruck, FaBox, FaBan, FaKey } from "react-icons/fa";
+import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
 
 const Pedido = ({ pedido,recargar }) => {
+  // The order total includes the service fee, which is not part of the product rows.
+  const subtotalProductos = (pedido?.detalles || []).reduce(
+    (acc, detalle) => acc + Number(detalle.cantidad) * Number(detalle.producto?.precio || 0),
+    0
+  );
+  const comisionServicio = Number(pedido?.total || 0) - subtotalProductos;
   const cardRef = useRef(null);
   const [cardWidth, setCardWidth] = useState(0);
   const isNarrow = cardWidth > 0 && cardWidth < 370;
@@ -68,9 +75,8 @@ const Pedido = ({ pedido,recargar }) => {
   };
 
   const handleSolicitar = () => {
-    console.log(pedido)
     if(new Date(pedido.fechaPreCompra)>Date.now()){
-      toast.error(`Pedido Programado para ${new Date(pedido.fechaPreCompra).toLocaleDateString("es")}. no se puede solicitar`)
+      toast.error(`Pedido Programado para ${formatDateAR(pedido.fechaPreCompra)}. no se puede solicitar`)
     }else{
       toast.success("Pedido Solicitado")
       // optimistic transition to aceptado
@@ -92,7 +98,6 @@ const Pedido = ({ pedido,recargar }) => {
       });
 
       if (!response.ok) {
-        console.log(response);
         setEstadoLocal(pedido.estado); // revert if server fail
       }
       setModalValoracionVisible(false);
@@ -144,7 +149,6 @@ const Pedido = ({ pedido,recargar }) => {
       opinion: valoracion.opinion,
     };
 
-    console.log(body);
 
     try {
       const response = await fetch(url, {
@@ -591,7 +595,7 @@ const Pedido = ({ pedido,recargar }) => {
                 style={{ ...styles.dialogButton, ...styles.cancelButton }}
                 onClick={() => setModalCancelarVisible(false)}
               >
-                Cancelar
+                Volver
               </button>
               <button
                 style={{ ...styles.dialogButton, ...styles.confirmButton }}
@@ -793,6 +797,12 @@ const Pedido = ({ pedido,recargar }) => {
 
             {/* Total */}
             <div style={styles.totalContainer}>
+              {comisionServicio > 0.005 && (
+                <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", fontSize: "14px"}}>
+                  <span>Subtotal productos: ${subtotalProductos.toFixed(2)}</span>
+                  <span>Comisión de servicio: ${comisionServicio.toFixed(2)}</span>
+                </div>
+              )}
               <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <span style={{fontSize: "18px", fontWeight: "bold"}}>Total a Pagar:</span>
                 <span style={{fontSize: "28px", fontWeight: "bold"}}>

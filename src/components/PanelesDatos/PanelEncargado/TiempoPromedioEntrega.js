@@ -70,7 +70,6 @@ const TiempoPromedioEntrega = ({ puestoId = "Todos", eventoId = "Todos" }) => {
         }
 
         const data = await response.json();
-        console.log(data);
         setTiempoPromedio(data.data || 0); // Ajusta según el formato de la respuesta del backend
       } catch (error) {
         console.error("Error al obtener el tiempo promedio de entrega", error);

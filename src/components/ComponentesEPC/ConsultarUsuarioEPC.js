@@ -36,14 +36,12 @@ const ConsultarUsuarioEPC = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
   }, []);
 
   const isCuitValid = (cuit) => {
-    console.log("Entre");
     const regexCuit = /^(20|23|27|30|33)([0-9]{9}|-[0-9]{8}-[0-9]{1})$/g;
     if (!cuit.trim()) {
       return false;
@@ -96,7 +94,6 @@ const ConsultarUsuarioEPC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
         if (data.code === 200) {
           setApellido(user.apellido);
           setNombre(user.nombre);
@@ -125,7 +122,6 @@ const ConsultarUsuarioEPC = () => {
   const handleSaveChanges = (e) => {
     e.preventDefault();
 
-     console.log("aca");
 
       if (!isCuitValid(cuit)) {
         toast.error("El CUIT no es válido o está vacío.");
@@ -180,7 +176,6 @@ const ConsultarUsuarioEPC = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data)
         if (data.code === 200) {
           toast.success('Datos cargados correctamente');
         } else if (data.codigo === 400) {

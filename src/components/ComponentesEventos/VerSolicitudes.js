@@ -67,7 +67,6 @@ const VerSolicitudesEvento = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.data);
         setAsociaciones(data.data);
       })
       .catch((error) => {
@@ -87,7 +86,6 @@ const VerSolicitudesEvento = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data.data);
         setEventos(data.data);
       })
       .catch((error) => {

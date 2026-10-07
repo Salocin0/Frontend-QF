@@ -30,7 +30,6 @@ const DialogWithPaymentSheet = ({
         setError(null);
         
         if (!paymentSheetData) {
-          console.log("Fetching payment sheet data for amount:", amountToPay);
           const response = await fetch(
             `${process.env.REACT_APP_BACK_URL}payment-sheet`,
             {
@@ -47,7 +46,6 @@ const DialogWithPaymentSheet = ({
           }
 
           const data = await response.json();
-          console.log("Payment sheet data received:", data);
           
           if (!data.clientSecret) {
             throw new Error("clientSecret no recibido del servidor");

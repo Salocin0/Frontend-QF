@@ -60,6 +60,12 @@ const CrearNuevoPuesto = () => {
       return;
     }
 
+    // Native "required" bubbles are disabled (noValidate) so every message is shown in Spanish.
+    if (!logoBase64 || !bannerBase64) {
+      toast.error("Debe adjuntar el logo y el banner");
+      return;
+    }
+
     fetch(`${process.env?.REACT_APP_BACK_URL}puesto`, {
       method: "POST",
       headers: {
@@ -209,7 +215,7 @@ const CrearNuevoPuesto = () => {
             <div style={styles.content}>
               <div style={styles.cardBody}>
                 <h1 style={styles.formTitle}>Registrar Carro de Comida</h1>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} noValidate>
               {/* Fila 1: N° Carro, Nombre, Teléfono */}
               <div style={styles.row}>
                 <div className="mb-3" style={{ width: col3, marginRight: isMobile ? "0" : "10px" }}>
