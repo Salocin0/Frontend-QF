@@ -45,12 +45,9 @@ const AdquirirNuevoRolPE = () => {
 
       if (response.ok) {
         toast.success("Actualizado a productor de eventos");
-        const data = await response.json();
-        console.log(data);
         navigate(`/login`);
       } else {
         toast.error("Error al actualizar a productor de eventos");
-        console.log(response.json());
       }
     } catch (error) {
       console.error(error);

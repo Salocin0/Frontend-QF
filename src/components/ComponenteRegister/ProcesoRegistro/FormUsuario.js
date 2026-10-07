@@ -154,7 +154,7 @@ const FormUsuario = ({ nextStep, backStep, tipoUsuario, handleRegistro }) => {
         <div style={styles.cardHeader}>
           <h2 style={styles.title}>Crear Cuenta - Paso 1</h2>
         </div>
-        <form onSubmit={handleSubmit} style={styles.form}>
+        <form onSubmit={handleSubmit} style={styles.form} noValidate>
           <div style={styles.formGroup}>
             <label htmlFor="username" style={styles.label}>Nombre de usuario</label>
             <input

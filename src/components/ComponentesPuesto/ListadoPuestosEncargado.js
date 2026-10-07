@@ -24,7 +24,6 @@ const ListadoPuestosEncargado = () => {
   const navigate = useNavigate();
 
   const recargarComponente = () => {
-    console.log("Recargando componente");
     setTimeout(() => {
       setRecargar(recargar + 1);
     }, 100);

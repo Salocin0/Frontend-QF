@@ -102,7 +102,7 @@ describe('Phase 7 — Charts Responsive', () => {
   // ---- 7.2 GraficaLineas ----
 
   describe('7.2 GraficaLineas', () => {
-    test('mobile: wrapper maxWidth 100%', async () => {
+    test('mobile: wrapper fills the card (no maxWidth cap)', async () => {
       global.fetch = jest.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve({ data: [{ diaevento: '2026-05-27', nombrepuesto: 'Puesto 1', totalrecaudado: '1000' }] }) }));
       useBreakpoint.mockReturnValue({
         isMobile: true, isTablet: false, isDesktop: false,
@@ -116,10 +116,10 @@ describe('Phase 7 — Charts Responsive', () => {
         return el;
       }, { timeout: 5000, interval: 100 });
       expect(wrapper).toBeInTheDocument();
-      expect(wrapper.style.maxWidth).toBe('100%');
+      expect(wrapper.style.maxWidth).toBe('');
     });
 
-    test('desktop: wrapper maxWidth 800px', async () => {
+    test('desktop: wrapper fills the card (no 800px cap)', async () => {
       global.fetch = jest.fn(() => Promise.resolve({ ok: true, json: () => Promise.resolve({ data: [{ diaevento: '2026-05-27', nombrepuesto: 'Puesto 1', totalrecaudado: '1000' }] }) }));
       useBreakpoint.mockReturnValue({
         isMobile: false, isTablet: false, isDesktop: true,
@@ -132,7 +132,7 @@ describe('Phase 7 — Charts Responsive', () => {
         if (!el) throw new Error('not found');
         return el;
       }, { timeout: 5000, interval: 100 });
-      expect(wrapper.style.maxWidth).toBe('800px');
+      expect(wrapper.style.maxWidth).toBe('');
     });
   });
 

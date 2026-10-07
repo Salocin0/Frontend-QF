@@ -13,9 +13,6 @@ const Login = () => {
   const { isMobile } = useBreakpoint();
 
   // Debug: verificar que las importaciones existen
-  console.log('Debug imports - PasswordToggle:', PasswordToggle);
-  console.log('Debug imports - Footer:', Footer);
-  console.log('Debug imports - fetchToken:', fetchToken);
 
   const activarMensajes = async () => {
     try {
@@ -25,10 +22,8 @@ const Login = () => {
         if (token) {
           setTokenWeb(token);
         } else {
-          console.log('No se pudo obtener el token.');
         }
       } else {
-        console.log('Permiso de notificación denegado.');
       }
     } catch (error) {
       console.log("Error al activar mensajes:", error);

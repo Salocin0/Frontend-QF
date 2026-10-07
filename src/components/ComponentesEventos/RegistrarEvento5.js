@@ -21,7 +21,11 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
+const DEFAULT_MAP_CENTER = [-34.603722, -58.381592];
+
 const toNumber = (value) => {
+  // Number("") is 0: treat empty values as missing so the map is not centered on (0, 0).
+  if (String(value ?? "").trim() === "") return null;
   const parsed = Number(String(value ?? "").replace(",", "."));
   return Number.isFinite(parsed) ? parsed : null;
 };
@@ -66,6 +70,7 @@ const RegistrarEvento5 = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [eventoCenter, setEventoCenter] = useState(null);
   const [isFinishing, setIsFinishing] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
 
@@ -127,6 +132,21 @@ const RegistrarEvento5 = () => {
     }
   };
 
+  // Center the map on the event location by default.
+  useEffect(() => {
+    if (!effectiveEventoId) return;
+    fetch(`${process.env?.REACT_APP_BACK_URL}evento/${effectiveEventoId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const lat = toNumber(data?.data?.latitud);
+        const lng = toNumber(data?.data?.longitud);
+        if (lat !== null && lng !== null) setEventoCenter([lat, lng]);
+      })
+      .catch(() => {
+        // Keep the default center when the event cannot be loaded.
+      });
+  }, [effectiveEventoId]);
+
   useEffect(() => {
     fetchPuntos();
     return () => {
@@ -135,21 +155,13 @@ const RegistrarEvento5 = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [effectiveEventoId]);
 
-  const generateCode = (length = 6) => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    let result = "";
-    for (let i = 0; i < length; i += 1) {
-      result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-  };
-
   const openModal = (type, punto = null) => {
     setModalType(type);
     setSelectedPunto(punto);
 
     if (type === "create") {
-      setNombre(generateCode(6));
+      // Readable default name (editable); replaced by the address when picking a point on the map.
+      setNombre(`Punto de encuentro ${puntos.length + 1}`);
       setUbicacion("");
       setLatitud("");
       setLongitud("");
@@ -528,7 +540,7 @@ const RegistrarEvento5 = () => {
   const mapCenter =
     latitudParsed !== null && longitudParsed !== null
       ? [latitudParsed, longitudParsed]
-      : [-34.603722, -58.381592];
+      : eventoCenter || DEFAULT_MAP_CENTER;
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>

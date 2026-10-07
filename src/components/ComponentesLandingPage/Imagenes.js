@@ -47,7 +47,7 @@ const Imagenes = () => {
   return (
     <div style={styles.container}>
       <div style={styles.titleContainer}>
-        <h2>Próximos Eventos</h2>
+        <h2 style={{ color: "var(--qf-text-primary)" }}>Próximos Eventos</h2>
       </div>
       <div style={styles.contentRow}>
         <div style={styles.colLg8}>

@@ -25,7 +25,6 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
         );
 
         const data = await response.json();
-        console.log(data);
         setTotalRecaudado(data.data);
       } catch (error) {
         console.error("Error al obtener el total recaudado", error);
@@ -38,7 +37,6 @@ const TotalRecaudadoEvento = ({ puestoId = "Todos", eventoId = "Todos" }) => {
     if (puestoId || eventoId) {
       fetchData();
     }
-    console.log(puestoId, eventoId);
   }, [puestoId, eventoId, user?.consumidorId]);
 
   const styles = {

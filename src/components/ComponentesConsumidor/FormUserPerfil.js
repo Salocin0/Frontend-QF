@@ -3,6 +3,12 @@ import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+// The georef API may answer with an error object instead of a list: never assume an array.
+export const sortByName = (items) =>
+  Array.isArray(items)
+    ? [...items].sort((a, b) => String(a?.nombre ?? "").localeCompare(String(b?.nombre ?? ""), "es"))
+    : [];
+
 const UserProfileForm = ({
   mostrarBotonHabilitarDeNuevoR,
   handleVolverAHabilitarR,
@@ -99,7 +105,9 @@ const UserProfileForm = ({
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
       .then((response) => response.json())
       .then((data) => {
-        setProvincias(data.provincias);
+        setProvincias(
+          sortByName(data?.provincias)
+        );
       })
       .catch((error) => {
         console.error(error);
@@ -116,11 +124,9 @@ const UserProfileForm = ({
       )
         .then((response) => response.json())
         .then((data) => {
-          const sortedLocalidades = data.municipios.sort((a, b) =>
-            a.nombre.localeCompare(b.nombre)
-          );
+          const sortedLocalidades = sortByName(data?.municipios);
           setLocalidadPrueba(sortedLocalidades);
-          setFilteredLocalidades(data.municipios);
+          setFilteredLocalidades(sortedLocalidades);
         })
         .catch((error) => {
           console.error(error);
@@ -148,11 +154,17 @@ const UserProfileForm = ({
       return;
     }
 
+    // The input shows dd/mm/yyyy but the backend parses non-ISO dates as mm/dd/yyyy.
+    const fechaMatch = fechaNacimiento.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    const fechaISO = fechaMatch
+      ? `${fechaMatch[3]}-${fechaMatch[2].padStart(2, "0")}-${fechaMatch[1].padStart(2, "0")}`
+      : fechaNacimiento;
+
     const datosActualizados = {
       nombre,
       apellido,
       dni,
-      fechaNacimiento,
+      fechaNacimiento: fechaISO,
       provincia,
       localidad,
       telefono,
@@ -188,7 +200,6 @@ const UserProfileForm = ({
 
   const handleEliminarCuenta = async () => {
     try {
-      console.log(user);
       const response = await fetch(
         `${process.env?.REACT_APP_BACK_URL}user/${user.id}`,
         {
@@ -230,7 +241,7 @@ const UserProfileForm = ({
 
         const fechaNacimientoEspañol = new Date(
           data1.data.fechaNacimiento
-        ).toLocaleDateString("es-ES");
+        ).toLocaleDateString("es-ES", { timeZone: "UTC" });
         setFechaNacimiento(fechaNacimientoEspañol);
 
         setLocalidad(data1.data.localidad);

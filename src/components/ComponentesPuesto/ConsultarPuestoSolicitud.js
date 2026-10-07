@@ -47,7 +47,7 @@ const ConsultarPuestoSolicitud = () => {
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Puestos", url: "/listado-puestos-encargado" },
-    { title: "Informacion de mi puesto", url: `info-puesto/${carrito.id}` },
+    { title: "Información de mi puesto", url: `info-puesto/${carrito.id}` },
   ];
 
   return (
@@ -55,7 +55,7 @@ const ConsultarPuestoSolicitud = () => {
       <div style={styles.pagina}>
         {/* Título centrado */}
         <h1 style={styles.tituloSeccion}>
-          Informacion Puesto {carrito?.nombreCarro}
+          Información del puesto {carrito?.nombreCarro}
         </h1>
 
         <hr style={styles.hrFull} />

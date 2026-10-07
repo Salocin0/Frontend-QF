@@ -6,6 +6,7 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import "./../sass/main.scss";
 import useBreakpoint from "../../useBreakpoint";
+import { TIPOS_EVENTO, TIPOS_PAGO } from "../../constants/eventos";
 
 const RegistrarEvento = () => {
   const { isMobile } = useBreakpoint();
@@ -66,7 +67,6 @@ const RegistrarEvento = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -222,7 +222,6 @@ const RegistrarEvento = () => {
       return;
     }
 
-    console.log(evento);
     const headers = new Headers();
     headers.append("ConsumidorId", session.consumidorId);
     headers.append("Content-Type", "application/json");
@@ -480,9 +479,9 @@ const RegistrarEvento = () => {
                                     <option value="" disabled selected>
                                 Selecciona un Tipo
                               </option>
-                          <option value={1}>Cine</option>
-                          <option value={2}>Festival</option>
-                          <option value={3}>Deporte</option>
+                          {TIPOS_EVENTO.map((opcion) => (
+                            <option key={opcion} value={opcion}>{opcion}</option>
+                          ))}
                         </select>
                       </div>
 
@@ -564,8 +563,9 @@ const RegistrarEvento = () => {
                                                               <option value="" disabled selected>
                                 Selecciona un Tipo de Pago
                               </option>
-                          <option value={1}>Pago</option>
-                          <option value={2}>Gratuito</option>
+                          {TIPOS_PAGO.map((opcion) => (
+                            <option key={opcion} value={opcion}>{opcion}</option>
+                          ))}
                         </select>
                       </div>
 

@@ -28,7 +28,6 @@ const TopProductos = ({ puestoId = "Todos", eventoId = "Todos" }) => {
         );
 
         const data = await response.json();
-        console.log(data);
         if (data.status === "success") {
           setProductos(data.data);
         } else {

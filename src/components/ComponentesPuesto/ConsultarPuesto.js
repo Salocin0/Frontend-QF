@@ -76,7 +76,6 @@ const ConsultarPuesto = () => {
       .then((response) => response.json())
       .then((data) => {
         // Manejo de la respuesta del servidor
-        console.log(data);
         // Mostrar mensaje de éxito
         toast.success("Cambios guardados correctamente");
         // Desactivar el modo de edición
@@ -138,7 +137,6 @@ const ConsultarPuesto = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }

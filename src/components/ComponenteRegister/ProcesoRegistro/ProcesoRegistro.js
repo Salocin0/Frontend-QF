@@ -98,8 +98,6 @@ const ProcesoRegistro = () => {
           condicionIva: productorData.ivaCondicion,
         },
       };
-      console.log(JSON.stringify(datosRegistro));
-      console.log(datosRegistro.tokenWeb);
 
       fetch(`${process.env.REACT_APP_BACK_URL}user/`, {
         method: "POST",

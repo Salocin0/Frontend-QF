@@ -72,6 +72,11 @@ const RegistrarProductos = () => {
       return;
     }
 
+    if (!(Number(producto.precio) >= 0)) {
+      toast.error("El precio debe ser mayor o igual a 0");
+      return;
+    }
+
     fetch(`${process.env?.REACT_APP_BACK_URL}producto`, {
       method: "POST",
       headers: {

@@ -156,7 +156,7 @@ const GraficaBarras = ({ eventId }) => {
     },
     backgroundColor: bgSecondary,
     title: {
-      text: "Recaudacion por Puesto y Dia",
+      text: "Recaudación por Puesto y Día",
       subtext: "Total Recaudado por cada Puesto en cada Dia",
       top: "3%",
       left: "center",

@@ -19,7 +19,8 @@ const FloatingButton = () => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      color: "var(--qf-blanco-puro)",
+      // Dark text on the gold background (white on gold is only 2.45:1).
+      color: "#1a1a1a",
     },
     buttonText: {
       flex: 1,

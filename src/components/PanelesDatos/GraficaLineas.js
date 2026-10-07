@@ -26,7 +26,6 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   const [puestos, setPuestos] = useState([]); // Guardar puestos en estadon
   const { isMobile } = useBreakpoint();
   useEffect(() => {
-    console.log("Evento seleccionado:", eventId, "Puesto seleccionado:", puestoId);
 
     const fetchData = async () => {
       setLoading(true);
@@ -42,7 +41,6 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
         }
 
         const data = await response.json();
-        console.log("Datos obtenidos:", eventId, puestoId, data);
 
         if (!data.data || data.data.length === 0) {
           toast.error("No hay Pedidos en este evento para mostrar");
@@ -145,6 +143,8 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
         orient: "horizontal",
         textStyle: { color: "#ffffff" }
       },
+      // Room for title + legend above the plot and for the labels of the tallest bar.
+      grid: { top: isMobile ? 110 : 90, left: 16, right: 24, bottom: 16, containLabel: true },
       xAxis: { 
         type: "category", 
         data: categorias,
@@ -153,6 +153,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
       },
       yAxis: { 
         type: "value",
+        max: (value) => Math.ceil((value.max || 0) * 1.2),
         axisLabel: {
           color: "#ffffff",
           formatter: (value) => `$${Math.round(value).toLocaleString("es-AR")}`,
@@ -181,7 +182,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   );
 
   return (
-    <div style={{ position: "relative", height: "100%", width: "100%", maxWidth: isMobile ? "100%" : "800px", minHeight: "400px", overflow: "visible" }} data-testid="grafica-wrapper">
+    <div style={{ position: "relative", height: "100%", width: "100%", minHeight: "400px", overflow: "visible" }} data-testid="grafica-wrapper">
       <button
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{

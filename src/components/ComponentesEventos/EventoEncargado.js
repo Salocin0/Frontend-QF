@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
-import imgDefault from "../img/logoevento.webp";
+import imgDefault from "../img/QuickFood_LogoYellow.png";
+import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 const ESTADOS_ASOCIABLES = ["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];
 
@@ -31,7 +32,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
 
   const formatEstado = (str) => {
     if (!str) return "";
-    return str.replace(/([A-Z])/g, " $1").trim();
+    return str.replace(/\d+$/, "").replace(/([A-Z])/g, " $1").trim();
   };
 
   useEffect(() => {
@@ -45,8 +46,6 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
     headers.append("ConsumidorId", user?.consumidorId);
     headers.append("Content-Type", "application/json");
 
-    console.log(evento.id);
-    console.log(puestoId);
 
     fetch(
       `${process.env?.REACT_APP_BACK_URL}asociacion/evento/${evento.id}/asociarSimple/${puestoId}/0`,
@@ -97,8 +96,6 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
   };
 
   const handleCrearForm = () => {
-    console.log("Entre a CrearForm");
-    console.log(evento.id);
     const url = `/restriccionesEvento/${evento.id}`;
     navigate(url);
   };
@@ -116,11 +113,9 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
             headers: headers,
           }
         );
-        console.log(response.status);
         if (response.status === 400) {
           setTieneAsociacionPendiente(true);
         } else if (response.status === 200) {
-          console.log("Sin asociaciones");
         }
       } catch (error) {
         console.error(error);
@@ -235,7 +230,7 @@ const EventoEncargado = ({ evento, puestoId, recargar }) => {
               <h5 style={styles.cardTitle}>{evento.nombre}</h5>
               <p style={styles.cardDescripcion}>{evento.descripcion}</p>
               <p style={styles.cardText}>
-                {evento.ubicacion} - {evento.localidad}, {evento.provincia}
+                {formatUbicacion(evento)}
               </p>
 
               {!tieneAsociacionPendiente && isEnPreparacion && (

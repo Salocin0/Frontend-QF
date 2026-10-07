@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { FaStore, FaCalendarAlt, FaUser, FaMapMarkedAlt, FaInfoCircle, FaCheckCircle, FaHourglassStart, FaTruck, FaBox, FaBan } from "react-icons/fa";
 
 const PedidoRepartidor = ({ pedido, recargar }) => {
-  console.log(pedido);
   const [modalentregarvisible, setModalEntregarVisible] = useState(false);
   const [modalDetalleVisible, setModalDetalleVisible] = useState(false);
   const [modalMapaVisible, setModalMapaVisible] = useState(false);
@@ -47,7 +46,6 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
 
   const pedidoEntregado = () => {
     if (codigo === pedido.codigoEntrega) {
-      console.log("entregado",pedido.codigoEntrega);
       fetch(
         `${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${pedido.id}/pedidoEntregado`,
         {
@@ -56,7 +54,6 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           toast.success("pedido Entregado");
           recargar();
           setModalEntregarVisible(false);
@@ -66,7 +63,7 @@ const PedidoRepartidor = ({ pedido, recargar }) => {
           setEstadoLocal(pedido.estado);
         });
     } else {
-      toast.error("codigo incorrecto");
+      toast.error("Código incorrecto");
     }
   };
 

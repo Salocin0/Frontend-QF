@@ -10,7 +10,6 @@ const Contacto = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Formulario enviado:", nombre, correo, mensaje);
   };
 
   return (

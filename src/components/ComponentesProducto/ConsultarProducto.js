@@ -35,13 +35,14 @@ const ConsultarProducto = () => {
       estado,
     };
 
-    if (
-      !nombre.trim() ||
-      !descripcion.trim() ||
-      !aderezos.trim() ||
-      !precio.toString().trim()
-    ) {
-      toast.error("Todos los campos son obligatorios");
+    if (!nombre.trim() || !descripcion.trim() || !precio.toString().trim()) {
+      toast.error("Nombre, descripción y precio son obligatorios");
+      return;
+    }
+
+    const precioNumerico = Number(precio);
+    if (!Number.isFinite(precioNumerico) || precioNumerico < 0) {
+      toast.error("El precio debe ser un número mayor o igual a 0");
       return;
     }
 
@@ -50,13 +51,18 @@ const ConsultarProducto = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ producto: productoguardar }),
     })
-      .then((response) => response.json())
+      .then((response) =>
+        response.json().then((data) => {
+          if (!response.ok) throw new Error(data?.msg || "Error al guardar los cambios");
+          return data;
+        })
+      )
       .then(() => {
         toast.success("Cambios guardados correctamente");
         navigate(`/listado-productos/${producto?.puestoId}`);
         setEditMode(false);
       })
-      .catch(() => toast.error("Error al guardar los cambios"));
+      .catch((error) => toast.error(error?.message || "Error al guardar los cambios"));
   };
 
   useEffect(() => {
@@ -66,7 +72,7 @@ const ConsultarProducto = () => {
         setProducto(data.data);
         setNombre(data.data.nombre);
         setDescripcion(data.data.descripcion);
-        setAderezos(data.data.aderezos);
+        setAderezos(data.data.aderezos ?? "");
         setPrecio(data.data.precio);
         setEstado(data.data.estado);
       })
@@ -169,6 +175,11 @@ const ConsultarProducto = () => {
       <div style={styles.pagina}>
         {/* Título centrado */}
         <h1 style={styles.tituloSeccion}>Actualizar Producto</h1>
+        {editMode && (
+          <p style={{ textAlign: "center", color: "var(--qf-text-muted)", margin: 0 }}>
+            Modo edición: modificá los datos y presioná "Guardar Cambios".
+          </p>
+        )}
 
         <hr style={styles.hrFull} />
 
@@ -201,6 +212,8 @@ const ConsultarProducto = () => {
                 <label style={styles.label}>Precio</label>
                 <input
                   type="number"
+                  min="0"
+                  step="any"
                   value={precio}
                   onChange={(e) => setPrecio(e.target.value)}
                   disabled={!editMode}

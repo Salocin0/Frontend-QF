@@ -34,7 +34,7 @@ const AsociarRepartidorAEvento = () => {
   }, []);
 
   const recargarComponente = () => {
-    setRecargar(+1);
+    setRecargar((valor) => valor + 1);
   };
 
   useEffect(() => {
@@ -72,7 +72,8 @@ const AsociarRepartidorAEvento = () => {
       new Set(eventos.map((e) => normalizarEstadoFiltro(e.estado)))
     ).map((estado) => ({
       valor: estado,
-      etiqueta: estado ? estado.replace(/([A-Z])/g, " $1").trim() : estado,
+      // "EnPreparacion" -> "En Preparacion" (the numeric suffix of sub-states must never reach the label).
+      etiqueta: estado ? estado.replace(/\d+$/, "").replace(/([A-Z])/g, " $1").trim() : estado,
     })),
   };
 

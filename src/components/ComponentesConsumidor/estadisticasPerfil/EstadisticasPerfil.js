@@ -2,36 +2,67 @@ import { useEffect, useContext, useState } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import CardGenericaEstadistica from "./CardGenericaEstadistica";
 
+const formatMoney = (value) => `$ ${Math.round(Number(value) || 0).toLocaleString("es-AR")}`;
+
+// Metrics shown per role; consumer metrics only make sense for the consumidor role.
+export const buildMetrics = (tipoUsuario, data) => {
+  const d = data && typeof data === "object" && !Array.isArray(data) ? data : {};
+  switch (tipoUsuario) {
+    case "productor":
+      return [
+        { titulo: "Eventos Creados", valor: d.total_eventos ?? 0 },
+        { titulo: "Total Generado", valor: formatMoney(d.total_recaudado) },
+      ];
+    case "repartidor":
+      return [
+        { titulo: "Eventos Trabajados", valor: d.eventos_participados ?? 0 },
+        { titulo: "Pedidos Entregados", valor: d.pedidos_entregados ?? 0 },
+      ];
+    case "encargado":
+      return [{ titulo: "Total Recaudado", valor: formatMoney(d.total_recaudado) }];
+    default:
+      return [
+        { titulo: "Total Gastado", valor: formatMoney(d.total_gastado) },
+        { titulo: "Pedidos Realizados", valor: d.total_pedidos ?? 0 },
+        { titulo: "Eventos Participados", valor: d.total_eventos ?? 0 },
+      ];
+  }
+};
+
 const EstadisticasPerfil = () => {
   const { user } = useContext(UserContext);
-  const [estadisticasConsumidor, setEstadisticasConsumidor] = useState(null);
-  const [estadisticasRepartidor, setEstadisticasRepartidor] = useState(null);
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchEstadisticas = async () => {
+    const base = process.env?.REACT_APP_BACK_URL;
+    const request = () => {
+      switch (user.tipoUsuario) {
+        case "productor":
+          return fetch(`${base}estadisticas/productor/${user.consumidorId}`);
+        case "repartidor":
+          return fetch(`${base}estadisticas/repartidor/${user.consumidorId}`);
+        case "encargado":
+          return fetch(`${base}estadisticas/total-recaudado-puesto-evento/${user.consumidorId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idPuesto: "Todos", idEvento: "Todos" }),
+          }).then(async (res) => {
+            if (!res.ok) return res;
+            const json = await res.json();
+            return { ok: true, json: async () => ({ data: { total_recaudado: json.data } }) };
+          });
+        default:
+          return fetch(`${base}estadisticas/consumidor/${user.consumidorId}`);
+      }
+    };
+
+    const load = async () => {
       try {
-        let dataRepartidor = null;
-        let dataConsumidor = null;
-
-        if (user.tipoUsuario === "repartidor") {
-          const responseRepartidor = await fetch(
-            `${process.env?.REACT_APP_BACK_URL}estadisticas/repartidor/${user.consumidorId}`
-          );
-          if (!responseRepartidor.ok)
-            throw new Error("Error en la API de repartidor");
-          dataRepartidor = await responseRepartidor.json();
-        }
-
-        const responseConsumidor = await fetch(
-          `${process.env?.REACT_APP_BACK_URL}estadisticas/consumidor/${user.consumidorId}`
-        );
-        if (!responseConsumidor.ok)
-          throw new Error("Error en la API de consumidor");
-        dataConsumidor = await responseConsumidor.json();
-
-        setEstadisticasRepartidor(dataRepartidor?.data || null);
-        setEstadisticasConsumidor(dataConsumidor?.data || null);
+        const response = await request();
+        if (!response.ok) throw new Error("Error en la API de estadísticas");
+        const json = await response.json();
+        setData(json?.data || null);
       } catch (error) {
         console.error("Error al obtener estadísticas:", error);
       } finally {
@@ -39,7 +70,7 @@ const EstadisticasPerfil = () => {
       }
     };
 
-    if (user) fetchEstadisticas();
+    if (user) load();
   }, [user]);
 
   if (isLoading) return <p>Cargando estadísticas...</p>;
@@ -53,30 +84,9 @@ const EstadisticasPerfil = () => {
         justifyContent: "space-between",
       }}
     >
-      {user.tipoUsuario === "repartidor" && (
-        <CardGenericaEstadistica
-          titulo={"Eventos Trabajados"}
-          valor={estadisticasRepartidor.eventos_participados}
-        />
-      )}
-      {user.tipoUsuario === "repartidor" && (
-        <CardGenericaEstadistica
-          titulo={"Pedidos Entregados"}
-          valor={estadisticasRepartidor.pedidos_entregados}
-        />
-      )}
-      <CardGenericaEstadistica
-        titulo={"Total Gastado"}
-        valor={estadisticasConsumidor.total_gastado}
-      />
-      <CardGenericaEstadistica
-        titulo={"Pedidos Realizados"}
-        valor={estadisticasConsumidor.total_pedidos}
-      />
-      <CardGenericaEstadistica
-        titulo={"Eventos Participados"}
-        valor={estadisticasConsumidor.total_eventos}
-      />
+      {buildMetrics(user?.tipoUsuario, data).map((metric) => (
+        <CardGenericaEstadistica key={metric.titulo} titulo={metric.titulo} valor={metric.valor} />
+      ))}
     </div>
   );
 };

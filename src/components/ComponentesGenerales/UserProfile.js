@@ -20,7 +20,6 @@ const UserProfile = ({ haveRol }) => {
       const base = process.env?.REACT_APP_BACK_URL || "";
       const normalizedBase = base.startsWith("http") ? base : `https://${base}`;
       const url = normalizedBase.endsWith("/") ? `${normalizedBase}user/cerrarWeb` : `${normalizedBase}/user/cerrarWeb`;
-      console.log('UserProfile - logout url:', url);
 
       fetch(url, {
         method: "POST",

@@ -183,3 +183,9 @@
     height: 300px;
     overflow: hidden;
   }
+// Carousel controls: keep the arrows (and their hidden labels) readable on the dark background.
+.carousel-container .carousel-control-prev,
+.carousel-container .carousel-control-next {
+  color: var(--qf-text-primary);
+  opacity: 0.9;
+}

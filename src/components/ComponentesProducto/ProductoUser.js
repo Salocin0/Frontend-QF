@@ -19,6 +19,10 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
   }, []);
 
   const handleAddtocart = () => {
+    if (!evento?.id) {
+      toast.error("No se pudo determinar el evento. Volvé al listado de eventos e intentá de nuevo.");
+      return;
+    }
     const headers = new Headers();
     headers.append("ConsumidorId", user.consumidorId);
     headers.append("Content-Type", "application/json");
@@ -28,7 +32,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
       {
         method: "PUT",
         headers: headers,
-        body: JSON.stringify({ fecha: selectedDay,eventoId:evento.id }),
+        body: JSON.stringify({ fecha: selectedDay,eventoId: evento.id }),
       }
     )
       .then((response) => {

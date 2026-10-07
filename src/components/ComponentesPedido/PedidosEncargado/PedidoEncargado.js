@@ -1,15 +1,11 @@
-import { format } from "date-fns";
 import { default as React, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import FiltersEventosConsumidor from "../../Filtros y Buscadores/filtersEventosConsumidor";
 import "./../../sass/main.scss";
 import { FaClipboardCheck, FaInfoCircle, FaTimesCircle } from "react-icons/fa";
 
 const PedidoEncargado = ({ pedido, recargar }) => {
-  const { id } = useParams();
-  const [session, setSession] = useState(null);
-  const navigate = useNavigate();
+  const [, setSession] = useState(null);
 
   useEffect(() => {
     const sessionId = localStorage.getItem("sessionId");
@@ -29,7 +25,6 @@ const PedidoEncargado = ({ pedido, recargar }) => {
       .then((response) => response.json())
       .then((data) => {
         setSession(data.data);
-        console.log(data.data.tipoUsuario);
       })
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
@@ -54,7 +49,6 @@ const PedidoEncargado = ({ pedido, recargar }) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         toast.success("pedido aceptado");
         recargar();
       })
@@ -67,7 +61,6 @@ const PedidoEncargado = ({ pedido, recargar }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         toast.success("pedido en preparacion");
         recargar();
       })
@@ -80,7 +73,6 @@ const PedidoEncargado = ({ pedido, recargar }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         toast.success("pedido cancelado");
         recargar();
       })
@@ -96,7 +88,6 @@ const PedidoEncargado = ({ pedido, recargar }) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         toast.success("pedido listo");
         recargar();
       })
@@ -109,7 +100,6 @@ const PedidoEncargado = ({ pedido, recargar }) => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         toast.success("pedido en camino");
         recargar();
       })

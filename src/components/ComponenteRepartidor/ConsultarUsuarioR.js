@@ -36,7 +36,6 @@ const ConsultarUsuarioR = () => {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -78,7 +77,6 @@ const ConsultarUsuarioR = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         if (data.code === 200) {
           setApellido(user.apellido);
           setNombre(user.nombre);
@@ -149,7 +147,6 @@ const ConsultarUsuarioR = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         if (data.code === 200) {
           toast.success("Datos cargados correctamente");
         } else if (data.codigo === 400) {

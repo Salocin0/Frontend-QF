@@ -161,7 +161,6 @@ const EncargadoPuesto = ({
       cuitEPC,
       condicionEPC,
     };
-    console.log(datosActualizados);
     try {
       const response = await fetch(
         `${process.env?.REACT_APP_BACK_URL}encargado/${user.consumidorId}`,

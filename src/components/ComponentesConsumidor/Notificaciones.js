@@ -32,7 +32,6 @@ const Notificaciones = () => {
         );
         const responseJson = await response.json();
         setNotificaciones(responseJson.notificaciones);
-        console.log(responseJson);
       } catch (error) {
         console.error("Error fetching notificaciones:", error);
       } finally {

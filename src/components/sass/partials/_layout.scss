@@ -753,13 +753,21 @@
   flex: 1;
 }
 
-// En mobile: apilar verticalmente los botones
+// En mobile: botones compactos, dos por fila, sin ocupar media pantalla
 @media screen and (max-width: 767px) {
   .qf-dashboard-actions {
-    flex-direction: column;
+    gap: 8px;
   }
   .qf-dashboard-actions > * {
-    flex: none;
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+  }
+  .qf-dashboard-actions h2 {
+    font-size: 0.95rem !important;
+    margin: 0;
+  }
+  .qf-dashboard-actions span {
+    margin-right: 8px !important;
   }
 }
 

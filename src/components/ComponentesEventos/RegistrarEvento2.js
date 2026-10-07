@@ -1,6 +1,6 @@
 ﻿/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
@@ -10,6 +10,9 @@ import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
 import useBreakpoint from "../../useBreakpoint";
+import { TIPOS_EVENTO, TIPOS_PAGO } from "../../constants/eventos";
+
+const DRAFT_ESTADOS = ["EnPreparacion1", "EnPreparacion2", "EnPreparacion3"];
 
 const RegistrarEvento2 = () => {
   const { isMobile } = useBreakpoint();
@@ -35,6 +38,13 @@ const RegistrarEvento2 = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  // Saved draft awaiting the user decision (continue it or start a new event).
+  const [pendingDraft, setPendingDraft] = useState(null);
+  // False while a stored draft id is still being verified: saving is blocked until it resolves.
+  const [draftCheckDone, setDraftCheckDone] = useState(
+    () => !localStorage.getItem(EVENTO_CREACION_ID_KEY)
+  );
   const geocodeDebounceRef = useRef(null);
 
   const fetchNominatim = async (query, limit = 5) => {
@@ -95,6 +105,16 @@ const RegistrarEvento2 = () => {
 
     if (isSubmitting) return;
 
+    if (!draftCheckDone) {
+      toast.info("Estamos verificando si tenés un borrador guardado. Probá de nuevo en unos segundos.");
+      return;
+    }
+
+    if (pendingDraft) {
+      toast.info("Elegí si querés continuar con el borrador o empezar un evento nuevo.");
+      return;
+    }
+
     // Validaciones
     if (!nombre.trim()) {
       toast.error("El nombre no puede estar vacío");
@@ -135,20 +155,19 @@ const RegistrarEvento2 = () => {
       let lat = result?.geometry?.lat ?? null;
       let lng = result?.geometry?.lng ?? null;
 
-      // Si Nominatim no encontró coordenadas, intentar con geolocalización del navegador
+      // No coordinates from the autocomplete: one bounded geocoding attempt. The browser geolocation
+      // fallback was removed: it blocked the save for up to 5 s (permission prompt) and stored the
+      // user's position instead of the event's.
       if (lat === null || lng === null) {
         try {
-          const pos = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, {
-              enableHighAccuracy: true,
-              timeout: 5000,
-            });
-          });
-          lat = String(pos.coords.latitude);
-          lng = String(pos.coords.longitude);
+          const [first] = await Promise.race([
+            fetchNominatim(ubicacion, 1),
+            new Promise((resolve) => setTimeout(() => resolve([]), 3000)),
+          ]);
+          lat = first?.geometry?.lat ?? null;
+          lng = first?.geometry?.lng ?? null;
         } catch {
-          // No se pudo obtener ubicación, sigue con null
-          console.warn("No se pudo obtener ubicación del navegador");
+          console.warn("No se pudo geocodificar la ubicación del evento");
         }
       }
 
@@ -244,6 +263,7 @@ const RegistrarEvento2 = () => {
     setLocalidad(e.target.value);
   };
 
+  // The selected option label (text) is what gets stored, never the numeric option code.
   const handleOptionClickEvento = (value) => {
     setSelectedOptionEvento(value);
     setTipoEvento(value);
@@ -301,9 +321,40 @@ const RegistrarEvento2 = () => {
     navigate("/listado-eventos-productor");
   };
 
+  const applyDraft = (ev) => {
+    setNombre(ev.nombre || "");
+    setDescripcion(ev.descripcion || "");
+    setUbicacion(ev.ubicacion || "");
+    setLocalidad(ev.localidad || "");
+    setProvincia(ev.provincia || "");
+    setTipoEvento(ev.tipoEvento || "");
+    setTipoPago(ev.tipoPago || "");
+    setSelectedOptionEvento(ev.tipoEvento || null);
+    setSelectedOptionPago(ev.tipoPago || null);
+    setImagenEvento(ev.img || null);
+    setCroquis(ev.croquis || null);
+  };
+
+  const handleContinueDraft = () => {
+    if (pendingDraft) applyDraft(pendingDraft);
+    setPendingDraft(null);
+  };
+
+  const handleDiscardDraft = () => {
+    localStorage.removeItem(EVENTO_CREACION_ID_KEY);
+    setPendingDraft(null);
+  };
+
   useEffect(() => {
     const storedEventoId = localStorage.getItem(EVENTO_CREACION_ID_KEY);
-    if (!storedEventoId) return;
+    if (!storedEventoId) {
+      setDraftCheckDone(true);
+      return;
+    }
+    // Coming back from step 2/4 keeps working on the same draft without asking.
+    const resumingFromNextStep = Boolean(location.state?.eventoId);
+
+    const discardStaleKey = () => localStorage.removeItem(EVENTO_CREACION_ID_KEY);
 
     fetch(`${process.env?.REACT_APP_BACK_URL}evento/${storedEventoId}`, {
       method: "GET",
@@ -315,22 +366,22 @@ const RegistrarEvento2 = () => {
       .then((res) => res.json())
       .then((data) => {
         const ev = data?.data;
-        if (!ev) return;
-        setNombre(ev.nombre || "");
-        setDescripcion(ev.descripcion || "");
-        setUbicacion(ev.ubicacion || "");
-        setLocalidad(ev.localidad || "");
-        setProvincia(ev.provincia || "");
-        setTipoEvento(ev.tipoEvento || "");
-        setTipoPago(ev.tipoPago || "");
-        setSelectedOptionEvento(ev.tipoEvento || null);
-        setSelectedOptionPago(ev.tipoPago || null);
-        setImagenEvento(ev.img || null);
-        setCroquis(ev.croquis || null);
+        // Only unfinished drafts can be resumed ("EnPreparacion" without suffix is a completed event).
+        if (!ev || !DRAFT_ESTADOS.includes(ev.estado)) {
+          discardStaleKey();
+          return;
+        }
+        if (resumingFromNextStep) {
+          applyDraft(ev);
+        } else {
+          setPendingDraft(ev);
+        }
       })
       .catch(() => {
-        // Si falla la carga de borrador, no bloqueamos el formulario.
-      });
+        // The draft could not be verified: a stale id must never be reused to overwrite an event.
+        discardStaleKey();
+      })
+      .finally(() => setDraftCheckDone(true));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -388,6 +439,8 @@ const RegistrarEvento2 = () => {
     },
     optionContainerEvento: {
       display: "flex",
+      flexWrap: "wrap",
+      rowGap: "0.5rem",
       justifyContent: "space-between",
     },
     opcionesEvento: {
@@ -405,6 +458,8 @@ const RegistrarEvento2 = () => {
     },
     optionContainerPago: {
       display: "flex",
+      flexWrap: "wrap",
+      rowGap: "0.5rem",
       justifyContent: "space-between",
     },
     opcionesPago: {
@@ -453,6 +508,13 @@ const RegistrarEvento2 = () => {
       justifyContent: "center",
       alignItems: "center",
       gap: "10px",
+    },
+    draftBanner: {
+      border: "1px solid var(--qf-naranja)",
+      borderRadius: "8px",
+      padding: "12px",
+      marginBottom: "16px",
+      color: "var(--qf-text-primary)",
     },
     btnPrimaryDisabled: {
       opacity: 0.7,
@@ -527,6 +589,22 @@ const RegistrarEvento2 = () => {
         </div>
         <div style={styles.colForm}>
           <div style={styles.darkFormWrapper}>
+            {pendingDraft && (
+              <div style={styles.draftBanner} role="alert">
+                <p style={{ margin: "0 0 8px" }}>
+                  Tenés un borrador sin terminar: <strong>{pendingDraft.nombre || "Evento sin nombre"}</strong>.
+                  Si continuás con el borrador, se van a editar sus datos.
+                </p>
+                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                  <button type="button" style={{ ...styles.btnPrimary, width: "auto", padding: "0.5rem 1rem" }} onClick={handleContinueDraft}>
+                    Continuar borrador
+                  </button>
+                  <button type="button" style={{ ...styles.btnSecondary, width: "auto", padding: "0.5rem 1rem" }} onClick={handleDiscardDraft}>
+                    Empezar uno nuevo
+                  </button>
+                </div>
+              </div>
+            )}
             <form action="#" method="POST">
               <div style={styles.formGroup}>
                 <label htmlFor="nombre" style={styles.formLabel}>
@@ -559,39 +637,18 @@ const RegistrarEvento2 = () => {
                   Tipo de Evento*
                 </label>
                 <div style={styles.optionContainerEvento}>
-                  <div
-                    style={{
-                      ...styles.opcionesEvento,
-                      ...(selectedOptionEvento === 1
-                        ? styles.opcionesEventoSelected
-                        : {}),
-                    }}
-                    onClick={() => handleOptionClickEvento(1)}
-                  >
-                    Cines
-                  </div>
-                  <div
-                    style={{
-                      ...styles.opcionesEvento,
-                      ...(selectedOptionEvento === 2
-                        ? styles.opcionesEventoSelected
-                        : {}),
-                    }}
-                    onClick={() => handleOptionClickEvento(2)}
-                  >
-                    Festival
-                  </div>
-                  <div
-                    style={{
-                      ...styles.opcionesEvento,
-                      ...(selectedOptionEvento === 3
-                        ? styles.opcionesEventoSelected
-                        : {}),
-                    }}
-                    onClick={() => handleOptionClickEvento(3)}
-                  >
-                    Deporte
-                  </div>
+                  {TIPOS_EVENTO.map((opcion) => (
+                    <div
+                      key={opcion}
+                      style={{
+                        ...styles.opcionesEvento,
+                        ...(selectedOptionEvento === opcion ? styles.opcionesEventoSelected : {}),
+                      }}
+                      onClick={() => handleOptionClickEvento(opcion)}
+                    >
+                      {opcion}
+                    </div>
+                  ))}
                 </div>
               </div>
 
@@ -600,28 +657,18 @@ const RegistrarEvento2 = () => {
                   Tipo de Pago*
                 </label>
                 <div style={styles.optionContainerPago}>
-                  <div
-                    style={{
-                      ...styles.opcionesPago,
-                      ...(selectedOptionPago === 1
-                        ? styles.opcionesPagoSelected
-                        : {}),
-                    }}
-                    onClick={() => handleOptionClickPago(1)}
-                  >
-                    Pago
-                  </div>
-                  <div
-                    style={{
-                      ...styles.opcionesPago,
-                      ...(selectedOptionPago === 2
-                        ? styles.opcionesPagoSelected
-                        : {}),
-                    }}
-                    onClick={() => handleOptionClickPago(2)}
-                  >
-                    Gratuito
-                  </div>
+                  {TIPOS_PAGO.map((opcion) => (
+                    <div
+                      key={opcion}
+                      style={{
+                        ...styles.opcionesPago,
+                        ...(selectedOptionPago === opcion ? styles.opcionesPagoSelected : {}),
+                      }}
+                      onClick={() => handleOptionClickPago(opcion)}
+                    >
+                      {opcion}
+                    </div>
+                  ))}
                 </div>
               </div>
               <div style={{display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "0.5rem" : 0}}>

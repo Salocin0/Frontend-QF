@@ -168,7 +168,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
   });
 
   // ── ED-E1: Image fallback when img is null ──
-  test('falls back to logoevento.webp when event img is null', async () => {
+  test('falls back to QuickFood_LogoYellow.png when event img is null', async () => {
     fetchSpy
       .mockResolvedValueOnce(mockFetchResponse({ status: 'success', data: { ...fullEvent, img: null } }))
       .mockResolvedValueOnce(mockFetchResponse({ status: 'success', data: [] }));
@@ -178,7 +178,7 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
     await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
     const img = screen.getByAltText('Feria Gastronomica');
-    expect(img).toHaveAttribute('src', expect.stringContaining('logoevento.webp'));
+    expect(img).toHaveAttribute('src', expect.stringContaining('QuickFood_LogoYellow.png'));
   });
 
   // ── ED-E4: Empty diaEventos shows empty/placeholder state ──

@@ -181,13 +181,11 @@ const EventProducerForm = ({
 
       if (response1.ok) {
         const data1 = await response1.json();
-        console.log(data1);
         if (
           data1.data.productor?.habilitado === true &&
           (data1.data.productor?.cuit || data1.data.productor?.razonSocial)
         ) {
           setMostrarContenidoProductor(true);
-          console.log(data1.data.productor.razonSocial);
           setCuitPE(data1.data.productor.cuit);
           setRazonSocialPE(data1.data.productor.razonSocial);
           setCondicionPE(data1.data.productor.condicionIva);

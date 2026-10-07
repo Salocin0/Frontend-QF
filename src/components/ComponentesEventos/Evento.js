@@ -1,13 +1,13 @@
 import { format } from "date-fns";
 import { default as React, useEffect, useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./../sass/main.scss";
 import imgdefault from "./img/villa maria.png";
+import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 //TODO MODIFICACIONES PARA QUE ANDE, ESTA HARDCODEADO EN LISTADOEVENTOS
 const Evento = ({ evento,recargar }) => {
-  const { id } = useParams();
   const [session, setSession] = useState(null);
   const navigate = useNavigate();
 
@@ -29,7 +29,6 @@ const Evento = ({ evento,recargar }) => {
       .then((response) => response.json())
       .then((data) => {
         setSession(data.data);
-        console.log(data.data.tipoUsuario);
       })
       .catch((error) => console.error("Error fetching session:", error));
   }, []);
@@ -96,7 +95,7 @@ const Evento = ({ evento,recargar }) => {
               </div>
               
               <div>
-                <h6 className={`card-text`}>{`${evento.ubicacion}, ${evento.localidad}, ${evento.provincia}`}</h6>
+                <h6 className={`card-text`}>{formatUbicacion(evento)}</h6>
               </div>
               <div>
                 <h6 className={`card-text`}>{format(new Date(evento.fechaInicio), "dd/MM/yyyy")}</h6>

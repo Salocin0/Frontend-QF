@@ -27,7 +27,6 @@ function FormDinamicoRestricciones({ data, userType }) {
         .then((response) => response.json())
         .then((data) => {
           setSession(data.data);
-          console.log(data.data);
         })
         .catch((error) => console.error("Error fetching session:", error));
     }
@@ -46,7 +45,6 @@ function FormDinamicoRestricciones({ data, userType }) {
     headers.append("Content-Type", "application/json");
 
     const restricciones = {};
-    console.log(filteredData);
     Object.keys(formResponses).forEach((fieldName, index) => {
       const respuesta = formResponses[fieldName];
       const restriccion = {};
@@ -59,7 +57,6 @@ function FormDinamicoRestricciones({ data, userType }) {
 
     if (Object.keys(formResponses).length < filteredData.length) {
       toast.error("Complete todos los campos");
-      console.log(formResponses);
     } else {
       fetch(`${process.env?.REACT_APP_BACK_URL}asociacion/evento/${id}/asociar/0/${session.consumidorId}`, {
         method: "POST",
@@ -88,7 +85,6 @@ function FormDinamicoRestricciones({ data, userType }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setFilteredData(data.data);
       })
       .catch((error) => {

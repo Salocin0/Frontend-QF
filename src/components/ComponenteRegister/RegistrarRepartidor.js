@@ -162,7 +162,6 @@ const RegistroRepartidor = () => {
         nombre: nombre,
       },
     };
-    console.log(JSON.stringify(json_consumidor));
     fetch(`${process.env.REACT_APP_BACK_URL}user/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -170,7 +169,6 @@ const RegistroRepartidor = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.code === 200) {
           toast.success("Usuario registrado correctamente");
           setTimeout(() => {

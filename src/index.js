@@ -16,7 +16,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
   const rawBase = process.env.REACT_APP_BACK_URL || '';
   const prefixed = rawBase.startsWith('http://') || rawBase.startsWith('https://') ? rawBase : `https://${rawBase}`;
   const base = prefixed.endsWith('/') ? prefixed : `${prefixed}/`;
-  console.log('Backend base URL:', base);
 })();
 
 root.render(

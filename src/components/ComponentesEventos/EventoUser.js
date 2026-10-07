@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logoevento from "./../img/logoevento.webp";
+import logoevento from "./../img/QuickFood_LogoYellow.png";
 import { toast } from "react-toastify";
+import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 const EventoUser = ({ evento }) => {
   const navigate = useNavigate();
@@ -25,7 +26,6 @@ const EventoUser = ({ evento }) => {
     const horasTotales = Math.floor(diferencia / (1000 * 60 * 60));
     const dias = Math.floor(horasTotales / 24);
     const horas = horasTotales % 24;
-    console.log(evento);
 
     if (dias > 0) {
       return `${dias} día${dias > 1 ? "s" : ""} y ${horas} hora${
@@ -71,7 +71,7 @@ const EventoUser = ({ evento }) => {
 
   const formatEstado = (str) => {
     if (!str) return "";
-    return str.replace(/([A-Z])/g, " $1").trim();
+    return str.replace(/\d+$/, "").replace(/([A-Z])/g, " $1").trim();
   };
 
   const textoTiempo =
@@ -247,7 +247,7 @@ const EventoUser = ({ evento }) => {
               <p style={styles.title}>{evento.nombre}</p>
               <p style={styles.descripcion}>{evento.descripcion}</p>
               <p style={styles.text}>
-                {evento.ubicacion}, {evento.localidad}, {evento.provincia}
+                {formatUbicacion(evento)}
               </p>
               {evento.distanciaCalculada !== undefined && evento.distanciaCalculada !== null ? (
                 <p style={styles.distance}>

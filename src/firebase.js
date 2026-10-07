@@ -20,7 +20,6 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register('/firebase-messaging-sw.js')
     .then((registration) => {
-      console.log('Service Worker registrado:', registration);
     })
     .catch((error) => {
       console.error('Error al registrar el Service Worker:', error);
@@ -44,7 +43,6 @@ const fetchToken = async () => {
   try {
     const supported = await ensureMessagingSupported();
     if (!supported) {
-      console.log('Firebase messaging no está disponible en este navegador.');
       return null;
     }
 
@@ -56,10 +54,8 @@ const fetchToken = async () => {
     });
 
     if (currentToken) {
-      console.log('Token de registro:', currentToken);
       return currentToken;
     } else {
-      console.log('No se pudo obtener el token de registro.');
       return null;
     }
   } catch (err) {

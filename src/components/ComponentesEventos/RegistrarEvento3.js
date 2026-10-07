@@ -40,7 +40,7 @@ const RegistrarEvento3 = () => {
   const [horasAntesInicioEvento, setHorasAntesInicioEvento] = useState("");
   const [todosLosDiasPreventa, setTodosLosDiasPreventa] = useState("");
   const [cantidadPuestos, setCantidadPuestos] = useState("");
-  const [tieneRepartidores, setTieneRepartidores] = useState(2);
+  const [tieneRepartidores, setTieneRepartidores] = useState(true); // matches the default "Sí" option
   const [cantidadRepartidores, setCantidadRepartidores] = useState("");
   const [capacidadMaxima, setCapacidadMaxima] = useState("");
   const [linkVentaEntradas, setLinkVentaEntradas] = useState("");
@@ -229,6 +229,10 @@ const RegistrarEvento3 = () => {
       tienePreventa,
       horasAntesInicioEvento,
       cantidadPuestos,
+      conRepartidor: tieneRepartidores === true,
+      cantidadRepartidores: cantidadRepartidores === "" ? undefined : cantidadRepartidores,
+      conButaca: tieneButacas === true,
+      capacidadMaxima: capacidadMaxima === "" ? undefined : capacidadMaxima,
       restricciones,
       cantidadDiasEvento: Math.ceil(
         (finEvento - inicioEvento) / (1000 * 60 * 60 * 24)

@@ -2,7 +2,12 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import imgDefault from "../img/logoevento.webp";
+import imgDefault from "../img/QuickFood_LogoYellow.png";
+import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
+
+// Sub-states such as "EnPreparacion1" are shown as "En Preparación".
+const etiquetaEstado = (estado) =>
+  typeof estado === "string" && estado.startsWith("EnPreparacion") ? "En Preparación" : estado;
 
 const ESTADOS_ASOCIABLES = ["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];
 
@@ -246,8 +251,10 @@ const EventoRepartidor = ({ evento, recargar }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.code === 200) {
-          toast.success("Asociacion Guardada");
-          window.location.reload();
+          // Reload only the list (a full page reload would swallow the toast).
+          toast.success("Asociación guardada");
+          setTieneAsociacionPendiente(true);
+          if (typeof recargar === "function") recargar();
         }
       })
       .catch((error) => {
@@ -338,9 +345,9 @@ const EventoRepartidor = ({ evento, recargar }) => {
             <h5 style={styles.cardTitle}>{evento.nombre}</h5>
             <p style={styles.cardDescripcion}>{evento.descripcion}</p>
             <p style={styles.cardText}>
-              {evento.ubicacion} - {evento.localidad}, {evento.provincia}
+              {formatUbicacion(evento)}
             </p>
-            <p style={isCardNarrow ? styles.cardEstadoNarrow : styles.cardEstado}>{evento.estado==="EnPreparacion"? "En Preparación" : evento.estado}</p>
+            <p style={isCardNarrow ? styles.cardEstadoNarrow : styles.cardEstado}>{etiquetaEstado(evento.estado)}</p>
           </div>
         </div>
       </div>
@@ -376,7 +383,7 @@ const EventoRepartidor = ({ evento, recargar }) => {
               <div style={styles.infoRow}>
                 <span style={styles.infoLabel}>Ubicación:</span>
                 <span style={styles.infoValue}>
-                  {evento.ubicacion} - {evento.localidad}, {evento.provincia}
+                  {formatUbicacion(evento)}
                 </span>
               </div>
             </div>

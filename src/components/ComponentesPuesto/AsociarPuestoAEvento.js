@@ -35,7 +35,7 @@ const AsociarPuestoAEvento = () => {
   }, []);
 
   const recargarComponente = () => {
-    setRecargar(+1);
+    setRecargar((valor) => valor + 1);
   };
 
   useEffect(() => {
