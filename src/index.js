@@ -5,9 +5,9 @@ import reportWebVitals from './reportWebVitals';
 
 // Aplicar data-theme al <html> ANTES del primer render
 // para evitar flash de tema incorrecto (FOUC)
-const storedTheme = localStorage.getItem("modoOscuroActivo");
-const isDark = storedTheme === null ? true : storedTheme === "true";
-document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+// Cada carga comienza en modo oscuro; el usuario puede cambiarlo con el botón.
+localStorage.setItem("modoOscuroActivo", "true");
+document.documentElement.setAttribute("data-theme", "dark");
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

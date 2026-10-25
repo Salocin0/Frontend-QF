@@ -40,6 +40,7 @@ jest.mock('react-toastify', () => ({
 // Mock react-icons
 jest.mock('react-icons/fa', () => ({
   FaUser: () => <span data-testid="fa-user" />,
+  FaSignOutAlt: () => <span data-testid="fa-sign-out" />,
   FaTrash: () => <span data-testid="fa-trash" />,
   FaMinus: () => <span data-testid="fa-minus" />,
   FaPlus: () => <span data-testid="fa-plus" />,
@@ -204,49 +205,20 @@ describe('Phase 5 — Shared UI Responsive', () => {
       </MemoryRouter>
     );
 
-    test('mobile: navItem position relative, bottom auto, width 100%', () => {
-      useBreakpoint.mockReturnValue({
-        isMobile: true, isTablet: false, isDesktop: false,
-        breakpoint: 'xs', width: 375,
-      });
-
-      const { container } = render(<UserProfile haveRol={false} />, { wrapper });
-
-      const li = container.querySelector('[data-testid="user-profile-nav"]');
-      expect(li).toBeInTheDocument();
-      expect(li.style.position).toBe('relative');
-      expect(li.style.width).toBe('100%');
+    test('shows the account name and active role without a dropdown', () => {
+      render(<UserProfile />, { wrapper });
+      expect(screen.getByText('testuser')).toBeInTheDocument();
+      expect(screen.getByLabelText('Rol activo: Consumidor')).toHaveTextContent('Consumidor');
+      expect(screen.queryByRole('button')).not.toBeInTheDocument();
     });
 
-    test('desktop: navItem position absolute, bottom 70px, width 85%', () => {
-      useBreakpoint.mockReturnValue({
-        isMobile: false, isTablet: false, isDesktop: true,
-        breakpoint: 'xl', width: 1200,
-      });
-
-      const { container } = render(<UserProfile haveRol={false} />, { wrapper });
-
-      const li = container.querySelector('[data-testid="user-profile-nav"]');
-      expect(li.style.position).toBe('absolute');
-      expect(li.style.bottom).toBe('70px');
-      expect(li.style.width).toBe('85%');
+    test('logout is a separate action outside the account summary', () => {
+      render(<><UserProfile /><UserProfile logoutOnly /></>, { wrapper });
+      const account = screen.getByTestId('user-profile-nav');
+      const logout = screen.getByRole('button', { name: /cerrar sesión/i });
+      expect(account).not.toContainElement(logout);
     });
 
-    test('renders Perfil text after opening the dropdown', () => {
-      useBreakpoint.mockReturnValue({
-        isMobile: false, isTablet: false, isDesktop: true,
-        breakpoint: 'xl', width: 1200,
-      });
-
-      const { container } = render(<UserProfile haveRol={false} />, { wrapper });
-
-      // El menú (con "Perfil" y "Cerrar Sesión") se monta vía portal recién
-      // al abrir el dropdown haciendo click en el toggle.
-      fireEvent.click(container.querySelector('#dropdown'));
-
-      expect(screen.getByText('Perfil')).toBeInTheDocument();
-      expect(screen.getByText('Cerrar Sesión')).toBeInTheDocument();
-    });
   });
 
   // ---- 5.3 DocumentUpload ----

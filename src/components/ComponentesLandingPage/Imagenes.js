@@ -1,70 +1,22 @@
-﻿import React from "react";
+import React from "react";
+import { Link } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
 import Carrousel from "./Carrousel";
-import useBreakpoint from "../../useBreakpoint";
 
-const Imagenes = () => {
-  const { isMobile } = useBreakpoint();
-
-  const styles = {
-    container: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      flexDirection: "column",
-      padding: "2rem 0", 
-      backgroundColor: "var(--qf-bg-secondary)",
-    },
-    titleContainer: {
-      textAlign: "center",
-      paddingBottom: "1rem",
-    },
-    contentRow: {
-      display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      alignItems: "center",
-      width: "100%",
-      maxWidth: "1200px",
-      justifyContent: "space-between",
-      padding: isMobile ? "0 1rem" : "0",
-    },
-    colLg8: {
-      flex: isMobile ? "none" : 2,
-      width: isMobile ? "100%" : "auto",
-      paddingRight: isMobile ? "0" : "1rem",
-    },
-    colLg4: {
-      flex: isMobile ? "none" : 1,
-      width: isMobile ? "100%" : "auto",
-    },
-    descripcion: {
-      textAlign: "center",
-    },
-    text: {
-      color: "var(--qf-text-primary)",
-    }
-  };
-  
-  return (
-    <div style={styles.container}>
-      <div style={styles.titleContainer}>
-        <h2 style={{ color: "var(--qf-text-primary)" }}>Próximos Eventos</h2>
-      </div>
-      <div style={styles.contentRow}>
-        <div style={styles.colLg8}>
-          <Carrousel />
-        </div>
-        <div style={styles.colLg4}>
-          <div style={styles.descripcion}>
-            <p style={styles.text}>
-              Estos son los próximos eventos en los que trabajaremos con
-              Quickfood para mejorar la experiencia de compra de los
-              espectadores.
-            </p>
-          </div>
-        </div>
-      </div>
+const Imagenes = () => (
+  <section className="qf-hero" aria-labelledby="qf-hero-title">
+    <div className="qf-hero__copy">
+      <span className="qf-eyebrow">PEDÍ Y DISFRUTÁ. SIN FILAS.</span>
+      <h1 id="qf-hero-title">Tu evento.<br />Tu comida.<br /><span>Sin esperar.</span></h1>
+      <p>Viví cada momento. Elegí lo que más te gusta y recibí tu pedido sin perderte nada del evento.</p>
+      <Link className="qf-primary-link" to="/Listado-eventos">Explorar eventos <FaArrowRight aria-hidden="true" /></Link>
+      <div className="qf-hero__benefits"><span>Elegí tu puesto</span><span>Pedí desde tu lugar</span><span>Disfrutá el evento</span></div>
     </div>
-  );
-};
+    <div className="qf-hero__events">
+      <div className="qf-hero__events-heading"><h2>Próximos eventos</h2><span>Con QuickFood</span></div>
+      <Carrousel />
+    </div>
+  </section>
+);
 
 export default Imagenes;

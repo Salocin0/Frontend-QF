@@ -205,24 +205,24 @@ const Inicio = () => {
       },
     },
     {
-      title: "Cerrar Sesión",
-      icon: <FaSignOutAlt />,
-      onClick: handleLogout,
-      className: "qf-dashboard-action",
-      style: {
-        backgroundColor: "var(--qf-rojo)",
-        padding: "10px",
-        borderRadius: "10px",
-        cursor: "pointer",
-      },
-    },
-    {
       title: "Carrito",
       icon: <FaShoppingCart />,
       onClick: handleCart,
       className: "qf-dashboard-action",
       style: {
         backgroundColor: "var(--qf-naranja)",
+        padding: "10px",
+        borderRadius: "10px",
+        cursor: "pointer",
+      },
+    },
+    {
+      title: "Cerrar Sesión",
+      icon: <FaSignOutAlt />,
+      onClick: handleLogout,
+      className: "qf-dashboard-action",
+      style: {
+        backgroundColor: "var(--qf-rojo)",
         padding: "10px",
         borderRadius: "10px",
         cursor: "pointer",

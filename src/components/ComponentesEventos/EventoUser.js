@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logoevento from "./../img/QuickFood_LogoYellow.png";
+import logoevento from "./../img/qf-new-logo-transparent.png";
 import { toast } from "react-toastify";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 

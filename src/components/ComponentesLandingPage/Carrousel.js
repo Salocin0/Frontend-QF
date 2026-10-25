@@ -1,7 +1,10 @@
 // Carrousel.js
 import React, { useEffect, useState } from "react";
 import Carousel from "react-bootstrap/Carousel";
-import Logo from "../img/adaptive-icon.png";
+import { Link } from "react-router-dom";
+import Logo from "../img/qf-new-logo-transparent.png";
+import villaMariaPoster from "../img/villamaria.jpg";
+import cosquinRockPoster from "../img/cosquinrock.jpeg";
 import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
 
 const MAX_EVENTOS = 5;
@@ -21,62 +24,52 @@ export const pickUpcomingEvents = (eventos, now = new Date()) =>
     .slice(0, MAX_EVENTOS)
     .map(({ evento, start }) => ({ ...evento, fechaInicioMostrada: new Date(start).toISOString() }));
 
-const slideStyles = {
-  container: { height: "min(300px, 56vw)", minHeight: "180px", position: "relative", overflow: "hidden", backgroundColor: "var(--qf-bg-main)" },
-  image: { width: "100%", height: "100%", objectFit: "cover" },
-  neutral: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "0.5rem",
-    color: "var(--qf-text-primary)",
-  },
-  logo: { height: "90px", width: "auto" },
-  caption: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    padding: "0.75rem 1rem",
-    textAlign: "center",
-    color: "#fff",
-    background: "linear-gradient(transparent, rgba(0,0,0,0.75))",
-  },
-};
-
-const EventSlide = ({ evento }) => (
-  <div style={slideStyles.container}>
-    {evento.img ? (
-      <img src={evento.img} alt={evento.nombre} style={slideStyles.image} />
-    ) : (
-      <div style={slideStyles.neutral}>
-        <img src={Logo} alt="QuickFood" style={slideStyles.logo} />
+const EventSlide = ({ evento }) => {
+  const [imageFailed, setImageFailed] = useState(false);
+  const normalizedName = (evento.nombre || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const isVillaMaria = normalizedName.includes("cosquin") && /villa\s*maria/.test(normalizedName);
+  const eventName = isVillaMaria ? "58° Festival Internacional de Peñas — Villa María" : evento.nombre;
+  const eventImage = isVillaMaria ? villaMariaPoster : evento.img;
+  return (
+    <div className={`qf-event-slide${isVillaMaria ? " qf-event-slide--cover" : ""}`}>
+      {eventImage && !imageFailed ? (
+        <img src={eventImage} alt={eventName} className="qf-event-slide__image" onError={() => setImageFailed(true)} />
+      ) : (
+        <div className="qf-event-slide__fallback"><img src={Logo} alt="QuickFood" /></div>
+      )}
+      <div className="qf-event-slide__caption">
+        <span className="qf-event-slide__badge">{evento.estado === "EnCurso" ? "En curso" : "Próximamente"}</span>
+        <h3>{eventName}</h3>
+        <p>{formatDateAR(evento.fechaInicioMostrada)}</p>
+        <Link to={`/listado-puestos/${evento.id}`}>Ver evento <span aria-hidden="true">↗</span></Link>
       </div>
-    )}
-    <div style={slideStyles.caption}>
-      <strong>{evento.nombre}</strong>
-      <div>{formatDateAR(evento.fechaInicioMostrada)}</div>
     </div>
-  </div>
-);
+  );
+};
 
 const Carrousel = () => {
   const [eventos, setEventos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadFailed, setLoadFailed] = useState(false);
 
   useEffect(() => {
     const base = process.env?.REACT_APP_BACK_URL;
     const load = (estado) =>
       fetch(`${base}evento/enEstado/${estado}`)
-        .then((res) => (res.ok ? res.json() : null))
-        .then((json) => (Array.isArray(json?.data) ? json.data : []))
-        .catch(() => []);
+        .then((res) => {
+          if (res.status === 404) return null;
+          if (!res.ok) throw new Error("No se pudieron cargar los eventos");
+          return res.json();
+        })
+        .then((json) => (Array.isArray(json?.data) ? json.data : []));
 
     let cancelled = false;
     Promise.all([load("Confirmado"), load("EnCurso")]).then(([confirmados, enCurso]) => {
       if (!cancelled) setEventos(pickUpcomingEvents([...enCurso, ...confirmados]));
+    }).catch(() => {
+      if (!cancelled) setLoadFailed(true);
+    }).finally(() => {
+      if (!cancelled) setLoading(false);
     });
     return () => {
       cancelled = true;
@@ -85,7 +78,7 @@ const Carrousel = () => {
 
   return (
     <div className="carousel-container">
-      <Carousel className="carousel" interval={eventos.length > 1 ? 5000 : null}>
+      <Carousel className="carousel" controls indicators interval={5000} pause="hover" prevLabel="Evento anterior" nextLabel="Evento siguiente">
         {eventos.length > 0 ? (
           eventos.map((evento) => (
             <Carousel.Item key={evento.id}>
@@ -94,14 +87,23 @@ const Carrousel = () => {
           ))
         ) : (
           <Carousel.Item>
-            <div style={slideStyles.container}>
-              <div style={slideStyles.neutral}>
-                <img src={Logo} alt="QuickFood" style={slideStyles.logo} />
-                <strong>Muy pronto vas a ver acá los próximos eventos</strong>
-              </div>
+            <div className="qf-event-empty" role="status" aria-live="polite">
+              <img src={Logo} alt="QuickFood" />
+              <strong>{loading ? "Buscando próximos eventos…" : loadFailed ? "No pudimos cargar los eventos" : "Lo próximo está por llegar"}</strong>
+              <p>{loading ? "Un momento, estamos preparando la cartelera." : loadFailed ? "Volvé a intentar en unos minutos." : "Muy pronto vas a encontrar acá nuevas experiencias para disfrutar sin filas."}</p>
             </div>
           </Carousel.Item>
         )}
+        <Carousel.Item>
+          <div className="qf-event-slide qf-event-slide--cover">
+            <img src={cosquinRockPoster} alt="Cosquín Rock" className="qf-event-slide__image" />
+            <div className="qf-event-slide__caption">
+              <span className="qf-event-slide__badge">Música y experiencias</span>
+              <h3>Cosquín Rock</h3>
+              <Link to="/listado-eventos">Explorar eventos <span aria-hidden="true">↗</span></Link>
+            </div>
+          </div>
+        </Carousel.Item>
       </Carousel>
     </div>
   );

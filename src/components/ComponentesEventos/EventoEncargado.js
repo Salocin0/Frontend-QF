@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
-import imgDefault from "../img/QuickFood_LogoYellow.png";
+import imgDefault from "../img/qf-new-logo-transparent.png";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 const ESTADOS_ASOCIABLES = ["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];

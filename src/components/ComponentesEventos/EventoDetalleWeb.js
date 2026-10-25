@@ -7,7 +7,7 @@ import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useBreakpoint from "../../useBreakpoint";
-import imgDefault from "../img/QuickFood_LogoYellow.png";
+import imgDefault from "../img/qf-new-logo-transparent.png";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 // El valor de "action" viaja tal cual a POST evento/cambiarEstado/:id/:accion

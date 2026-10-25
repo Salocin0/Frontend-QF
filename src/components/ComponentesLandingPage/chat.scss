@@ -1,0 +1,48 @@
+.qf-chat {
+  --chat-bg: #191714;
+  --chat-surface: #302920;
+  --chat-text: #fff8ed;
+  --chat-muted: #d4c6b3;
+  --chat-link: #ffbd59;
+  --qf-button-hover-bg: #b0002c;
+  --qf-button-hover-text: #ffbd59;
+  --qf-button-hover-border: #b0002c;
+  display: flex; flex-direction: column; max-height: min(640px, calc(100dvh - 130px));
+  background: var(--chat-bg); color: var(--chat-text); border-radius: 18px;
+  font-family: var(--qf-font-family, "Avenir Next", sans-serif);
+  overflow: hidden;
+
+  &__header { position: relative; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 18px 92px; background: #ffbd59; color: #000; border-bottom: 2px solid #b0002c; flex-shrink: 0; text-align: center; }
+  &__header img { position: absolute; left: 12px; width: 40px; height: 40px; object-fit: cover; border-radius: 50%; border: 2px solid #b0002c; }
+  &__header h2 { font-size: 1.4rem; font-weight: 800; margin: 0; color: #000; }
+  &__header h2::after { display: none; }
+  &__header p { font-size: 0.75rem; line-height: 1.4; color: #000; margin: 3px 0 0; }
+  &__messages { height: 330px; min-height: 100px; overflow-y: auto; overscroll-behavior: contain; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; scrollbar-width: thin; scrollbar-color: #ffbd59 var(--chat-bg); }
+  &__message { flex-shrink: 0; max-width: 90%; padding: 12px 15px; border-radius: 16px 16px 16px 4px; align-self: flex-start; background: var(--chat-surface); color: var(--chat-text); }
+  &__sender { display: block; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.06em; color: var(--chat-link); margin-bottom: 5px; }
+  &__message p { margin: 0; font-size: 0.92rem; line-height: 1.65; color: inherit; white-space: pre-wrap; overflow-wrap: anywhere; }
+  &__message--user { align-self: flex-end; background: #ffbd59; color: #261c10; border-radius: 16px 16px 4px 16px; }
+  &__message--user .qf-chat__sender { color: #805000; }
+  &__message--error { border: 1px solid #b0002c; }
+  &__link, &__account a { color: var(--chat-link); text-decoration: underline; text-underline-offset: 3px; }
+  &__suggestions { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  &__suggestions button { --qf-button-hover-bg: #ffbd59; --qf-button-hover-text: #261c10; --qf-button-hover-border: #ffbd59; background: transparent; border: 1px solid var(--chat-link); color: var(--chat-link); padding: 8px 12px; border-radius: 12px; font-size: 0.82rem; text-align: left; cursor: pointer; }
+  &__suggestions button span { margin-left: 12px; }
+  &__account { display: flex; justify-content: center; gap: 6px; padding: 8px 12px; font-size: 0.78rem; color: var(--chat-muted); flex-shrink: 0; }
+  &__composer { display: flex; gap: 8px; padding: 12px 14px 6px; border-top: 1px solid var(--chat-surface); flex-shrink: 0; }
+  &__composer input { flex: 1; min-width: 0; background: var(--chat-surface); color: var(--chat-text); border: 1px solid var(--chat-muted); border-radius: 14px; padding: 12px; font-size: 16px; }
+  &__composer input::placeholder { color: var(--chat-muted); }
+  &__composer input:focus { outline: 2px solid #ffbd59; outline-offset: 1px; }
+  &__composer button { display: grid; place-items: center; width: 46px; border-radius: 14px; background: #ffbd59; color: #261c10; border: 0; flex-shrink: 0; cursor: pointer; }
+  &__composer button:disabled { opacity: 0.4; cursor: not-allowed; }
+  &__signature { text-align: center; color: var(--chat-muted); letter-spacing: 0.12em; font-size: 0.6rem; padding: 8px 10px 12px; }
+  &__typing { display: flex; align-items: center; gap: 4px; flex-shrink: 0; color: var(--chat-muted); }
+  &__typing > span { width: 5px; height: 5px; border-radius: 50%; background: #ffbd59; animation: foody-typing 1s infinite alternate; }
+  &__typing > span:nth-child(2) { animation-delay: 0.2s; }
+  &__typing > span:nth-child(3) { animation-delay: 0.4s; }
+  &__typing small { font-size: 0.72rem; margin-left: 6px; }
+  &__sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+[data-theme="light"] .qf-chat { --chat-bg: #fffcf7; --chat-surface: #fff0d9; --chat-text: #261c10; --chat-muted: #68563f; --chat-link: #8c0023; }
+@keyframes foody-typing { to { opacity: 0.3; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .qf-chat__typing > span { animation: none; } }

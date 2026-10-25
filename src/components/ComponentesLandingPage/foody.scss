@@ -1,0 +1,54 @@
+.qf-foody {
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 1100;
+  --foody-gold: #ffbd59;
+  --foody-red: #b0002c;
+
+  &__launcher {
+    display: flex; align-items: center; gap: 12px; min-height: 64px;
+    padding: 6px; border-radius: 40px; border: 2px solid var(--foody-gold);
+    background: #191714; color: #ffbd59; font-size: 1.1rem; font-weight: 800;
+    box-shadow: 0 8px 28px #0004; cursor: pointer;
+    animation: foody-arrive 450ms ease-out both, foody-float 5s 450ms ease-in-out infinite;
+  }
+  &__avatar { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: #ffbd59; overflow: hidden; }
+  &__avatar img { width: 100%; height: 100%; object-fit: cover; }
+  &__greeting {
+    position: absolute; bottom: calc(100% + 18px); right: 0;
+    width: 260px; max-width: calc(100vw - 40px); padding: 22px;
+    background: #ffbd59; color: #261c10; border: 2px solid #b0002c;
+    border-radius: 22px 22px 6px 22px; box-shadow: 0 12px 36px #0003;
+    animation: foody-arrive 550ms 300ms ease-out both;
+    &::after { content: ""; position: absolute; right: 30px; bottom: -9px; width: 16px; height: 16px; background: #ffbd59; border-right: 2px solid #b0002c; border-bottom: 2px solid #b0002c; transform: rotate(45deg); }
+    strong { display: block; color: #b0002c; font-size: 1.1rem; padding-right: 10px; }
+    p { color: #574632; font-size: 0.9rem; margin: 10px 0 14px; }
+  }
+  &__dismiss { position: absolute; top: 5px; right: 5px; width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #574632; cursor: pointer; font-size: 0.7rem; }
+  &__start { --qf-button-hover-bg: #b0002c; --qf-button-hover-text: #ffbd59; --qf-button-hover-border: #b0002c; background: #261c10; color: #ffbd59; border: 0; border-radius: 10px; padding: 8px 14px; font-weight: 700; cursor: pointer; }
+  &__popup { position: absolute; right: 0; bottom: calc(100% + 14px); width: 400px; max-width: calc(100vw - 40px); max-height: calc(100dvh - 120px); overflow-y: auto; border-radius: 20px; box-shadow: 0 16px 60px #0005; animation: foody-arrive 220ms ease-out both; }
+  &__popup > div > button:first-child { z-index: 2; width: 36px; height: 36px; display: grid; place-items: center; line-height: 1; }
+}
+@keyframes foody-arrive { from { opacity: 0; transform: translateY(14px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes foody-float {
+  0%, 20%, 100% { transform: translateY(0); }
+  10% { transform: translateY(-10px); }
+}
+@media (prefers-reduced-motion: reduce) { .qf-foody__launcher, .qf-foody__greeting, .qf-foody__popup { animation: none; } }
+@media (max-width: 480px) { .qf-foody { right: 12px; bottom: max(14px, env(safe-area-inset-bottom)); } .qf-foody__popup { max-width: calc(100vw - 24px); } }
+
+.qf-foody .qf-foody__greeting .qf-foody__start:focus-visible {
+  background: #b0002c !important;
+  color: #ffbd59 !important;
+  border-color: #b0002c !important;
+  box-shadow: 0 0 0 2px #b0002c !important;
+}
+@media (hover: hover) {
+  .qf-foody .qf-foody__greeting .qf-foody__start:hover {
+    background: #b0002c !important;
+    color: #ffbd59 !important;
+    border-color: #b0002c !important;
+    box-shadow: 0 0 0 2px #b0002c !important;
+  }
+}

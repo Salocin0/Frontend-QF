@@ -45,13 +45,13 @@ const Footer = () => {
       textAlign: "center",
     },
     linkStyle: {
-      color: "var(--qf-naranja)",
+      color: "var(--qf-link-color, var(--qf-naranja))",
       textDecoration: "none",
       fontSize: "0.875rem",
       cursor: "pointer",
     },
     iconStyle: {
-      color: "var(--qf-naranja)",
+      color: "var(--qf-link-color, var(--qf-naranja))",
       textDecoration: "none",
       cursor: "pointer",
       fontSize: "1rem",

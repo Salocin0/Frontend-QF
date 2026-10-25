@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import imgDefault from "../img/QuickFood_LogoYellow.png";
+import imgDefault from "../img/qf-new-logo-transparent.png";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 // Sub-states such as "EnPreparacion1" are shown as "En Preparación".

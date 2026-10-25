@@ -4,6 +4,9 @@ import Login from '../components/ComponentesLogin/Login';
 import { MemoryRouter } from 'react-router-dom';
 import { server } from '../mocks';
 import { rest } from 'msw';
+import { toast } from 'react-toastify';
+
+jest.mock('react-toastify', () => ({ toast: { error: jest.fn(), success: jest.fn(), info: jest.fn() } }));
 
 describe('Iniciar Sesión (Consumidor) - integracion', () => {
   beforeEach(() => {
@@ -53,9 +56,11 @@ describe('Iniciar Sesión (Consumidor) - integracion', () => {
       </MemoryRouter>
     );
 
+    fireEvent.change(screen.getByLabelText('Usuario'), { target: { value: 'usuario-invalido' } });
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'clave-invalida' } });
     const ingresarButton = screen.getByRole('button', { name: 'Iniciar sesión' });
     fireEvent.click(ingresarButton);
 
-    await waitFor(() => expect(screen.getByText(/invalid credentials|credenciales/i)).toBeInTheDocument());
+    await waitFor(() => expect(toast.error).toHaveBeenCalled());
   });
 });

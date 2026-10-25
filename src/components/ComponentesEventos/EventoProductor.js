@@ -1,7 +1,7 @@
 import { default as React, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import imgDefault from "../img/QuickFood_LogoYellow.png";
+import imgDefault from "../img/qf-new-logo-transparent.png";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 

@@ -1,18 +1,13 @@
 import React from "react";
-import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser, FaMoon, FaSun } from "react-icons/fa";
-import useTheme from "../../useTheme";
+import { FaMale } from "react-icons/fa";
+import { FaHome, FaCalendarAlt, FaShoppingBag, FaShoppingCart, FaBell, FaStore, FaHandshake, FaChartBar, FaUsers, FaTruck, FaUser } from "react-icons/fa";
 
 const MenuItems = ({
+  haveRol,
   isResponsable,
   isProductor,
   isRepartidor,
-  togglePanel,
 }) => {
-  const { isDark, toggleTheme } = useTheme();
-
-   const handleBotonChat = () => {
-    togglePanel();
-   }
 
   return (
     <ul className="nav flex-column p-3">
@@ -145,53 +140,20 @@ const MenuItems = ({
         </>
       )}
 
-      <li className="navitem">
-        <span onClick={() => handleBotonChat()} className="navlink text-truncate">
-          <FaUser className="icono" />
-          <span className="ms-1 w-100">
-            Foody
-          </span>
-        </span>
-      </li>
 
-      {/* Toggle de tema — pill switch visual */}
-      <li className="navitem" style={{ cursor: "pointer" }} onClick={toggleTheme}>
-        <span className="navlink text-truncate" style={{ pointerEvents: "none" }}>
-          {isDark ? <FaSun className="icono" /> : <FaMoon className="icono" />}
-          <span className="ms-1" style={{ flex: 1 }}>
-            {isDark ? "Modo claro" : "Modo oscuro"}
-          </span>
-          {/* Pill toggle */}
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              width: "42px",
-              height: "24px",
-              borderRadius: "12px",
-              backgroundColor: isDark ? "var(--qf-naranja)" : "transparent",
-              border: "2px solid var(--qf-naranja)",
-              position: "relative",
-              flexShrink: 0,
-              marginRight: "4px",
-              transition: "background-color 0.3s",
-            }}
-          >
-            <span
-              style={{
-                position: "absolute",
-                top: "2px",
-                left: isDark ? "18px" : "2px",
-                width: "16px",
-                height: "16px",
-                borderRadius: "50%",
-                backgroundColor: isDark ? "var(--qf-negro-puro)" : "var(--qf-naranja)",
-                transition: "left 0.3s",
-              }}
-            />
-          </span>
-        </span>
+
+      <li className="qf-sidebar-section-label">Mi cuenta</li>
+      <li className="navitem">
+        <a href="/perfil" className="navlink"><FaUser className="icono" /><span>Mi perfil</span></a>
       </li>
+      {!haveRol && (
+        <>
+          <li className="qf-sidebar-section-label">Sumate a QuickFood</li>
+          <li className="navitem"><a href="/adquirir-nuevo-rolPE" className="navlink"><FaCalendarAlt className="icono" /><span>Quiero ser productor</span></a></li>
+          <li className="navitem"><a href="/adquirir-nuevo-rolEPC" className="navlink"><FaStore className="icono" /><span>Quiero ser encargado</span></a></li>
+          <li className="navitem"><a href="/adquirir-nuevo-rolR" className="navlink"><FaMale className="icono" /><span>Quiero ser repartidor</span></a></li>
+        </>
+      )}
     </ul>
   );
 };
