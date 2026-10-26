@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import useBreakpoint from "../../useBreakpoint";
 import useTheme from "../../useTheme";
+import { parseChatText } from "./chatRichText";
 
 const Chatbot = () => {
   const { user } = useContext(UserContext);
@@ -165,6 +166,29 @@ const Chatbot = () => {
       textDecoration: "none",
       cursor: "pointer",
     },
+    bold: {
+      color: "var(--qf-naranja)",
+      fontWeight: 700,
+    },
+    richHeading: {
+      color: "var(--qf-naranja)",
+      fontWeight: 700,
+      fontSize: "1.05em",
+      margin: "0 0 6px 0",
+    },
+    richParagraph: {
+      margin: "0 0 8px 0",
+      lineHeight: 1.45,
+    },
+    richList: {
+      margin: "0 0 8px 0",
+      paddingLeft: "20px",
+      listStyleType: "disc",
+    },
+    richListItem: {
+      marginBottom: "4px",
+      lineHeight: 1.45,
+    },
     footerLink2: {
       color: "var(--qf-naranja)",
       textDecoration: "underline",
@@ -198,18 +222,36 @@ const Chatbot = () => {
       addMessageToChat(message, "user");
       chatInput.value = "";
 
+      // URLSearchParams se encarga del encoding: pasar el string crudo a su constructor
+      // hacía que "&" cortara el mensaje y "+" se volviera espacio.
+      const body = new URLSearchParams();
+      body.append("userMessage", message);
+
       fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
         method: "POST",
-        body: new URLSearchParams("userMessage=" + message),
+        body,
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       })
-        .then((response) => response.json())
+        .then(async (response) => {
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(data?.msg || "No pudimos obtener una respuesta.");
+          }
+          return data;
+        })
         .then((data) => {
           addMessageToChat(data.data.chat_response, "bot");
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => {
+          console.error("Error:", error);
+          addMessageToChat(
+            error.message ||
+              "No pudimos obtener una respuesta. Probá de nuevo en unos segundos.",
+            "bot"
+          );
+        });
     }
   }, [addMessageToChat]);
 
@@ -261,46 +303,70 @@ const Chatbot = () => {
 
 
 
-  // Convierte un texto plano que puede contener links Markdown [texto](url) o URLs
-  // sueltas (http/https) en nodos de React, renderizando los links como <a> clickeables.
+  // Convierte la respuesta del bot en bloques con estilo: negrita, viñetas y links
+  // clickeables. El parseo vive en chatRichText.js para poder testearlo aparte.
   const renderRichText = (text) => {
     if (typeof text !== "string") return text;
 
-    // Captura: [label](url-absoluta-o-relativa)  |  url absoluta suelta
-    const pattern =
-      /\[([^\]]+)\]\(((?:https?:\/\/|\/)[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
-    const nodes = [];
-    let lastIndex = 0;
-    let match;
-    let key = 0;
+    const blocks = parseChatText(text);
+    if (!blocks.length) return text;
 
-    while ((match = pattern.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        nodes.push(text.slice(lastIndex, match.index));
+    const renderSpans = (spans, keyPrefix) =>
+      spans.map((span, i) => {
+        if (span.type === "bold") {
+          return (
+            <strong key={`${keyPrefix}-b${i}`} style={styles.bold}>
+              {span.value}
+            </strong>
+          );
+        }
+        if (span.type === "link") {
+          // Las rutas relativas abren en la misma pestaña; las absolutas en una nueva
+          const isRelative = span.href.startsWith("/");
+          return (
+            <a
+              key={`${keyPrefix}-l${i}`}
+              href={span.href}
+              target={isRelative ? "_self" : "_blank"}
+              rel={isRelative ? undefined : "noopener noreferrer"}
+              style={styles.footerLink}
+            >
+              {span.label}
+            </a>
+          );
+        }
+        return <React.Fragment key={`${keyPrefix}-t${i}`}>{span.value}</React.Fragment>;
+      });
+
+    return blocks.map((block, index) => {
+      const key = `blk-${index}`;
+
+      if (block.type === "heading") {
+        return (
+          <div key={key} style={styles.richHeading}>
+            {renderSpans(block.spans, key)}
+          </div>
+        );
       }
-      const href = match[2] || match[3];
-      const label = match[1] || match[3];
-      // Las rutas relativas abren en la misma pestaña; las absolutas en una nueva
-      const isRelative = href.startsWith("/");
-      nodes.push(
-        <a
-          key={`chat-link-${key++}`}
-          href={href}
-          target={isRelative ? "_self" : "_blank"}
-          rel={isRelative ? undefined : "noopener noreferrer"}
-          style={styles.footerLink}
-        >
-          {label}
-        </a>
+
+      if (block.type === "list") {
+        return (
+          <ul key={key} style={styles.richList}>
+            {block.items.map((item, i) => (
+              <li key={`${key}-i${i}`} style={styles.richListItem}>
+                {renderSpans(item, `${key}-i${i}`)}
+              </li>
+            ))}
+          </ul>
+        );
+      }
+
+      return (
+        <p key={key} style={styles.richParagraph}>
+          {renderSpans(block.spans, key)}
+        </p>
       );
-      lastIndex = pattern.lastIndex;
-    }
-
-    if (lastIndex < text.length) {
-      nodes.push(text.slice(lastIndex));
-    }
-
-    return nodes.length ? nodes : text;
+    });
   };
 
   const renderMessageContent = (msg) => {
