@@ -1,10 +1,8 @@
-﻿import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import Panel from './ChatPanel';
 import logoBot from '../bot-img.png';
 
 const FloatingButton = () => {
-  const navigate = useNavigate();
   const styles = {
     button: {
       width: '200px',
@@ -38,14 +36,10 @@ const FloatingButton = () => {
   
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  // Foody calls a paid LLM, so it is only offered to signed-in users.
-  // Anonymous visitors are sent to the login page instead of opening the panel.
+  // El panel siempre abre: si el visitante no está logueado, Foody se lo dice
+  // dentro del chat con los links a login y registro. Redirigir de golpe era
+  // confuso: parecía que el botón estaba roto.
   const togglePanel = () => {
-    const stored = localStorage.getItem('user');
-    if (!stored) {
-      navigate('/login');
-      return;
-    }
     setIsPanelOpen(prevState => !prevState);
   };
 

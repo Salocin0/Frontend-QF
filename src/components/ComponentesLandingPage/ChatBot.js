@@ -13,6 +13,8 @@ const Chatbot = () => {
   const { isMobile } = useBreakpoint();
   const { isDark, toggleTheme } = useTheme();
   const [messages, setMessages] = useState([]);
+  // Sin sesión el chat abre igual (para que se vea que funciona), pero no consulta.
+  const isGuest = !user?.nombre;
   const styles = {
     global: {
       fontFamily: "Segoe UI, Tahoma, Geneva, Verdana, sans-serif",
@@ -151,6 +153,14 @@ const Chatbot = () => {
       whiteSpace: "nowrap",
       transition: "background-color 0.3s ease",
     },
+    chatInputDisabled: {
+      opacity: 0.6,
+      cursor: "not-allowed",
+    },
+    sendBtnDisabled: {
+      opacity: 0.5,
+      cursor: "not-allowed",
+    },
     footer: {
       textAlign: "center",
       padding: "15px 0",
@@ -202,6 +212,12 @@ const Chatbot = () => {
 
   const MenssageRegister = `Tambien podes crearte una cuenta haciendo click aquí.`;
 
+  // Saludo para visitantes sin sesión: explica quién es Foody y por qué necesita
+  // que se registren. El chat abre igual, pero no deja consultar.
+  const GuestGreeting = `Hola! Soy Foody 🤖, el asistente de QuickFood. Te ayudo a encontrar eventos, puestos y precios.
+
+No detecto que estés logueado o registrado. Para consultarme, ingresá con tu cuenta o creá una gratis.`;
+
   const chatInputRef = useRef(null);
   const chatBoxRef = useRef(null);
 
@@ -218,48 +234,57 @@ const Chatbot = () => {
   const sendMessage = useCallback(() => {
     const chatInput = chatInputRef.current;
     const message = chatInput.value.trim();
-    if (message) {
-      addMessageToChat(message, "user");
-      chatInput.value = "";
+    if (!message) return;
 
-      // URLSearchParams se encarga del encoding: pasar el string crudo a su constructor
-      // hacía que "&" cortara el mensaje y "+" se volviera espacio.
-      const body = new URLSearchParams();
-      body.append("userMessage", message);
-
-      fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
-        method: "POST",
-        body,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      })
-        .then(async (response) => {
-          const data = await response.json().catch(() => ({}));
-          if (!response.ok) {
-            throw new Error(data?.msg || "No pudimos obtener una respuesta.");
-          }
-          return data;
-        })
-        .then((data) => {
-          addMessageToChat(data.data.chat_response, "bot");
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          addMessageToChat(
-            error.message ||
-              "No pudimos obtener una respuesta. Probá de nuevo en unos segundos.",
-            "bot"
-          );
-        });
+    // Sin sesión no se consulta al backend: el LLM es pago y la API no autentica.
+    if (!user?.nombre) {
+      addMessageToChat(
+        "Para consultarme necesitás iniciar sesión. Usá los links de arriba 👆",
+        "bot"
+      );
+      return;
     }
-  }, [addMessageToChat]);
+
+    addMessageToChat(message, "user");
+    chatInput.value = "";
+
+    // URLSearchParams se encarga del encoding: pasar el string crudo a su constructor
+    // hacía que "&" cortara el mensaje y "+" se volviera espacio.
+    const body = new URLSearchParams();
+    body.append("userMessage", message);
+
+    fetch(`${process.env?.REACT_APP_BACK_URL}chatbot`, {
+      method: "POST",
+      body,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    })
+      .then(async (response) => {
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          throw new Error(data?.msg || "No pudimos obtener una respuesta.");
+        }
+        return data;
+      })
+      .then((data) => {
+        addMessageToChat(data.data.chat_response, "bot");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        addMessageToChat(
+          error.message ||
+            "No pudimos obtener una respuesta. Probá de nuevo en unos segundos.",
+          "bot"
+        );
+      });
+  }, [addMessageToChat, user]);
 
   useEffect(() => {
     const nombre = user?.nombre;
     const greetingMessage = nombre
       ? `Hola ${nombre} 👋 👋, \nespero que estés bien! Acá Foody 🤖.  \nDecime, ¿en qué puedo ayudarte?`
-      : `Hola Usuario 👋 👋,  \nespero que estés bien! Acá Foody 🤖.  \nDecime, ¿en qué puedo ayudarte?`;
+      : GuestGreeting;
 
     if (nombre) {
       setMessages([
@@ -284,7 +309,7 @@ const Chatbot = () => {
         },
       ]);
     }
-  }, [user, MenssageLogin, MenssageRegister]);
+  }, [user, GuestGreeting, MenssageLogin, MenssageRegister]);
 
   useEffect(() => {
     const chatInput = chatInputRef.current;
@@ -432,10 +457,25 @@ const Chatbot = () => {
           <input
             type="text"
             ref={chatInputRef}
-            style={styles.chatInput}
-            placeholder="Escribí tu consulta aquí..."
+            style={{
+              ...styles.chatInput,
+              ...(isGuest ? styles.chatInputDisabled : null),
+            }}
+            placeholder={
+              isGuest
+                ? "Iniciá sesión para consultarme..."
+                : "Escribí tu consulta aquí..."
+            }
+            disabled={isGuest}
           />
-          <button onClick={sendMessage} style={styles.sendBtn}>
+          <button
+            onClick={sendMessage}
+            style={{
+              ...styles.sendBtn,
+              ...(isGuest ? styles.sendBtnDisabled : null),
+            }}
+            disabled={isGuest}
+          >
             Enviar
           </button>
         </div>

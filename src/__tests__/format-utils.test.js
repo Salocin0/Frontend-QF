@@ -62,4 +62,33 @@ describe("pickUpcomingEvents (landing carousel)", () => {
     const many = Array.from({ length: 9 }, (_, i) => ({ id: i, estado: "Confirmado", fechaHoraInicio: `2999-01-0${i + 1}T10:00:00Z` }));
     expect(pickUpcomingEvents(many)).toHaveLength(5);
   });
+
+  test("drops events whose last day already passed, even if the state is not Finalizado", () => {
+    const now = new Date("2026-10-26T12:00:00Z");
+    const eventos = [
+      {
+        id: 1,
+        nombre: "Termino ayer",
+        estado: "EnCurso",
+        diaEventos: [
+          { fechaHoraInicioDiaEvento: "2026-10-20T10:00:00Z", fechaHoraFinDiaEvento: "2026-10-25T23:00:00Z" },
+        ],
+      },
+      {
+        id: 2,
+        nombre: "Sigue hoy",
+        estado: "EnCurso",
+        diaEventos: [
+          { fechaHoraInicioDiaEvento: "2026-10-24T10:00:00Z", fechaHoraFinDiaEvento: "2026-10-27T23:00:00Z" },
+        ],
+      },
+    ];
+    expect(pickUpcomingEvents(eventos, now).map((e) => e.id)).toEqual([2]);
+  });
+
+  test("keeps an event with no end date rather than hiding it", () => {
+    const now = new Date("2026-10-26T12:00:00Z");
+    const eventos = [{ id: 7, estado: "Confirmado", fechaHoraInicio: "2026-11-01T10:00:00Z" }];
+    expect(pickUpcomingEvents(eventos, now).map((e) => e.id)).toEqual([7]);
+  });
 });

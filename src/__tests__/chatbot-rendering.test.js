@@ -4,10 +4,10 @@ import { MemoryRouter } from 'react-router-dom';
 import { UserContext } from '../components/ComponentesGenerales/UserContext';
 import Chatbot from '../components/ComponentesLandingPage/ChatBot';
 
-const renderChat = () =>
+const renderChat = (user = { id: 4, nombre: 'Ana', tipoUsuario: 'consumidor' }) =>
   render(
     <MemoryRouter>
-      <UserContext.Provider value={{ user: { id: 4, nombre: 'Ana', tipoUsuario: 'consumidor' } }}>
+      <UserContext.Provider value={{ user }}>
         <Chatbot />
       </UserContext.Provider>
     </MemoryRouter>
@@ -117,6 +117,31 @@ describe('Chatbot — message rendering', () => {
     ask('hola');
 
     expect(await screen.findByText(/Demasiadas consultas seguidas/i)).toBeInTheDocument();
+    restore();
+  });
+
+  test('guest sees the greeting with login and register links', () => {
+    renderChat(null);
+
+    expect(screen.getByText(/Soy Foody/i)).toBeInTheDocument();
+    expect(screen.getByText(/No detecto que estés logueado o registrado/i)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /loguearte/i })).toHaveAttribute('href', '/login');
+    expect(screen.getByRole('link', { name: /crearte una cuenta/i })).toHaveAttribute(
+      'href',
+      '/seleccion-perfil'
+    );
+  });
+
+  test('guest cannot send: input is disabled and no request is made', () => {
+    const restore = mockFetch(async () => ({ ok: true, json: async () => ({}) }));
+
+    renderChat(null);
+
+    const input = screen.getByPlaceholderText(/Iniciá sesión para consultarme/i);
+    expect(input).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Enviar/i })).toBeDisabled();
+    expect(global.fetch).not.toHaveBeenCalled();
+
     restore();
   });
 });
