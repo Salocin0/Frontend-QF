@@ -33,8 +33,9 @@ export const pickUpcomingEvents = (eventos, now = new Date()) =>
     .map(({ evento, start }) => ({ ...evento, fechaInicioMostrada: new Date(start).toISOString() }));
 
 const slideStyles = {
-  container: { height: "min(300px, 56vw)", minHeight: "180px", position: "relative", overflow: "hidden", backgroundColor: "var(--qf-bg-main)" },
-  image: { width: "100%", height: "100%", objectFit: "cover" },
+  // 16:9 matches the generated covers, so `cover` no longer crops the title away.
+  container: { aspectRatio: "16 / 9", width: "100%", maxHeight: "min(520px, 62vw)", position: "relative", overflow: "hidden", backgroundColor: "var(--qf-bg-main)" },
+  image: { width: "100%", height: "100%", objectFit: "cover", display: "block" },
   neutral: {
     width: "100%",
     height: "100%",
@@ -67,8 +68,9 @@ const EventSlide = ({ evento }) => (
         <img src={Logo} alt="QuickFood" style={slideStyles.logo} />
       </div>
     )}
+    {/* The generated covers already carry the event name, so only the date is overlaid. */}
     <div style={slideStyles.caption}>
-      <strong>{evento.nombre}</strong>
+      {!evento.img && <strong>{evento.nombre}</strong>}
       <div>{formatDateAR(evento.fechaInicioMostrada)}</div>
     </div>
   </div>
