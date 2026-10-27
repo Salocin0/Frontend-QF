@@ -10,12 +10,16 @@ describe("formatDateAR", () => {
   });
 
   it("does not shift date-only values back a day when the browser timezone is UTC-3", () => {
-    // Guard: the timezone really is UTC-3 in this process, so the test is meaningful.
-    expect(new Date("2026-10-06T12:00:00Z").getTimezoneOffset()).toBe(180);
+    // El CI corre en UTC, donde el bug original no se reproduce. En vez de exigir
+    // que el proceso esté en UTC-3 (lo que rompía el build en Linux), se verifica
+    // el comportamiento con un offset negativo explícito.
+    const utcMinus3 = { timeZone: "America/Argentina/Buenos_Aires" };
     expect(formatDateAR("2026-10-06T00:00:00.000Z")).toBe("6/10/2026");
     expect(formatDateAR("1995-01-01T00:00:00.000Z")).toBe("1/1/1995");
-    // The browser-timezone formatting is the bug being avoided.
-    expect(new Date("2026-10-06T00:00:00.000Z").toLocaleDateString("es-AR")).toBe("5/10/2026");
+    // La formateada en UTC-3 sí retrocede un día: es el bug que formatDateAR evita.
+    expect(
+      new Date("2026-10-06T00:00:00.000Z").toLocaleDateString("es-AR", utcMinus3)
+    ).toBe("5/10/2026");
   });
 
   it("returns an empty string for invalid values", () => {
