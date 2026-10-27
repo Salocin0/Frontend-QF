@@ -29,30 +29,53 @@ const Chatbot = () => {
       backgroundColor: "var(--qf-bg-dark)",
       display: "flex",
       alignItems: "center",
-      justifyContent: "center",
-      padding: "16px 50px",
-      borderBottom: `5px solid var(--qf-naranja)`,
-      borderRadius: "20px",
-      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+      gap: "10px",
+      justifyContent: "flex-start",
+      padding: "14px 52px 14px 16px",
+      borderBottom: `3px solid var(--qf-naranja)`,
+      borderRadius: "20px 20px 0 0",
+    },
+    headerAvatar: {
+      width: "34px",
+      height: "34px",
+      borderRadius: "50%",
+      objectFit: "cover",
+      border: `2px solid var(--qf-naranja)`,
+      flexShrink: 0,
+    },
+    headerTextWrap: {
+      display: "flex",
+      flexDirection: "column",
+      minWidth: 0,
     },
     headerTitle: {
       margin: 0,
       color: "var(--qf-naranja)",
-      fontSize: isMobile ? "1em" : "1.5em",
+      fontSize: isMobile ? "1em" : "1.1em",
+      fontWeight: 700,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    headerSubtitle: {
+      margin: 0,
+      color: "var(--qf-blanco-puro)",
+      opacity: 0.75,
+      fontSize: "0.75em",
       whiteSpace: "nowrap",
       overflow: "hidden",
       textOverflow: "ellipsis",
     },
     themeSwitch: {
       position: "absolute",
-      left: "16px",
+      right: "52px",
       top: "50%",
       transform: "translateY(-50%)",
-      width: "52px",
-      height: "28px",
+      width: "44px",
+      height: "24px",
       padding: 0,
       borderRadius: "20px",
-      border: `2px solid var(--qf-naranja)`,
+      border: `1px solid var(--qf-naranja)`,
       backgroundColor: "var(--qf-bg-main)",
       cursor: "pointer",
       display: "flex",
@@ -62,84 +85,93 @@ const Chatbot = () => {
     themeSwitchThumb: {
       position: "absolute",
       top: "50%",
-      left: isDark ? "26px" : "2px",
+      left: isDark ? "22px" : "2px",
       transform: "translateY(-50%)",
-      width: "20px",
-      height: "20px",
+      width: "18px",
+      height: "18px",
       borderRadius: "50%",
       backgroundColor: "var(--qf-naranja)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      fontSize: "11px",
+      fontSize: "10px",
       lineHeight: 1,
       transition: "left 0.3s ease",
     },
     chatContainer: {
       width: "100%",
-      margin: "20px auto",
-      padding: "10px",
-      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-      backgroundColor: "var(--qf-bg-dark)",
-      borderRadius: "20px",
+      margin: 0,
+      padding: "12px",
+      backgroundColor: "var(--qf-bg-main)",
+      borderRadius: "0 0 20px 20px",
+      boxSizing: "border-box",
     },
     chatBox: {
-      height: "250px",
+      height: isMobile ? "260px" : "320px",
       overflowY: "auto",
-      border: `2px solid var(--qf-naranja)`,
-      padding: "10px",
-      marginBottom: "20px",
-      backgroundColor: "var(--qf-bg-main)",
-      borderRadius: "15px",
+      border: `1px solid rgba(197, 161, 69, 0.35)`,
+      padding: "12px",
+      marginBottom: "12px",
+      backgroundColor: "var(--qf-bg-dark)",
+      borderRadius: "14px",
+      scrollBehavior: "smooth",
     },
     chatMessage: {
       display: "flex",
       alignItems: "flex-start",
-      marginBottom: "15px",
+      marginBottom: "12px",
       flexDirection: "row",
+      gap: "8px",
     },
     messageText: {
-      borderRadius: "20px",
-      padding: "15px",
-      maxWidth: "70%",
-      fontSize: "1em",
-      backgroundColor: "var(--qf-bg-dark)",
+      borderRadius: "14px",
+      padding: "10px 14px",
+      maxWidth: "78%",
+      fontSize: "0.92em",
+      backgroundColor: "var(--qf-bg-secondary)",
+      color: "var(--qf-blanco-puro)",
+      boxSizing: "border-box",
+      overflowWrap: "anywhere",
     },
     userImage: {
-      width: "50px",
-      height: "50px",
+      width: "32px",
+      height: "32px",
       borderRadius: "50%",
       objectFit: "cover",
-      marginLeft: "10px",
+      flexShrink: 0,
     },
     botImage: {
-      width: "50px",
-      height: "50px",
+      width: "32px",
+      height: "32px",
       borderRadius: "50%",
       objectFit: "cover",
-      marginRight: "10px",
+      flexShrink: 0,
     },
     userMessageText: {
-      color: "var(--qf-blanco-puro)",
-      marginLeft: "15px",
+      color: "var(--qf-negro-puro)",
+      backgroundColor: "var(--qf-naranja)",
+      borderBottomRightRadius: "4px",
     },
     botMessageText: {
       color: "var(--qf-blanco-puro)",
-      marginRight: "15px",
+      backgroundColor: "var(--qf-bg-secondary)",
+      borderBottomLeftRadius: "4px",
     },
     chatInputContainer: {
       display: "flex",
       alignItems: "center",
-      gap: "10px",
+      gap: "8px",
     },
     chatInput: {
       flex: 1,
       minWidth: 0,
-      padding: "10px",
-      border: `2px solid var(--qf-naranja)`,
+      padding: "10px 14px",
+      border: `1px solid rgba(197, 161, 69, 0.5)`,
       borderRadius: "20px",
-      backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-text-primary)",
+      backgroundColor: "var(--qf-bg-dark)",
+      color: "var(--qf-blanco-puro)",
+      fontSize: "0.9em",
+      outline: "none",
       transition: "border 0.3s ease, box-shadow 0.3s ease",
     },
     sendBtn: {
@@ -163,30 +195,35 @@ const Chatbot = () => {
     },
     footer: {
       textAlign: "center",
-      padding: "15px 0",
+      padding: "8px 0 10px",
       backgroundColor: "var(--qf-bg-main)",
-      fontSize: "1em",
-      borderTop: `5px solid var(--qf-naranja)`,
-      borderRadius: "20px",
-      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-      colors: "var(--qf-blanco-puro)",
+      fontSize: "0.7em",
+      borderTop: `1px solid rgba(197, 161, 69, 0.25)`,
+      borderRadius: "0 0 20px 20px",
+      color: "var(--qf-blanco-puro)",
+      opacity: 0.7,
     },
     footerLink: {
       color: "var(--qf-naranja)",
-      textDecoration: "none",
+      textDecoration: "underline",
       cursor: "pointer",
+      fontWeight: 600,
     },
     bold: {
       color: "var(--qf-naranja)",
       fontWeight: 700,
     },
     richHeading: {
-      color: "var(--qf-naranja)",
+      color: "var(--qf-blanco-puro)",
       fontWeight: 700,
       fontSize: "1.05em",
       margin: "0 0 6px 0",
     },
     richParagraph: {
+      // El color va explícito: _inicio.scss define `h2, p { color: black }` a nivel
+      // global y, al ser una regla directa sobre <p>, gana sobre el color heredado
+      // del contenedor. Sin esto el texto quedaba negro sobre fondo negro.
+      color: "var(--qf-blanco-puro)",
       margin: "0 0 8px 0",
       lineHeight: 1.45,
     },
@@ -194,8 +231,10 @@ const Chatbot = () => {
       margin: "0 0 8px 0",
       paddingLeft: "20px",
       listStyleType: "disc",
+      color: "var(--qf-blanco-puro)",
     },
     richListItem: {
+      color: "var(--qf-blanco-puro)",
       marginBottom: "4px",
       lineHeight: 1.45,
     },
@@ -417,7 +456,22 @@ No detecto que estés logueado o registrado. Para consultarme, ingresá con tu c
   return (
     <div style={styles.global}>
       <header style={styles.header}>
-        <h1 style={styles.headerTitle}>Bienvenido al ChatFood!</h1>
+        <img src={botImageURL} alt="Foody" style={styles.headerAvatar} />
+        <div style={styles.headerTextWrap}>
+          <h1 style={styles.headerTitle}>Foody</h1>
+          <p style={styles.headerSubtitle}>
+            {isGuest ? "Asistente de QuickFood" : "Asistente de QuickFood · En línea"}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={toggleTheme}
+          style={styles.themeSwitch}
+          aria-label={isDark ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+          title={isDark ? "Modo claro" : "Modo oscuro"}
+        >
+          <span style={styles.themeSwitchThumb}>{isDark ? "🌙" : "☀️"}</span>
+        </button>
       </header>
       <div style={styles.chatContainer}>
         <div style={styles.chatBox} ref={chatBoxRef}>
