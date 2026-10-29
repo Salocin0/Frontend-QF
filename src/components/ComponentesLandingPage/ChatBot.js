@@ -4,11 +4,13 @@ import { FaPaperPlane } from "react-icons/fa";
 import botImageURL from "../bot-img.png";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import "./chat.scss";
+import { parseChatText } from "./chatRichText";
 
 const suggestions = ["¿Cómo hago un pedido?", "¿Qué eventos hay?", "¿Cómo me registro?"];
 
 const Chatbot = () => {
   const { user } = useContext(UserContext);
+  const isGuest = !user?.nombre;
   const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -24,7 +26,7 @@ const Chatbot = () => {
 
   const sendMessage = async (text = draft) => {
     const message = text.trim();
-    if (!message || requestRef.current) return;
+    if (isGuest || !message || requestRef.current) return;
     setMessages((prev) => [...prev, { message, sender: "user" }]);
     setDraft("");
     setIsSending(true);
@@ -37,13 +39,13 @@ const Chatbot = () => {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         signal: controller.signal,
       });
-      if (!response.ok) throw new Error("Chat unavailable");
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data?.msg || "No pude responder en este momento. Intentá de nuevo en unos minutos.");
       if (typeof data?.data?.chat_response !== "string") throw new Error("Invalid response");
       setMessages((prev) => [...prev, { message: data.data.chat_response, sender: "bot" }]);
     } catch (error) {
       if (error.name !== "AbortError") {
-        setMessages((prev) => [...prev, { message: "No pude responder en este momento. Intentá de nuevo en unos minutos.", sender: "bot", error: true }]);
+        setMessages((prev) => [...prev, { message: error.message || "No pude responder en este momento. Intentá de nuevo en unos minutos.", sender: "bot", error: true }]);
       }
     } finally {
       requestRef.current = null;
@@ -57,41 +59,65 @@ const Chatbot = () => {
   const renderRichText = (text) => {
     if (typeof text !== "string") return text;
 
-    // Captura: [label](url-absoluta-o-relativa)  |  url absoluta suelta
-    const pattern =
-      /\[([^\]]+)\]\(((?:https?:\/\/|\/)[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
-    const nodes = [];
-    let lastIndex = 0;
-    let match;
-    let key = 0;
+    const blocks = parseChatText(text);
+    if (!blocks.length) return text;
 
-    while ((match = pattern.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        nodes.push(text.slice(lastIndex, match.index));
+    const renderSpans = (spans, keyPrefix) =>
+      spans.map((span, i) => {
+        if (span.type === "bold") {
+          return (
+            <strong key={`${keyPrefix}-b${i}`} className="qf-chat__bold">
+              {span.value}
+            </strong>
+          );
+        }
+        if (span.type === "link") {
+          // Las rutas relativas abren en la misma pestaña; las absolutas en una nueva
+          const isRelative = span.href.startsWith("/");
+          return (
+            <a
+              key={`${keyPrefix}-l${i}`}
+              href={span.href}
+              target={isRelative ? "_self" : "_blank"}
+              rel={isRelative ? undefined : "noopener noreferrer"}
+              className="qf-chat__footerLink"
+            >
+              {span.label}
+            </a>
+          );
+        }
+        return <React.Fragment key={`${keyPrefix}-t${i}`}>{span.value}</React.Fragment>;
+      });
+
+    return blocks.map((block, index) => {
+      const key = `blk-${index}`;
+
+      if (block.type === "heading") {
+        return (
+          <div key={key} className="qf-chat__richHeading">
+            {renderSpans(block.spans, key)}
+          </div>
+        );
       }
-      const href = match[2] || match[3];
-      const label = match[1] || match[3];
-      // Las rutas relativas abren en la misma pestaña; las absolutas en una nueva
-      const isRelative = href.startsWith("/");
-      nodes.push(
-        <a
-          key={`chat-link-${key++}`}
-          href={href}
-          target={isRelative ? "_self" : "_blank"}
-          rel={isRelative ? undefined : "noopener noreferrer"}
-          className="qf-chat__link"
-        >
-          {label}
-        </a>
+
+      if (block.type === "list") {
+        return (
+          <ul key={key} className="qf-chat__richList">
+            {block.items.map((item, i) => (
+              <li key={`${key}-i${i}`} className="qf-chat__richListItem">
+                {renderSpans(item, `${key}-i${i}`)}
+              </li>
+            ))}
+          </ul>
+        );
+      }
+
+      return (
+        <p key={key} className="qf-chat__richParagraph">
+          {renderSpans(block.spans, key)}
+        </p>
       );
-      lastIndex = pattern.lastIndex;
-    }
-
-    if (lastIndex < text.length) {
-      nodes.push(text.slice(lastIndex));
-    }
-
-    return nodes.length ? nodes : text;
+    });
   };
 
   return (
@@ -105,24 +131,25 @@ const Chatbot = () => {
           <span className="qf-chat__sender">Foody</span>
           <p>¡Hola{user?.nombre ? `, ${user.nombre}` : ""}! 👋 Soy Foody. Te ayudo con eventos, pedidos y tus primeros pasos en QuickFood. ¿Qué necesitás?</p>
         </div>
-        {messages.length === 0 && (
+        {!isGuest && messages.length === 0 && (
           <div className="qf-chat__suggestions" aria-label="Consultas sugeridas">
             {suggestions.map((text) => <button key={text} type="button" onClick={() => sendMessage(text)}>{text} <span aria-hidden="true">↗</span></button>)}
           </div>
         )}
+        {isGuest && <div className="qf-chat__message qf-chat__message--bot"><p>No detecto que estés logueado o registrado. Para consultarme, ingresá con tu cuenta o creá una gratis.</p></div>}
         {messages.map((msg, index) => (
           <div key={index} className={`qf-chat__message qf-chat__message--${msg.sender}${msg.error ? " qf-chat__message--error" : ""}`}>
             <span className="qf-chat__sender">{msg.sender === "user" ? "Vos" : "Foody"}</span>
-            <p>{msg.sender === "bot" ? renderRichText(msg.message) : msg.message}</p>
+            <div className="qf-chat__body">{msg.sender === "bot" ? renderRichText(msg.message) : <p>{msg.message}</p>}</div>
           </div>
         ))}
         {isSending && <div className="qf-chat__typing" role="status"><span /><span /><span /><small>Foody está escribiendo…</small></div>}
       </div>
-      {!user?.nombre && <div className="qf-chat__account"><Link to="/login">Iniciá sesión</Link><span>o</span><Link to="/seleccion-perfil">creá tu cuenta</Link></div>}
+      {!user?.nombre && <div className="qf-chat__account"><Link to="/login">Podés loguearte</Link><span>o</span><Link to="/seleccion-perfil">crearte una cuenta</Link></div>}
       <form className="qf-chat__composer" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>
         <label className="qf-chat__sr-only" htmlFor="foody-message">Tu consulta para Foody</label>
-        <input id="foody-message" ref={inputRef} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Escribí tu consulta…" autoComplete="off" />
-        <button type="submit" disabled={!draft.trim() || isSending} aria-label="Enviar mensaje"><FaPaperPlane aria-hidden="true" /></button>
+        <input id="foody-message" ref={inputRef} value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={isGuest ? "Iniciá sesión para consultarme…" : "Escribí tu consulta…"} disabled={isGuest} autoComplete="off" />
+        <button type="submit" disabled={isGuest || !draft.trim() || isSending} aria-label="Enviar mensaje"><FaPaperPlane aria-hidden="true" /></button>
       </form>
       <div className="qf-chat__signature">QUICKFOOD · PEDÍ Y DISFRUTÁ</div>
     </div>

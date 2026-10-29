@@ -10,12 +10,16 @@ describe("formatDateAR", () => {
   });
 
   it("does not shift date-only values back a day when the browser timezone is UTC-3", () => {
-    // Guard: the timezone really is UTC-3 in this process, so the test is meaningful.
-    expect(new Date("2026-10-06T12:00:00Z").getTimezoneOffset()).toBe(180);
+    // El CI corre en UTC, donde el bug original no se reproduce. En vez de exigir
+    // que el proceso esté en UTC-3 (lo que rompía el build en Linux), se verifica
+    // el comportamiento con un offset negativo explícito.
+    const utcMinus3 = { timeZone: "America/Argentina/Buenos_Aires" };
     expect(formatDateAR("2026-10-06T00:00:00.000Z")).toBe("6/10/2026");
     expect(formatDateAR("1995-01-01T00:00:00.000Z")).toBe("1/1/1995");
-    // The browser-timezone formatting is the bug being avoided.
-    expect(new Date("2026-10-06T00:00:00.000Z").toLocaleDateString("es-AR")).toBe("5/10/2026");
+    // La formateada en UTC-3 sí retrocede un día: es el bug que formatDateAR evita.
+    expect(
+      new Date("2026-10-06T00:00:00.000Z").toLocaleDateString("es-AR", utcMinus3)
+    ).toBe("5/10/2026");
   });
 
   it("returns an empty string for invalid values", () => {
@@ -61,5 +65,34 @@ describe("pickUpcomingEvents (landing carousel)", () => {
     expect(pickUpcomingEvents(null)).toEqual([]);
     const many = Array.from({ length: 9 }, (_, i) => ({ id: i, estado: "Confirmado", fechaHoraInicio: `2999-01-0${i + 1}T10:00:00Z` }));
     expect(pickUpcomingEvents(many)).toHaveLength(5);
+  });
+
+  test("drops events whose last day already passed, even if the state is not Finalizado", () => {
+    const now = new Date("2026-10-26T12:00:00Z");
+    const eventos = [
+      {
+        id: 1,
+        nombre: "Termino ayer",
+        estado: "EnCurso",
+        diaEventos: [
+          { fechaHoraInicioDiaEvento: "2026-10-20T10:00:00Z", fechaHoraFinDiaEvento: "2026-10-25T23:00:00Z" },
+        ],
+      },
+      {
+        id: 2,
+        nombre: "Sigue hoy",
+        estado: "EnCurso",
+        diaEventos: [
+          { fechaHoraInicioDiaEvento: "2026-10-24T10:00:00Z", fechaHoraFinDiaEvento: "2026-10-27T23:00:00Z" },
+        ],
+      },
+    ];
+    expect(pickUpcomingEvents(eventos, now).map((e) => e.id)).toEqual([2]);
+  });
+
+  test("keeps an event with no end date rather than hiding it", () => {
+    const now = new Date("2026-10-26T12:00:00Z");
+    const eventos = [{ id: 7, estado: "Confirmado", fechaHoraInicio: "2026-11-01T10:00:00Z" }];
+    expect(pickUpcomingEvents(eventos, now).map((e) => e.id)).toEqual([7]);
   });
 });

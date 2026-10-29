@@ -9,7 +9,9 @@ import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
 
 const MAX_EVENTOS = 5;
 
-// Next events first; finished ones and events without a date are dropped.
+// Next events first; finished ones, already-ended ones and events without a date are dropped.
+// "Already ended" matters because an event can stay in EnCurso/Confirmado after its last
+// day passed, and the landing must not advertise it as upcoming.
 export const pickUpcomingEvents = (eventos, now = new Date()) =>
   (Array.isArray(eventos) ? eventos : [])
     .map((evento) => {
@@ -17,9 +19,18 @@ export const pickUpcomingEvents = (eventos, now = new Date()) =>
       const start = dias.length
         ? Math.min(...dias.map((d) => new Date(d.fechaHoraInicioDiaEvento).getTime()))
         : new Date(evento?.fechaHoraInicio).getTime();
-      return { evento, start };
+      const end = dias.length
+        ? Math.max(...dias.map((d) => new Date(d.fechaHoraFinDiaEvento).getTime()))
+        : new Date(evento?.fechaHoraFin).getTime();
+      return { evento, start, end };
     })
-    .filter(({ evento, start }) => evento && evento.estado !== "Finalizado" && !Number.isNaN(start))
+    .filter(({ evento, start, end }) => {
+      if (!evento || evento.estado === "Finalizado") return false;
+      if (Number.isNaN(start)) return false;
+      // Sin fecha de fin conocida se mantiene: es mejor mostrarlo que ocultarlo.
+      if (!Number.isNaN(end) && end < now.getTime()) return false;
+      return true;
+    })
     .sort((a, b) => a.start - b.start)
     .slice(0, MAX_EVENTOS)
     .map(({ evento, start }) => ({ ...evento, fechaInicioMostrada: new Date(start).toISOString() }));
