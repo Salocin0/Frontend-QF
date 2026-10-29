@@ -1,59 +1,57 @@
-import React, { useState } from 'react';
-import Panel from './ChatPanel';
-import logoBot from '../bot-img.png';
+import React, { useEffect, useRef, useState } from "react";
+import { FaTimes } from "react-icons/fa";
+import Panel from "./ChatPanel";
+import logoBot from "../bot-img.png";
+import "./foody.scss";
 
-const FloatingButton = () => {
-  const styles = {
-    button: {
-      width: '200px',
-      height: '50px',
-      fontSize: '16px',
-      overflow: 'hidden',
-      position: 'fixed',
-      bottom: '70px',
-      right: '20px',
-      borderRadius: '50px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-      backgroundColor: "var(--qf-naranja)",
-      border: 'none',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      // Dark text on the gold background (white on gold is only 2.45:1).
-      color: "#1a1a1a",
-    },
-    buttonText: {
-      flex: 1,
-      textAlign: 'center',
-      fontWeight: 'bold',
-    },
-    botImage: {
-      height: '100%',
-      borderRadius: '50%',
-      border: `2px solid var(--qf-text-white)`,
-    },
-  };
-  
+const FloatingButton = ({ showWelcome = true }) => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
+  const [showGreeting, setShowGreeting] = useState(true);
+  const launcherRef = useRef(null);
+  const popupRef = useRef(null);
 
-  // El panel siempre abre: si el visitante no está logueado, Foody se lo dice
-  // dentro del chat con los links a login y registro. Redirigir de golpe era
-  // confuso: parecía que el botón estaba roto.
-  const togglePanel = () => {
-    setIsPanelOpen(prevState => !prevState);
+  useEffect(() => {
+    if (isPanelOpen) popupRef.current?.querySelector("button")?.focus();
+  }, [isPanelOpen]);
+
+  const openChat = () => {
+    setHasOpened(true);
+    setShowGreeting(false);
+    setIsPanelOpen(true);
+  };
+
+  const minimizeChat = () => {
+    setIsPanelOpen(false);
+    launcherRef.current?.focus();
+  };
+
+  const closeChat = () => {
+    setHasOpened(false);
+    setIsPanelOpen(false);
+    launcherRef.current?.focus();
   };
 
   return (
-    <div>
-      <button
-        style={styles.button}
-        onClick={togglePanel}
-      >
-        <span style={styles.buttonText}>Consultas Foody</span>
-        <img src={logoBot} alt="Bot" style={styles.botImage} />
+    <div className="qf-foody">
+      {showWelcome && !isPanelOpen && showGreeting && (
+        <div className="qf-foody__greeting">
+          <button className="qf-foody__dismiss" aria-label="Ocultar saludo de Foody" onClick={() => setShowGreeting(false)}><FaTimes aria-hidden="true" /></button>
+          <strong>¡Hola! Soy Foody 👋</strong>
+          <p>¿Tenés hambre de respuestas?</p>
+          <button className="qf-foody__start" onClick={openChat}>Charlemos <span aria-hidden="true">↗</span></button>
+        </div>
+      )}
+      {hasOpened && (
+        <div ref={popupRef} id="foody-chat" hidden={!isPanelOpen} className="qf-foody__popup" role="dialog" aria-label="Chat con Foody" onKeyDown={(event) => {
+          if (event.key === "Escape") { event.stopPropagation(); minimizeChat(); }
+        }}>
+          <Panel onClose={closeChat} onMinimize={minimizeChat} position="relative" bottom="0px" right="0px" />
+        </div>
+      )}
+      <button ref={launcherRef} type="button" className="qf-foody__launcher" aria-label={isPanelOpen ? "Minimizar chat con Foody" : "Abrir chat con Foody"} aria-expanded={isPanelOpen} aria-controls={isPanelOpen ? "foody-chat" : undefined} onClick={() => isPanelOpen ? minimizeChat() : openChat()}>
+        <span className="qf-foody__avatar"><img src={logoBot} alt="" /></span>
       </button>
-
-      {isPanelOpen && <Panel onClose={togglePanel} />}
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import imgDefault from "../img/QuickFood_LogoYellow.png";
+import imgDefault from "../img/qf-new-logo-transparent.png";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 

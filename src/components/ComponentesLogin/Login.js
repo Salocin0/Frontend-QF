@@ -6,6 +6,8 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import useLogin from "../Hooks/UseLogin";
 import { FaUser } from "react-icons/fa";
 import useBreakpoint from "../../useBreakpoint";
+import Logo from "../img/qf-new-logo-transparent.png";
+import "./login-form.scss";
 
 const Login = () => {
   const { updateUser } = useContext(UserContext);
@@ -56,24 +58,24 @@ const Login = () => {
       backgroundRepeat: "no-repeat",
     },
     containerStyle: {
-      maxWidth: "400px",
+      maxWidth: "440px",
       width: isMobile ? "calc(100% - 32px)" : "100%",
-      padding: isMobile ? "1.5rem" : "2rem",
-      borderRadius: "8px",
-      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-      backgroundColor: "var(--qf-bg-main)",
+      padding: isMobile ? "1.75rem" : "2.5rem",
+      borderRadius: "24px",
+      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.25)",
+      backgroundColor: "var(--login-bg)",
       textAlign: "center",
-      border: `1px solid var(--qf-naranja)`,
+      border: "1px solid #ffbd59",
     },
     titleStyle: {
-      fontSize: "1.5rem",
+      fontSize: "1.8rem",
       fontWeight: "bold",
       marginBottom: "1rem",
-      color: "var(--qf-text-primary)",
+      color: "var(--login-text)",
     },
     subtitleStyle: {
-      fontSize: "0.875rem",
-      color: "var(--qf-text-muted)",
+      fontSize: "0.95rem",
+      color: "var(--login-muted)",
       marginBottom: "1.5rem",
     },
     formStyle: {
@@ -84,40 +86,46 @@ const Login = () => {
       display: "flex",
       flexDirection: "column",
       alignItems: "flex-start",
-      marginBottom: "1rem",
+      marginBottom: "1.25rem",
+      gap: "8px",
       position: "relative",
     },
     inputStyle: {
       width: "100%",
-      padding: "0.75rem",
+      padding: "0.85rem 2.75rem 0.85rem 0.85rem",
       fontSize: "1rem",
-      borderRadius: "4px",
+      borderRadius: "12px",
+      border: "1px solid var(--login-border)",
+      backgroundColor: "var(--login-input)",
+      color: "var(--login-text)",
     },
     buttonStyle: {
       width: "100%",
       padding: "0.75rem",
       fontSize: "1rem",
       fontWeight: "bold",
-      backgroundColor: "var(--qf-naranja)",
-      color: "var(--qf-text-primary)",
-      borderRadius: "4px",
+      backgroundColor: "#ffbd59",
+      color: "#261c10",
+      borderRadius: "12px",
       border: "none",
       cursor: "pointer",
     },
     linkStyle: {
-      color: "var(--qf-blue)",
+      color: "var(--login-link)",
       textDecoration: "none",
-      fontSize: "0.875rem",
+      fontSize: "0.95rem",
       cursor: "pointer",
     },
     footerLinks: {
       display: "flex",
       justifyContent: "space-between",
-      marginTop: "1rem",
+      marginTop: "1.25rem",
+      flexWrap: "wrap",
+      gap: "12px",
     },
     label: {
       fontSize: "1rem",
-      color: "var(--qf-text-primary)",
+      color: "var(--login-text)",
       fontWeight: "bold",
       margin: 0,
       cursor: "default",
@@ -125,25 +133,27 @@ const Login = () => {
     iconStyle: {
       position: "absolute",
       right: "15px",
-      top: "68%",
-      transform: "translateY(-50%)",
+      bottom: "16px",
+
       cursor: "pointer",
-      color: "var(--qf-text-muted)",
+      color: "var(--login-muted)",
     }
   };
 
   return (
     <section style={styles.sectionStyle}>
-      <div style={styles.containerStyle}>
-        <h1 style={styles.titleStyle}>QuickFood</h1>
-        <p style={styles.subtitleStyle}>Ingresa tus credenciales para acceder</p>
+      <div className="qf-login-card" style={styles.containerStyle}>
+        <img className="qf-login-card__logo" src={Logo} alt="QuickFood" />
+        <h1 style={styles.titleStyle}>¡Qué bueno verte!</h1>
+        <p style={styles.subtitleStyle}>Iniciá sesión y disfrutá sin filas.</p>
         <form onSubmit={handleSubmit} style={styles.formStyle}>
           <div style={styles.inputWrapper}>
             <label htmlFor="usuario" style={styles.label}>Usuario</label>
             <input
               id="usuario"
               type="text"
-              placeholder="Ingresa tu usuario"
+              placeholder="Ingresá tu usuario"
+              autoComplete="username"
               style={styles.inputStyle}
               value={email}
               onChange={handleEmailChange}
@@ -158,7 +168,7 @@ const Login = () => {
               inputId="contraseña"
               value={password}
               onChange={handlePasswordChange}
-              placeholder="Ingresa tu contraseña"
+              placeholder="Ingresá tu contraseña"
               style={styles.inputStyle}
             />
           </div>

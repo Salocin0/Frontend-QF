@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import Chatbot from "./ChatBot";
 
-const Panel = ({ onClose, position, bottom, right, top, left, isLogin }) => {
+const Panel = ({ onClose, onMinimize, position, bottom, right, top, left, isLogin }) => {
   const styles = {
     panel: {
       position: position || "fixed",
@@ -9,11 +9,11 @@ const Panel = ({ onClose, position, bottom, right, top, left, isLogin }) => {
       top: top || "auto",
       left: left || "auto",
       right: left ? "auto" : (right ?? (isLogin ? "calc(80% - 400px)" : 0)),
-      width: "400px",
+      width: "min(400px, 100%)",
       maxWidth: "calc(100vw - 20px)",
       height: "auto",
       backgroundColor: "var(--qf-bg-main)",
-      border: `2px solid var(--qf-naranja)`,
+      border: "2px solid #ffbd59",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
       transition: "left 0.3s ease",
       zIndex: 1000,
@@ -22,30 +22,31 @@ const Panel = ({ onClose, position, bottom, right, top, left, isLogin }) => {
     },
     closeButton: {
       position: "absolute",
-      top: "10px",
-      right: "12px",
-      // Por encima del header del chat (que tiene su propio fondo y padding).
+      top: "14px",
+      right: "20px",
+      background: "none",
+      border: "none",
+      fontSize: "30px",
+      color: "#b0002c",
       zIndex: 2,
-      width: "32px",
-      height: "32px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      background: "rgba(0, 0, 0, 0.35)",
-      border: "1px solid var(--qf-naranja)",
-      borderRadius: "50%",
-      fontSize: "20px",
+      width: "36px",
+      height: "36px",
+      display: "grid",
+      placeItems: "center",
       lineHeight: 1,
-      color: "var(--qf-naranja)",
       cursor: "pointer",
-      padding: 0,
     },
   };
   return (
     <div style={styles.panel}>
-      <button style={styles.closeButton} onClick={onClose}>
+      <button type="button" aria-label="Cerrar chat" style={styles.closeButton} onClick={onClose}>
         &times;
       </button>
+      {onMinimize && (
+        <button type="button" aria-label="Minimizar chat" title="Minimizar" style={{ ...styles.closeButton, right: "56px", fontSize: "24px", width: "36px", height: "36px" }} onClick={onMinimize}>
+          <span aria-hidden="true">−</span>
+        </button>
+      )}
       <Chatbot />
     </div>
   );

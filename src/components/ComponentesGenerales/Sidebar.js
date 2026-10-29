@@ -1,30 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import Logo from "../img/adaptive-icon.png";
+import Logo from "../img/qf-new-logo-solid.png";
+import LogoTransparent from "../img/qf-new-logo-transparent.png";
 import MenuItems from "./MenuItems";
 import UserProfile from "./UserProfile";
-import Panel from "../ComponentesLandingPage/ChatPanel";
 import useBreakpoint from "../../useBreakpoint";
-import { FaTimes } from "react-icons/fa";
+import useTheme from "../../useTheme";
+import { FaTimes, FaSun, FaMoon } from "react-icons/fa";
 
 const Sidebar = ({ tipoUsuario, onClose, isCollapsed }) => {
   const { isMobile } = useBreakpoint();
+  const { isDark, toggleTheme } = useTheme();
   const [usuario, setUsuario] = useState("consumidor");
   const [isResponsable, setIsResponsable] = useState(false);
   const [isProductor, setIsProductor] = useState(false);
   const [isRepartidor, setIsRepartidor] = useState(false);
   const [haveRol, setHaveRol] = useState(false);
-  const [showPanel, setShowPanel] = useState(false);
 
   // Verificación de seguridad
   const SafeMenuItems = (props) => typeof MenuItems === 'function' ? <MenuItems {...props} /> : <div>Error: MenuItems undefined</div>;
   const SafeUserProfile = (props) => typeof UserProfile === 'function' ? <UserProfile {...props} /> : <div>Error: UserProfile undefined</div>;
-  const SafePanel = (props) => typeof Panel === 'function' ? <Panel {...props} /> : <div>Error: Panel undefined</div>;
-
-  const togglePanel = () => {
-    setShowPanel(!showPanel);
-  };
-
   useEffect(() => {
     setUsuario(tipoUsuario);
     setIsResponsable(usuario === "encargado");
@@ -48,27 +42,26 @@ const Sidebar = ({ tipoUsuario, onClose, isCollapsed }) => {
 
       <div className="logocontainer">
         <a href="/inicio">
-          <img src={Logo} alt="Logo" className="logo" style={{ borderRadius: "10px" }} />
+          <img src={isDark ? Logo : LogoTransparent} alt="QuickFood" className="logo" style={{ borderRadius: "10px", width: isCollapsed && !isMobile ? "56px" : "120px", height: "auto", maxWidth: "100%", objectFit: "contain" }} />
         </a>
+
       </div>
       <div className="menu-container">
         <SafeMenuItems
+          haveRol={haveRol}
           isResponsable={isResponsable}
           isProductor={isProductor}
           isRepartidor={isRepartidor}
-          togglePanel={togglePanel}
         />
-        {showPanel && createPortal(
-          <SafePanel
-            onClose={togglePanel}
-            position="fixed"
-            bottom={isMobile ? "80px" : "44px"}
-            left={isMobile || isCollapsed ? "0" : "280px"}
-            isLogin={true}
-          />,
-          document.body
-        )}
-        <SafeUserProfile haveRol={haveRol} />
+      </div>
+      <div className="qf-sidebar-account-footer">
+      <div className="qf-sidebar-account">
+        <ul><SafeUserProfile haveRol={haveRol} /></ul>
+        <button type="button" className="qf-sidebar-theme" onClick={toggleTheme} aria-label={isDark ? "Activar modo claro" : "Activar modo oscuro"} title={isDark ? "Activar modo claro" : "Activar modo oscuro"}>
+          {isDark ? <FaSun aria-hidden="true" /> : <FaMoon aria-hidden="true" />}
+        </button>
+      </div>
+      <SafeUserProfile logoutOnly />
       </div>
     </div>
   );

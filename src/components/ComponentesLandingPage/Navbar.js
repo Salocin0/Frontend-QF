@@ -1,11 +1,13 @@
 ﻿import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Logo from "../img/adaptive-icon.png";
-import { FaUserPlus, FaSignInAlt, FaBars, FaTimes } from "react-icons/fa";
+import Logo from "../img/qf-new-logo-transparent.png";
+import { FaUserPlus, FaSignInAlt, FaBars, FaTimes, FaSun, FaMoon } from "react-icons/fa";
 import useBreakpoint from "../../useBreakpoint";
+import useTheme from "../../useTheme";
 
 const Navbar = () => {
   const { isMobile } = useBreakpoint();
+  const { isDark, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const styles = {
@@ -52,7 +54,7 @@ const Navbar = () => {
       color: "var(--qf-text-muted)",
       cursor: "pointer",
       textDecoration: "none",
-      border: `2px solid var(--qf-text-muted)`,
+      border: `2px solid var(--qf-naranja)`,
       borderRadius: "10px",
       margin: isMobile ? "5px 0" : "10px",
       display: "flex",
@@ -80,6 +82,28 @@ const Navbar = () => {
     <nav style={styles.navbar}>
       <div style={styles.navbarTop}>
         <img src={Logo} alt="Logo" style={styles.logo} />
+        <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label={isDark ? "Activar modo claro" : "Activar modo oscuro"}
+          title={isDark ? "Activar modo claro" : "Activar modo oscuro"}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            padding: "8px 12px",
+            minHeight: "44px",
+            minWidth: "44px",
+            justifyContent: "center",
+            backgroundColor: "transparent",
+            color: "var(--qf-text-primary)",
+            border: "1px solid var(--qf-naranja)",
+            borderRadius: "10px",
+            cursor: "pointer",
+          }}
+        >
+          {isDark ? <FaSun aria-hidden="true" /> : <FaMoon aria-hidden="true" />}
+        </button>
         <button
           style={styles.hamburgerBtn}
           onClick={() => setMenuOpen((prev) => !prev)}

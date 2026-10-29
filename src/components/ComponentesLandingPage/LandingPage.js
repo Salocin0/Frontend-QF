@@ -7,7 +7,7 @@ import FloatingButton from "./FloatingButton";
 
 const LandingPage = () => {
   return (
-    <div data-testid="landing-page" style={{ width: "100%", overflowX: "hidden" }}>
+    <div className="qf-landing" data-testid="landing-page" style={{ width: "100%", overflowX: "hidden" }}>
       <Navbar />
       <FloatingButton />
       <Imagenes />

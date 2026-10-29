@@ -1,0 +1,27 @@
+.qf-login-card {
+  --login-bg: #191714;
+  --login-input: #302920;
+  --login-text: #fff8ed;
+  --login-muted: #d4c6b3;
+  --login-border: #75634c;
+  --login-link: #ffbd59;
+  --qf-button-hover-bg: #b0002c;
+  --qf-button-hover-text: #ffbd59;
+  --qf-button-hover-border: #b0002c;
+  font-family: var(--qf-font-family);
+  &__logo { width: 120px; height: 94px; object-fit: contain; background: #fff0d9; border-radius: 16px; margin-bottom: 20px; padding: 8px; }
+  input { min-height: 48px; }
+  input::placeholder { color: var(--login-muted); opacity: 0.8; }
+  input:focus-visible { outline: 2px solid #ffbd59; outline-offset: 2px; }
+  a:hover { color: var(--login-text) !important; text-decoration: underline !important; text-underline-offset: 4px; }
+  a:focus-visible { outline: 2px solid #ffbd59; outline-offset: 4px; border-radius: 3px; }
+  button[type="submit"] { min-height: 48px; margin-top: 4px; }
+}
+[data-theme="light"] .qf-login-card {
+  --login-bg: #fffcf7;
+  --login-input: #fff0d9;
+  --login-text: #261c10;
+  --login-muted: #68563f;
+  --login-border: #b49a76;
+  --login-link: #8c0023;
+}

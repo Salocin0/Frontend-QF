@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { FaBars, FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Sidebar from "./Sidebar";
+import { createPortal } from "react-dom";
+import FloatingButton from "../ComponentesLandingPage/FloatingButton";
 import useBreakpoint from "../../useBreakpoint";
 
 /**
@@ -82,6 +84,8 @@ const PageLayout = ({
       <div className={`page-layout__sidebar ${sidebarOpenClass}`}>
         <Sidebar {...sidebarProps} onClose={closeSidebar} isCollapsed={isCollapsed} />
       </div>
+
+      {createPortal(<FloatingButton showWelcome={false} />, document.body)}
 
       {/* Contenido principal */}
       <div className="page-layout__content" data-testid="page-layout-content">

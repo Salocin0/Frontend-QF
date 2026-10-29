@@ -23,25 +23,27 @@ describe('FloatingButton — chatbot gating', () => {
 
   test('anonymous visitor still opens the panel (button is not broken)', () => {
     renderButton();
-    fireEvent.click(screen.getByRole('button', { name: /Consultas Foody/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Abrir chat con Foody/i }));
     expect(screen.getByTestId('chat-panel')).toBeInTheDocument();
   });
 
   test('signed-in user opens the panel', () => {
     localStorage.setItem('user', JSON.stringify({ id: 4, tipoUsuario: 'consumidor' }));
     renderButton();
-    fireEvent.click(screen.getByRole('button', { name: /Consultas Foody/i }));
+    fireEvent.click(screen.getByRole('button', { name: /Abrir chat con Foody/i }));
     expect(screen.getByTestId('chat-panel')).toBeInTheDocument();
   });
 
-  test('clicking again closes the panel', () => {
+  test('clicking again minimizes the panel and retains the conversation', () => {
     renderButton();
-    const button = screen.getByRole('button', { name: /Consultas Foody/i });
+    const button = screen.getByRole('button', { name: /Abrir chat con Foody/i });
 
     fireEvent.click(button);
     expect(screen.getByTestId('chat-panel')).toBeInTheDocument();
 
     fireEvent.click(button);
-    expect(screen.queryByTestId('chat-panel')).not.toBeInTheDocument();
+    expect(screen.getByTestId('chat-panel')).not.toBeVisible();
+    fireEvent.click(button);
+    expect(screen.getByTestId('chat-panel')).toBeVisible();
   });
 });
