@@ -8,6 +8,10 @@ import { parseChatText } from "./chatRichText";
 
 const suggestions = ["¿Cómo hago un pedido?", "¿Qué eventos hay?", "¿Cómo me registro?"];
 
+// Guests never see the suggestion chips (the composer is disabled for them), so
+// "¿Cómo me registro?" would only ever be shown to someone already signed in.
+const suggestionsForUser = suggestions.filter((text) => !text.includes("registro"));
+
 const Chatbot = () => {
   const { user } = useContext(UserContext);
   const isGuest = !user?.nombre;
@@ -133,7 +137,7 @@ const Chatbot = () => {
         </div>
         {!isGuest && messages.length === 0 && (
           <div className="qf-chat__suggestions" aria-label="Consultas sugeridas">
-            {suggestions.map((text) => <button key={text} type="button" onClick={() => sendMessage(text)}>{text} <span aria-hidden="true">↗</span></button>)}
+            {suggestionsForUser.map((text) => <button key={text} type="button" onClick={() => sendMessage(text)}>{text} <span aria-hidden="true">↗</span></button>)}
           </div>
         )}
         {isGuest && <div className="qf-chat__message qf-chat__message--bot"><p>No detecto que estés logueado o registrado. Para consultarme, ingresá con tu cuenta o creá una gratis.</p></div>}

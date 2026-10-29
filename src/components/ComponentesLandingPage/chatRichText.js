@@ -26,21 +26,30 @@ export const parseInline = (line) => {
   let lastIndex = 0;
   let match;
 
-  INLINE_PATTERN.lastIndex = 0;
-  while ((match = INLINE_PATTERN.exec(text)) !== null) {
+  // A fresh regex per call: parseInline recurses for bold-wrapped links, and a
+  // shared /g regex would have its lastIndex clobbered by the inner call.
+  const pattern = new RegExp(INLINE_PATTERN.source, 'g');
+  while ((match = pattern.exec(text)) !== null) {
     if (match.index > lastIndex) {
       spans.push({ type: 'text', value: text.slice(lastIndex, match.index) });
     }
 
     if (match[1] !== undefined) {
-      spans.push({ type: 'bold', value: match[1] });
+      // The model often wraps a link in bold ("**[Evento](url)**"). Parsing the
+      // inner content keeps the link clickable instead of showing raw markdown.
+      const inner = parseInline(match[1]);
+      spans.push(
+        ...inner.map((span) =>
+          span.type === 'text' ? { type: 'bold', value: span.value } : span
+        )
+      );
     } else {
       const href = match[3] || match[4];
       const label = match[2] || match[4];
       spans.push({ type: 'link', label, href });
     }
 
-    lastIndex = INLINE_PATTERN.lastIndex;
+    lastIndex = pattern.lastIndex;
   }
 
   if (lastIndex < text.length) {
