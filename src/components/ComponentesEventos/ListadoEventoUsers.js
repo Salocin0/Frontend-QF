@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import "../ComponentesGenerales/ListFilters.css";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import EventoUser from "./EventoUser";
-import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Footer from "../ComponentesGenerales/Footer";
-import FiltersEventosConsumidor from "../Filtros y Buscadores/filtersEventosConsumidor";
-import Buscador from "../Filtros y Buscadores/BuscadorEventosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import "./ListadoEventos.css";
 
 const haversineDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
@@ -39,293 +37,128 @@ const filtrarFinalizados = (eventosList) => {
   });
 };
 
+export const filterEvents = (events, { nombre, distancia, preventa, order }, location) => {
+  let filtered = filtrarFinalizados(events).map((event) => {
+    const lat = Number(event.latitud);
+    const lon = Number(event.longitud);
+    const valid = event.latitud != null && event.latitud !== "" && event.longitud != null && event.longitud !== "" && Number.isFinite(lat) && Number.isFinite(lon);
+    return { ...event, distanciaCalculada: location && valid ? haversineDistance(location.lat, location.lon, lat, lon) : null };
+  }).filter((event) =>
+    String(event.nombre || "").toLocaleLowerCase().includes(nombre.trim().toLocaleLowerCase()) &&
+    (!distancia || (event.distanciaCalculada != null && event.distanciaCalculada <= Number(distancia))) &&
+    ((event.tienePreventa && preventa.conPreventa) || (!event.tienePreventa && preventa.sinPreventa))
+  );
+  const start = (event) => {
+    const dates = (event.diaEventos || []).map((day) => new Date(day.fechaHoraInicioDiaEvento).getTime()).filter(Number.isFinite);
+    const fallback = new Date(event.fechaHoraInicio).getTime();
+    return dates.length ? Math.min(...dates) : Number.isFinite(fallback) ? fallback : Infinity;
+  };
+  filtered.sort((a, b) => order === "distance"
+    ? (a.distanciaCalculada ?? Infinity) - (b.distanciaCalculada ?? Infinity)
+    : start(a) - start(b));
+  return filtered;
+};
+
 const ListadoEventosUsers = () => {
-  const [loanding, setLoanding] = useState(false);
-  const [rows, setRows] = useState([]);
-  const [eventos, setEventos] = useState([]);
-  const [filteredEventos, setFilteredEventos] = useState([]);
   const { user } = useContext(UserContext);
-  const [userLocation, setUserLocation] = useState(null);
-
-  const contentRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(999);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const isNarrowLayout = contentWidth <= 780;
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setContentWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const [distancia, setDistancia] = useState(null);
+  const [eventos, setEventos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [location, setLocation] = useState(null);
+  const [locationStatus, setLocationStatus] = useState("idle");
   const [nombre, setNombre] = useState("");
+  const [distancia, setDistancia] = useState("");
   const [preventa, setPreventa] = useState({ conPreventa: true, sinPreventa: true });
+  const [order, setOrder] = useState("date");
+  const consumerId = user?.consumidorId;
 
-  // Obtener ubicación del navegador
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-        },
-        (error) => {
-          console.warn("No se pudo obtener la ubicación:", error.message);
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
-      );
-    }
-  }, []);
-
-  // Calcular distancia para cada evento cuando cambia userLocation o eventos
-  const calcularDistancias = useCallback((eventosList) => {
-    if (!userLocation) return eventosList;
-    return eventosList.map((evento) => {
-      if (evento.latitud && evento.longitud) {
-        const distancia = haversineDistance(
-          userLocation.lat,
-          userLocation.lon,
-          parseFloat(evento.latitud),
-          parseFloat(evento.longitud)
-        );
-        return { ...evento, distanciaCalculada: distancia };
-      }
-      return { ...evento, distanciaCalculada: null };
-    });
-  }, [userLocation]);
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Eventos", url: "/Listado-eventos" },
-  ];
-
-  useEffect(() => {
-    if (user) {
-      setLoanding(false);
-      const headers = new Headers();
-      headers.append("ConsumidorId", user.consumidorId);
-      fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/EnCurso`, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const eventosData = Array.isArray(data.data) ? data.data : [];
-          const eventosSinFinalizados = filtrarFinalizados(eventosData);
-          const eventosConDistancia = calcularDistancias(eventosSinFinalizados);
-          setEventos(eventosConDistancia);
-          setFilteredEventos(eventosConDistancia);
-          generateRows(eventosConDistancia);
-          return fetch(
-            `${process.env?.REACT_APP_BACK_URL}evento/enEstado/Confirmado`,
-            {
-              method: "GET",
-              headers: headers,
-            }
-          );
-        })
-        .then((response) => response.json())
-        .then((confirmadoData) => {
-          const confirmadoEventos = Array.isArray(confirmadoData.data) ? confirmadoData.data : [];
-          const confirmadoSinFinalizados = filtrarFinalizados(confirmadoEventos);
-          const confirmadoConDistancia = calcularDistancias(confirmadoSinFinalizados);
-          setEventos((prev) => {
-            const allEventos = [...prev, ...confirmadoConDistancia];
-            generateRows(allEventos);
-            return allEventos;
-          });
-          setLoanding(true);
-        })
-        .catch((error) => {
-          console.log("Error fetching eventos.", error);
-          setLoanding(true);
-        });
-    }
-  }, [user]);
-
-  // Recalcular distancias cuando se obtiene la ubicación y ya hay eventos
-  useEffect(() => {
-    if (userLocation && eventos.length > 0) {
-      const eventosConDistancia = calcularDistancias(eventos);
-      setEventos(eventosConDistancia);
-      setFilteredEventos((prev) => {
-        const filteredIds = new Set(prev.map((e) => e.id));
-        return eventosConDistancia.filter((e) => filteredIds.has(e.id));
-      });
-      generateRows(eventosConDistancia);
-    }
-  }, [userLocation]);
-
-  const generateRows = (eventosList) => {
-    const list = Array.isArray(eventosList) ? eventosList : [];
-    const totalEventos = Math.ceil(list.length / 4) * 4;
-    const eventosConNulos = [
-      ...list,
-      ...Array(totalEventos - list.length).fill(null),
-    ];
-
-    const generatedRows = [];
-    for (let i = 0; i < eventosConNulos.length; i += 4) {
-      const row = eventosConNulos.slice(i, i + 4);
-      generatedRows.push(row);
-    }
-    setRows(generatedRows);
+  const requestLocation = () => {
+    if (!navigator.geolocation) { setLocationStatus("error"); return; }
+    setLocationStatus("loading");
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => { setLocation({ lat: coords.latitude, lon: coords.longitude }); setLocationStatus("ready"); },
+      () => setLocationStatus("error"),
+      { timeout: 10000, maximumAge: 60000 }
+    );
   };
 
   useEffect(() => {
-    const applyFilters = () => {
-      let filtered = Array.isArray(eventos) ? eventos : [];
-
-      // Filtrar eventos finalizados
-      filtered = filtrarFinalizados(filtered);
-
-      if (distancia) {
-        filtered = filtered.filter(
-          (evento) =>
-            evento.distanciaCalculada === null ||
-            evento.distanciaCalculada === undefined ||
-            evento.distanciaCalculada <= distancia
-        );
+    const controller = new AbortController();
+    const load = async () => {
+      setLoading(true); setError(false);
+      try {
+        const raw = process.env?.REACT_APP_BACK_URL || "";
+        const base = raw.endsWith("/") ? raw : `${raw}/`;
+        const results = await Promise.all(["EnCurso", "Confirmado"].map(async (status) => {
+          const response = await fetch(`${base}evento/enEstado/${status}`, {
+            headers: { ConsumidorId: consumerId }, signal: controller.signal,
+          });
+          if (!response.ok) throw new Error("Error al cargar eventos");
+          const json = await response.json();
+          return Array.isArray(json.data) ? json.data : [];
+        }));
+        if (!controller.signal.aborted) setEventos([...new Map(results.flat().map((event) => [event.id, event])).values()]);
+      } catch (err) {
+        if (!controller.signal.aborted) setError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
-      if (nombre) {
-        filtered = filtered.filter((evento) =>
-          evento.nombre.toLowerCase().includes(nombre.toLowerCase())
-        );
-      }
-      if (preventa) {
-        filtered = filtered.filter(
-          (evento) =>
-            (evento.tienePreventa && preventa.conPreventa) ||
-            (!evento.tienePreventa && preventa.sinPreventa)
-        );
-      }
-
-      setFilteredEventos(filtered);
-      generateRows(filtered);
     };
+    if (consumerId != null) load();
+    else { setLoading(false); setError(true); }
+    return () => controller.abort();
+  }, [consumerId, attempt]);
 
-    applyFilters();
-  }, [distancia, nombre, preventa, eventos]);
+  const filtered = useMemo(() => filterEvents(eventos, { nombre, distancia, preventa, order }, location), [eventos, nombre, distancia, preventa, order, location]);
+  const active = Boolean(nombre || distancia || !preventa.conPreventa || !preventa.sinPreventa);
+  const reset = () => { setNombre(""); setDistancia(""); setPreventa({ conPreventa: true, sinPreventa: true }); setOrder("date"); };
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-      }}>
-        {/* Header: título centrado + línea divisoria */}
-        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
-          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
-            Eventos
-          </h1>
+      <main className="qf-events-page">
+        <header className="qf-page-header qf-page-header--full">
+          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>Eventos</h1>
           <hr className="qf-separator qf-separator--spaced" />
-        </div>
-
-        {/* Dos columnas: izquierda (breadcrumb + listado) | derecha (buscador + filtros) */}
-        <div ref={contentRef} className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`} style={{ flex: 1, minHeight: 0 }}>
-          {/* Columna izquierda */}
-          <div className="qf-page-content__main">
-            <Breadcrumb items={breadcrumbItems} style={{
-              margin: '0px auto 8px',
-              backgroundColor: 'var(--qf-bg-secondary)',
-              width: '98%',
-              paddingRight: '16px',
-              padding: '8px',
-              paddingLeft: '16px',
-              borderRadius: '10px',
-              border: '1px solid var(--qf-naranja)',
-              boxSizing: 'border-box',
-            }} />
-
-            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
-            {isNarrowLayout && (
-              <div className="qf-narrow-filters" style={{ width: "98%", margin: "0 auto 0 auto" }}>
-                <div className="qf-search-box" style={{ marginBottom: "8px" }}>
-                  <Buscador setNombre={setNombre} />
-                </div>
-                <div className="qf-filter-box" style={{ margin: 0 }}>
-                  <div
-                    className="qf-collapsible-header"
-                    onClick={() => setFiltersOpen((prev) => !prev)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
-                  >
-                    <span className="qf-collapsible-title">FILTROS</span>
-                    <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
-                  </div>
-                  {filtersOpen && (
-                    <div className="qf-collapsible-body">
-                      <FiltersEventosConsumidor
-                        distancia={distancia}
-                        setDistancia={setDistancia}
-                        setPreventa={setPreventa}
-                        hideTitle
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className="qf-scrollable" style={{ paddingTop: "8px" }}>
-              {!loanding ? (
-                <LoandingComponent />
-              ) : Array.isArray(filteredEventos) && filteredEventos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex} style={{ width: "100%" }}>
-                    {row.map((evento, index) => (
-                      <div
-                        key={evento?.id ?? `empty-${rowIndex}-${index}`}
-                        style={{ marginBottom: "10px", width: "100%" }}
-                      >
-                        {evento !== null ? (
-                          <EventoUser evento={evento} />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 className="qf-no-results">
-                  No hay eventos activos en este momento.
-                </h2>
-              )}
-            </div>
+        </header>
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Eventos", url: "/Listado-eventos" }]} style={{ width: "100%", margin: "0 0 20px" }} />
+        <section className="qf-events-filters qf-list-filters" aria-label="Buscar y filtrar eventos">
+          <div className="qf-events-filter-top">
+            <label className="qf-events-search">Buscar evento
+              <input type="search" placeholder="Nombre del evento…" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+            </label>
+            <label>Ordenar por
+              <select value={order} onChange={(e) => setOrder(e.target.value)}>
+                <option value="date">Próxima fecha</option><option value="distance" disabled={!location}>Más cercanos</option>
+              </select>
+            </label>
           </div>
-
-          {/* Columna derecha: buscador + filtros */}
-          {!isNarrowLayout && (
-            <aside className="qf-page-content__aside">
-              <div className="qf-search-box">
-                <Buscador setNombre={setNombre} />
-              </div>
-              <div className="qf-filter-box">
-                <FiltersEventosConsumidor
-                  distancia={distancia}
-                  setDistancia={setDistancia}
-                  setPreventa={setPreventa}
-                />
-              </div>
-            </aside>
-          )}
-        </div>
-      </div>
-
+          <div className="qf-events-filter-bottom">
+            <div className="qf-events-distance">
+              <label>Distancia
+                <select value={distancia} disabled={!location} onChange={(e) => setDistancia(e.target.value)}>
+                  <option value="">Cualquier distancia</option><option value="5">Hasta 5 km</option><option value="25">Hasta 25 km</option><option value="100">Hasta 100 km</option>
+                </select>
+              </label>
+              {!location && <button type="button" className="qf-events-location" onClick={requestLocation} disabled={locationStatus === "loading"}>{locationStatus === "loading" ? "Buscando ubicación…" : "Usar mi ubicación"}</button>}
+            </div>
+            <fieldset className="qf-events-presale"><legend>Preventa</legend>
+              <label><input type="checkbox" checked={preventa.conPreventa} onChange={(e) => setPreventa((prev) => ({ ...prev, conPreventa: e.target.checked }))} />Con preventa</label>
+              <label><input type="checkbox" checked={preventa.sinPreventa} onChange={(e) => setPreventa((prev) => ({ ...prev, sinPreventa: e.target.checked }))} />Sin preventa</label>
+            </fieldset>
+            <button type="button" className="qf-events-clear" onClick={reset} disabled={!active && order === "date"}>Limpiar filtros</button>
+          </div>
+          {locationStatus === "error" && <p className="qf-events-location-hint" role="status">No pudimos obtener tu ubicación. Podés buscar por nombre y preventa o volver a intentarlo.</p>}
+        </section>
+        <div className="qf-events-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "evento disponible" : "eventos disponibles"}`}</div>
+        {loading ? <p className="qf-events-empty" role="status">Cargando eventos…</p> : error ? (
+          <div className="qf-events-empty" role="alert"><h2>No pudimos cargar los eventos</h2><p>Intentá nuevamente en unos momentos.</p><button className="qf-btn qf-btn--primary" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div>
+        ) : filtered.length ? (
+          <div className="qf-events-grid">{filtered.map((event) => <EventoUser key={event.id} evento={event} />)}</div>
+        ) : <div className="qf-events-empty"><h2>{active ? "No encontramos eventos con estos filtros" : "Todavía no hay eventos activos"}</h2><p>{active ? "Probá con otro nombre o ampliá la distancia de búsqueda." : "Volvé pronto para descubrir los próximos eventos."}</p>{active && <button className="qf-btn qf-btn--primary" onClick={reset}>Ver todos los eventos</button>}</div>}
+      </main>
       <Footer />
     </PageLayout>
   );
 };
-
 export default ListadoEventosUsers;

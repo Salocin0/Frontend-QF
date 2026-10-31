@@ -1,232 +1,92 @@
-﻿import React, { useEffect, useState, useContext, useRef } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import "../ComponentesGenerales/ListFilters.css";
+import React, { useEffect, useState, useContext, useMemo } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
-import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import PuestoUser from "./PuestoUser";
-import { useParams } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import FiltersPuestosConsumidor from "../Filtros y Buscadores/filtersPuestosConsumidor";
-import BuscadorPuestosConsumidor from "../Filtros y Buscadores/BuscadorPuestosConsumidor";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import { useLocation } from "react-router-dom";
+import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
+import "./PuestosListado.css";
+import eventPlaceholder from "../img/qf-new-logo-transparent.png";
 
+export const filterStands = (stands, { name, stars, time }) => stands.filter((stand) => {
+  const query = name.trim().toLocaleLowerCase();
+  const matchesName = [stand.nombreCarro, stand.tipoNegocio].some((text) => String(text || "").toLocaleLowerCase().includes(query));
+  const rating = stand.estrellas ?? stand.estrella;
+  return matchesName && (!stars || (rating != null && Number(rating) >= Number(stars))) &&
+    (!time || (stand.tiempo != null && Number(stand.tiempo) > 0 && Number(stand.tiempo) <= Number(time)));
+});
 const ListadoPuestosUser = () => {
   const { idEvento } = useParams();
-  const [loanding, setLoanding] = useState(false);
-  const [rows, setRows] = useState([]);
-  const [carritos, setCarritos] = useState([]);
-  const [filteredCarritos, setFilteredCarritos] = useState([]);
-  const { user } = useContext(UserContext);
-  const [estrella, setEstrella] = useState(0);
-  const [tiempo, setTiempo] = useState(0);
-  const [nombre, setNombre] = useState("");
-  const [evento, setEvento] = useState({});
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Eventos", url: "/Listado-eventos" },
-    { title: "Puestos", url: `/listado-puestos/${idEvento}` },
-  ];
   const location = useLocation();
+  const navigate = useNavigate();
   const selectedDay = location.state?.selectedDay || null;
-  const contentRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(999);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const isNarrowLayout = contentWidth <= 780;
-
+  const { user } = useContext(UserContext);
+  const [stands, setStands] = useState([]);
+  const [evento, setEvento] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [name, setName] = useState("");
+  const [stars, setStars] = useState("");
+  const [time, setTime] = useState("");
   useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setContentWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  // Obtener datos iniciales
-  useEffect(() => {
-    setLoanding(false);
-    const fetchPuestos = fetch(`${process.env?.REACT_APP_BACK_URL}puesto/evento/${idEvento}`, {
-      method: "GET",
-    }).then((response) => response.json());
-
-    const fetchEvento = fetch(`${process.env?.REACT_APP_BACK_URL}evento/${idEvento}`, {
-      method: "GET",
-    }).then((response) => response.json());
-
-    Promise.all([fetchPuestos, fetchEvento])
-      .then(([puestosData, eventoData]) => {
-        // The backend may answer with an error payload ({}), so always keep an array.
-        const puestos = Array.isArray(puestosData?.data) ? puestosData.data : [];
-        setCarritos(puestos);
-        setFilteredCarritos(puestos);
-        setEvento(eventoData?.data || {});
-        setLoanding(true);
-      })
-      .catch((error) => {
-        console.error("Error al cargar datos.", error);
-        setCarritos([]);
-        setFilteredCarritos([]);
-        setLoanding(true);
-      });
-  }, [user, idEvento]);
-
-  // Filtrar carritos cuando cambien los filtros
-  useEffect(() => {
-    const applyFilters = () => {
-      let filtered = [...carritos];
-      // Filtrar por estrellas
-      if (estrella > 0) {
-        filtered = filtered.filter(
-          (carrito) => carrito.estrella || 4.5 >= estrella
-        );
+    const controller = new AbortController();
+    const load = async () => {
+      setLoading(true); setError(false);
+      try {
+        const raw = process.env?.REACT_APP_BACK_URL || "";
+        const base = raw.endsWith("/") ? raw : `${raw}/`;
+        const get = async (path) => {
+          const response = await fetch(`${base}${path}/${idEvento}`, { signal: controller.signal });
+          if (response.ok === false) throw new Error("Error al cargar los puestos");
+          return response.json();
+        };
+        const [standData, eventData] = await Promise.all([get("puesto/evento"), get("evento")]);
+        if (!controller.signal.aborted) {
+          setStands(Array.isArray(standData?.data) ? standData.data : []);
+          setEvento(eventData?.data || {});
+        }
+      } catch (err) {
+        if (!controller.signal.aborted) setError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
-      // Filtrar por tiempo
-      if (tiempo > 0) {
-        filtered = filtered.filter((carrito) => carrito.tiempo || 30 <= tiempo);
-      }
-      // Filtrar por nombre
-      if (nombre.trim() !== "") {
-        const lowerCaseNombre = nombre.toLowerCase();
-        filtered = filtered.filter(
-          (carrito) =>
-            carrito.nombreCarro?.toLowerCase().includes(lowerCaseNombre) ||
-            carrito.tipoNegocio?.toLowerCase().includes(lowerCaseNombre)
-        );
-      }
-      setFilteredCarritos(filtered);
     };
-
-    applyFilters();
-  }, [estrella, tiempo, nombre, carritos]);
-
-  // Generar las filas para los carritos filtrados
-  useEffect(() => {
-    const totalCarritos = Math.ceil(filteredCarritos.length / 4) * 4;
-    const carritosConNulos = [
-      ...filteredCarritos,
-      ...Array(totalCarritos - filteredCarritos.length).fill(null),
-    ];
-
-    const generatedRows = [];
-    for (let i = 0; i < carritosConNulos.length; i += 4) {
-      const row = carritosConNulos.slice(i, i + 4);
-      generatedRows.push(row);
-    }
-    setRows(generatedRows);
-  }, [filteredCarritos]);
-
+    load();
+    return () => controller.abort();
+  }, [idEvento, attempt]);
+  const filtered = useMemo(() => filterStands(stands, { name, stars, time }), [stands, name, stars, time]);
+  const active = Boolean(name || stars || time);
+  const reset = () => { setName(""); setStars(""); setTime(""); };
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-      }}>
-        {/* Header */}
-        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
-          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
-            {evento?.nombre ? `Puestos de ${evento.nombre}` : "Puestos"}
-          </h1>
-          <hr className="qf-separator qf-separator--spaced" />
-        </div>
-
-        {/* Dos columnas: izquierda (breadcrumb + listado) | derecha (buscador + filtros) */}
-        <div ref={contentRef} className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`} style={{ flex: 1, minHeight: 0 }}>
-          {/* Columna izquierda */}
-          <div className="qf-page-content__main">
-            <Breadcrumb items={breadcrumbItems} style={{
-              margin: '0px auto 8px',
-              backgroundColor: 'var(--qf-bg-secondary)',
-              width: '98%',
-              paddingRight: '16px',
-              padding: '8px',
-              paddingLeft: '16px',
-              borderRadius: '10px',
-              border: '1px solid var(--qf-naranja)',
-              boxSizing: 'border-box',
-            }} />
-
-            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
-            {isNarrowLayout && (
-              <div className="qf-narrow-filters" style={{ width: "98%", margin: "0 auto 0 auto" }}>
-                <div className="qf-search-box" style={{ marginBottom: "8px" }}>
-                  <BuscadorPuestosConsumidor setNombre={setNombre} />
-                </div>
-                <div className="qf-filter-box" style={{ margin: 0 }}>
-                  <div
-                    className="qf-collapsible-header"
-                    onClick={() => setFiltersOpen((prev) => !prev)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
-                  >
-                    <span className="qf-collapsible-title">FILTROS</span>
-                    <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
-                  </div>
-                  {filtersOpen && (
-                    <div className="qf-collapsible-body">
-                      <FiltersPuestosConsumidor
-                        setEstrella={setEstrella}
-                        setTiempo={setTiempo}
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div className="qf-scrollable" style={{ paddingTop: "8px" }}>
-              {!loanding ? (
-                <LoandingComponent />
-              ) : Array.isArray(filteredCarritos) && filteredCarritos.length > 0 ? (
-                rows.length > 0 &&
-                rows.map((row, rowIndex) => (
-                  <div key={rowIndex} style={{ width: "100%" }}>
-                    {row.map((carrito, index) => (
-                      <div
-                        key={index}
-                        style={{ marginBottom: "10px", width: "100%" }}
-                      >
-                        {carrito !== null ? (
-                          <PuestoUser carrito={carrito} selectedDay={selectedDay} evento={evento} />
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                ))
-              ) : (
-                <h2 className="qf-no-results">
-                  No hay puestos en este momento.
-                </h2>
-              )}
+      <main className="qf-stands-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Eventos", url: "/Listado-eventos" }, { title: "Puestos", url: `/listado-puestos/${idEvento}` }]} style={{ width: "100%", margin: "0 0 20px" }} />
+        <header className="qf-stands-event-header">
+          <div className="qf-stands-event-identity">
+            <img src={evento.img || eventPlaceholder} alt="" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = eventPlaceholder; }} />
+            <div>
+              <h1>{evento.nombre || "Puestos del evento"}</h1>
+              <p>{selectedDay ? `Precompra · Retiro el ${formatDateAR(selectedDay)}` : "Elegí un puesto para ver sus productos."}</p>
             </div>
           </div>
-
-          {/* Columna derecha: buscador + filtros */}
-          {!isNarrowLayout && (
-            <aside className="qf-page-content__aside">
-              <div className="qf-search-box">
-                <BuscadorPuestosConsumidor setNombre={setNombre} />
-              </div>
-              <div className="qf-filter-box">
-                <FiltersPuestosConsumidor
-                  setEstrella={setEstrella}
-                  setTiempo={setTiempo}
-                />
-              </div>
-            </aside>
-          )}
-        </div>
-      </div>
-
+          <button type="button" onClick={() => navigate(`/tipo-compra/${idEvento}`)}>Volver</button>
+        </header>
+        <section className="qf-stands-filters qf-list-filters" aria-label="Buscar y filtrar puestos">
+          <label>Buscar puesto<input type="search" value={name} onChange={(e) => setName(e.target.value)} placeholder="Nombre o tipo de comida…" /></label>
+          <label>Valoración mínima<select value={stars} onChange={(e) => setStars(e.target.value)}><option value="">Todas</option>{[1, 2, 3, 4, 5].map((value) => <option key={value} value={value}>{value} {value === 1 ? "estrella" : "estrellas"}</option>)}</select></label>
+          <label>Tiempo de entrega<select value={time} onChange={(e) => setTime(e.target.value)}><option value="">Cualquier tiempo</option><option value="15">Hasta 15 min</option><option value="30">Hasta 30 min</option><option value="60">Hasta 1 hora</option></select></label>
+          <button type="button" onClick={reset} disabled={!active}>Limpiar filtros</button>
+        </section>
+        <p className="qf-stands-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "puesto disponible" : "puestos disponibles"}`}</p>
+        {loading ? <p className="qf-stands-empty" role="status">Cargando puestos…</p> : error ? <div className="qf-stands-empty" role="alert"><h2>No pudimos cargar los puestos</h2><button type="button" className="qf-btn qf-btn--primary" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : filtered.length ? (
+          <div className="qf-stands-grid">{filtered.map((stand) => <PuestoUser key={stand.id} carrito={stand} selectedDay={selectedDay} evento={evento} />)}</div>
+        ) : <div className="qf-stands-empty"><h2>{active ? "No encontramos puestos con estos filtros" : "No hay puestos en este momento."}</h2>{active && <button type="button" className="qf-btn qf-btn--primary" onClick={reset}>Ver todos los puestos</button>}</div>}
+      </main>
       <Footer />
     </PageLayout>
   );
 };
-
 export default ListadoPuestosUser;

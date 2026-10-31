@@ -31,6 +31,8 @@ const applyTheme = (isDark) => {
   }
 };
 
+export const initializeTheme = () => applyTheme(getIsDark());
+
 const listeners = new Set();
 const notify = () => listeners.forEach((listener) => listener());
 

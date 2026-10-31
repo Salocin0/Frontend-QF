@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import Footer from "../ComponentesGenerales/Footer";
+import { useState, useEffect } from "react";
+import "./Pedidos.css";
 import { toast } from "react-toastify";
 import { FaStore, FaCalendarAlt, FaMotorcycle, FaMapMarkedAlt, FaInfoCircle, FaTimesCircle, FaStar, FaPlay, FaHourglassStart, FaCheckCircle, FaTruck, FaBox, FaBan, FaKey } from "react-icons/fa";
 import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
@@ -11,20 +11,6 @@ const Pedido = ({ pedido,recargar }) => {
     0
   );
   const comisionServicio = Number(pedido?.total || 0) - subtotalProductos;
-  const cardRef = useRef(null);
-  const [cardWidth, setCardWidth] = useState(0);
-  const isNarrow = cardWidth > 0 && cardWidth < 370;
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setCardWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const [opinion, setOpinion] = useState("");
   const [repartidorRating, setRepartidorRating] = useState(1);
   const [puestoRating, setPuestoRating] = useState(1);
@@ -219,20 +205,6 @@ const Pedido = ({ pedido,recargar }) => {
       marginBottom: "0.5rem",
       color: "var(--qf-text-primary)",
     },
-    cardEstado: {
-      fontSize: "16px",
-      color: "var(--qf-blanco-puro)",
-      fontWeight: "bold",
-      backgroundColor: coloresPorEstado[estadoLocal],
-      borderRadius: "10px",
-      padding: "5px 10px",
-      width: "150px",
-      textAlign: "center",
-      position: isNarrow ? "relative" : "absolute",
-      top: isNarrow ? "0" : "10px",
-      right: isNarrow ? "0" : "10px",
-      margin: isNarrow ? "10px 0 0 auto" : "0",
-    },
     separator: {
       color: "var(--qf-naranja)",
     },
@@ -247,7 +219,6 @@ const Pedido = ({ pedido,recargar }) => {
       border: "none",
       padding: "0.25rem 0.5rem",
       borderRadius: "0.2rem",
-      marginRight: "0.5rem",
       cursor: "pointer",
       width: "150px",
       fontWeight: "bold",
@@ -292,18 +263,6 @@ const Pedido = ({ pedido,recargar }) => {
       width: "150px",
       fontWeight: "bold",
     },
-    price: {
-      color: "var(--qf-text-primary)",
-      fontSize: "1.5rem",
-      fontWeight: "bold",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: isNarrow ? "flex-start" : "center",
-      position: isNarrow ? "relative" : "absolute",
-      right: isNarrow ? "0" : "10px",
-      bottom: isNarrow ? "0" : "10px",
-      marginTop: isNarrow ? "10px" : "0",
-    },
     dialogContainer: {
       display:
         modalValoracionVisible ||
@@ -318,7 +277,7 @@ const Pedido = ({ pedido,recargar }) => {
       width: "100%",
       height: "100%",
       backgroundColor: "rgba(0, 0, 0, 0.5)",
-      zIndex: "1000",
+      zIndex: "1200",
       justifyContent: "center",
       alignItems: "center",
     },
@@ -328,6 +287,8 @@ const Pedido = ({ pedido,recargar }) => {
       borderRadius: "10px",
       width: "80%",
       maxWidth: "500px",
+      maxHeight: "85dvh",
+      overflowY: "auto",
       textAlign: "center",
     },
     dialogTitle: {
@@ -488,48 +449,40 @@ const Pedido = ({ pedido,recargar }) => {
   };
 
   return (
-    <div style={styles.container}>
-      <div ref={cardRef} style={styles.card}>
-        <div style={styles.cardBody}>
-          <div className="row">
-            <div className="position-relative">
-              <h5 style={styles.cardTitle}>Pedido #{pedido?.id}</h5>
-              <h5 style={styles.cardSubTitle}>
-                <span><FaStore /></span>
-                {" " + pedido.puesto.nombreCarro}
-              </h5>
-              <h5 style={styles.cardSubTitle}>
-                <span><FaCalendarAlt /></span>
-                {" " + new Date(pedido.fecha).toLocaleDateString("es")}
-              </h5>
-              {pedido.estado === "EnCamino" && (
-                <h5 style={styles.cardSubTitle}>
-                  <span><FaMotorcycle /></span>
-                  {" " +
-                    pedido?.repartidore?.consumidore?.nombre +
-                    ", " +
-                    pedido?.repartidore?.consumidore?.apellido || "Alberto"}
-                </h5>
-              )}
-              {pedido.estado === "EnCamino" && (
-                <h5 style={styles.cardSubTitle}>
-                  <span><FaMapMarkedAlt /></span>
-                  {pedido?.puntoEncuentro?.nombre}
-                </h5>
-              )}
-              {pedido.estado === "EnCamino" && pedido?.codigoEntrega && (
-                <h5 style={styles.cardSubTitle}>
-                  <span><FaKey /></span>
-                  {" Código de entrega: " + pedido.codigoEntrega}
-                </h5>
-              )}
-
-              <h5 style={styles.price}>${pedido.total.toFixed(2)}</h5>
-              <p style={styles.cardEstado}>{traducirEstado(pedido.estado)}</p>
-            </div>
+    <div className="qf-order-wrapper">
+      <article className="qf-order-card"
+        role="button" tabIndex={0} aria-label={`Ver detalle del pedido #${pedido.id}`}
+        onClick={() => setModalDetalleVisible(true)}
+        onKeyDown={(event) => {
+          if (event.target !== event.currentTarget) return;
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setModalDetalleVisible(true);
+          }
+        }}
+      >
+        <div className="qf-order-body">
+          <div className="qf-order-heading">
+            <h2>Pedido #{pedido.id}</h2>
+            <span className="qf-order-status" style={{ borderColor: coloresPorEstado[estadoLocal] || "var(--qf-naranja)" }}>{getIconoEstado(estadoLocal)} {traducirEstado(estadoLocal)}</span>
           </div>
-          <hr style={styles.separator} />
-          <div style={styles.buttonGroup}>
+          <div className="qf-order-details">
+          <h3 className="qf-order-store"><FaStore aria-hidden="true" /> {pedido.puesto?.nombreCarro || "Puesto no disponible"}</h3>
+          {pedido.evento?.nombre && <p className="qf-order-event">{pedido.evento.nombre}</p>}
+          <div className="qf-order-delivery-info">
+          <p className="qf-order-date"><FaCalendarAlt aria-hidden="true" /> {formatDateAR(pedido.fecha)}</p>
+          {estadoLocal === "EnCamino" && <>
+            {pedido.puntoEncuentro?.nombre && <p className="qf-order-location"><FaMapMarkedAlt aria-hidden="true" /> {pedido.puntoEncuentro.nombre}</p>}
+            {pedido.codigoEntrega && <p className="qf-order-code"><FaKey aria-hidden="true" /> Código de entrega: <strong>{pedido.codigoEntrega}</strong></p>}
+          </>}
+          </div>
+          </div>
+          <div className="qf-order-total">
+            <span>Total del pedido</span>
+            <strong>{Number(pedido.total || 0).toLocaleString("es-AR", { style: "currency", currency: "ARS" })}</strong>
+            {estadoLocal === "EnCamino" && <p className="qf-order-courier"><FaMotorcycle aria-hidden="true" /> {[pedido.repartidore?.consumidore?.nombre, pedido.repartidore?.consumidore?.apellido].filter(Boolean).join(" ") || "Repartidor asignado"}</p>}
+          </div>
+          <div className="qf-order-actions" onClick={(event) => event.stopPropagation()}>
             {mostrarBotonInfo && (
                 <button
                 style={styles.buttonInfo}
@@ -566,7 +519,7 @@ const Pedido = ({ pedido,recargar }) => {
             )}
           </div>
         </div>
-      </div>
+      </article>
       {modalCancelarVisible && (
         <div style={styles.dialogContainer}>
           <div style={styles.dialogContent}>
@@ -578,7 +531,7 @@ const Pedido = ({ pedido,recargar }) => {
                 <div style={styles.infoLabel}>
                   <FaStore /> Puesto:
                 </div>
-                <div style={styles.infoValue}>{pedido.puesto.nombreCarro}</div>
+                <div style={styles.infoValue}>{pedido.puesto?.nombreCarro}</div>
               </div>
               <div style={styles.infoRow}>
                 <div style={styles.infoLabel}>
@@ -659,7 +612,7 @@ const Pedido = ({ pedido,recargar }) => {
                 <div style={styles.infoLabel}>
                   <FaStore /> Puesto:
                 </div>
-                <div style={styles.infoValue}>{pedido.puesto.nombreCarro}</div>
+                <div style={styles.infoValue}>{pedido.puesto?.nombreCarro}</div>
               </div>
               <div style={styles.infoRow}>
                 <div style={styles.infoLabel}>
@@ -745,7 +698,7 @@ const Pedido = ({ pedido,recargar }) => {
                 <div style={styles.infoLabel}>
                   <FaStore /> Puesto:
                 </div>
-                <div style={styles.infoValue}>{pedido.puesto.nombreCarro}</div>
+                <div style={styles.infoValue}>{pedido.puesto?.nombreCarro}</div>
               </div>
               <div style={styles.infoRow}>
                 <div style={styles.infoLabel}>
@@ -806,7 +759,7 @@ const Pedido = ({ pedido,recargar }) => {
               <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                 <span style={{fontSize: "18px", fontWeight: "bold"}}>Total a Pagar:</span>
                 <span style={{fontSize: "28px", fontWeight: "bold"}}>
-                  ${pedido?.total?.toFixed(2)}
+                  ${Number(pedido?.total || 0).toFixed(2)}
                 </span>
               </div>
             </div>
@@ -822,7 +775,6 @@ const Pedido = ({ pedido,recargar }) => {
           </div>
         </div>
       )}
-      <Footer />
     </div>
   );
 };

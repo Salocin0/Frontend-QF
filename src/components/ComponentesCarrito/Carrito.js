@@ -1,162 +1,82 @@
-﻿import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { FaShoppingCart, FaArrowLeft } from "react-icons/fa";
+import CheckoutAll from "./CheckoutAll";
+import CartOverview from "./CartOverview";
 import RenderizarTarjeta from "./Tarjeta";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import { CircularProgress } from "@mui/material";
+import "./Carrito.css";
+import useTheme from "../../useTheme";
+import logoDark from "../img/qf-new-logo-solid.png";
+import logoLight from "../img/qf-new-logo-transparent.png";
 
+export const groupCartItems = (items) => {
+  if (!Array.isArray(items)) return [];
+  const groups = new Map();
+  for (const item of items) {
+    if (!item?.producto || Number(item.cantidad) <= 0) continue;
+    const key = JSON.stringify([item.eventoId ?? item.evento?.id, item.producto.puestoId, item.fecha || null]);
+    if (!groups.has(key)) groups.set(key, { key, productos: [] });
+    groups.get(key).productos.push(item);
+  }
+  return [...groups.values()];
+};
 const Carrito = () => {
-  const [carrito, setCarrito] = useState(null);
   const { user } = useContext(UserContext);
-  const [recargar, setRecargar] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const recargarComponente = () => {
-    setRecargar((prevRecargar) => prevRecargar + 1);
-  };
-
+  const consumerId = user?.consumidorId;
+  const navigate = useNavigate();
+  const { isDark } = useTheme();
+  const [cart, setCart] = useState(null);
+  const [liveItems, setLiveItems] = useState({});
+  const [checkouts, setCheckouts] = useState({});
+  const [checkoutLocked, setCheckoutLocked] = useState(false);
+  const updateCheckout = useCallback((key, checkout) => setCheckouts((previous) => ({ ...previous, [key]: checkout })), []);
+  const updateItems = useCallback((key, items) => setLiveItems((previous) => previous[key] === items ? previous : { ...previous, [key]: items }), []);
+  const [reload, setReload] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const refresh = useCallback(() => setReload((value) => value + 1), []);
   useEffect(() => {
-    if (user) {
-      setIsLoading(true);
-      const headers = new Headers();
-      headers.append("ConsumidorId", user.consumidorId);
-
-      fetch(`${process.env?.REACT_APP_BACK_URL}carrito/`, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.data) {
-            setCarrito(data.data);
-          } else {
-            setCarrito(null);
-          }
-        })
-        .catch((error) => console.log("No existen carritos.", error))
-        .finally(() => setIsLoading(false));
-    }
-  }, [user, recargar]);
-
-  // Función para agrupar los productos por eventoId, puestoId y fecha
-  const agruparProductos = () => {
-    if (!carrito || !carrito.ItemCarritos) return {};
-
-    return carrito.ItemCarritos.reduce((acc, item) => {
-      const { eventoId, producto, fecha } = item;
-      const puestoId = producto.puestoId;
-      const fechaKey = fecha ? `conFecha-${fecha}` : "sinFecha";
-
-      if (!acc[eventoId]) acc[eventoId] = {};
-      if (!acc[eventoId][puestoId]) acc[eventoId][puestoId] = {};
-      if (!acc[eventoId][puestoId][fechaKey])
-        acc[eventoId][puestoId][fechaKey] = [];
-
-      acc[eventoId][puestoId][fechaKey].push(item);
-
-      return acc;
-    }, {});
-  };
-
-  const productosAgrupados = agruparProductos();
-
-  const styles = {
-    mainContent: {
-      width: "100%",
-      padding: "0 20px",
-      height: "100%",
-      marginBottom: "5rem",
-    },
-    titleSection: {
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "1rem",
-      color: "var(--qf-naranja)",
-    },
-    separator: {
-      border: "none",
-      borderTop: `1px solid var(--qf-naranja)`,
-    },
-    productContainer: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    productList: {
-      width: "100%",
-    },
-    loadingContainer: {
-      height: "30rem",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "var(--qf-bg-main)",
-      gap: "20px",
-    },
-    loadingText: {
-      fontSize: "16px",
-      color: "var(--qf-text-primary)",
-      fontWeight: "bold",
-    },
-  };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mi Carrito", url: "/carrito" },
-  ];
-
+    const controller = new AbortController();
+    const load = async () => {
+      setLoading(true); setError(false);
+      try {
+        const raw = process.env?.REACT_APP_BACK_URL || "";
+        const response = await fetch(`${raw.endsWith("/") ? raw : `${raw}/`}carrito/`, { headers: { ConsumidorId: consumerId }, signal: controller.signal });
+        if (!response.ok) throw new Error("No se pudo cargar el carrito");
+        const json = await response.json();
+        if (!controller.signal.aborted) { setCart(json?.data || null); setLiveItems({}); setCheckouts({}); }
+      } catch (err) {
+        if (!controller.signal.aborted) setError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
+    if (consumerId != null) load();
+    else { setLoading(false); setError(true); }
+    return () => controller.abort();
+  }, [consumerId, reload]);
+  const groups = useMemo(() => groupCartItems(cart?.ItemCarritos), [cart]);
+  const summaryGroups = useMemo(() => groups.map((group) => ({ ...group, productos: liveItems[group.key] ?? group.productos, checkout: checkouts[group.key] })), [groups, liveItems, checkouts]);
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.mainContent}>
-        <div style={styles.titleSection}>
-          <h1 className="qf-page-title">Carrito</h1>
-        </div>
-        <hr className="qf-separator" style={{ marginLeft: "-40px", marginRight: "-40px", width: "auto", marginBottom: "20px" }} />
-        <Breadcrumb
-          items={breadcrumbItems}
-          style={{ width: "100%", margin: "10px 0" }}
-        />
-
-        <div style={styles.productContainer}>
-          <div style={styles.productList}>
-            {isLoading ? (
-              <div style={styles.loadingContainer}>
-                <CircularProgress style={{ color: "var(--qf-naranja)" }} size={50} />
-                <div style={styles.loadingText}>Cargando carrito...</div>
-              </div>
-            ) : Object.keys(productosAgrupados).length > 0 ? (
-              Object.entries(productosAgrupados).map(([eventoId, puestos]) =>
-                Object.entries(puestos).map(([puestoId, grupos]) =>
-                  Object.entries(grupos).map(([fechaKey, productos], index) => (
-                    <RenderizarTarjeta
-                      key={`${eventoId}-${puestoId}-${fechaKey}-${index}`}
-                      productos={productos}
-                      titulo={`Evento: ${eventoId} | Puesto: ${puestoId} | ${
-                        fechaKey.startsWith("conFecha")
-                          ? `Fecha: ${productos[0]?.fecha}`
-                          : "Sin fecha"
-                      }`}
-                      recargarComponente={recargarComponente}
-                      evento={eventoId}
-                    />
-                  ))
-                )
-              )
-            ) : (
-              <div style={{height: "30rem", display: "flex", justifyContent: "center", alignItems: "center",backgroundColor: "var(--qf-bg-main)"}}>
-                <h2 style={{ color: "var(--qf-naranja)", textAlign: "center",  }}>
-                  No hay productos en el carrito
-                </h2>
-              </div>
-            )}
-          </div>
-        </div>
-        <Footer />
-      </div>
+      <main className="qf-cart-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mi carrito", url: "/carrito" }]} />
+        <header className="qf-cart-heading"><div><h1><FaShoppingCart aria-hidden="true" /> Mi carrito</h1><p>Revisá tus productos y pagá todos tus pedidos juntos.</p></div><button type="button" className="qf-cart-secondary" onClick={() => navigate("/Listado-eventos")}><FaArrowLeft aria-hidden="true" /> Ver eventos</button></header>
+        {loading ? <p className="qf-cart-empty" role="status">Cargando carrito…</p> : error ? <div className="qf-cart-empty" role="alert"><h2>No pudimos cargar tu carrito</h2><button className="qf-cart-primary" onClick={refresh}>Reintentar</button></div> : groups.length ? (
+          <div className="qf-cart-overview-layout"><div className="qf-cart-groups">{groups.map(({ key, productos }) => <RenderizarTarjeta key={key} groupKey={key} onItemsChange={updateItems} externalCheckout onCheckoutChange={updateCheckout} checkoutLocked={checkoutLocked} productos={productos} evento={productos[0].eventoId ?? productos[0].evento?.id} recargarComponente={refresh} />)}</div><CartOverview groups={summaryGroups} checkoutControl={<CheckoutAll consumerId={consumerId} disabled={summaryGroups.some((group) => !group.checkout || group.checkout.disabled)} onComplete={refresh} onLockChange={setCheckoutLocked} />} /></div>
+        ) : <section className="qf-cart-empty qf-cart-empty--welcome" aria-labelledby="empty-cart-title">
+          <img className="qf-cart-empty-logo" src={isDark ? logoDark : logoLight} alt="QuickFood" />
+          <h2 id="empty-cart-title">Tu carrito está vacío</h2>
+          <p>Elegí un evento, descubrí sus puestos y encontrá algo rico para tu próximo pedido.</p>
+          <button type="button" className="qf-cart-primary" onClick={() => navigate("/Listado-eventos")}>Explorar eventos <span aria-hidden="true">→</span></button>
+        </section>}
+      </main>
+      <Footer />
     </PageLayout>
   );
 };
-
 export default Carrito;

@@ -12,6 +12,9 @@
 [data-theme="dark"] {
   // ── Colores de marca (iguales en ambos modos) ──────────────
   --qf-naranja:      #c5a145;   // Colors.Naranja
+  --qf-highlight-text: #ffd600;
+  --qf-highlight-surface: #ffbd59;
+  --qf-highlight-border: #ffbd59;
   --qf-rojo:         #ff5733;   // Colors.Rojo
   --qf-negro-puro:   #000000;   // Colors.NegroEnNegro
   --qf-blanco-puro:  #ffffff;   // Colors.BlancoEnBlanco
@@ -54,6 +57,9 @@
 }
 
 [data-theme="light"] {
+  --qf-highlight-text: #805b20;
+  --qf-highlight-surface: #e4d2b4;
+  --qf-highlight-border: #a4814d;
   // ── Fondos ────────────────────────────────────────────────
   --qf-bg-main:      #f3f1ed;   // Fondo neutro cálido para páginas internas
   --qf-bg-secondary: #eae6df;   // Superficies secundarias en modo claro

@@ -1,4 +1,5 @@
-﻿import React, { useState } from "react";
+﻿import "../ComponentesGenerales/AdquirirRol.css";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Footer from "../ComponentesGenerales/Footer";
@@ -61,14 +62,7 @@ const AdquirirNuevoRolPE = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-      }}>
+      <main className="qf-acquire-role">
         {/* Header centrado */}
         <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
           <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
@@ -90,7 +84,7 @@ const AdquirirNuevoRolPE = () => {
         }} />
 
         {/* Formulario centrado */}
-        <div style={{
+        <div className="qf-acquire-role__form" style={{
           width: "100%",
           margin: "0 auto",
           backgroundColor: "var(--qf-bg-secondary)",
@@ -122,7 +116,6 @@ const AdquirirNuevoRolPE = () => {
                 id="cuit"
                 style={{
                   width: "100%",
-                  padding: "0.5rem",
                   marginBottom: "1rem",
                   borderRadius: "4px",
                   boxSizing: "border-box",
@@ -146,7 +139,6 @@ const AdquirirNuevoRolPE = () => {
                 id="razonSocial"
                 style={{
                   width: "100%",
-                  padding: "0.5rem",
                   marginBottom: "1rem",
                   borderRadius: "4px",
                   boxSizing: "border-box",
@@ -168,7 +160,6 @@ const AdquirirNuevoRolPE = () => {
               <select
                 style={{
                   width: "100%",
-                  padding: "0.5rem",
                   marginBottom: "1rem",
                   borderRadius: "4px",
                   boxSizing: "border-box",
@@ -221,7 +212,7 @@ const AdquirirNuevoRolPE = () => {
             </button>
           </form>
         </div>
-      </div>
+      </main>
       <Footer />
     </PageLayout>
   );

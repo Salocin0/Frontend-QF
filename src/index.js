@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/ComponentesGenerales/App.js';
 import reportWebVitals from './reportWebVitals';
+import { initializeTheme } from './useTheme';
 
 // Aplicar data-theme al <html> ANTES del primer render
 // para evitar flash de tema incorrecto (FOUC)
-// Cada carga comienza en modo oscuro; el usuario puede cambiarlo con el botón.
-localStorage.setItem("modoOscuroActivo", "true");
-document.documentElement.setAttribute("data-theme", "dark");
+// Respetar la preferencia guardada también al navegar con una recarga completa.
+initializeTheme();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

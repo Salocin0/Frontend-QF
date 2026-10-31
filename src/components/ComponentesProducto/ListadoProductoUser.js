@@ -1,225 +1,110 @@
-﻿import banner from "../ComponentesProducto/banner.jpg";
-import React, { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import "../ComponentesGenerales/ListFilters.css";
+import React, { useEffect, useState, useContext, useMemo } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import PageLayout from "../ComponentesGenerales/PageLayout";
-import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import Footer from "../ComponentesGenerales/Footer";
 import ProductoUser from "./ProductoUser";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import { useContext } from "react";
-import BuscadorProductoConsumidor from "../Filtros y Buscadores/BuscadorProductoConsumidor";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import { useLocation } from "react-router-dom";
+import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
+import "./ProductosListado.css";
+import { FaShoppingCart, FaCalendarAlt, FaArrowLeft } from "react-icons/fa";
+import standPlaceholder from "../img/puestoLogoDefault.jpg";
 
+export const filterProducts = (products, search, sort) => {
+  const query = search.trim().toLocaleLowerCase();
+  const filtered = products.filter((product) => [product.nombre, product.descripcion].some((value) => String(value || "").toLocaleLowerCase().includes(query)));
+  if (sort === "price-up") filtered.sort((a, b) => Number(a.precio || 0) - Number(b.precio || 0));
+  if (sort === "price-down") filtered.sort((a, b) => Number(b.precio || 0) - Number(a.precio || 0));
+  if (sort === "name") filtered.sort((a, b) => String(a.nombre || "").localeCompare(String(b.nombre || ""), "es"));
+  return filtered;
+};
 const ListadoProductoUser = () => {
-  const contentRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(0);
-  const isNarrowLayout = contentWidth < 768 && contentWidth > 0;
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setContentWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const { id } = useParams();
-  const [loanding, setLoanding] = useState(false);
-  const [productos, setProductos] = useState([]);
-  const [filteredProductos, setFilteredProductos] = useState([]);
-  const [puesto, setPuesto] = useState();
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
   const selectedDay = location.state?.selectedDay || null;
-  let evento = location.state?.evento || null;
-  const eventoId = location.state?.eventoid;
-  
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Eventos", url: "/Listado-eventos" },
-    { title: "Puestos", url: `/listado-puestos/${evento?.id || id}` },
-    { title: "Productos", url: `/productos/${puesto?.id}` },
-  ];
-  if(evento===null){
-    evento={id:eventoId}
-  }
-  
-
-  // Direct URL access has no event in the navigation state: send the user to pick an event first.
+  const evento = location.state?.evento || { id: location.state?.eventoid };
+  const eventId = evento?.id;
+  const eventName = evento?.nombre;
+  const [eventInfo, setEventInfo] = useState(null);
+  const displayedEvent = eventInfo || evento;
+  const consumerId = user?.consumidorId;
+  const [products, setProducts] = useState([]);
+  const [puesto, setPuesto] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("default");
   useEffect(() => {
-    if (!evento?.id) {
+    if (!eventId) {
       toast.info("Elegí un evento y un puesto para ver sus productos.");
       navigate("/Listado-eventos", { replace: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  }, [eventId, navigate]);
   useEffect(() => {
-    if (user) {
-      setLoanding(false);
-      const headers = new Headers();
-      headers.append("ConsumidorId", user.consumidorId);
-      headers.append("puestoId", id);
-
-      const fetchProductos = fetch(`${process.env?.REACT_APP_BACK_URL}producto`, {
-        method: "GET",
-        headers: headers,
-      }).then((response) => response.json());
-
-      const fetchPuesto = fetch(`${process.env?.REACT_APP_BACK_URL}puesto/consultar/${id}`, {
-        method: "GET",
-      }).then((response) => response.json());
-
-      Promise.all([fetchProductos, fetchPuesto])
-        .then(([productosData, puestoData]) => {
-          setProductos(productosData.data);
-          setFilteredProductos(productosData.data);
-          setPuesto(puestoData.data);
-          setLoanding(true);
-        })
-        .catch((error) => {
-          console.log("Error al cargar productos.", error);
-          setLoanding(true);
-        });
-    }
-  }, [user, id]);
-
-  // Maneja el filtro de productos
-  const handleSearch = (searchTerm) => {
-    const filtered = productos.filter(
-      (producto) =>
-        producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        producto.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredProductos(filtered);
-  };
-
+    const controller = new AbortController();
+    const load = async () => {
+      setLoading(true); setError(false);
+      try {
+        const raw = process.env?.REACT_APP_BACK_URL || "";
+        const base = raw.endsWith("/") ? raw : `${raw}/`;
+        const get = async (path, headers) => {
+          const response = await fetch(`${base}${path}`, { headers, signal: controller.signal });
+          if (!response.ok) throw new Error("Error al cargar productos");
+          return response.json();
+        };
+        const [productData, standData, eventData] = await Promise.all([
+          get("producto", { ConsumidorId: consumerId, puestoId: id }), get(`puesto/consultar/${id}`),
+          eventName ? Promise.resolve(null) : get(`evento/${eventId}`),
+        ]);
+        if (!controller.signal.aborted) {
+          setProducts(Array.isArray(productData?.data) ? productData.data : []);
+          setPuesto(standData?.data || {});
+          setEventInfo(eventData?.data || null);
+        }
+      } catch (err) {
+        if (!controller.signal.aborted) setError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
+    if (eventId && consumerId != null) load();
+    return () => controller.abort();
+  }, [id, eventId, eventName, consumerId, attempt]);
+  const filtered = useMemo(() => filterProducts(products, search, sort), [products, search, sort]);
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div ref={contentRef} style={{
-        width: "100%",
-        height: "100%",
-        paddingTop: "20px",
-        paddingLeft: "20px",
-        paddingRight: "20px",
-        paddingBottom: 0,
-        display: "flex",
-        flexDirection: "column",
-        boxSizing: "border-box",
-        flex: 1,
-      }}>
-        {/* Banner */}
-        <div style={{
-          backgroundImage: `url(${banner})`,
-          height: "120px",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          display: "flex",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          borderBottom: "2px solid var(--qf-blanco-puro)",
-          marginLeft: "-20px",
-          marginRight: "-20px",
-          marginTop: "-20px",
-          marginBottom: "20px",
-          paddingLeft: "36px",
-        }}>
-          <h1 className="qf-page-title" style={{
-            fontSize: "1.5rem",
-            backgroundColor: "var(--qf-bg-secondary)",
-            padding: "10px 16px",
-            borderRadius: "10px",
-            border: "2px solid var(--qf-blanco-puro)",
-            width: "98%",
-            margin: 0,
-            textAlign: "left",
-          }}>
-            {puesto?.nombreCarro}
-          </h1>
-        </div>
-
-        {/* Contenido scrollable con dos columnas */}
-        <div style={{
-          flex: 1,
-          overflow: "hidden",
-          display: "flex",
-          flexDirection: "column",
-        }}>
-          <div style={{
-            display: "flex",
-            flexDirection: isNarrowLayout ? "column" : "row",
-            gap: "20px",
-            alignItems: isNarrowLayout ? "stretch" : "flex-start",
-            height: isNarrowLayout ? "auto" : "100%",
-            overflow: isNarrowLayout ? "visible" : "hidden",
-          }}>
-            {/* Columna izquierda: breadcrumb + productos */}
-            <div style={{
-              width: isNarrowLayout ? "100%" : "70%",
-              boxSizing: "border-box",
-            }}>
-              <Breadcrumb items={breadcrumbItems} style={{ width: "100%", margin: "8px 0" }} />
-
-              <div style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-                paddingBottom: "80px",
-                overflow: "visible",
-                width: "100%",
-                boxSizing: "border-box",
-              }}>
-                {!loanding ? (
-                  <LoandingComponent />
-                ) : Array.isArray(filteredProductos) && filteredProductos.length > 0 ? (
-                  filteredProductos.map((producto, index) => (
-                    <div key={index} style={{ width: "100%", display: "flex", justifyContent: "flex-start", boxSizing: "border-box" }}>
-                      <ProductoUser producto={producto} user={user} idpuesto={id} selectedDay={selectedDay} evento={evento}/>
-                    </div>
-                  ))
-                ) : (
-                  <h2 className="qf-no-results">
-                    No existen productos en este carrito.
-                  </h2>
-                )}
-              </div>
-            </div>
-
-            {/* Columna derecha: buscador + botón carrito */}
-            <div style={{
-              width: isNarrowLayout ? "100%" : "30%",
-              boxSizing: "border-box",
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
-              alignItems: isNarrowLayout ? "stretch" : "flex-start",
-              order: isNarrowLayout ? -1 : 0,
-            }}>
-              <div className="qf-search-box">
-                <BuscadorProductoConsumidor onSearch={handleSearch} />
-              </div>
-              <button
-                className="qf-btn qf-btn--primary"
-                style={{ width: "100%" }}
-                onClick={() => navigate("/carrito")}
-              >
-                Ir a mi Carrito
-              </button>
+      <main className="qf-products-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Eventos", url: "/Listado-eventos" }, { title: "Puestos", url: `/listado-puestos/${eventId}` }, { title: "Productos", url: `/productos-puesto/${id}` }]} style={{ width: "100%", margin: "0 0 20px" }} />
+        <section className="qf-products-context" aria-label="Evento y puesto seleccionados">
+          <div className="qf-products-identity">
+            <img src={puesto.img || standPlaceholder} alt="" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = standPlaceholder; }} />
+            <div>
+              <h1>{puesto.nombreCarro || "Productos del puesto"}</h1>
+              <p className="qf-products-event-name">{displayedEvent.nombre || `Evento #${eventId}`}</p>
+              {selectedDay && <p className="qf-products-pickup"><FaCalendarAlt aria-hidden="true" /> Retiro el {formatDateAR(selectedDay)}</p>}
             </div>
           </div>
-        </div>
-      </div>
-
+          <div className="qf-products-header-actions">
+            <button type="button" className="qf-products-back" onClick={() => navigate(`/listado-puestos/${eventId}`, { state: { selectedDay } })}><FaArrowLeft aria-hidden="true" /> Volver</button>
+            <button type="button" className="qf-products-cart" onClick={() => navigate("/carrito")}><FaShoppingCart aria-hidden="true" /> Mi carrito</button>
+          </div>
+        </section>
+        <section className="qf-products-toolbar qf-list-filters" aria-label="Buscar y ordenar productos">
+          <label>Buscar producto<input type="search" placeholder="Nombre o descripción…" value={search} onChange={(e) => setSearch(e.target.value)} /></label>
+          <label>Ordenar por<select value={sort} onChange={(e) => setSort(e.target.value)}><option value="default">Orden del puesto</option><option value="price-up">Menor precio</option><option value="price-down">Mayor precio</option><option value="name">Nombre</option></select></label>
+        </section>
+        <p className="qf-products-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "producto disponible" : "productos disponibles"}`}</p>
+        {loading ? <p className="qf-products-empty" role="status">Cargando productos…</p> : error ? <div className="qf-products-empty" role="alert"><h2>No pudimos cargar los productos</h2><button type="button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : filtered.length ? (
+          <div className="qf-products-grid">{filtered.map((product) => <ProductoUser key={product.id} producto={product} user={user} selectedDay={selectedDay} evento={evento} />)}</div>
+        ) : <div className="qf-products-empty"><h2>{search ? "No encontramos productos con ese nombre" : "Todavía no hay productos en este puesto"}</h2>{search && <button type="button" onClick={() => setSearch("")}>Limpiar búsqueda</button>}</div>}
+      </main>
       <Footer />
     </PageLayout>
   );
 };
-
 export default ListadoProductoUser;

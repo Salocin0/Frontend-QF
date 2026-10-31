@@ -1,25 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import logoevento from "./../img/qf-new-logo-transparent.png";
-import { toast } from "react-toastify";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 const EventoUser = ({ evento }) => {
-  const navigate = useNavigate();
-  const cardRef = useRef(null);
-  const [cardWidth, setCardWidth] = useState(9999);
-  const isNarrow = cardWidth < 700;
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setCardWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const calcularTiempoRestante = (fecha) => {
     const ahora = new Date();
     const diferencia = fecha - ahora;
@@ -87,189 +71,26 @@ const EventoUser = ({ evento }) => {
     ? "Empieza pronto"
     : formatEstado(evento.estado);
 
-  const styles = {
-    container: {
-      width: "100%",
-      margin: "0",
-      padding: "0",
-    },
-    card: {
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "8px",
-      width: "98%",
-      minHeight: "110px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      margin: "0 auto 14px auto",
-      color: "var(--qf-text-primary)",
-      padding: "8px 16px",
-      transition: "transform 0.2s ease-in-out",
-      cursor: "pointer",
-    },
-    cardBody: {
-      flex: 1,
-      display: "flex",
-      flexDirection: isNarrow ? "column" : "row",
-      gap: isNarrow ? "8px" : "12px",
-      alignItems: isNarrow ? "stretch" : "center",
-      cursor: "pointer",
-      padding: "10px 18px",
-    },
-    imageContainer: {
-      width: isNarrow ? "100%" : "140px",
-      minWidth: isNarrow ? "auto" : "140px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "0",
-      backgroundColor: "transparent",
-    },
-    img: {
-      width: "100%",
-      maxWidth: isNarrow ? "200px" : "110px",
-      height: isNarrow ? "120px" : "auto",
-      objectFit: "cover",
-      borderRadius: "8px",
-      marginLeft: "0",
-      boxShadow: "none",
-      display: "block",
-    },
-    content: {
-      flexGrow: 1,
-      position: "relative",
-      justifyContent: "start",
-      alignItems: "start",
-      display: "flex",
-      flexDirection: "column",
-      marginLeft: "0",
-    },
-    title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      color: "var(--qf-naranja)",
-      marginBottom: "10px",
-    },
-    descripcion: {
-      fontSize: "18px",
-      color: "var(--qf-text-muted)",
-      marginBottom: "10px",
-    },
-    text: {
-      fontSize: "16px",
-      color: "var(--qf-text-muted)",
-      marginBottom: "5px",
-    },
-    distance: {
-      fontSize: "16px",
-      fontWeight: "bold",
-      color: "var(--qf-green)",
-      marginBottom: "5px",
-    },
-    estado: {
-      fontSize: "16px",
-      backgroundColor: "var(--qf-green)",
-      color: "var(--qf-text-white)",
-      borderRadius: "5px",
-      padding: "5px 5px",
-      fontWeight: "bold",
-      display: "flex",
-      justifyContent: "center",
-      width: "200px",
-    },
-    fecha: {
-      fontSize: "16px",
-      color: "var(--qf-text-muted)",
-    },
-    estadoContainer: {
-      display: "flex",
-      position: isNarrow ? "relative" : "absolute",
-      top: isNarrow ? "0" : "10px",
-      right: isNarrow ? "0" : "10px",
-      width: isNarrow ? "100%" : "180px",
-      marginBottom: isNarrow ? "8px" : "0",
-      justifyContent: isNarrow ? "center" : "flex-start",
-    },
-    preventa: {
-      fontSize: "16px",
-      color: "var(--qf-text-primary)",
-      fontWeight: "bold",
-      padding: "5px 10px",
-      borderRadius: "5px",
-      backgroundColor: "var(--qf-naranja)",
-      display: "flex",
-      justifyContent: "center",
-    },
-  };
-
-  const handleCardClick = () => {
-    if (eventoFinalizado) {
-      toast.error("El evento ha finalizado.");
-    } else {
-      navigate(`/tipo-compra/${evento.id}`);
-    }
-  };
-
+  const image = evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar") ? evento.img : logoevento;
   return (
-    <div ref={cardRef} style={styles.container}>
-      <div style={styles.card} onClick={handleCardClick}>
-        <div style={styles.cardLink}>
-          <div style={styles.cardBody}>
-            <div style={styles.imageContainer}>
-              <img
-                src={
-                  evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
-                    ? evento.img
-                    : logoevento
-                }
-                alt="Logo del Evento"
-                style={styles.img}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = logoevento;
-                }}
-              />
-            </div>
-
-            <div style={styles.content}>
-              {textoBadge && (
-                <div style={styles.estadoContainer}>
-                  <p style={{
-                    ...styles.estado,
-                    backgroundColor: eventoFinalizado
-                      ? "var(--qf-rojo)"
-                      : eventoEnProgreso
-                      ? "var(--qf-green)"
-                      : "var(--qf-green)",
-                  }}>
-                    {textoBadge}
-                  </p>
-                </div>
-              )}
-              <p style={styles.title}>{evento.nombre}</p>
-              <p style={styles.descripcion}>{evento.descripcion}</p>
-              <p style={styles.text}>
-                {formatUbicacion(evento)}
-              </p>
-              {evento.distanciaCalculada !== undefined && evento.distanciaCalculada !== null ? (
-                <p style={styles.distance}>
-                  A {evento.distanciaCalculada < 1
-                    ? `${Math.round(evento.distanciaCalculada * 1000)}m`
-                    : `${evento.distanciaCalculada.toFixed(1)}km`} de distancia
-                </p>
-              ) : (
-                <p style={styles.distance}>Distancia no disponible</p>
-              )}
-
-              <p style={styles.fecha}>{textoTiempo}</p>
-
-              {evento?.tienePreventa && (
-                <p style={styles.preventa}>Tiene preventa</p>
-              )}
-            </div>
-          </div>
+    <article className="qf-event-card">
+      <Link to={`/tipo-compra/${evento.id}`} className="qf-event-card-link">
+        <div className="qf-event-card-image">
+          <img src={image} alt="" loading="lazy" onError={(e) => { e.target.onerror = null; if (e.target.src !== logoevento) e.target.src = logoevento; }} />
+          {textoBadge && <span className={`qf-event-badge${eventoEnProgreso ? " qf-event-badge--live" : ""}`}>{textoBadge}</span>}
         </div>
-      </div>
-    </div>
+        <div className="qf-event-card-content">
+          <div className="qf-event-card-heading"><h2>{evento.nombre}</h2>{evento.tienePreventa && <span className="qf-event-presale-badge">Preventa</span>}</div>
+          <p className="qf-event-description">{evento.descripcion}</p>
+          <div className="qf-event-meta">
+            <p className="qf-event-location">{formatUbicacion(evento)}</p>
+            {fechaInicio && <p className="qf-event-date">{fechaInicio.toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" })}</p>}
+            {evento.distanciaCalculada != null && <p className="qf-event-distance">A {evento.distanciaCalculada < 1 ? `${Math.round(evento.distanciaCalculada * 1000)} m` : `${evento.distanciaCalculada.toFixed(1)} km`}</p>}
+          </div>
+          <div className="qf-event-card-footer"><span>{textoTiempo}</span><span className="qf-event-cta">Ver evento <span aria-hidden="true">→</span></span></div>
+        </div>
+      </Link>
+    </article>
   );
 };
-
 export default EventoUser;

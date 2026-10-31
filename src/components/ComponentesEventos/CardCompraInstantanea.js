@@ -1,57 +1,15 @@
-﻿import { FaBolt } from 'react-icons/fa'
+import { FaBolt, FaArrowRight } from "react-icons/fa";
+import "./CompraOpciones.css";
 
-const CardCompraInstantanea = ({ evento }) => {
-    // Verificamos el estado del evento
-    const eventStatus = evento?.estado; // Asumiendo que 'evento' tiene un atributo 'estado'
-
-    // Definir el mensaje de acuerdo al estado del evento
-    const eventMessage = eventStatus !== "EnCurso"
-        ? "El evento todavía no ha comenzado."
-        : "Comprar en un evento de manera instantánea.";
-
-    const styles = {
-        card: {
-            width: "100%",
-            minHeight: "30vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "var(--qf-bg-secondary)", // Fondo gris claro
-            borderRadius: "8px",
-            boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-            border: `1px solid var(--qf-naranja)`,
-            cursor: "pointer"
-        },
-        content: {
-            textAlign: "center"
-        },
-        icon: {
-            color: "var(--qf-naranja)", // Color del ícono (puedes cambiarlo)
-            marginBottom: "10px",
-        },
-        title: {
-            fontSize: "24px",
-            fontWeight: "bold",
-            margin: "0 0 10px 0",
-            color: "var(--qf-text-white)",
-        },
-        text: {
-            fontSize: "16px",
-            color: "var(--qf-text-white)"
-        }
-    };
-
-    return (
-        <div style={styles.card}>
-            <div style={styles.content}>
-                <span style={styles.icon}><FaBolt size={30} /></span>
-                <p style={styles.title}>Compra Instantánea</p>
-                <p style={styles.text}>
-                    {eventMessage}
-                </p>
-            </div>
-        </div>
-    );
-}
-
+const CardCompraInstantanea = ({ evento, onSelect }) => (
+  <button type="button" className="qf-purchase-card qf-purchase-instant" onClick={onSelect}>
+    <span className="qf-purchase-icon" aria-hidden="true"><FaBolt /></span>
+    <span className="qf-purchase-copy">
+      <span className="qf-purchase-title">Compra instantánea</span>
+      <span className="qf-purchase-description">Comprá durante el evento y recibí tu pedido en el momento.</span>
+      {evento?.estado !== "EnCurso" && <span className="qf-purchase-hint">Disponible cuando comience el evento.</span>}
+    </span>
+    <FaArrowRight className="qf-purchase-arrow" aria-hidden="true" />
+  </button>
+);
 export default CardCompraInstantanea;

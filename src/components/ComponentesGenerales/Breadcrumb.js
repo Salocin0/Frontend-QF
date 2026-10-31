@@ -7,14 +7,14 @@ const Breadcrumb = ({ items, style }) => {
 
   let styles = {
     breadcrumbContainer: {
-      margin: isMobile ? '4px auto' : '8px auto',
-      backgroundColor: 'var(--qf-bg-secondary)',
-      width: isMobile ? '100%' : '98%',
-      padding: isMobile ? '6px 10px' : '8px 16px',
-      marginBottom: '10px',
+      margin: '0 0 20px',
+      backgroundColor: 'transparent',
+      width: '100%',
+      padding: '8px 0',
+      marginBottom: '20px',
       marginTop: '0px',
-      borderRadius: '10px',
-      border: '1px solid var(--qf-naranja)',
+      borderRadius: 0,
+      border: 'none',
       boxSizing: 'border-box',
     },
     breadcrumb: {
@@ -23,9 +23,13 @@ const Breadcrumb = ({ items, style }) => {
       margin: '0',
       display: 'flex',
       flexWrap: 'wrap',
+      alignItems: 'center',
+      rowGap: '8px',
     },
     breadcrumbItem: {
-      fontSize: isMobile ? '12px' : '14px',
+      fontSize: isMobile ? '14px' : '16px',
+      fontWeight: 600,
+      lineHeight: 1.5,
       color: 'var(--qf-naranja)',
       whiteSpace: 'nowrap',
     },
@@ -35,11 +39,13 @@ const Breadcrumb = ({ items, style }) => {
       cursor: 'pointer',
     },
     breadcrumbItemActive: {
-      color: 'var(--qf-text-primary)',
+      color: 'var(--qf-highlight-text)',
+      fontWeight: 800,
     },
     breadcrumbDivider: {
       margin: isMobile ? '0 4px' : '0 10px',
-      color: 'var(--qf-text-primary)',
+      color: 'var(--qf-text-muted)',
+      fontWeight: 400,
     },
   };
 
@@ -49,6 +55,13 @@ const Breadcrumb = ({ items, style }) => {
       breadcrumbContainer: {
         ...styles.breadcrumbContainer,
         ...style,
+        width: '100%',
+        margin: '0 0 20px',
+        padding: '8px 0',
+        background: 'transparent',
+        border: 'none',
+        borderRadius: 0,
+        boxShadow: 'none',
       },
     };
   }

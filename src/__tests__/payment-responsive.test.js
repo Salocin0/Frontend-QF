@@ -34,6 +34,7 @@ jest.mock('react-toastify', () => ({
 
 // Mock react-icons
 jest.mock('react-icons/fa', () => ({
+  FaCalendarAlt: () => <span data-testid="fa-calendar" />,
   FaTrash: () => <span data-testid="fa-trash" />,
   FaMinus: () => <span data-testid="fa-minus" />,
   FaPlus: () => <span data-testid="fa-plus" />,
@@ -219,7 +220,7 @@ describe('Phase 6 — Payment Responsive', () => {
       expect(contentWrapper.style.flexDirection).toBe('row');
     });
 
-    test('desktop: rightSection width 320px', () => {
+    test('desktop: summary keeps 320px width even with one product', () => {
       useBreakpoint.mockReturnValue({
         isMobile: false, isTablet: false, isDesktop: true,
         breakpoint: 'xl', width: 1200,
@@ -248,7 +249,7 @@ describe('Phase 6 — Payment Responsive', () => {
       );
 
       expect(screen.getByText('Hamburguesa')).toBeInTheDocument();
-      expect(screen.getByText('$1500 c/u')).toBeInTheDocument();
+      expect(screen.getByText(/c\/u$/)).toHaveTextContent('1.500,00');
     });
   });
 

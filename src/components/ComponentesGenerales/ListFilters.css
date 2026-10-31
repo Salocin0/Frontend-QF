@@ -1,0 +1,62 @@
+/* Shared lightweight controls for the event → stand → product journey. */
+.page-layout .qf-list-filters {
+  --qf-filter-border: color-mix(in srgb, var(--qf-text-primary) 22%, transparent);
+  --qf-filter-hover-border: color-mix(in srgb, var(--qf-text-primary) 45%, transparent);
+  --qf-button-hover-bg: transparent;
+  --qf-button-hover-text: var(--qf-text-primary);
+  --qf-button-hover-border: var(--qf-filter-hover-border);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+.page-layout .qf-list-filters label,
+.page-layout .qf-list-filters legend {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--qf-text-muted);
+}
+.page-layout .qf-list-filters input[type="search"],
+.page-layout .qf-list-filters select {
+  box-sizing: border-box;
+  height: 44px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--qf-text-primary);
+  border: 1px solid var(--qf-filter-border);
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 400;
+  transition: border-color 0.15s ease;
+}
+.page-layout .qf-list-filters input[type="search"]:hover,
+.page-layout .qf-list-filters select:hover { border-color: var(--qf-filter-hover-border); }
+.page-layout .qf-list-filters input[type="search"]:focus-visible,
+.page-layout .qf-list-filters select:focus-visible {
+  outline: 1px solid var(--qf-naranja);
+  outline-offset: 1px;
+  border-color: var(--qf-naranja);
+  box-shadow: none;
+}
+.page-layout .qf-list-filters select option { background: var(--qf-bg-main); color: var(--qf-text-primary); }
+.page-layout .qf-list-filters button {
+  border-color: var(--qf-filter-border);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--qf-text-muted);
+}
+.page-layout .qf-list-filters .qf-events-presale label { background: transparent; border-color: var(--qf-filter-border); border-radius: 6px; }
+.page-layout .qf-list-filters .qf-events-filter-bottom,
+.page-layout .qf-list-filters .qf-orders-states { border-top-color: var(--qf-filter-border); }
+.page-layout .qf-list-filters button[aria-pressed="true"] {
+  --qf-button-hover-bg: var(--qf-highlight-surface);
+  --qf-button-hover-text: #261c10;
+  background: var(--qf-highlight-surface);
+  color: #261c10;
+  border-color: var(--qf-highlight-border);
+}
+.page-layout .qf-list-filters button:hover,
+.page-layout .qf-list-filters button:focus-visible { box-shadow: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .page-layout .qf-list-filters input, .page-layout .qf-list-filters select { transition: none; }
+}
