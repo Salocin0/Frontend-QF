@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useState, useRef } from "react";
+﻿import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
@@ -8,21 +8,9 @@ import EventProducerForm from "./FormEventPerfil";
 import EncargadoPuesto from "./FormEncargadoPerfil";
 import RepartidorComponent from "./FormRepartidorPerfil";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import "./estadisticasPerfil/Perfil.css";
 import EstadisticasPerfil from "./estadisticasPerfil/EstadisticasPerfil";
 const ConsultarUsuario = () => {
-  const contentRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(999);
-  const isNarrowLayout = contentWidth <= 780;
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setContentWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
   const [showModal, setShowModal] = useState(false);
   const { user, updateUser } = useContext(UserContext);
   const [mostrarContenidoProductor, setMostrarContenidoProductor] =
@@ -282,20 +270,12 @@ const ConsultarUsuario = () => {
   
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
-    { title: "Mi Perfil", url: "/Listado-eventos" },
+    { title: "Mi Perfil", url: "/perfil" },
   ];
   
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-        padding: "0 15px",
-      }}>
+      <main className="qf-profile-page">
         {/* Header full-width centrado */}
         <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
           <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
@@ -316,21 +296,8 @@ const ConsultarUsuario = () => {
           boxSizing: 'border-box',
         }} />
 
-        {/* Contenido: dos columnas responsive */}
-        <div
-          ref={contentRef}
-          style={{
-            flex: 1,
-            minHeight: 0,
-            display: "flex",
-            flexDirection: isNarrowLayout ? "column" : "row",
-            gap: "20px",
-            width: "100%",
-            boxSizing: "border-box",
-          }}
-        >
-          {/* Columna izquierda: forms */}
-          <div style={{ flex: 1, minWidth: 0, order: isNarrowLayout ? 1 : 0 }}>
+        <EstadisticasPerfil />
+        <div className="qf-profile-details">
             <section style={{ width: "100%" }}>
               <UserProfileForm
                 mostrarBotonHabilitarDeNuevoR={mostrarBotonHabilitarDeNuevoR}
@@ -372,32 +339,8 @@ const ConsultarUsuario = () => {
                 setMostrarBotonHabilitarDeNuevoR={setMostrarBotonHabilitarDeNuevoR}
               />
             </section>
-          </div>
-
-          {/* Columna derecha: estadísticas (no se estira) */}
-          <aside style={{
-            order: isNarrowLayout ? -1 : 0,
-            width: isNarrowLayout ? "100%" : "320px",
-            minWidth: isNarrowLayout ? "100%" : "320px",
-            flexShrink: 0,
-            alignSelf: "flex-start",
-            position: isNarrowLayout ? "static" : "sticky",
-            top: "20px",
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-          }}>
-            <div style={{
-              border: "1px solid var(--qf-naranja)",
-              borderRadius: "10px",
-              backgroundColor: "var(--qf-bg-secondary)",
-              padding: "20px",
-            }}>
-              <EstadisticasPerfil />
-            </div>
-          </aside>
         </div>
-      </div>
+      </main>
       <Footer />
     </PageLayout>
   );

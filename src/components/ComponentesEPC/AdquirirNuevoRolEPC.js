@@ -1,4 +1,5 @@
-﻿import React, { useState, useContext } from "react";
+﻿import "../ComponentesGenerales/AdquirirRol.css";
+import React, { useState, useContext } from "react";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
@@ -53,14 +54,7 @@ const AdquirirNuevoRolEPC = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-      }}>
+      <main className="qf-acquire-role">
         {/* Header centrado */}
         <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
           <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
@@ -82,7 +76,7 @@ const AdquirirNuevoRolEPC = () => {
         }} />
 
         {/* Formulario */}
-        <div style={{
+        <div className="qf-acquire-role__form" style={{
           width: "100%",
           margin: "0 auto",
           backgroundColor: "var(--qf-bg-secondary)",
@@ -104,7 +98,6 @@ const AdquirirNuevoRolEPC = () => {
             <div style={{ marginBottom: "15px" }}>
               <label htmlFor="cuit" style={{
                 display: "block",
-                fontSize: "0.875rem",
                 color: "var(--qf-text-white)",
                 marginBottom: "4px",
               }}>
@@ -118,8 +111,6 @@ const AdquirirNuevoRolEPC = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "10px",
-                  fontSize: "1rem",
                   borderRadius: "5px",
                   boxSizing: "border-box",
                 }}
@@ -129,7 +120,6 @@ const AdquirirNuevoRolEPC = () => {
             <div style={{ marginBottom: "15px" }}>
               <label htmlFor="razonSocial" style={{
                 display: "block",
-                fontSize: "0.875rem",
                 color: "var(--qf-text-white)",
                 marginBottom: "4px",
               }}>
@@ -143,8 +133,6 @@ const AdquirirNuevoRolEPC = () => {
                 required
                 style={{
                   width: "100%",
-                  padding: "10px",
-                  fontSize: "1rem",
                   borderRadius: "5px",
                   boxSizing: "border-box",
                 }}
@@ -154,7 +142,6 @@ const AdquirirNuevoRolEPC = () => {
             <div style={{ marginBottom: "15px" }}>
               <label htmlFor="ivaCondicion" style={{
                 display: "block",
-                fontSize: "0.875rem",
                 color: "var(--qf-text-white)",
                 marginBottom: "4px",
               }}>
@@ -166,8 +153,6 @@ const AdquirirNuevoRolEPC = () => {
                 onChange={handleCondicionIvaChange}
                 style={{
                   width: "100%",
-                  padding: "10px",
-                  fontSize: "1rem",
                   borderRadius: "5px",
                   boxSizing: "border-box",
                 }}
@@ -209,7 +194,7 @@ const AdquirirNuevoRolEPC = () => {
             </button>
           </form>
         </div>
-      </div>
+      </main>
       <Footer />
     </PageLayout>
   );

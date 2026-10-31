@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Main from "./Main";
 import NotificationHandler from './NotificationHandler'; // Ajusta la ruta según tu estructura de proyecto
 import { UserProvider } from './UserContext';
+import './Notifications.css';
 
 const App = () => {
   return (
@@ -14,15 +15,16 @@ const App = () => {
       </Router>
       <ToastContainer
         position="top-right" // Posición en la esquina superior derecha
-        autoClose={2000}
-        hideProgressBar={true}
+        autoClose={4500}
+        hideProgressBar={false}
         closeOnClick
         rtl={false}
         draggable
         pauseOnHover
-        theme="colored"
-        style={{ width: "400px" }} // Ajustar el ancho del ToastContainer
-        toastStyle={{ fontSize: "16px" }} // Ajustar el tamaño de fuente de los toasts
+        theme="light"
+        className="qf-toast-container"
+        toastClassName="qf-toast"
+        limit={3}
       />
       <NotificationHandler />
     </UserProvider>

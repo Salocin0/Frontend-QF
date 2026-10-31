@@ -1,165 +1,83 @@
-﻿import React, { useEffect, useState, useContext } from "react";
+import "../ComponentesGenerales/ListFilters.css";
+import React, { useEffect, useState, useContext, useMemo, useCallback } from "react";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Pedido from "./Pedido";
-import LoandingComponent from "../ComponentesGenerales/LoandingComponent";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import Tabs from "./PedidosRepartidor/Tabs";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Footer from "../ComponentesGenerales/Footer";
+import "./Pedidos.css";
 
+export const ORDER_STATES = {
+  Todos: [], Pendientes: ["Pendiente"], Aceptados: ["Aceptado", "Precomprado"],
+  "En preparación": ["EnPreparacion"], "En camino": ["EnCamino"],
+  Entregados: ["Entregado", "Valorado"], Cancelados: ["Cancelado"],
+};
+export const filterOrders = (orders, tab, search, order) => {
+  const states = ORDER_STATES[tab] || [];
+  const term = search.trim().toLocaleLowerCase();
+  const date = (pedido) => new Date(pedido.fecha).getTime() || 0;
+  return orders.filter((pedido) => (!states.length || states.includes(pedido.estado)) &&
+    [pedido.id, pedido.puesto?.nombreCarro, pedido.evento?.nombre].some((value) => String(value ?? "").toLocaleLowerCase().includes(term)))
+    .sort((a, b) => order === "oldest" ? date(a) - date(b) : date(b) - date(a));
+};
 const ListadoPedidos = () => {
-  const [loanding, setLoanding] = useState(false);
-  const [rows, setRows] = useState([]);
-  const [pedidos, setPedidos] = useState([]);
-  const [recargar, setRecargar] = useState(0);
   const { user } = useContext(UserContext);
-  const [activeTab, setActiveTab] = useState("Todos");
-  const [pedidosFiltrados, setPedidosFiltrados] = useState([]);
-
-  // Función para recargar el componente
-  const recargarComponente = () => {
-    setRecargar((prev) => prev + 1);
-  };
-
-  // useEffect para cargar los pedidos
+  const consumerId = user?.consumidorId;
+  const [pedidos, setPedidos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [reload, setReload] = useState(0);
+  const [tab, setTab] = useState("Todos");
+  const [search, setSearch] = useState("");
+  const [order, setOrder] = useState("newest");
+  const refresh = useCallback(() => setReload((value) => value + 1), []);
   useEffect(() => {
-    if (user) {
-      setLoanding(false);
-      const headers = new Headers();
-      headers.append("ConsumidorId", user.consumidorId);
-
-      fetch(`${process.env?.REACT_APP_BACK_URL}pedido/`, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setPedidos(data.data);
-          setLoanding(true);
-        })
-        .catch((error) => {
-          console.log("No existen pedidos.", error);
-          setLoanding(true);
-        });
-    }
-  }, [user, recargar]);
-
-  // useEffect para filtrar los pedidos
-  useEffect(() => {
-    const pedidosFiltrados = pedidos.filter((pedido) => {
-      if (activeTab === "Todos") return true;
-      if (activeTab === "Pendientes") return pedido.estado === "Pendiente";
-      if (activeTab === "Aceptados")
-        return pedido.estado === "Aceptado" || pedido.estado === "Precomprado";
-      if (activeTab === "En Preparacion")
-        return pedido.estado === "EnPreparacion";
-      if (activeTab === "En Camino") return pedido.estado === "EnCamino";
-      if (activeTab === "Entregados")
-        return pedido.estado === "Entregado" || pedido.estado === "Valorado";
-      if (activeTab === "Cancelados") return pedido.estado === "Cancelado";
-      return pedido.estado.toLowerCase() === activeTab.toLowerCase();
-    });
-
-    // Actualizar el estado de pedidosFiltrados
-    setPedidosFiltrados(pedidosFiltrados);
-  }, [pedidos, activeTab]);
-
-  // useEffect para organizar los pedidos en filas de 4 elementos
-  useEffect(() => {
-    const totalEventos = Math.ceil(pedidosFiltrados.length / 4) * 4;
-    const eventosConNulos = [
-      ...pedidosFiltrados,
-      ...Array(totalEventos - pedidosFiltrados.length).fill(null),
-    ];
-
-    const generatedRows = [];
-    for (let i = 0; i < eventosConNulos.length; i += 4) {
-      const row = eventosConNulos.slice(i, i + 4);
-      generatedRows.push(row);
-    }
-    setRows(generatedRows);
-  }, [pedidosFiltrados]);
-
-  const styles = {
-    mainContent: {
-      width: "100%",
-      padding: "0 20px",
-      height: "100%",
-      marginBottom: "5rem",
-    },
-    titleSection: {
-      display: "flex",
-      justifyContent: "center",
-      marginBottom: "1rem",
-    },
-    seccionNegativo: {
-      color: "var(--qf-naranja)",
-    },
-    separator: {
-      border: "none",
-      borderTop: `1px solid var(--qf-naranja)`,
-    },
-    contentWrapper: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    pedidosWrapper: {
-      width: "100%",
-      paddingTop: "0.5rem",
-      paddingBottom: "3rem",
-      overflowY: "auto",
-      height: "calc(100vh - 250px)",
-      scrollbarWidth: "none",
-      msOverflowStyle: "none",
-    },
-  };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis pedidos", url: "/Listado-eventos" },
-  ];
-
+    const controller = new AbortController();
+    const load = async () => {
+      setLoading(true); setError(false);
+      try {
+        const raw = process.env?.REACT_APP_BACK_URL || "";
+        const response = await fetch(`${raw.endsWith("/") ? raw : `${raw}/`}pedido/`, { headers: { ConsumidorId: consumerId }, signal: controller.signal });
+        if (!response.ok) throw new Error("No se pudieron cargar los pedidos");
+        const json = await response.json();
+        if (!controller.signal.aborted) setPedidos(Array.isArray(json.data) ? json.data : []);
+      } catch (err) {
+        if (!controller.signal.aborted) setError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    };
+    if (consumerId != null) load();
+    else { setLoading(false); setError(true); }
+    return () => controller.abort();
+  }, [consumerId, reload]);
+  const filtered = useMemo(() => filterOrders(pedidos, tab, search, order), [pedidos, tab, search, order]);
+  const reset = () => { setSearch(""); setTab("Todos"); setOrder("newest"); };
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.mainContent}>
-        <div style={styles.titleSection}>
-          <h1 className="qf-page-title">Pedidos</h1>
-        </div>
-        <hr className="qf-separator" style={{ marginLeft: "-40px", marginRight: "-40px", width: "auto", marginBottom: "20px" }} />
-        <Breadcrumb
-          items={breadcrumbItems}
-          style={{ width: "100%", margin: "10px 0" }}
-        />
-
-        <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div style={styles.contentWrapper}>
-          <div style={styles.pedidosWrapper}>
-            {!loanding ? (
-              <LoandingComponent />
-            ) : Array.isArray(pedidosFiltrados) && pedidosFiltrados.length > 0 ? (
-              rows.length > 0 &&
-              rows.map((row, rowIndex) => (
-                <div key={rowIndex}>
-                  {row.map((pedido, index) => (
-                    <div key={index}>
-                      {pedido !== null ? (
-                        <Pedido pedido={pedido} recargar={recargarComponente} />
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              ))
-            ) : (
-              <h2 style={styles.seccionNegativo}>No hay Pedidos hechos.</h2>
-            )}
+      <main className="qf-orders-page">
+        <header className="qf-page-header qf-page-header--full">
+          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>Pedidos</h1>
+          <hr className="qf-separator qf-separator--spaced" />
+        </header>
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis pedidos", url: "/pedidos" }]} style={{ width: "100%", margin: "0 0 20px" }} />
+        <section className="qf-orders-filters qf-list-filters" aria-label="Buscar y filtrar pedidos">
+          <div className="qf-orders-toolbar">
+            <label>Buscar pedido<input type="search" placeholder="Número de pedido, puesto o evento…" value={search} onChange={(e) => setSearch(e.target.value)} /></label>
+            <label>Ordenar por<select value={order} onChange={(e) => setOrder(e.target.value)}><option value="newest">Más recientes</option><option value="oldest">Más antiguos</option></select></label>
+            <button type="button" className="qf-orders-clear" onClick={reset} disabled={!search && tab === "Todos" && order === "newest"}>Limpiar filtros</button>
           </div>
-        </div>
-      </div>
-
+          <div className="qf-orders-states" role="group" aria-label="Estado del pedido">
+            {Object.entries(ORDER_STATES).map(([name, states]) => <button key={name} type="button" aria-pressed={tab === name} onClick={() => setTab(name)}>{name}<span>{pedidos.filter((pedido) => !states.length || states.includes(pedido.estado)).length}</span></button>)}
+          </div>
+        </section>
+        <p className="qf-orders-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "pedido encontrado" : "pedidos encontrados"}`}</p>
+        {loading ? <p className="qf-orders-empty" role="status">Cargando pedidos…</p> : error ? <div className="qf-orders-empty" role="alert"><h2>No pudimos cargar tus pedidos</h2><button className="qf-btn qf-btn--primary" onClick={refresh}>Reintentar</button></div> : filtered.length ? (
+          <div className="qf-orders-grid">{filtered.map((pedido) => <Pedido key={pedido.id} pedido={pedido} recargar={refresh} />)}</div>
+        ) : <div className="qf-orders-empty"><h2>{pedidos.length ? "No encontramos pedidos con estos filtros" : "Todavía no hiciste pedidos"}</h2>{pedidos.length > 0 && <button className="qf-btn qf-btn--primary" onClick={reset}>Ver todos los pedidos</button>}</div>}
+      </main>
       <Footer />
     </PageLayout>
   );
 };
-
 export default ListadoPedidos;

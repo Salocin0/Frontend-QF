@@ -1,0 +1,47 @@
+.qf-payment-sheet { box-sizing: border-box; width: 100%; padding: 28px; color: var(--qf-text-primary); background: var(--qf-bg-secondary); font-family: var(--qf-font-family); }
+.qf-payment-header { display: flex; align-items: center; gap: 12px; }
+.qf-payment-icon { display: grid; place-items: center; width: 44px; height: 44px; flex: 0 0 44px; border-radius: 12px; background: var(--qf-bg-main); color: var(--qf-highlight-text); font-size: 1.2rem; }
+.qf-payment-header h2 { font-size: 1.35rem; font-weight: 700; margin: 0 0 5px; }
+.qf-payment-header p { display: flex; align-items: center; gap: 6px; color: var(--qf-text-muted); margin: 0; font-size: 0.8rem; }
+.qf-payment-header svg, .qf-payment-actions svg { flex-shrink: 0; }
+.qf-payment-close { display: grid; place-items: center; width: 36px; height: 36px; flex: 0 0 36px; margin-left: auto; padding: 0; border: 0; border-radius: 8px; color: var(--qf-text-muted); background: transparent; cursor: pointer; }
+.qf-payment-amount { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 26px 0 22px; }
+.qf-payment-amount > span { color: var(--qf-text-muted); font-size: 0.9rem; }
+.qf-payment-amount strong { font-size: clamp(1.8rem, 5vw, 2.3rem); font-weight: 800; color: var(--qf-highlight-text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; text-align: center; line-height: 1.2; }
+.qf-payment-amount small { color: var(--qf-text-muted); font-size: 0.75rem; }
+.qf-payment-buyer { display: grid; gap: 10px; margin: 0 0 22px; padding: 16px 0; border-top: 1px solid color-mix(in srgb, var(--qf-text-primary) 16%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--qf-text-primary) 16%, transparent); }
+.qf-payment-buyer > div { display: grid; grid-template-columns: 85px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.qf-payment-buyer dt { color: var(--qf-text-muted); font-size: 0.8rem; font-weight: 400; }
+.qf-payment-buyer dd { margin: 0; font-size: 0.85rem; font-weight: 500; overflow-wrap: anywhere; text-align: right; }
+.qf-payment-field-label { display: block; margin-bottom: 10px; font-size: 0.85rem; font-weight: 600; }
+.qf-payment-card-field { padding: 15px 12px; border: 1px solid color-mix(in srgb, var(--qf-text-primary) 25%, transparent); border-radius: 8px; background: var(--qf-bg-main); }
+.qf-payment-card-field:focus-within { border-color: var(--qf-naranja); box-shadow: 0 0 0 1px var(--qf-naranja); }
+.qf-payment-error { margin: 12px 0 0; font-size: 0.85rem; line-height: 1.5; color: var(--qf-rojo); }
+.qf-payment-actions { display: grid; gap: 8px; margin-top: 22px; }
+.qf-payment-submit, .qf-payment-cancel { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 46px; padding: 12px 16px; border-radius: 8px; font: inherit; font-size: 0.95rem; cursor: pointer; }
+.qf-payment-submit { border: 0; background: var(--qf-highlight-surface); color: #261c10; font-weight: 700; }
+.qf-payment-cancel { border: 0; background: transparent; color: var(--qf-text-muted); font-size: 0.85rem; }
+.qf-payment-sheet button:disabled { opacity: 0.5; cursor: not-allowed; }
+.qf-payment-sheet button:focus-visible { outline: 2px solid var(--qf-naranja); outline-offset: 3px; }
+.qf-payment-note { margin: 14px 0 0; color: var(--qf-text-muted); font-size: 0.72rem; line-height: 1.5; text-align: center; }
+.qf-payment-processing { margin: 12px 0 0; color: var(--qf-highlight-text); font-size: 0.8rem; text-align: center; }
+@media (max-width: 480px) { .qf-payment-sheet { padding: 24px 18px; } }
+
+.qf-payment-dialog .MuiBackdrop-root {
+  background-color: rgb(0 0 0 / 28%);
+  backdrop-filter: blur(4px);
+}
+.qf-payment-dialog .qf-payment-modal {
+  box-shadow: 0 28px 70px rgb(0 0 0 / 35%), 0 8px 24px rgb(0 0 0 / 18%), inset 0 1px 0 rgb(255 255 255 / 12%);
+  animation: qf-payment-pop 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+[data-theme="light"] .qf-payment-dialog .qf-payment-modal {
+  box-shadow: 0 24px 64px rgb(48 40 26 / 18%), 0 6px 20px rgb(48 40 26 / 10%), inset 0 1px 0 rgb(255 255 255 / 80%);
+}
+@keyframes qf-payment-pop {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qf-payment-dialog .qf-payment-modal { animation: none; }
+}

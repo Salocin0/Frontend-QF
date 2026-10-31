@@ -1,10 +1,7 @@
-const CardGenericaEstadistica = ({titulo,valor}) => {
-  return (
-    <div>
-      <h2 style={{textAlign:"center",fontSize:"1.6rem",color:"var(--qf-naranja)"}}>{titulo}</h2>
-      <h3 style={{textAlign:"center",fontSize:"1.2rem",color:"var(--qf-naranja)"}}>{valor}</h3>
-    </div>
-  );
-};
+const CardGenericaEstadistica = ({ titulo, valor }) => (
+  <article className="qf-profile-metric">
+    <div><h3>{titulo}</h3><p>{valor}</p></div>
+  </article>
+);
 
 export default CardGenericaEstadistica;

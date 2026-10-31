@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -31,7 +31,7 @@ const Notificaciones = () => {
           }
         );
         const responseJson = await response.json();
-        setNotificaciones(responseJson.notificaciones);
+        setNotificaciones(Array.isArray(responseJson.notificaciones) ? responseJson.notificaciones : []);
       } catch (error) {
         console.error("Error fetching notificaciones:", error);
       } finally {
@@ -44,8 +44,9 @@ const Notificaciones = () => {
   const styles = {
     mainContent: {
       width: "100%",
-      padding: "0 20px",
-      height: "100%",
+      padding: "48px 24px 24px",
+      boxSizing: "border-box",
+      minWidth: 0,
       marginBottom: "5rem",
     },
     titleSection: {
@@ -71,16 +72,15 @@ const Notificaciones = () => {
 
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
-    { title: "Mis Notificaciones", url: "/Listado-eventos" },
+    { title: "Mis Notificaciones", url: "/notificaciones" },
   ];
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
-      <div style={styles.mainContent}>
+      <div className="qf-notifications-page" style={styles.mainContent}>
         <div style={styles.titleSection}>
           <h1 className="qf-page-title">Notificaciones</h1>
         </div>
-        <hr className="qf-separator" style={{ marginLeft: "-40px", marginRight: "-40px", width: "auto", marginBottom: "20px" }} />
         <Breadcrumb
           items={breadcrumbItems}
           style={{ width: "100%", margin: "10px 0" }}
@@ -99,7 +99,7 @@ const Notificaciones = () => {
             />
           ))
         ) : (
-          <p style={{ color: "var(--qf-text-primary)" }}>No hay notificaciones.</p>
+          <div className="qf-notifications-empty"><h2>Estás al día</h2><p>Los avisos sobre tus pedidos y eventos aparecerán acá.</p></div>
         )}
       </div>
       <Footer />

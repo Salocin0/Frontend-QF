@@ -1,18 +1,23 @@
-﻿import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import DialogWithPaymentSheet from "./DialogWithPatmentSheet";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
-import { FaTrash, FaMinus, FaPlus, FaShoppingCart, FaArrowRight, FaCheckCircle } from "react-icons/fa";
+import { FaTrash, FaMinus, FaPlus, FaArrowRight, FaCheckCircle, FaCalendarAlt } from "react-icons/fa";
+import { cartAmounts } from "./cartAmounts";
+import productoDefecto from "../img/productoDefecto.png";
+import "./Carrito.css";
 import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
 
-const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
+const RenderizarTarjeta = ({ productos, recargarComponente, evento, groupKey, onItemsChange, externalCheckout = false, onCheckoutChange, checkoutLocked = false }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [isOpen, setIsOpen] = useState(false);
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
   const [productosLocal, setProductosLocal] = useState(productos);
+  const [pending, setPending] = useState(false);
+  const busyRef = useRef(false);
   const cardRef = useRef(null);
   const [cardWidth, setCardWidth] = useState(0);
   const isNarrow = cardWidth < 850;
@@ -21,154 +26,42 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
   useEffect(() => {
     const el = cardRef.current;
     if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setCardWidth(entry.contentRect.width);
-    });
+    const observer = new ResizeObserver(([entry]) => setCardWidth(entry.contentRect.width));
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+  useEffect(() => { setProductosLocal(productos); }, [productos]);
+  useEffect(() => { onItemsChange?.(groupKey, productosLocal); }, [groupKey, onItemsChange, productosLocal]);
 
-  useEffect(() => {
-    setProductosLocal(productos);
-  }, [productos]);
- 
-  const quitarDelCarrito = (producto) => {
-    // Guardar estado anterior para revertir si hay error
-    const estadoAnterior = productosLocal;
-    
-    // Actualizar estado local inmediatamente
-    const productoIndex = productosLocal.findIndex(p => p.producto.id === producto.producto.id);
-    if (productoIndex === -1 || productosLocal[productoIndex].cantidad <= 0) return;
-    
-    const productoOriginal = productosLocal[productoIndex];
-    const nuevosCantidad = productoOriginal.cantidad - 1;
-    
-    const productosActualizados = [...productosLocal];
-    productosActualizados[productoIndex] = {
-      ...productoOriginal,
-      cantidad: nuevosCantidad,
-    };
-    setProductosLocal(productosActualizados);
-    toast.success(`-1 ${producto.producto.nombre}`);
-
-    // Sincronizar con el servidor en background
-    const headers = new Headers();
-    headers.append("ConsumidorId", user.consumidorId);
-    headers.append("Content-Type", "application/json")
-
-    const body = {
-      fecha: productosLocal[0].fecha,
-      eventoId: productosLocal[0].eventoId,
-      cantidad: 1
-    }
-
-    fetch(
-      `${process.env?.REACT_APP_BACK_URL}carrito/removeToCart/${productosLocal[0].productoId}`,
-      {
-        method: "PUT",
-        headers: headers,
-        body: JSON.stringify(body)
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Éxito silencioso
-      })
-      .catch((error) => {
-        console.log("Error al quitar del carrito:", error);
-        // Revertir cambio local en caso de error
-        setProductosLocal(estadoAnterior);
-        toast.error(`Error al quitar ${producto.producto.nombre}`);
+  const updateProduct = async (item, action) => {
+    if (busyRef.current || checkoutLocked) return;
+    const previous = productosLocal;
+    const id = item.producto.id;
+    if (action === "remove" && Number(item.cantidad) <= 1) return;
+    const next = action === "delete" ? previous.filter((product) => product.producto.id !== id)
+      : previous.map((product) => product.producto.id === id ? { ...product, cantidad: Number(product.cantidad) + (action === "add" ? 1 : -1) } : product);
+    busyRef.current = true;
+    setPending(true);
+    setProductosLocal(next);
+    try {
+      const endpoint = { add: "addToCart", remove: "removeToCart", delete: "deleteProductToCart" }[action];
+      const response = await fetch(`${process.env?.REACT_APP_BACK_URL}carrito/${endpoint}/${id}`, {
+        method: "PUT", headers: { ConsumidorId: user.consumidorId, "Content-Type": "application/json" },
+        body: JSON.stringify({ fecha: item.fecha, eventoId: item.eventoId ?? item.evento?.id, cantidad: 1 }),
       });
-  };
-
-  const eliminarDelCarrito = (producto) => {
-    // Actualizar estado local inmediatamente
-    const productoIndex = productosLocal.findIndex(p => p.producto.id === producto.producto.id);
-    if (productoIndex === -1) return;
-    
-    const productosActualizados = productosLocal.filter((_, idx) => idx !== productoIndex);
-    setProductosLocal(productosActualizados);
-    toast.success(`${producto.producto.nombre} eliminado`);
-
-    // Sincronizar con el servidor en background
-    const headers = new Headers();
-    headers.append("ConsumidorId", user.consumidorId);
-    headers.append("Content-Type", "application/json")
-    const body = {
-      fecha: producto.fecha || productosLocal[0]?.fecha,
-      eventoId: producto.eventoId || productosLocal[0]?.eventoId,
+      if (!response.ok) throw new Error("No se pudo actualizar");
+      if (!next.length) recargarComponente();
+    } catch (error) {
+      setProductosLocal(previous);
+      toast.error("No pudimos actualizar el carrito. Intentá nuevamente.");
+    } finally {
+      busyRef.current = false;
+      setPending(false);
     }
-
-    fetch(
-      `${process.env?.REACT_APP_BACK_URL}carrito/deleteProductToCart/${producto.producto.id}`,
-      {
-        method: "PUT",
-        headers: headers,
-        body: JSON.stringify(body),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Éxito silencioso pero recargamos para sincronizar totalmente
-        recargarComponente();
-      })
-      .catch((error) => {
-        console.log("Error al eliminar del carrito:", error);
-        // Revertir cambio local en caso de error
-        setProductosLocal(productos);
-        toast.error(`Error al eliminar ${producto.producto.nombre}`);
-      });
   };
-
-  const agregarAlCarrito = (producto) => {
-    // Guardar estado anterior para revertir si hay error
-    const estadoAnterior = productosLocal;
-    
-    // Actualizar estado local inmediatamente
-    const productoIndex = productosLocal.findIndex(p => p.producto.id === producto.producto.id);
-    if (productoIndex === -1) return;
-    
-    const productoOriginal = productosLocal[productoIndex];
-    const nuevosCantidad = productoOriginal.cantidad + 1;
-    
-    const productosActualizados = [...productosLocal];
-    productosActualizados[productoIndex] = {
-      ...productoOriginal,
-      cantidad: nuevosCantidad,
-    };
-    setProductosLocal(productosActualizados);
-    toast.success(`+1 ${producto.producto.nombre}`);
-
-    // Sincronizar con el servidor en background
-    const headers = new Headers();
-    headers.append("ConsumidorId", user.consumidorId);
-    headers.append("Content-Type", "application/json")
-    const body = {
-      fecha: productosLocal[0].fecha,
-      eventoId: productosLocal[0].eventoId,
-      cantidad: 1
-    }
-
-    fetch(
-      `${process.env?.REACT_APP_BACK_URL}carrito/addToCart/${productosLocal[0].productoId}`,
-      {
-        method: "PUT",
-        headers: headers,
-        body: JSON.stringify(body),
-      }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Éxito silencioso
-      })
-      .catch((error) => {
-        console.log("Error al agregar al carrito:", error);
-        // Revertir cambio local en caso de error
-        setProductosLocal(estadoAnterior);
-        toast.error(`Error al agregar ${producto.producto.nombre}`);
-      });
-  };
+  const quitarDelCarrito = (item) => updateProduct(item, "remove");
+  const agregarAlCarrito = (item) => updateProduct(item, "add");
+  const eliminarDelCarrito = (item) => updateProduct(item, "delete");
 
   const handleCloseCompra = () => {
     setIsOpen(false);
@@ -251,232 +144,6 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
     return total;
   };
 
-  const styles = {
-    card: {
-      border: `2px solid var(--qf-naranja)`,
-      borderRadius: "12px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      margin: "15px 0",
-      padding: "16px",
-      width: "100%",
-      position: "relative",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
-      display: "flex",
-      flexDirection: "column",
-    },
-    cardHeader: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: "20px",
-      paddingBottom: "15px",
-      borderBottom: `2px solid var(--qf-naranja)`,
-    },
-    cardTitle: {
-      fontSize: "22px",
-      fontWeight: "bold",
-      color: "var(--qf-text-white)",
-      WebkitTextFillColor: "var(--qf-text-white)",
-      margin: 0,
-    },
-    preventaText: {
-      fontSize: "13px",
-      color: "var(--qf-text-white)",
-      display: "inline-flex",
-      alignItems: "center",
-      padding: "6px 12px",
-      borderRadius: "25px",
-      backgroundColor: "var(--qf-naranja)",
-      fontWeight: "bold",
-      whiteSpace: "nowrap",
-    },
-    contentWrapper: {
-      display: "flex",
-      gap: "20px",
-    },
-    leftSection: {
-      flex: 1,
-      display: "flex",
-      flexDirection: "column",
-      gap: "15px",
-      maxHeight: "500px",
-      overflowY: "auto",
-      paddingRight: "10px",
-    },
-    productsContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "15px",
-    },
-    productCard: {
-      display: "flex",
-      gap: "15px",
-      padding: "15px",
-      backgroundColor: "var(--qf-bg-main)",
-      borderRadius: "10px",
-      alignItems: "center",
-      transition: "all 0.3s ease",
-      border: `1px solid var(--qf-naranja)33`,
-    },
-    productImage: {
-      width: "100px",
-      height: "100px",
-      borderRadius: "8px",
-      objectFit: "cover",
-      border: `2px solid var(--qf-naranja)`,
-      backgroundColor: "var(--qf-text-primary)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      fontSize: "40px",
-      color: "var(--qf-naranja)",
-      flexShrink: 0,
-    },
-    productInfo: {
-      flex: 1,
-      display: "flex",
-      flexDirection: "column",
-      gap: "8px",
-    },
-    productName: {
-      fontSize: "16px",
-      fontWeight: "bold",
-      color: "var(--qf-text-primary)",
-    },
-    productPrice: {
-      fontSize: "18px",
-      fontWeight: "bold",
-      color: "var(--qf-naranja)",
-    },
-    productControls: {
-      display: "flex",
-      alignItems: "center",
-      gap: "10px",
-      justifyContent: "flex-end",
-      flexShrink: 0,
-    },
-    quantityControl: {
-      display: "flex",
-      alignItems: "center",
-      gap: "8px",
-      backgroundColor: "var(--qf-naranja)",
-      borderRadius: "8px",
-      padding: "5px 10px",
-    },
-    quantityButton: {
-      backgroundColor: "transparent",
-      border: "none",
-      color: "var(--qf-text-white)",
-      cursor: "pointer",
-      fontSize: "14px",
-      fontWeight: "bold",
-      padding: "2px 6px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      transition: "all 0.2s ease",
-    },
-    quantity: {
-      color: "var(--qf-text-white)",
-      fontWeight: "bold",
-      minWidth: "30px",
-      textAlign: "center",
-    },
-    deleteButton: {
-      backgroundColor: "var(--qf-rojo)",
-      color: "var(--qf-text-primary)",
-      border: "none",
-      borderRadius: "6px",
-      padding: "8px 10px",
-      cursor: "pointer",
-      fontSize: "14px",
-      fontWeight: "bold",
-      display: "flex",
-      alignItems: "center",
-      gap: "6px",
-      transition: "all 0.2s ease",
-    },
-    rightSection: {
-      width: "320px",
-      backgroundColor: "var(--qf-bg-main)",
-      borderRadius: "10px",
-      padding: "20px",
-      borderLeft: `4px solid var(--qf-naranja)`,
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-    },
-    summaryRow: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: "12px",
-      fontSize: "14px",
-    },
-    summaryLabel: {
-      color: "var(--qf-text-primary)",
-      fontWeight: "bold",
-    },
-    summaryValue: {
-      color: "var(--qf-naranja)",
-      fontWeight: "bold",
-    },
-    totalRow: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginTop: "15px",
-      paddingTop: "15px",
-      borderTop: `2px solid var(--qf-naranja)`,
-      fontSize: "22px",
-    },
-    totalLabel: {
-      color: "var(--qf-text-primary)",
-      fontWeight: "bold",
-    },
-    totalAmount: {
-      color: "var(--qf-naranja)",
-      fontWeight: "bold",
-    },
-    actionButtons: {
-      display: "flex",
-      gap: "8px",
-      flexDirection: "column",
-      marginTop: "15px",
-    },
-    button: {
-      padding: "10px 16px",
-      fontSize: "13px",
-      borderRadius: "8px",
-      border: "none",
-      fontWeight: "bold",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      gap: "8px",
-      transition: "all 0.2s ease",
-      width: "100%",
-    },
-    continueBtn: {
-      backgroundColor: "var(--qf-info)",
-      color: "var(--qf-text-white)",
-    },
-    deleteBtn: {
-      backgroundColor: "var(--qf-rojo)",
-      color: "var(--qf-text-primary)",
-      fontSize: "12px",
-      padding: "8px 12px",
-    },
-    buyBtn: {
-      backgroundColor: "var(--qf-green)",
-      color: "var(--qf-text-white)",
-      fontSize: "15px",
-      padding: "12px 16px",
-      order: -1,
-    },
-  };
-
   const handleCloseDialog = () => {
     setIsOpen(false);
   };
@@ -488,143 +155,49 @@ const RenderizarTarjeta = ({ productos, recargarComponente, evento }) => {
       : "Compra inmediata";
   };
 
+  const first = productosLocal[0] || productos[0];
+  const orderAmount = cartAmounts(productosLocal);
+  const subtotal = calcularTotal(productosLocal) || 0;
+  const money = (value) => Number(value || 0).toLocaleString("es-AR", { style: "currency", currency: "ARS" });
+  const quantity = productosLocal.reduce((sum, item) => sum + Number(item.cantidad), 0);
+  useEffect(() => {
+    onCheckoutChange?.(groupKey, { disabled: pending || !quantity });
+  }, [groupKey, onCheckoutChange, pending, quantity]);
   return (
-      <div ref={cardRef} key={productosLocal?.puestoId} style={styles.card}>
-      <div style={styles.cardHeader}>
-        <p style={styles.cardTitle}>
-          {productosLocal[0]?.producto?.puesto?.nombreCarro} - {productosLocal[0]?.evento?.nombre}
-        </p>
-        <span style={styles.preventaText}>
-          {obtenerTextoPreventa()}
-        </span>
-      </div>
-
-      <div style={{ ...styles.contentWrapper, flexDirection: isNarrow ? "column" : "row" }} data-testid="cart-content-wrapper">
-        {/* Sección izquierda: Productos */}
-        <div style={styles.leftSection}>
-          <div style={styles.productsContainer}>
-            {productosLocal?.map((item, index) => (
-              <div key={index} style={{ ...styles.productCard, flexDirection: isProductNarrow ? "column" : "row" }} data-testid="cart-product-card">
-                {/* Imagen del producto */}
-                <div style={{ ...styles.productImage, width: isProductNarrow ? "100%" : "100px", height: isProductNarrow ? "140px" : "100px" }}>
-                  {item.producto.img ? (
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "6px",
-                        backgroundImage: `url(${item.producto.img})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    />
-                  ) : (
-                    <div style={{ fontSize: "30px", color: "var(--qf-naranja)" }}>—</div>
-                  )}
-                </div>
-
-                {/* Información del producto */}
-                <div style={styles.productInfo}>
-                  <div style={styles.productName}>
-                    {item.producto.nombre}
-                  </div>
-                  <div style={styles.productPrice}>
-                    ${item.producto.precio} c/u
-                  </div>
-                </div>
-
-                {/* Controles */}
-                <div style={{ ...styles.productControls, justifyContent: isProductNarrow ? "center" : "flex-end", width: isProductNarrow ? "100%" : "auto" }}>
-                  <div style={styles.quantityControl}>
-                    <button
-                      style={styles.quantityButton}
-                      onClick={() => quitarDelCarrito(item)}
-                      title="Disminuir cantidad"
-                    >
-                      <FaMinus />
-                    </button>
-                    <span style={styles.quantity}>{item.cantidad}</span>
-                    <button
-                      style={styles.quantityButton}
-                      onClick={() => agregarAlCarrito(item)}
-                      title="Aumentar cantidad"
-                    >
-                      <FaPlus />
-                    </button>
-                  </div>
-                  <button
-                    style={styles.deleteButton}
-                    onClick={() => eliminarDelCarrito(item)}
-                    title="Eliminar del carrito"
-                  >
-                    <FaTrash />
-                  </button>
-                </div>
+    <section ref={cardRef} className="qf-cart-group" aria-busy={pending}>
+      <header className="qf-cart-group-heading">
+        <div><p className="qf-cart-event"><Link className="qf-cart-event-link" to={`/tipo-compra/${first?.eventoId ?? first?.evento?.id ?? evento?.id ?? evento}`}>{first?.evento?.nombre || `Evento #${first?.eventoId ?? evento?.id ?? evento}`}</Link></p><h2><Link className="qf-cart-stand-link" to={`/productos-puesto/${first?.producto?.puestoId}`} state={{ eventoid: first?.eventoId ?? first?.evento?.id, evento: first?.evento, selectedDay: first?.fecha }}>{first?.producto?.puesto?.nombreCarro || "Tu puesto"}</Link></h2></div>
+        <span className="qf-cart-date"><FaCalendarAlt aria-hidden="true" /> {obtenerTextoPreventa()}</span>
+      </header>
+      <div className="qf-cart-content" style={{ flexDirection: isNarrow ? "column" : "row" }} data-testid="cart-content-wrapper">
+        <div className="qf-cart-items">
+          {productosLocal.map((item) => <article key={item.producto.id} className="qf-cart-product" style={{ flexDirection: isProductNarrow ? "column" : "row" }} data-testid="cart-product-card">
+            <img className="qf-cart-product-image" src={item.producto.img || productoDefecto} alt="" loading="lazy" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = productoDefecto; }} />
+            <div className="qf-cart-product-info"><h3>{item.producto.nombre}</h3><p>{money(item.producto.precio)} c/u</p><strong>{money(Number(item.producto.precio) * Number(item.cantidad))}</strong></div>
+            <div className="qf-cart-product-controls">
+              <div className="qf-cart-quantity" role="group" aria-label={`Cantidad de ${item.producto.nombre}`}>
+                <button type="button" disabled={checkoutLocked || pending || Number(item.cantidad) <= 1} onClick={() => quitarDelCarrito(item)} aria-label={`Disminuir ${item.producto.nombre}`}><FaMinus /></button>
+                <output aria-live="polite">{item.cantidad}</output>
+                <button type="button" disabled={checkoutLocked || pending} onClick={() => agregarAlCarrito(item)} aria-label={`Aumentar ${item.producto.nombre}`}><FaPlus /></button>
               </div>
-            ))}
-          </div>
+              <button type="button" className="qf-cart-remove" disabled={checkoutLocked || pending} onClick={() => eliminarDelCarrito(item)} aria-label={`Eliminar ${item.producto.nombre}`}><FaTrash /></button>
+            </div>
+          </article>)}
         </div>
-
-        {/* Sección derecha: Resumen y botones */}
-        <div style={{ ...styles.rightSection, width: isNarrow ? "100%" : "320px" }} data-testid="cart-right-section">
-          <div>
-            <div style={styles.summaryRow}>
-              <span style={styles.summaryLabel}>Subtotal:</span>
-              <span style={styles.summaryValue}>${calcularTotal(productosLocal)?.toFixed(2)}</span>
-            </div>
-            <div style={styles.summaryRow}>
-              <span style={styles.summaryLabel}>Comisión (15%):</span>
-              <span style={styles.summaryValue}>${(calcularTotal(productosLocal) * 0.15)?.toFixed(2)}</span>
-            </div>
-            <div style={styles.totalRow}>
-              <span style={styles.totalLabel}>Total:</span>
-              <span style={styles.totalAmount}>${(calcularTotal(productosLocal) * 1.15)?.toFixed(2)}</span>
-            </div>
+        <aside className="qf-cart-summary" style={{ width: isNarrow ? "100%" : "320px" }} data-testid="cart-right-section">
+          <h3>Resumen del pedido</h3>
+          <p className="qf-cart-summary-count">{quantity} {quantity === 1 ? "unidad" : "unidades"}</p>
+          <dl><div><dt>Subtotal</dt><dd>{money(subtotal)}</dd></div><div><dt>Comisión de servicio (15%)</dt><dd>{money(orderAmount.commission)}</dd></div><div className="qf-cart-total"><dt>Total</dt><dd>{money(orderAmount.total)}</dd></div></dl>
+          <div className="qf-cart-summary-actions">
+          {!externalCheckout && <button type="button" className="qf-cart-primary" disabled={pending || !quantity} onClick={registrarPedido}><FaCheckCircle aria-hidden="true" /> Comprar</button>}
+          <button type="button" className="qf-cart-secondary" disabled={checkoutLocked || pending} onClick={llevarPuesto}><FaArrowRight aria-hidden="true" /> Ver puesto</button>
+          <button type="button" className="qf-cart-empty-group" disabled={checkoutLocked || pending} onClick={() => setConfirmDeleteOpen(true)}><FaTrash aria-hidden="true" /> Vaciar este pedido</button>
           </div>
-
-          {/* Botones de acción */}
-          <div style={styles.actionButtons}>
-            <button
-              style={{ ...styles.button, ...styles.buyBtn }}
-              onClick={() => registrarPedido()}
-            >
-              <FaCheckCircle /> Comprar
-            </button>
-            <button
-              style={{ ...styles.button, ...styles.continueBtn }}
-              onClick={() => llevarPuesto()}
-            >
-              <FaArrowRight /> Seguir agregando
-            </button>
-            <button
-              style={{ ...styles.button, ...styles.deleteBtn }}
-              onClick={() => setConfirmDeleteOpen(true)}
-            >
-              <FaTrash /> Eliminar
-            </button>
-          </div>
-        </div>
+        </aside>
       </div>
-
-      <ConfirmDialog
-        open={confirmDeleteOpen}
-        title="Eliminar pedido"
-        message="¿Querés vaciar este carrito? Se van a quitar todos sus productos."
-        onConfirm={() => {
-          setConfirmDeleteOpen(false);
-          eliminarPedido();
-        }}
-        onCancel={() => setConfirmDeleteOpen(false)}
-      />
-
-      <DialogWithPaymentSheet
-        isOpen={isOpen}
-        onClose={handleCloseDialog}
-        amount={calcularTotal(productosLocal) * 1.15}
-        handleCloseCompra={handleCloseCompra}
-      />
-    </div>
+      <ConfirmDialog open={confirmDeleteOpen} title="Eliminar pedido" message="¿Querés vaciar este carrito? Se van a quitar todos sus productos." onConfirm={() => { setConfirmDeleteOpen(false); eliminarPedido(); }} onCancel={() => setConfirmDeleteOpen(false)} />
+      <DialogWithPaymentSheet isOpen={isOpen} onClose={handleCloseDialog} amount={orderAmount.total} handleCloseCompra={handleCloseCompra} />
+    </section>
   );
 };
-
 export default RenderizarTarjeta;

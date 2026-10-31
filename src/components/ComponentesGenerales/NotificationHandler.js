@@ -1,5 +1,5 @@
 import { onMessage } from "@firebase/messaging";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 import { ensureMessagingSupported, messaging } from "../../firebase.js"; // Ajusta la ruta según tu estructura de proyecto
 
@@ -15,7 +15,9 @@ const NotificationHandler = () => {
 
         const { notification } = message || {};
         if (notification && notification.title && notification.body) {
-          toast.info(`${notification.title}: ${notification.body}`);
+          toast.info(
+            <div className="qf-toast-message"><strong>{notification.title}</strong><p>{notification.body}</p></div>
+          );
         } else {
           toast.info('Mensaje recibido sin título ni cuerpo');
         }

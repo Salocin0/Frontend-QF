@@ -1,4 +1,5 @@
-﻿import React, { useState } from "react";
+﻿import "../ComponentesGenerales/AdquirirRol.css";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
@@ -66,14 +67,7 @@ const AdquirirNuevoRolR = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-      }}>
+      <main className="qf-acquire-role">
         {/* Header centrado */}
         <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
           <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
@@ -95,7 +89,7 @@ const AdquirirNuevoRolR = () => {
         }} />
 
         {/* Formulario */}
-        <div style={{
+        <div className="qf-acquire-role__form" style={{
           width: "100%",
           margin: "0 auto",
           backgroundColor: "var(--qf-bg-secondary)",
@@ -146,7 +140,7 @@ const AdquirirNuevoRolR = () => {
               <button
                 type="submit"
                 style={{
-                  backgroundColor: "green",
+                  backgroundColor: "var(--qf-green)",
                   color: "white",
                   border: "none",
                   padding: "0.5rem 1rem",
@@ -178,7 +172,7 @@ const AdquirirNuevoRolR = () => {
             </div>
           </form>
         </div>
-      </div>
+      </main>
       <Footer />
     </PageLayout>
   );

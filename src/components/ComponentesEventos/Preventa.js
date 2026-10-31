@@ -8,7 +8,8 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CircularProgress } from "@mui/material";
-import useBreakpoint from "../../useBreakpoint";
+import "./CompraOpciones.css";
+import eventPlaceholder from "../img/qf-new-logo-transparent.png";
 
 const Preventa = () => {
   const [evento, setEvento] = useState([]);
@@ -60,11 +61,9 @@ const Preventa = () => {
     navigate(`/listado-puestos/${evento.id}`);
   };
 
-  const styles = {
-  };
 
   return (
-    <PageLayout sidebarProps={{ tipoUsuario: user.tipoUsuario }}>
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       {isLoading ? (
         <div
           className="qf-main-content--padded"
@@ -81,18 +80,31 @@ const Preventa = () => {
       ) : (
         <div
           data-testid="preventa-cards-grid"
-          className="qf-main-content--padded"
+          className="qf-purchase-options"
           style={{
             display: "grid",
             gridTemplateColumns,
-            gap: "16px",
-            flex: 1,
-            minHeight: 0,
+            gap: "12px",
+            alignContent: "start",
+            flex: "0 0 auto",
           }}
         >
-          <div onClick={() => irACompraInstantanea()}>
-            <CardCompraInstantanea evento={evento} />
-          </div>
+          <header className="qf-purchase-heading">
+            <div className="qf-purchase-event-summary">
+              <img className="qf-purchase-event-thumbnail" alt=""
+                src={evento.img && !String(evento.img).includes("vendimia.mendoza.gov.ar") ? evento.img : eventPlaceholder}
+                onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = eventPlaceholder; }} />
+              <div>
+                <span className="qf-purchase-event-label">ESTÁS COMPRANDO EN</span>
+                <h1>{evento.nombre || "Tu evento"}</h1>
+              </div>
+            </div>
+            <div className="qf-purchase-heading-actions">
+              <p className="qf-purchase-question">¿Cómo querés comprar?</p>
+              <button type="button" className="qf-purchase-back" onClick={() => navigate("/Listado-eventos")}>Volver</button>
+            </div>
+          </header>
+          <CardCompraInstantanea evento={evento} onSelect={irACompraInstantanea} />
           <CardPreCompra evento={evento} />
         </div>
       )}

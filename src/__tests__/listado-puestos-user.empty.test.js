@@ -83,3 +83,20 @@ describe('ListadoPuestosUser - evento sin puestos', () => {
     await waitFor(() => expect(screen.getByTestId('puesto-user')).toBeInTheDocument());
   });
 });
+
+describe('ListadoPuestosUser - filtros reales', () => {
+  const { filterStands } = require('../components/ComponentesPuesto/ListadoPuestosUser');
+  const stands = [
+    { id: 1, nombreCarro: 'Pizza Norte', tipoNegocio: 'Pizza', estrellas: '4.7', tiempo: '12' },
+    { id: 2, nombreCarro: 'Burger Sur', tipoNegocio: 'Hamburguesas', estrellas: '3', tiempo: '45' },
+    { id: 3, nombreCarro: 'Sin datos' },
+  ];
+  test('combines name, minimum rating and delivery time', () => {
+    expect(filterStands(stands, { name: ' PIZZA ', stars: '4', time: '15' }).map((stand) => stand.id)).toEqual([1]);
+    expect(filterStands(stands, { name: '', stars: '5', time: '' })).toEqual([]);
+  });
+  test('does not invent ratings or times for stands without data', () => {
+    expect(filterStands(stands, { name: '', stars: '', time: '' })).toHaveLength(3);
+    expect(filterStands(stands, { name: '', stars: '', time: '15' }).map((stand) => stand.id)).toEqual([1]);
+  });
+});

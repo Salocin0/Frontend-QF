@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useMemo } from "react";
+﻿import React, { useEffect, useState, useContext } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +7,7 @@ import {
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentSheet from "./PaymentSheet";
 import { loadStripe } from "@stripe/stripe-js";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 import useBreakpoint from "../../useBreakpoint";
 
 // Cargar stripe una sola vez (fuera del componente)
@@ -17,7 +18,13 @@ const DialogWithPaymentSheet = ({
   onClose,
   amount,
   handleCloseCompra,
+  isCartCheckout = false,
+  cartCheckoutId,
+  onCartCheckoutReady,
 }) => {
+  const { user } = useContext(UserContext);
+  const consumerId = user?.consumidorId;
+  const [paymentBusy, setPaymentBusy] = useState(false);
   const [paymentSheetData, setPaymentSheetData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -28,30 +35,32 @@ const DialogWithPaymentSheet = ({
       try {
         setIsLoading(true);
         setError(null);
-        
+
         if (!paymentSheetData) {
-          const response = await fetch(
-            `${process.env.REACT_APP_BACK_URL}payment-sheet`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ amount: amountToPay }),
-            }
-          );
+          const raw = process.env.REACT_APP_BACK_URL || "";
+          const base = raw.endsWith("/") ? raw : `${raw}/`;
+          const path = isCartCheckout ? `payment-sheet/cart${cartCheckoutId ? `/${cartCheckoutId}` : ""}` : "payment-sheet";
+          const response = await fetch(`${base}${path}`, {
+            method: isCartCheckout && cartCheckoutId ? "GET" : "POST",
+            headers: { "Content-Type": "application/json", ...(isCartCheckout ? { ConsumidorId: consumerId } : {}) },
+            ...(isCartCheckout && cartCheckoutId ? {} : { body: JSON.stringify(isCartCheckout ? {} : { amount: amountToPay }) }),
+          });
 
           if (!response.ok) {
+            if (isCartCheckout && response.status === 404) {
+              throw new Error("El servidor todavía no tiene habilitada la compra de todo el carrito. Falta publicar la actualización del backend.");
+            }
             throw new Error(`Error HTTP: ${response.status}`);
           }
 
           const data = await response.json();
-          
+
           if (!data.clientSecret) {
             throw new Error("clientSecret no recibido del servidor");
           }
-          
+
           setPaymentSheetData(data);
+          if (isCartCheckout) onCartCheckoutReady?.(data);
         }
       } catch (err) {
         console.error("Error fetching Payment Sheet data:", err);
@@ -64,31 +73,34 @@ const DialogWithPaymentSheet = ({
     if (isOpen && !paymentSheetData) {
       fetchPaymentSheetData(amount * 100);
     }
-  }, [isOpen, paymentSheetData, amount]);
+  }, [isOpen, paymentSheetData, amount, isCartCheckout, cartCheckoutId, consumerId, onCartCheckoutReady]);
 
   const handleClose = () => {
+    if (paymentBusy) return;
     onClose();
     setPaymentSheetData(null);
     setError(null);
   };
 
   return (
-    <Dialog 
-      open={isOpen} 
-      onClose={handleClose} 
-      maxWidth={isMobile ? "xs" : "sm"} 
+    <Dialog
+      className="qf-payment-dialog"
+      open={isOpen}
+      disableEscapeKeyDown={paymentBusy}
+      onClose={handleClose}
+      maxWidth={isMobile ? "xs" : "sm"}
       fullWidth
-      fullScreen={isMobile}
+      slotProps={{ paper: { className: "qf-payment-modal", sx: { backgroundColor: "var(--qf-bg-secondary)", backgroundImage: "none", color: "var(--qf-text-primary)", borderRadius: "20px", border: 0, width: "calc(100% - 32px)", maxWidth: "450px", margin: "16px", maxHeight: "calc(100dvh - 32px)" } } }}
     >
       <DialogContent
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "var(--qf-bg-main)",
-          borderRadius: "0px",
-          padding: "20px",
-          minHeight: "300px",
+          backgroundColor: "transparent",
+          borderRadius: "inherit",
+          padding: isLoading || error ? "24px" : 0,
+          minHeight: isLoading || error ? "300px" : 0,
         }}
       >
         {isLoading ? (
@@ -99,10 +111,10 @@ const DialogWithPaymentSheet = ({
             </div>
           </div>
         ) : error ? (
-          <div style={{ 
-            display: "flex", 
-            flexDirection: "column", 
-            alignItems: "center", 
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             gap: "20px",
             textAlign: "center"
           }}>
@@ -131,8 +143,10 @@ const DialogWithPaymentSheet = ({
           <Elements stripe={stripePromise}>
             <PaymentSheet
               handleCloseCompra={handleCloseCompra}
+              onProcessingChange={setPaymentBusy}
               handleClose={handleClose}
-              amount={amount * 100}
+              amount={isCartCheckout ? paymentSheetData.amount : amount * 100}
+              currency={(paymentSheetData.currency || "usd").toUpperCase()}
               clientSecret={paymentSheetData.clientSecret}
               paymentIntent={paymentSheetData.paymentIntent}
             />

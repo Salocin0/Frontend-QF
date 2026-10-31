@@ -1,232 +1,63 @@
 import React, { useState } from "react";
-import { Modal, Button } from "react-bootstrap"; // Utilizando Bootstrap para el modal
+import { Modal } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { FaCalendarAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaArrowRight } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
+import "./CompraOpciones.css";
 
 const CardPreCompra = ({ evento }) => {
-  const [selectedDay, setSelectedDay] = useState(null); // Día seleccionado
-  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-
-  const eventoFinalizado = () => {
-    if (!evento?.diaEventos?.length) return false;
-    const ahora = new Date();
-    const fechaFin = new Date(
-      Math.max(...evento.diaEventos.map((d) => new Date(d.fechaHoraFinDiaEvento)))
-    );
-    return fechaFin <= ahora;
-  };
-
-  // Obtener la fecha actual y establecerla al inicio del día (para evitar conflictos de horas)
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
-
-  // Verificar si evento.diaEventos existe y es un array antes de mapearlo
   const availableDays = Array.isArray(evento?.diaEventos)
-    ? evento.diaEventos.map((fecha) => fecha.fechaHoraInicioDiaEvento)
-    : []; // Si no es un array, devolvemos un array vacío
+    ? [...new Set(evento.diaEventos.map((day) => day.fechaHoraInicioDiaEvento))]
+    : [];
+  const canSelect = (day) => new Date(day) > currentDate;
+  const hasDays = availableDays.some(canSelect);
 
-  // Manejador para seleccionar un día
-  const handleSelectDay = (day) => {
-    if (new Date(day) > currentDate) {
-      setSelectedDay(day);
-    }
-  };
-
-  // Manejador para el botón "Siguiente" que muestra el modal de advertencia
-  const handleNext = () => {
-    if (!selectedDay) {
-      toast.warn("Seleccioná una fecha para continuar con la precompra.");
-      return;
-    }
-    setShowModal(true);
-  };
-
-  // Manejadores para el modal de advertencia
-  const handleCloseModal = () => setShowModal(false);
   const handleAccept = () => {
-    if (eventoFinalizado()) {
-      setShowModal(false);
+    if (!selectedDay || !canSelect(selectedDay)) return;
+    const end = Math.max(...(evento.diaEventos || []).map((day) => new Date(day.fechaHoraFinDiaEvento)));
+    if (end <= Date.now()) {
       toast.error("El evento ha finalizado. No se pueden realizar pedidos.");
+      setShowModal(false);
       return;
     }
     setShowModal(false);
     navigate(`/listado-puestos/${evento.id}`, { state: { selectedDay } });
   };
-  const handleReject = () => setShowModal(false);
-
-  const styles = {
-    card: {
-      width: "100%",
-      padding: "20px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      borderRadius: "8px",
-      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-      textAlign: "center",
-      flex: 1,
-      border: `1px solid var(--qf-naranja)`,
-      display: "flex",
-      flexDirection: "column",
-    },
-    icon: {
-      color: "var(--qf-naranja)",
-      marginBottom: "10px",
-    },
-    title: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      marginBottom: "10px",
-      color: "var(--qf-text-primary)",
-    },
-    description: {
-      fontSize: "16px",
-      color: "var(--qf-text-primary)",
-      marginBottom: "20px",
-    },
-    dayGrid: {
-      display: "grid",
-      gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
-      gap: "10px",
-    },
-    dayItem: {
-      padding: "10px",
-      textAlign: "center",
-      cursor: "pointer",
-      border: `1px solid var(--qf-text-primary)`,
-      borderRadius: "5px",
-      color: "var(--qf-text-primary)",
-      backgroundColor: "var(--qf-bg-secondary)",
-    },
-    disabledDay: {
-      backgroundColor: "var(--qf-bg-main)",
-      cursor: "not-allowed",
-      color: "var(--qf-text-primary)",
-    },
-    activeDay: {
-      backgroundColor: "var(--qf-naranja)",
-      color: "var(--qf-text-primary)",
-    },
-    button: {
-      backgroundColor: "var(--qf-naranja)",
-      color: "var(--qf-text-primary)",
-      border: "none",
-      padding: "10px 20px",
-      borderRadius: "5px",
-      cursor: "pointer",
-      marginTop: "auto",
-      width: "200px",
-      alignSelf: "center",
-    },
-    modalHeader: {
-      backgroundColor: "var(--qf-bg-secondary)",
-      color: "var(--qf-text-primary)",
-      borderBottom: `1px solid var(--qf-naranja)`,
-    },
-    modalBody: {
-      backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-text-primary)",
-    },
-    modalFooter: {
-      backgroundColor: "var(--qf-bg-secondary)",
-      borderTop: `1px solid var(--qf-naranja)`,
-    },
-    disabledContainer: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexDirection: "column",
-      height: "100%",
-      opacity: 0.45,
-      cursor: "not-allowed",
-      userSelect: "none",
-    },
-    modalButton: {
-      backgroundColor: "var(--qf-naranja)",
-      border: "none",
-      color: "var(--qf-text-primary)",
-    },
-  };
-
   return (
-    <div style={styles.card}>
-      {evento.tienePreventa ? (
-        <>
-          <span style={styles.icon}><FaCalendarAlt size={30} /></span>
-          <h2 style={styles.title}>Pre Compra</h2>
-          <p style={styles.description}>
-            Seleccione una fecha disponible para la precompra.
-          </p>
-
-            <div style={styles.dayGrid}>
-              {availableDays.map((dia, index) => {
-                const isDisabled = new Date(dia) <= currentDate;
-                return (
-                  <div
-                    key={index}
-                    onClick={() => !isDisabled && handleSelectDay(dia)}
-                    style={{
-                      ...styles.dayItem,
-                      ...(isDisabled ? styles.disabledDay : {}),
-                      ...(selectedDay === dia ? styles.activeDay : {}),
-                    }}
-                  >
-                    {formatDateAR(dia)}
-                  </div>
-                );
-              })}
-            </div>
-
-          <button
-            onClick={handleNext}
-            style={{ ...styles.button, ...(selectedDay ? {} : { opacity: 0.6 }) }}
-            aria-disabled={!selectedDay}
-          >
-            Siguiente
-          </button>
-        </>
-      ) : (
-        <div style={styles.disabledContainer}>
-          <span style={styles.icon}><FaCalendarAlt /></span>
-          <h2 style={styles.title}>Precompra no disponible</h2>
-          <p style={styles.description}>
-            Precompra no disponible en este evento.
-          </p>
-        </div>
-      )}
-
-      {/* Modal de advertencia */}
-      <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Header style={styles.modalHeader} closeButton>
-          <Modal.Title>Advertencia</Modal.Title>
-        </Modal.Header>
-        <Modal.Body style={styles.modalBody}>
-          <p style={styles.description}>
-            ¿Está seguro de que desea continuar con la compra para el día{" "}
-            {formatDateAR(selectedDay)}? Su compra será válida
-            únicamente para ese día del evento.
-          </p>
+    <>
+      <button type="button" className="qf-purchase-card qf-purchase-instant"
+        disabled={!evento?.tienePreventa} onClick={() => setShowModal(true)}>
+        <span className="qf-purchase-icon" aria-hidden="true"><FaCalendarAlt /></span>
+        <span className="qf-purchase-copy">
+          <span className="qf-purchase-title">Precompra</span>
+          <span className="qf-purchase-description">Comprá antes del evento y retirá tu pedido allá, el día que elijas.</span>
+          <span className="qf-purchase-hint">{evento?.tienePreventa ? "Elegí la fecha de retiro para continuar." : "Precompra no disponible en este evento."}</span>
+        </span>
+        <FaArrowRight className="qf-purchase-arrow" aria-hidden="true" />
+      </button>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered contentClassName="qf-purchase-modal">
+        <Modal.Header closeButton><Modal.Title>Elegí el día de retiro</Modal.Title></Modal.Header>
+        <Modal.Body>
+          <p className="qf-purchase-description">Comprá ahora y retirá tu pedido en el evento. La compra será válida únicamente para el día elegido.</p>
+          <div className="qf-purchase-days" role="group" aria-label="Fechas de retiro">
+            {availableDays.map((day) => <button key={day} type="button" disabled={!canSelect(day)}
+              aria-pressed={selectedDay === day} onClick={() => setSelectedDay(day)}>{formatDateAR(day)}</button>)}
+          </div>
+          {!hasDays && <p className="qf-purchase-hint" role="status">No hay fechas disponibles para precomprar.</p>}
+          {selectedDay && <p className="qf-purchase-hint">Retiro seleccionado: {formatDateAR(selectedDay)}</p>}
         </Modal.Body>
-        <Modal.Footer style={styles.modalFooter}>
-          <Button
-            variant="secondary"
-            onClick={handleReject}
-            style={{ ...styles.modalButton, backgroundColor: "var(--qf-rojo)" }}
-          >
-            Rechazar
-          </Button>
-          <Button
-            variant="primary"
-            onClick={handleAccept}
-            style={{ ...styles.modalButton, backgroundColor: "var(--qf-green)" }}
-          >
-            Aceptar
-          </Button>
+        <Modal.Footer>
+          <button type="button" className="qf-purchase-back" onClick={() => setShowModal(false)}>Volver</button>
+          <button type="button" className="qf-purchase-continue" disabled={!selectedDay || !canSelect(selectedDay)} onClick={handleAccept}>Continuar con la precompra</button>
         </Modal.Footer>
       </Modal>
-    </div>
+    </>
   );
 };
-
 export default CardPreCompra;
