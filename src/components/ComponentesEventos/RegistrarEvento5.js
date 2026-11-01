@@ -11,7 +11,9 @@ import "leaflet/dist/leaflet.css";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import useBreakpoint from "../../useBreakpoint";
+import { Dialog } from "@mui/material";
+import { FaArrowLeft, FaCheck, FaPlus, FaMapMarkerAlt, FaPen, FaTrash, FaTimes, FaLocationArrow } from "react-icons/fa";
+import "./RegistrarEvento.css";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -51,7 +53,6 @@ const RecenterMap = ({ center }) => {
 };
 
 const RegistrarEvento5 = () => {
-  const { isMobile } = useBreakpoint();
   const { user } = useContext(UserContext);
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const { eventoId, diferenciaDiasEvento } = useParams();
@@ -168,8 +169,8 @@ const RegistrarEvento5 = () => {
     } else if (punto) {
       setNombre(punto.nombre || "");
       setUbicacion("");
-      setLatitud(punto.latitud || "");
-      setLongitud(punto.longitud || "");
+      setLatitud(String(punto.latitud ?? ""));
+      setLongitud(String(punto.longitud ?? ""));
     }
 
     setSuggestions([]);
@@ -346,392 +347,37 @@ const RegistrarEvento5 = () => {
     }, 2200);
   };
 
-  const styles = {
-    contentCol: {
-      display: "flex",
-      flexDirection: "column",
-      flex: 1,
-      minHeight: 0,
-      overflowY: "auto",
-      width: "100%",
-      boxSizing: "border-box",
-      padding: isMobile ? "0 12px 70px" : "0 20px 70px",
-    },
-    titleWrap: {
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "20px",
-      color: "var(--qf-text-primary)",
-      width: "100%",
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-      paddingTop: "10px",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    panel: {
-      margin: "20px",
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      padding: "20px",
-      color: "var(--qf-text-primary)",
-    },
-    topActions: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      gap: "10px",
-      marginBottom: "15px",
-      flexWrap: "wrap",
-    },
-    button: {
-      backgroundColor: "var(--qf-blue)",
-      color: "var(--qf-text-primary)",
-      border: "none",
-      borderRadius: "6px",
-      padding: "10px 14px",
-      cursor: "pointer",
-      fontWeight: "bold",
-    },
-    buttonSecondary: {
-      backgroundColor: "#6c757d",
-    },
-    greenButton: {
-      backgroundColor: "var(--qf-green)",
-    },
-    redButton: {
-      backgroundColor: "var(--qf-rojo)",
-    },
-    table: {
-      width: "100%",
-      borderCollapse: "collapse",
-    },
-    th: {
-      borderBottom: `1px solid var(--qf-naranja)`,
-      padding: "10px",
-      color: "var(--qf-naranja)",
-      textAlign: "left",
-    },
-    td: {
-      borderBottom: `1px solid rgba(255,255,255,0.12)`,
-      padding: "10px",
-      color: "var(--qf-text-primary)",
-    },
-    actionsCell: {
-      display: "flex",
-      gap: "8px",
-      justifyContent: "flex-end",
-    },
-    modalOverlay: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0,0,0,0.45)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 1100,
-    },
-    modal: {
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      width: "min(680px, 92vw)",
-      padding: "20px",
-      color: "var(--qf-text-primary)",
-    },
-    input: {
-      width: "100%",
-      padding: "10px",
-      borderRadius: "8px",
-      border: "1px solid #999",
-      marginBottom: "10px",
-    },
-    rowButtons: {
-      display: "flex",
-      justifyContent: "flex-end",
-      gap: "10px",
-      marginTop: "10px",
-      flexWrap: "wrap",
-    },
-    mapHint: {
-      fontSize: "0.9rem",
-      color: "rgba(255,255,255,0.85)",
-      marginTop: "4px",
-      marginBottom: "8px",
-    },
-    mapContainer: {
-      width: "100%",
-      height: "260px",
-      borderRadius: "10px",
-      overflow: "hidden",
-      border: `1px solid var(--qf-naranja)`,
-      marginTop: "8px",
-      marginBottom: "8px",
-    },
-    map: {
-      width: "100%",
-      height: "100%",
-    },
-    mobileHint: {
-      marginTop: "14px",
-      marginBottom: "0",
-      padding: "10px 12px",
-      borderRadius: "8px",
-      border: `1px dashed var(--qf-naranja)`,
-      color: "var(--qf-text-primary)",
-      backgroundColor: "rgba(0,0,0,0.18)",
-      fontSize: "0.95rem",
-    },
-    suggestions: {
-      listStyle: "none",
-      margin: "0",
-      padding: "0",
-      maxHeight: "180px",
-      overflowY: "auto",
-      border: "1px solid #999",
-      borderRadius: "8px",
-      backgroundColor: "var(--qf-blanco-puro)",
-      color: "#111",
-    },
-    suggestionItem: {
-      padding: "8px 10px",
-      cursor: "pointer",
-      borderBottom: "1px solid #ddd",
-    },
-    successOverlay: {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.45)",
-      zIndex: 1049,
-    },
-    successCard: {
-      position: "fixed",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      backgroundColor: "var(--qf-bg-secondary)",
-      color: "var(--qf-text-primary)",
-      padding: "2rem",
-      borderRadius: "12px",
-      border: `1px solid var(--qf-naranja)`,
-      boxShadow: "0px 12px 30px rgba(0, 0, 0, 0.35)",
-      textAlign: "center",
-      zIndex: 1050,
-      maxWidth: "460px",
-      width: "100%",
-    },
-  };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis Eventos", url: "/listado-eventos-productor" },
-    { title: "Crear un Evento (4/4)", url: `/registrar-evento5/${effectiveEventoId}` },
-  ];
-
   const latitudParsed = toNumber(latitud);
   const longitudParsed = toNumber(longitud);
-  const mapCenter =
-    latitudParsed !== null && longitudParsed !== null
-      ? [latitudParsed, longitudParsed]
-      : eventoCenter || DEFAULT_MAP_CENTER;
-
+  const mapCenter = latitudParsed !== null && longitudParsed !== null ? [latitudParsed, longitudParsed] : eventoCenter || DEFAULT_MAP_CENTER;
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-          <div style={styles.contentCol}>
-          <div style={styles.titleWrap}>
-            <h1>Crear un Evento</h1>
-          </div>
-          <hr style={{ color: "var(--qf-naranja)", border: `1px solid var(--qf-naranja)` }} />
-
-          <div style={styles.breadcrumbWrapper}>
-            <Breadcrumb
-              items={breadcrumbItems}
-              style={{ width: "100%" }}
-            />
-          </div>
-
-          <div style={styles.panel}>
-            <div style={styles.topActions}>
-              <h3 style={{ color: "var(--qf-naranja)", margin: 0 }}>Puntos de Encuentro</h3>
-              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                <button
-                  style={styles.button}
-                  onClick={() => navigate(`/registrar-evento4/${diferenciaDiasEvento}`, { state: { eventoId } })}
-                >
-                  Volver
-                </button>
-                <button style={{ ...styles.button, ...styles.greenButton }} onClick={() => openModal("create")}>
-                  Crear Punto de Encuentro
-                </button>
-              </div>
-            </div>
-
-            {loading ? (
-              <div style={{ display: "flex", justifyContent: "center", padding: "30px" }}>
-                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-              </div>
-            ) : puntos.length === 0 ? (
-              <p style={{ color: "var(--qf-text-primary)" }}>
-                No hay puntos de encuentro cargados. Debes crear al menos uno para finalizar.
-              </p>
-            ) : (
-              <table style={styles.table}>
-                <thead>
-                  <tr>
-                    <th style={styles.th}>Nombre</th>
-                    <th style={styles.th}>Latitud</th>
-                    <th style={styles.th}>Longitud</th>
-                    <th style={styles.th}>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {puntos.map((punto) => (
-                    <tr key={punto.id}>
-                      <td style={styles.td}>{punto.nombre}</td>
-                      <td style={styles.td}>{punto.latitud}</td>
-                      <td style={styles.td}>{punto.longitud}</td>
-                      <td style={styles.td}>
-                        <div style={styles.actionsCell}>
-                          <button style={styles.button} onClick={() => openModal("edit", punto)}>
-                            Editar
-                          </button>
-                          <button
-                            style={{ ...styles.button, ...styles.redButton }}
-                            onClick={() => handleDelete(punto)}
-                          >
-                            Eliminar
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-
-            <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end" }}>
-              <button
-                style={{ ...styles.button, ...styles.greenButton }}
-                onClick={handleFinish}
-                disabled={isFinishing}
-              >
-                {isFinishing && <CircularProgress size={18} style={{ color: "var(--qf-text-primary)", marginRight: 8 }} />}
-                {isFinishing ? "Finalizando..." : "Finalizar Registro"}
-              </button>
-            </div>
-
-            <p style={styles.mobileHint}>
-              Recomendacion: para finalizar esta configuracion con mayor comodidad,
-              te sugerimos hacerlo desde el telefono.
-            </p>
-        </div>
-      </div>
-
-      {showModal && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <h4 style={{ color: "var(--qf-naranja)", marginTop: 0 }}>
-              {modalType === "create" ? "Crear Punto de Encuentro" : "Editar Punto de Encuentro"}
-            </h4>
-
-            <input
-              style={styles.input}
-              placeholder="Nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-            />
-
-            <input
-              style={styles.input}
-              placeholder="Buscar ubicación"
-              value={ubicacion}
-              onChange={handleUbicacionChange}
-            />
-
-            {showSuggestions && suggestions.length > 0 && (
-              <ul style={styles.suggestions}>
-                {suggestions.map((item, index) => (
-                  <li
-                    key={`${item.display}-${index}`}
-                    style={styles.suggestionItem}
-                    onClick={() => handleSelectSuggestion(item)}
-                  >
-                    {item.display}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-              <input
-                style={styles.input}
-                placeholder="Latitud"
-                value={latitud}
-                onChange={(e) => setLatitud(e.target.value)}
-              />
-              <input
-                style={styles.input}
-                placeholder="Longitud"
-                value={longitud}
-                onChange={(e) => setLongitud(e.target.value)}
-              />
-            </div>
-
-            <p style={styles.mapHint}>Marca el punto exacto haciendo click en el mapa.</p>
-            <div style={styles.mapContainer}>
-              <MapContainer center={mapCenter} zoom={14} style={styles.map} scrollWheelZoom>
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <RecenterMap center={mapCenter} />
-                <MapClickHandler onPick={handleMapPick} />
-                {latitudParsed !== null && longitudParsed !== null && (
-                  <Marker position={[latitudParsed, longitudParsed]} />
-                )}
-              </MapContainer>
-            </div>
-
-            <div style={styles.rowButtons}>
-              <button style={styles.button} onClick={handleUseCurrentLocation}>
-                Usar mi ubicación
-              </button>
-              <button style={{ ...styles.button, ...styles.buttonSecondary }} onClick={closeModal}>
-                Cancelar
-              </button>
-              <button style={{ ...styles.button, ...styles.greenButton }} onClick={handleSave} disabled={isSaving}>
-                {isSaving && <CircularProgress size={16} style={{ color: "var(--qf-text-primary)", marginRight: 8 }} />}
-                {isSaving ? "Guardando..." : "Guardar"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {successOpen && (
-        <>
-          <div style={styles.successOverlay} />
-          <div style={styles.successCard}>
-            <h5 style={{ color: "var(--qf-naranja)", marginBottom: "0.75rem", fontWeight: "bold", fontSize: "1.5rem" }}>
-              ¡Registro Exitoso!
-            </h5>
-            <p style={{ color: "var(--qf-text-primary)", margin: 0, lineHeight: "1.5", fontSize: "1rem" }}>
-              El evento quedó creado y con puntos de encuentro configurados.
-            </p>
-          </div>
-        </>
-      )}
-
+      <main className="qf-event-registration-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Crear un evento · Puntos de encuentro", url: `/registrar-evento5/${effectiveEventoId}/${diferenciaDiasEvento}` }]} />
+        <header className="qf-event-registration-heading"><h1>Crear un Evento</h1><p>Definí dónde se encontrarán los asistentes y los repartidores para entregar sus pedidos.</p></header>
+        <ol className="qf-event-registration-steps" aria-label="Progreso del registro">{["Información", "Configuración", "Días del evento", "Puntos de encuentro"].map((step, index) => <li key={step} aria-current={index === 3 ? "step" : undefined} className={index < 3 ? "qf-event-step-completed" : ""}><span>{index < 3 ? <FaCheck aria-hidden="true" /> : index + 1}</span><div><small>Paso {index + 1}</small><strong>{step}</strong></div></li>)}</ol>
+        <section className="qf-event-registration-form qf-event-meeting-section">
+          <header className="qf-event-meeting-heading"><div><h2><FaMapMarkerAlt aria-hidden="true" /> Puntos de Encuentro</h2><p>Agregá al menos uno para completar el registro.</p></div><button type="button" className="qf-event-registration-button qf-event-registration-button--primary" onClick={() => openModal("create")} disabled={isFinishing}><FaPlus aria-hidden="true" /> Crear Punto de Encuentro</button></header>
+          {loading ? <div className="qf-event-meeting-empty" role="status">Cargando puntos de encuentro…</div> : !puntos.length ? <div className="qf-event-meeting-empty"><FaMapMarkerAlt aria-hidden="true" /><h3>Todavía no agregaste puntos de encuentro</h3><p>Elegí lugares fáciles de reconocer, como una entrada o un sector señalizado del evento.</p></div> : <><p className="qf-event-meeting-count">{puntos.length} {puntos.length === 1 ? "punto de encuentro" : "puntos de encuentro"}</p><ul className="qf-event-meeting-list">{puntos.map((punto, index) => <li key={punto.id}><span className="qf-event-meeting-number">{String(index + 1).padStart(2, "0")}</span><div><h3>{punto.nombre}</h3><p><span>Latitud: {punto.latitud}</span><span>Longitud: {punto.longitud}</span></p></div><div className="qf-event-meeting-actions"><button type="button" className="qf-event-registration-button" onClick={() => openModal("edit", punto)} disabled={isFinishing}><FaPen aria-hidden="true" /> Editar</button><button type="button" className="qf-event-registration-button" onClick={() => handleDelete(punto)} disabled={isFinishing}><FaTrash aria-hidden="true" /> Eliminar</button></div></li>)}</ul></>}
+          <footer className="qf-event-registration-footer"><span>Paso 4 de 4 · {puntos.length ? "Todo listo para completar el registro." : "Agregá un punto de encuentro antes de finalizar."}</span><div><button type="button" className="qf-event-registration-button" onClick={() => navigate(`/registrar-evento4/${diferenciaDiasEvento}`, { state: { eventoId } })} disabled={isFinishing}><FaArrowLeft aria-hidden="true" /> Volver</button><button type="button" className="qf-event-registration-button qf-event-registration-button--primary" onClick={handleFinish} disabled={isFinishing}>{isFinishing ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Finalizando...</> : <><FaCheck aria-hidden="true" /> Finalizar Registro</>}</button></div></footer>
+        </section>
+      </main>
+      <Dialog open={showModal} onClose={() => { if (!isSaving) closeModal(); }} fullWidth maxWidth="md" className="qf-event-point-dialog" aria-labelledby="event-point-dialog-title" slotProps={{ paper: { className: "qf-event-point-paper" } }}>
+        <header className="qf-event-point-dialog-heading"><div><span>Punto de encuentro</span><h2 id="event-point-dialog-title">{modalType === "create" ? "Crear Punto de Encuentro" : "Editar Punto de Encuentro"}</h2></div><button type="button" className="qf-event-point-close" aria-label="Cerrar punto de encuentro" onClick={closeModal} disabled={isSaving}><FaTimes aria-hidden="true" /></button></header>
+        {showModal && <form className="qf-event-point-form" onSubmit={(event) => { event.preventDefault(); handleSave(); }} noValidate>
+          <fieldset disabled={isSaving}><legend className="qf-event-registration-sr">Datos del punto de encuentro</legend><div className="qf-event-point-layout"><div className="qf-event-point-fields">
+            <label htmlFor="meeting-point-name">Nombre<input id="meeting-point-name" placeholder="Nombre" value={nombre} onChange={(event) => setNombre(event.target.value)} /></label>
+            <label htmlFor="meeting-point-address">Buscar ubicación<input id="meeting-point-address" placeholder="Buscar ubicación" autoComplete="off" value={ubicacion} onChange={handleUbicacionChange} /></label>
+            {showSuggestions && suggestions.length > 0 && <ul className="qf-event-address-suggestions">{suggestions.map((item, index) => <li key={`${item.display}-${index}`}><button type="button" onClick={() => handleSelectSuggestion(item)}>{item.display}</button></li>)}</ul>}
+            <div className="qf-event-point-coordinates"><label htmlFor="meeting-point-lat">Latitud<input id="meeting-point-lat" placeholder="Latitud" value={latitud} onChange={(event) => setLatitud(event.target.value)} /></label><label htmlFor="meeting-point-lng">Longitud<input id="meeting-point-lng" placeholder="Longitud" value={longitud} onChange={(event) => setLongitud(event.target.value)} /></label></div>
+            <button type="button" className="qf-event-registration-button" onClick={handleUseCurrentLocation}><FaLocationArrow aria-hidden="true" /> Usar mi ubicación</button>
+          </div><div className="qf-event-point-map-section"><p>Marcá el punto exacto haciendo clic en el mapa.</p><div className="qf-event-point-map"><MapContainer center={mapCenter} zoom={14} style={{ height: "100%", width: "100%" }} scrollWheelZoom><TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' /><RecenterMap center={mapCenter} /><MapClickHandler onPick={handleMapPick} />{latitudParsed !== null && longitudParsed !== null && <Marker position={[latitudParsed, longitudParsed]} />}</MapContainer></div></div></div></fieldset>
+          <footer><button type="button" className="qf-event-registration-button" onClick={closeModal} disabled={isSaving}>Cancelar</button><button type="submit" className="qf-event-registration-button qf-event-registration-button--primary" disabled={isSaving}>{isSaving ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Guardando...</> : "Guardar"}</button></footer>
+        </form>}
+      </Dialog>
+      <Dialog open={successOpen} fullWidth maxWidth="xs" className="qf-event-registration-success-dialog" aria-labelledby="event-registration-success-title" slotProps={{ paper: { className: "qf-event-registration-success" } }}><FaCheck aria-hidden="true" /><h2 id="event-registration-success-title">¡Registro Exitoso!</h2><p>El evento quedó creado y con puntos de encuentro configurados.</p></Dialog>
       <Footer />
     </PageLayout>
   );
 };
-
 export default RegistrarEvento5;

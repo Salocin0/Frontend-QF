@@ -1,0 +1,8 @@
+.qf-producer-dashboard .qf-manager-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.qf-producer-dashboard .qf-manager-dashboard-filters { grid-template-columns: 1fr; }
+.qf-producer-revenue-chart { height: 440px; min-width: 0; }
+.qf-producer-revenue-chart > [data-testid="grafica-wrapper"] { max-width: none !important; }
+.qf-producer-dashboard-error { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px; margin-bottom: 22px; border: 1px solid var(--qf-highlight-border); border-radius: 12px; }
+.qf-producer-dashboard-error p { color: var(--qf-text-primary); text-align: left; font-size: .9rem; margin: 0; }
+.qf-producer-dashboard-error button { min-height: 42px; padding: 9px 14px; border: 1px solid var(--qf-highlight-border); border-radius: 9px; color: var(--qf-text-primary); background: transparent; font: inherit; cursor: pointer; }
+@media (max-width: 767px) { .qf-producer-dashboard .qf-manager-metrics { grid-template-columns: 1fr; } .qf-producer-revenue-chart { height: 400px; } }

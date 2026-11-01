@@ -1,26 +1,14 @@
-import { default as React, useEffect, useState, useRef } from "react";
+import { default as React, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import imgDefault from "../img/qf-new-logo-transparent.png";
+import { FaInfoCircle, FaPen, FaClipboardList, FaCheck, FaPlay, FaPause, FaStop, FaTimes, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
+import "./EventosProductor.css";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
 const EventoProductor = ({ evento, recargarComponente }) => {
   const navigate = useNavigate();
-  const cardRef = useRef(null);
-  const [cardWidth, setCardWidth] = useState(999);
-  const isCardNarrow = cardWidth <= 550;
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setCardWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const [isEnPreparacion, setIsEnPreparacion] = useState(false);
   const [isConfirmado, setIsConfirmado] = useState(false);
   const [isEnCurso, setIsEnCurso] = useState(false);
@@ -283,229 +271,36 @@ const EventoProductor = ({ evento, recargarComponente }) => {
     setPendingAction(null);
   };
 
-  const styles = {
-    container: {
-      width: "100%",
-      backgroundColor: "var(--qf-bg-secondary)",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      position: "relative",
-      borderRadius: "10px",
-      padding: "20px",
-      gap: "20px",
-      marginBottom: "20px",
-      border: `1px solid var(--qf-naranja)`,
-    },
-    card: {
-      display: "flex",
-      flexDirection: isCardNarrow ? "column" : "row",
-      alignItems: isCardNarrow ? "center" : "flex-start",
-    },
-    imageContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      width: isCardNarrow ? "100%" : "auto",
-      marginBottom: isCardNarrow ? "12px" : "0",
-    },
-    img: {
-      width: "100%",
-      maxWidth: isCardNarrow ? "200px" : "150px",
-      height: "auto",
-      objectFit: "cover",
-      borderRadius: "10px",
-    },
-    detailsContainer: {
-      flex: "2",
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-      color: "var(--qf-naranja)",
-      width: isCardNarrow ? "100%" : "100%",
-      marginLeft: isCardNarrow ? "0" : "20px",
-      marginRight: isCardNarrow ? "0" : "150px",
-    },
-    cardTitle: {
-      fontSize: isCardNarrow ? "20px" : "24px",
-      fontWeight: "bold",
-      textAlign: "left",
-    },
-    cardDescripcion: {
-      fontSize: "16px",
-      marginBottom: "10px",
-      color: "var(--qf-text-primary)",
-      textAlign: "left",
-    },
-    cardText: {
-      fontSize: "14px",
-      color: "var(--qf-text-primary)",
-      textAlign: "left",
-    },
-    cardDistance: {
-      fontSize: "14px",
-      fontStyle: "italic",
-      color: "var(--qf-text-primary)",
-      textAlign: "left",
-    },
-    cardEstadoProductor: {
-      position: isCardNarrow ? "relative" : "absolute",
-      top: isCardNarrow ? "0" : "10px",
-      right: isCardNarrow ? "0" : "20px",
-      color: "var(--qf-text-primary)",
-      backgroundColor: "var(--qf-green)",
-      padding: "5px 10px",
-      borderRadius: "5px",
-      fontSize: "14px",
-      fontWeight: "bold",
-      marginBottom: isCardNarrow ? "8px" : "0",
-      alignSelf: isCardNarrow ? "center" : "auto",
-    },
-    buttonContainer: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      flexWrap: "wrap",
-      gap: "10px",
-      flexDirection: isCardNarrow ? "column" : "row",
-      marginTop: isCardNarrow ? "12px" : "0",
-    },
-    successButton: {
-      backgroundColor: "var(--qf-green)",
-      color: "white",
-      border: "none",
-      padding: "10px 20px",
-      borderRadius: "5px",
-      cursor: "pointer",
-      width: isCardNarrow ? "100%" : "auto",
-    },
-    dangerButton: {
-      backgroundColor: "var(--qf-rojo)",
-      color: "white",
-      border: "none",
-      padding: "10px 20px",
-      borderRadius: "5px",
-      cursor: "pointer",
-      width: isCardNarrow ? "100%" : "auto",
-    },
-    primaryButton: {
-      backgroundColor: "var(--qf-blue)",
-      color: "white",
-      border: "none",
-      padding: "10px 20px",
-      borderRadius: "5px",
-      cursor: "pointer",
-      width: isCardNarrow ? "100%" : "auto",
-    },
-    secondaryButton: {
-      backgroundColor: "var(--qf-bg-neutral)",
-      color: "white",
-      border: "none",
-      padding: "10px 20px",
-      borderRadius: "5px",
-      cursor: "pointer",
-      width: isCardNarrow ? "100%" : "auto",
-    },
+  const statusLabel = evento.estado?.startsWith("EnPreparacion") ? "En preparación" : String(evento.estado || "Sin estado").replace(/([a-z])([A-Z])/g, "$1 $2");
+  const dateLabel = (value) => {
+    if (!value) return null;
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? null : date.toLocaleString("es-AR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
   };
-
+  const start = dateLabel(evento.fechaHoraInicio);
+  const end = dateLabel(evento.fechaHoraFin);
   return (
-    <div ref={cardRef} style={styles.container}>
-      <div style={{ ...styles.card }}>
-        <div style={styles.imageContainer}>
-          <img
-            src={
-              evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
-                ? evento.img
-                : imgDefault
-            }
-            alt="Logo del Evento"
-            style={styles.img}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = imgDefault;
-            }}
-          />
+    <article className="qf-producer-event-card">
+      <div className="qf-producer-event-image"><img src={evento.img && !String(evento.img).includes("vendimia.mendoza.gov.ar") ? evento.img : imgDefault} alt={evento.nombre} onError={(event) => { if (event.currentTarget.getAttribute("src") !== imgDefault) event.currentTarget.src = imgDefault; }} /></div>
+      <div className="qf-producer-event-body">
+        <div className="qf-producer-event-title"><h2>{evento.nombre}</h2><span className={`qf-producer-event-state qf-producer-event-state--${evento.estado}`}>{statusLabel}</span></div>
+        <p className="qf-producer-event-description">{evento.descripcion}</p>
+        <p className="qf-producer-event-location"><FaMapMarkerAlt aria-hidden="true" />{formatUbicacion(evento)}</p>
+        {(start || end) && <dl className="qf-producer-event-dates">{start && <div><dt><FaCalendarAlt aria-hidden="true" /> Inicio</dt><dd>{start}</dd></div>}{end && <div><dt><FaCalendarAlt aria-hidden="true" /> Finalización</dt><dd>{end}</dd></div>}</dl>}
+        <div className="qf-producer-event-actions">
+          <button className="qf-producer-event-button" type="button" onClick={() => navigate(`/evento-detalle/${evento.id}`)}><FaInfoCircle aria-hidden="true" /> Ver Info</button>
+          <button className="qf-producer-event-button" type="button" onClick={() => navigate(`/evento/${evento.id}`)}><FaPen aria-hidden="true" /> Editar evento</button>
+          {!isEnCurso && <button className="qf-producer-event-button" type="button" onClick={verSolicitudes}><FaClipboardList aria-hidden="true" /> Ver Solicitudes</button>}
+          {isEnPreparacion && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={confirmarEvento}><FaCheck aria-hidden="true" /> Confirmar Evento</button>}
+          {isPausado && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={continuarEvento}><FaPlay aria-hidden="true" /> Continuar Evento</button>}
+          {isPausado && <button className="qf-producer-event-button qf-producer-event-button--danger" type="button" onClick={cancelarEvento}><FaTimes aria-hidden="true" /> Cancelar Evento</button>}
+          {isConfirmado && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={iniciarEvento}><FaPlay aria-hidden="true" /> Iniciar Evento</button>}
+          {isConfirmado && <button className="qf-producer-event-button" type="button" onClick={pausarEvento}><FaPause aria-hidden="true" /> Pausar Evento</button>}
+          {isEnCurso && <button className="qf-producer-event-button qf-producer-event-button--danger" type="button" onClick={finalizarEvento}><FaStop aria-hidden="true" /> Finalizar Evento</button>}
         </div>
-
-        <div style={styles.detailsContainer}>
-          <h5 style={styles.cardTitle}>{evento.nombre}</h5>
-          <p style={styles.cardDescripcion}>{evento.descripcion}</p>
-          <p style={styles.cardText}>
-            {formatUbicacion(evento)}
-          </p>
-          <p style={styles.cardDistance}>A 1km de distancia</p>
-        </div>
-
-        <p
-          style={{
-            ...styles.cardEstadoProductor,
-          }}
-        >
-          {evento.estado === "EnPreparacion" || evento.estado === "EnPreparacion1" || evento.estado === "EnPreparacion2" || evento.estado === "EnPreparacion3"
-            ? "En Preparación"
-            : evento.estado === "EnCurso"
-            ? "En Curso"
-            : evento.estado}
-        </p>
       </div>
-
-      <hr style={{
-        border: 'none',
-        height: '1px',
-        backgroundColor: 'var(--qf-naranja)',
-        margin: '16px 0 8px',
-        opacity: 0.4,
-      }} />
-
-      <div style={styles.buttonContainer}>
-        <button style={styles.primaryButton} onClick={() => navigate(`/evento-detalle/${evento.id}`)}>
-          Ver Info
-        </button>
-        {isEnPreparacion && (
-          <button style={styles.successButton} onClick={confirmarEvento}>
-            Confirmar Evento
-          </button>
-        )}
-        {isPausado && (
-          <button style={styles.successButton} onClick={continuarEvento}>
-            Continuar Evento
-          </button>
-        )}
-        {isPausado && (
-          <button style={styles.dangerButton} onClick={cancelarEvento}>
-            Cancelar Evento
-          </button>
-        )}
-        {!isEnCurso && (
-          <button style={styles.primaryButton} onClick={verSolicitudes}>
-            Ver Solicitudes
-          </button>
-        )}
-        {isConfirmado && (
-          <button style={styles.successButton} onClick={iniciarEvento}>
-            Iniciar Evento
-          </button>
-        )}
-        {isConfirmado && (
-          <button style={styles.secondaryButton} onClick={pausarEvento}>
-            Pausar Evento
-          </button>
-        )}
-        {isEnCurso && (
-          <button style={styles.dangerButton} onClick={finalizarEvento}>
-            Finalizar Evento
-          </button>
-        )}
-      </div>
-      
-      <ConfirmDialog
-        open={confirmOpen}
-        title={pendingAction?.title || 'Confirmar Acción'}
-        message={pendingAction?.message || '¿Estás seguro de que deseas realizar esta acción?'}
-        onConfirm={handleConfirm}
-        onCancel={handleCancel}
-      />
-    </div>
+      <ConfirmDialog open={confirmOpen} title={pendingAction?.title || 'Confirmar Acción'} message={pendingAction?.message || '¿Estás seguro de que deseas realizar esta acción?'} onConfirm={handleConfirm} onCancel={handleCancel} />
+    </article>
   );
 };
-
 export default EventoProductor;

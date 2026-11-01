@@ -1,18 +1,46 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "./../sass/main.scss";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
-import useBreakpoint from "../../useBreakpoint";
+import { FaArrowLeft, FaPen, FaSave, FaImage, FaPlus, FaTrash } from "react-icons/fa";
+import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import "./RegistrarEvento.css";
+import "./EditarEvento.css";
+import { UserContext } from "../ComponentesGenerales/UserContext";
 import { TIPOS_EVENTO, TIPOS_PAGO } from "../../constants/eventos";
+
+const datePart = (value) => {
+  if (!value) return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(value))) return value;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+};
+const timePart = (value) => {
+  const date = value ? new Date(value) : null;
+  return !date || Number.isNaN(date.getTime()) ? "" : `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+};
+const combineDate = (date, time, original) => {
+  if (!date) return undefined;
+  if (original && date === datePart(original) && time === timePart(original)) return original;
+  const result = new Date(`${date}T${time || "00:00"}`);
+  return Number.isNaN(result.getTime()) ? undefined : result.toISOString();
+};
 
 const ConsultarEvento = () => {
   const { id } = useParams();
-  const { isMobile } = useBreakpoint();
-  const [session, setSession] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
+  const { user } = useContext(UserContext);
+  const [legacySession, setLegacySession] = useState(null);
+  const session = user || legacySession;
+  const consumerId = session?.consumidorId;
+  const [loadingEvent, setLoadingEvent] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [editMode, setEditMode] = useState(false);
   const [nombre, setNombre] = useState("");
   const [imagenEvento, setImagenEvento] = useState(null);
@@ -38,7 +66,7 @@ const ConsultarEvento = () => {
   const [capacidadMaxima, setCapacidadMaxima] = useState("");
   const [tipoPago, setTipoPago] = useState("");
   const [linkVentaEntradas, setLinkVentaEntradas] = useState("");
-  const [, setEvento] = useState({});
+  const [loadedEvent, setEvento] = useState({});
 
   const [provincias, setProvincias] = useState([]);
   const [selectedProvince, setSelectedProvince] = useState("");
@@ -49,7 +77,7 @@ const ConsultarEvento = () => {
   React.useEffect(() => {
     fetch("https://apis.datos.gob.ar/georef/api/provincias")
       .then((resp) => resp.json())
-      .then((data) => setProvincias(data.provincias || []))
+      .then((data) => setProvincias(Array.isArray(data.provincias) ? data.provincias : []))
       .catch((err) => console.error("Error fetching provinces:", err));
   }, []);
 
@@ -68,14 +96,18 @@ const ConsultarEvento = () => {
 
 
 
-  const handleEditModeToggle = () => {
-    setEditMode(!editMode);
+  const handleEditModeToggle = (event) => {
+    event.preventDefault();
+    setEditMode(true);
   };
 
 
 
   const handleSaveChanges = (e) => {
     e.preventDefault();
+    if (savingRef.current || !editMode || !session || loadingEvent || loadError) return;
+    savingRef.current = true;
+    setSaving(true);
     const nuevoEvento = {
       nombre: nombre,
       descripcion: descripcion,
@@ -85,18 +117,19 @@ const ConsultarEvento = () => {
       localidad: localidad,
       provincia: provincia,
       tipoEvento: tipoEvento,
-      fechaInicio: fechaInicioEvento,
+      fechaInicio: combineDate(fechaInicioEvento, horaInicioEvento, loadedEvent.fechaHoraInicio),
       horaInicio: horaInicioEvento,
-      fechaFin: fechaFinEvento,
+      fechaFin: combineDate(fechaFinEvento, timePart(loadedEvent.fechaHoraFin), loadedEvent.fechaHoraFin),
       conPreventa: tienePreventa,
-      fechaInicioPreventa: fechaInicioPreventa,
-      fechaFinPreventa: fechaFinPreventa,
+      tienePreventa,
+      fechaInicioPreventa: fechaInicioPreventa || null,
+      fechaFinPreventa: fechaFinPreventa || null,
       plazoCancelacionPreventa: plazoCancelacionPreventa,
       tipoPreventa: tipoPreventa,
       cantidadPuestos: cantidadPuestos,
       conRepartidor: tieneRepartidores,
-      cantidadRepartidores: cantidadRepartidores,
-      capacidadMaxima: capacidadMaxima,
+      cantidadRepartidores: cantidadRepartidores === "" ? undefined : Number(cantidadRepartidores),
+      capacidadMaxima: capacidadMaxima === "" ? undefined : Number(capacidadMaxima),
       tipoPago: tipoPago,
       linkVentaEntradas: linkVentaEntradas,
       conButaca: tieneButacas,
@@ -113,7 +146,11 @@ const ConsultarEvento = () => {
       },
       body: JSON.stringify({ evento: nuevoEvento }),
     })
-      .then((response) => response.json())
+      .then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.msg || "Error al guardar los cambios");
+        return data;
+      })
       .then((data) => {
         // Manejo de la respuesta del servidor
         // Mostrar mensaje de éxito
@@ -124,64 +161,55 @@ const ConsultarEvento = () => {
       .catch((error) => {
         // Manejo de errores
         console.error(error);
-        toast.error("Error al guardar los cambios");
-      });
+        toast.error(error.message && error.message !== "Failed to fetch" ? `Error al guardar los cambios: ${error.message}` : "Error al guardar los cambios. Revisá la conexión e intentá nuevamente.");
+      })
+      .finally(() => { savingRef.current = false; setSaving(false); });
   };
 
   useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ sessionID: sessionId }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSession(data.data);
-
-        const headers = new Headers();
-        headers.append("ConsumidorId", data.data.consumidorId);
-
-        return fetch(`${process.env?.REACT_APP_BACK_URL}evento/${id}`, {
-          method: "GET",
-          headers: headers,
+    const controller = new AbortController();
+    setLoadingEvent(true);
+    setLoadError(false);
+    setEditMode(false);
+    (async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACK_URL}evento/${id}`, {
+          method: "GET", headers: consumerId ? { ConsumidorId: String(consumerId) } : {}, signal: controller.signal,
         });
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        setEvento(data.data);
-        setNombre(data.data.nombre);
-        setDescripcion(data.data.descripcion);
-        setImagenEvento(data.data.img);
-        setCroquis(data.data.croquis);
-        setUbicacion(data.data.ubicacion);
-        setLocalidad(data.data.localidad);
-        setProvincia(data.data.provincia);
-        setTipoEvento(data.data.tipoEvento);
-        setFechaInicioEvento(data.data.fechaInicioEvento);
-        setHoraInicioEvento(data.data.horaInicioEvento);
-        setFechaFinEvento(data.data.fechafinevento);
-        setTienePreventa(data.data.conPreventa);
-        setFechaInicioPreventa(data.data.fechaInicioPreventa);
-        setFechaFinPreventa(data.data.fechaFinPreventa);
-        setPlazoCancelacionPreventa(data.data.plazoCancelacionPreventa);
-        setTipoPreventa(data.data.tipoPreventa);
-        setCantidadPuestos(data.data.cantidadPuestos);
-        setTieneRepartidores(data.data.tieneRepartidores);
-        setCantidadRepartidores(data.data.cantidadRepartidores);
-        setCapacidadMaxima(data.data.capacidadMaxima);
-        setTipoPago(data.data.tipoPago);
-        setLinkVentaEntradas(data.data.linkVentaEntradas);
-        setEstado(data.data.estado);
-      })
-      .catch((error) => console.error("Error:", error));
-  }, [id]);
+        if (!response.ok) throw new Error("No se pudo cargar el evento");
+        const result = await response.json();
+        const data = result.data;
+        if (!data || !data.id) throw new Error("Evento no encontrado");
+        if (controller.signal.aborted) return;
+        setEvento(data);
+        setNombre(data.nombre ?? ""); setDescripcion(data.descripcion ?? "");
+        setImagenEvento(data.img ?? null); setCroquis(data.croquis ?? null);
+        setUbicacion(data.ubicacion ?? ""); setLocalidad(data.localidad ?? ""); setProvincia(data.provincia ?? "");
+        setSelectedProvince(data.provincia ?? ""); setSelectedLocalidad(data.localidad ?? "");
+        setTipoEvento(data.tipoEvento ?? "");
+        setFechaInicioEvento(datePart(data.fechaHoraInicio ?? data.fechaInicioEvento));
+        setHoraInicioEvento(data.horaInicioEvento ?? data.horaInicio ?? timePart(data.fechaHoraInicio));
+        setFechaFinEvento(datePart(data.fechaHoraFin ?? data.fechafinevento ?? data.fechaFinEvento));
+        setTienePreventa(data.tienePreventa ?? data.conPreventa ?? false);
+        setFechaInicioPreventa(datePart(data.fechaInicioPreventa)); setFechaFinPreventa(datePart(data.fechaFinPreventa));
+        setPlazoCancelacionPreventa(data.plazoCancelacionPreventa ?? ""); setTipoPreventa(data.tipoPreventa ?? "");
+        setCantidadPuestos(data.cantidadPuestos ?? "");
+        setTieneRepartidores(data.conRepartidor ?? data.tieneRepartidores ?? false);
+        setTieneButacas(data.conButaca ?? data.tieneButacas ?? false);
+        setCantidadRepartidores(data.cantidadRepartidores ?? ""); setCapacidadMaxima(data.capacidadMaxima ?? "");
+        setTipoPago(data.tipoPago ?? ""); setLinkVentaEntradas(data.linkVentaEntradas ?? ""); setEstado(data.estado);
+      } catch (error) {
+        if (!controller.signal.aborted) setLoadError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoadingEvent(false);
+      }
+    })();
+    return () => controller.abort();
+  }, [id, consumerId, loadAttempt]);
 
   const handleImagenEventoChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     fileToBase64(file, (base64) => {
       setImagenEvento(base64);
@@ -189,7 +217,8 @@ const ConsultarEvento = () => {
   };
 
   const handleCroquisChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     fileToBase64(file, (base64) => {
       setCroquis(base64);
@@ -197,23 +226,18 @@ const ConsultarEvento = () => {
   };
 
   useEffect(() => {
+    if (user) return;
     const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSession(data.data);
-        })
-        .catch((error) => console.error("Error fetching session:", error));
-    }
-  }, []);
+    if (!sessionId) return;
+    const controller = new AbortController();
+    fetch(`${process.env.REACT_APP_BACK_URL}user/session`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sessionID: sessionId }), signal: controller.signal,
+    }).then((response) => response.json()).then((result) => {
+      if (!controller.signal.aborted && result.data?.consumidorId) setLegacySession(result.data);
+    }).catch(() => {});
+    return () => controller.abort();
+  }, [user]);
 
   const handleLocalidadChange = (e) => {
     setSelectedLocalidad(e.target.value);
@@ -229,7 +253,7 @@ const ConsultarEvento = () => {
       )
         .then((response) => response.json())
         .then((data) => {
-          const sortedLocalidades = data.municipios.sort((a, b) =>
+          const sortedLocalidades = (Array.isArray(data.municipios) ? data.municipios : []).sort((a, b) =>
             a.nombre.localeCompare(b.nombre)
           );
           setLocalidades(sortedLocalidades);
@@ -253,6 +277,10 @@ const ConsultarEvento = () => {
   };
 
   const eliminarfila = (indice) => {
+    if (restriccionesEvento[indice]?.id == null) {
+      setRestriccionesEvento((current) => current.filter((_, index) => index !== indice));
+      return;
+    }
     if (restriccionesEvento[indice].id !== "undefined") {
       const headers = new Headers();
       headers.append("ConsumidorId", session?.consumidorId);
@@ -288,7 +316,7 @@ const ConsultarEvento = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setRestriccionesdb(data.data);
+        setRestriccionesdb(Array.isArray(data?.data) ? data.data : []);
       })
       .catch((error) => {
         console.error(error);
@@ -302,7 +330,7 @@ const ConsultarEvento = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        setRestriccionesEvento(data.data);
+        setRestriccionesEvento(Array.isArray(data?.data) ? data.data : []);
       })
       .catch((error) => {
         console.error(error);
@@ -312,544 +340,50 @@ const ConsultarEvento = () => {
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: session?.tipoUsuario }}>
-      <div className={`flex-grow-1`}>
-        <section
-          className={`align-items-center justify-content-center form mt-3 mb-5 rad`}
-          style={{ width: isMobile ? "100%" : "80%", maxWidth: isMobile ? "100%" : "800px", margin: "0 auto" }}
-        >
-          <div className={`card shadow-lg`}>
-            <div className={`card-body p-3 formulario`}>
-              <h1 className="fs-5 card-title fw-bold mb-2 text-dark">
-                Consultar Puesto
-              </h1>
-              <form onSubmit={handleSaveChanges} className="needs-validation">
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="nombre">
-                    Nombre del Evento
-                  </label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    className="form-control"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="nombre">
-                    Descripcion
-                  </label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    className="form-control"
-                    value={descripcion}
-                    onChange={(e) => setDescripcion(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="imagenEvento">
-                    Imagen de evento
-                  </label>
-                  <input
-                    type="file"
-                    id="imagenEvento"
-                    accept="image/*"
-                    onChange={(e) => handleImagenEventoChange(e)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="croquis">
-                    Croquis
-                  </label>
-                  <input
-                    type="file"
-                    id="croquis"
-                    accept="image/*"
-                    onChange={(e) => handleCroquisChange(e)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="provincia">
-                    Provincia
-                  </label>
-                  <select
-                    id="provincia"
-                    name="provincia"
-                    data-testid="provincia"
-                    className={` form-control`}
-                    value={selectedProvince}
-                    onChange={handleProvinceChange}
-                    disabled={!editMode}
-                  >
-                    <option value="" disabled>
-                      Seleccione una provincia
-                    </option>
-                    {provincias.map((prov) => (
-                      <option key={prov.nombre} value={prov.nombre}>
-                        {prov.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="localidad">
-                    Localidad
-                  </label>
-                  <select
-                    className={`form-control`}
-                    value={selectedLocalidad}
-                    onChange={handleLocalidadChange}
-                    data-testid="localidad"
-                    id="localidad"
-                    name="localidad"
-                    disabled={!editMode}
-                  >
-                    <option value="" disabled>
-                      Seleccione una localidad
-                    </option>
-                    {localidades.map((loc, index) => (
-                      <option key={`${loc.nombre}-${index}`} value={loc.nombre}>
-                        {loc.nombre}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="nombre">
-                    ubicacion
-                  </label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    className="form-control"
-                    value={ubicacion}
-                    onChange={(e) => setUbicacion(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="estado">
-                    Tipo Evento
-                  </label>
-                  <select
-                    id="estado"
-                    className="form-select"
-                    value={tipoEvento}
-                    onChange={(e) => setTipoEvento(e.target.value)}
-                    disabled={!editMode}
-                  >
-                    {[...(TIPOS_EVENTO.includes(tipoEvento) || !tipoEvento ? [] : [tipoEvento]), ...TIPOS_EVENTO].map((opcion) => (
-                      <option key={opcion} value={opcion}>{opcion}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="fecha">
-                    Fecha inicio evento
-                  </label>
-                  <input
-                    type="date"
-                    id="fecha"
-                    className="form-control"
-                    value={fechaInicioEvento}
-                    onChange={(e) => setFechaInicioEvento(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="hora">
-                    Hora inicio evento
-                  </label>
-                  <input
-                    type="time"
-                    id="hora"
-                    className="form-control"
-                    value={horaInicioEvento}
-                    onChange={(e) => setHoraInicioEvento(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="fecha">
-                    Fecha fin evento
-                  </label>
-                  <input
-                    type="date"
-                    id="fecha"
-                    className="form-control"
-                    value={fechaFinEvento}
-                    onChange={(e) => setFechaFinEvento(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="nombre">
-                    Cantidad Puestos
-                  </label>
-                  <input
-                    type="number"
-                    id="nombre"
-                    className="form-control"
-                    value={cantidadPuestos}
-                    onChange={(e) => setCantidadPuestos(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="nombre">
-                    Capacidad maxima
-                  </label>
-                  <input
-                    type="number"
-                    id="nombre"
-                    className="form-control"
-                    value={capacidadMaxima}
-                    onChange={(e) => setCapacidadMaxima(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="estado">
-                    Tipo Pago
-                  </label>
-                  <select
-                    id="estado"
-                    className="form-select"
-                    value={tipoPago}
-                    onChange={(e) => setTipoPago(e.target.value)}
-                    disabled={!editMode}
-                  >
-                    {[...(TIPOS_PAGO.includes(tipoPago) || !tipoPago ? [] : [tipoPago]), ...TIPOS_PAGO].map((opcion) => (
-                      <option key={opcion} value={opcion}>{opcion}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="nombre">
-                    link Venta Entradas
-                  </label>
-                  <input
-                    type="text"
-                    id="nombre"
-                    className="form-control"
-                    value={linkVentaEntradas}
-                    onChange={(e) => setLinkVentaEntradas(e.target.value)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <hr />
-                <h4>Restricciones personalizadas</h4>
-                <form>
-                  <div className="d-flex">
-                    <div className="col-3 px-1">
-                      <label style={{ color: "black" }}>Título</label>
-                      <input
-                        className="w-100 form-control"
-                        list="restricciones-titulo"
-                        value={nuevaColumna.titulo}
-                        onChange={(e) =>
-                          setNuevaColumna({
-                            ...nuevaColumna,
-                            titulo: e.target.value,
-                          })
-                        }
-                        disabled={!editMode}
-                      />
-                      <datalist id="restricciones-titulo">
-                        {restriccionesdb.map((restriccion, index) => (
-                          <option key={index} value={restriccion.titulo} />
-                        ))}
-                      </datalist>
-                    </div>
-
-                    <div className="col-3 px-1">
-                      <label style={{ color: "black" }}>Tipo</label>
-                      <select
-                        name=""
-                        id=""
-                        className="w-100 form-control"
-                        value={nuevaColumna.tipo}
-                        onChange={(e) =>
-                          setNuevaColumna({
-                            ...nuevaColumna,
-                            tipo: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="PDF">PDF</option>
-                        <option value="Cadena de texto">Cadena de texto</option>
-                        <option value="Numerico">Numerico</option>
-                        <option value="Imagen">Imagen</option>
-                        <option value="Opciones">Opciones</option>
-                      </select>
-                    </div>
-
-                    <div className="col-3 px-1">
-                      <label style={{ color: "black" }}>Opciones</label>
-                      <input
-                        className="w-100 form-control"
-                        list="restricciones-opciones"
-                        value={nuevaColumna.opciones}
-                        onChange={(e) =>
-                          setNuevaColumna({
-                            ...nuevaColumna,
-                            opciones: e.target.value,
-                          })
-                        }
-                        disabled={!editMode}
-                      />
-                      <datalist id="restricciones-opciones">
-                        {restriccionesdb.map((restriccion, index) => (
-                          <option key={index} value={restriccion.opciones} />
-                        ))}
-                      </datalist>
-                    </div>
-
-                    <div className="col-3 px-1">
-                      <label style={{ color: "black" }}>Usuario</label>
-                      <select
-                        name=""
-                        id=""
-                        className="w-100 form-control"
-                        value={nuevaColumna.usuario}
-                        onChange={(e) =>
-                          setNuevaColumna({
-                            ...nuevaColumna,
-                            usuario: e.target.value,
-                          })
-                        }
-                      >
-                        <option value="Ambos">Ambos</option>
-                        <option value="Repartidor">Repartidor</option>
-                        <option value="Encargado de puesto">
-                          Encargado de puesto
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="d-flex justify-content-end p-1">
-                    <button
-                      type="button"
-                      className="btn btn-success"
-                      onClick={agregarColumna}
-                      disabled={!editMode}
-                    >
-                      Agregar Restriccion
-                    </button>
-                  </div>
-                </form>
-                <div className="d-flex justify-content-center aling-content-center" style={{ overflowX: isMobile ? "auto" : "visible" }}>
-                  <table className="w-100 mx-auto text-center table table-striped table-bordered">
-                    <thead>
-                      <tr>
-                        <th>Título</th>
-                        <th>Tipo</th>
-                        <th>Opciones</th>
-                        <th>Usuario</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {restriccionesEvento.map((restriccion, index) => (
-                        <tr key={index}>
-                          <td>{restriccion.titulo}</td>
-                          <td>{restriccion.tipo}</td>
-                          <td>{restriccion.opciones}</td>
-                          <td>{restriccion.usuario}</td>
-                          <td>
-                            <button
-                              type="button"
-                              onClick={() => eliminarfila(index)}
-                              className="btn btn-danger"
-                              disabled={!editMode}
-                            >
-                              Eliminar
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <hr />
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="tienePreventa">
-                    ¿Tiene preventa?
-                  </label>
-                  <input
-                    type="checkbox"
-                    id="tienePreventa"
-                    checked={tienePreventa}
-                    onChange={(e) => setTienePreventa(e.target.checked)}
-                    disabled={!editMode}
-                  />
-                </div>
-                {tienePreventa && (
-                  <div>
-                    <div className="mb-3">
-                      <label className="mb-2 text-black" htmlFor="fecha">
-                        Fecha inicio preventa
-                      </label>
-                      <input
-                        type="date"
-                        id="fecha"
-                        className="form-control"
-                        value={fechaInicioPreventa}
-                        onChange={(e) => setFechaInicioPreventa(e.target.value)}
-                        disabled={!editMode}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="mb-2 text-black" htmlFor="fecha">
-                        Fecha fin preventa
-                      </label>
-                      <input
-                        type="date"
-                        id="fecha"
-                        className="form-control"
-                        value={fechaFinPreventa}
-                        onChange={(e) => setFechaFinPreventa(e.target.value)}
-                        disabled={!editMode}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="mb-2 text-black" htmlFor="nombre">
-                        plazo cancelacion preventa
-                      </label>
-                      <input
-                        type="number"
-                        id="nombre"
-                        className="form-control"
-                        value={plazoCancelacionPreventa}
-                        onChange={(e) =>
-                          setPlazoCancelacionPreventa(e.target.value)
-                        }
-                        disabled={!editMode}
-                      />
-                    </div>
-
-                    <div className="mb-3">
-                      <label className="mb-2 text-black" htmlFor="estado">
-                        Tipo Preventa
-                      </label>
-                      <select
-                        id="estado"
-                        className="form-select"
-                        value={tipoPreventa}
-                        onChange={(e) => setTipoPreventa(e.target.value)}
-                        disabled={!editMode}
-                      >
-                        <option value={1}>Tipo 1</option>
-                        <option value={2}>Tipo 2</option>
-                        <option value={3}>Tipo 3</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mb-3">
-                  <label
-                    className="mb-2 text-black"
-                    htmlFor="tieneRepartidores"
-                  >
-                    ¿Tiene Repartidores?
-                  </label>
-                  <input
-                    type="checkbox"
-                    id="tieneRepartidores"
-                    checked={tieneRepartidores}
-                    onChange={(e) => setTieneRepartidores(e.target.checked)}
-                    disabled={!editMode}
-                  />
-                </div>
-                {tieneRepartidores && (
-                  <div>
-                    <div className="mb-3">
-                      <label className="mb-2 text-black" htmlFor="nombre">
-                        Cantidad repartidores
-                      </label>
-                      <input
-                        type="number"
-                        id="nombre"
-                        className="form-control"
-                        value={cantidadRepartidores}
-                        onChange={(e) =>
-                          setCantidadRepartidores(e.target.value)
-                        }
-                        disabled={!editMode}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="mb-3">
-                  <label className="mb-2 text-black" htmlFor="tieneButacas">
-                    ¿Tiene Butacas?
-                  </label>
-                  <input
-                    type="checkbox"
-                    id="tieneButacas"
-                    checked={tieneButacas}
-                    onChange={(e) => setTieneButacas(e.target.checked)}
-                    disabled={!editMode}
-                  />
-                </div>
-
-                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: "8px" }}>
-                  {!editMode && (
-                    <button
-                      type="button"
-                      className="btn btn-primary my-1"
-                      onClick={handleEditModeToggle}
-                    >
-                      Editar
-                    </button>
-                  )}
-                  {editMode && (
-                    <button type="submit" className="btn btn-success my-1">
-                      Guardar Cambios
-                    </button>
-                  )}
-                </div>
-                <Link
-                  to={`/listado-eventos`}
-                  className="btn btn-primary w-100 my-1"
-                >
-                  Volver
-                </Link>
-              </form>
-            </div>
-          </div>
-        </section>
-        <Footer />
-      </div>
+      <main className="qf-event-registration-page qf-event-editor-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Editar evento", url: `/evento/${id}` }]} />
+        <header className="qf-event-editor-heading"><div className="qf-event-registration-heading"><h1>Editar evento</h1><p>Consultá y actualizá la información, la configuración y las restricciones.</p></div><Link className="qf-event-registration-button" to={`/evento-detalle/${id}`}><FaArrowLeft aria-hidden="true" /> Volver al detalle</Link></header>
+        {loadingEvent && <p role="status">Cargando los datos del evento…</p>}
+        {loadError && <div role="alert" className="qf-event-editor-load-error"><p>No pudimos cargar los datos del evento. La edición está bloqueada para evitar guardar información vacía.</p><button type="button" className="qf-event-registration-button" onClick={() => setLoadAttempt((value) => value + 1)}>Reintentar</button></div>}
+        <form className={`qf-event-registration-form qf-event-editor-form${editMode ? " qf-event-editor-form--editing" : ""}`} onSubmit={handleSaveChanges}>
+          <div className="qf-event-editor-title"><h2>{nombre || "Información del evento"}</h2><span>{editMode ? "Modo edición" : "Solo lectura"}</span></div>
+          <fieldset disabled={!editMode || saving || loadingEvent || loadError} className="qf-event-editor-sections"><legend className="qf-event-registration-sr">Datos del evento</legend>
+            <section className="qf-event-configuration-section"><h2>Información general</h2><div className="qf-event-configuration-fields">
+              <label htmlFor="nombre">Nombre del Evento<input id="nombre" value={nombre ?? ""} onChange={(event) => setNombre(event.target.value)} /></label>
+              <label htmlFor="tipoEvento">Tipo Evento<select id="tipoEvento" value={tipoEvento ?? ""} onChange={(event) => setTipoEvento(event.target.value)}><option value="">Seleccioná un tipo</option>{[...(TIPOS_EVENTO.includes(tipoEvento) || !tipoEvento ? [] : [tipoEvento]), ...TIPOS_EVENTO].map((option) => <option key={option} value={option}>{option}</option>)}</select></label>
+              <label htmlFor="descripcion" className="qf-event-editor-wide">Descripción<textarea id="descripcion" value={descripcion ?? ""} onChange={(event) => setDescripcion(event.target.value)} rows={3} /></label>
+            </div><div className="qf-event-editor-images">{[{ key: "imagenEvento", label: "Imagen de evento", value: imagenEvento, handler: handleImagenEventoChange }, { key: "croquis", label: "Croquis", value: croquis, handler: handleCroquisChange }].map((image) => <div key={image.key}><div className="qf-event-editor-preview">{image.value ? <img src={image.value} alt={`Vista previa: ${image.label}`} /> : <FaImage aria-hidden="true" />}</div><label htmlFor={image.key}>{image.label}<input type="file" id={image.key} accept="image/*" onChange={image.handler} /></label></div>)}</div></section>
+            <section className="qf-event-configuration-section"><h2>Ubicación</h2><div className="qf-event-configuration-fields">
+              <label htmlFor="provincia">Provincia<select id="provincia" name="provincia" data-testid="provincia" value={selectedProvince || provincia || ""} onChange={handleProvinceChange}><option value="">Seleccioná una provincia</option>{provincia && !provincias.some((item) => item.nombre === provincia) && <option value={provincia}>{provincia}</option>}{provincias.map((province) => <option key={province.nombre} value={province.nombre}>{province.nombre}</option>)}</select></label>
+              <label htmlFor="localidad">Localidad<select id="localidad" name="localidad" data-testid="localidad" value={selectedLocalidad || localidad || ""} onChange={handleLocalidadChange}><option value="">Seleccioná una localidad</option>{localidad && !localidades.some((item) => item.nombre === localidad) && <option value={localidad}>{localidad}</option>}{localidades.map((city, index) => <option key={`${city.nombre}-${index}`} value={city.nombre}>{city.nombre}</option>)}</select></label>
+              <label htmlFor="ubicacion" className="qf-event-editor-wide">Ubicación<input id="ubicacion" value={ubicacion ?? ""} onChange={(event) => setUbicacion(event.target.value)} /></label>
+            </div></section>
+            <section className="qf-event-configuration-section"><h2>Fechas y capacidad</h2><div className="qf-event-configuration-fields">
+              <label htmlFor="fechaInicioEvento">Fecha inicio evento<input type="date" id="fechaInicioEvento" value={fechaInicioEvento ?? ""} onChange={(event) => setFechaInicioEvento(event.target.value)} /></label>
+              <label htmlFor="horaInicioEvento">Hora inicio evento<input type="time" id="horaInicioEvento" value={horaInicioEvento ?? ""} onChange={(event) => setHoraInicioEvento(event.target.value)} /></label>
+              <label htmlFor="fechaFinEvento">Fecha fin evento<input type="date" id="fechaFinEvento" value={fechaFinEvento ?? ""} onChange={(event) => setFechaFinEvento(event.target.value)} /></label>
+              <label htmlFor="cantidadPuestos">Cantidad Puestos<input type="number" id="cantidadPuestos" value={cantidadPuestos ?? ""} onChange={(event) => setCantidadPuestos(event.target.value)} /></label>
+              <label htmlFor="capacidadMaxima">Capacidad máxima<input type="number" id="capacidadMaxima" value={capacidadMaxima ?? ""} onChange={(event) => setCapacidadMaxima(event.target.value)} /></label>
+            </div></section>
+            <section className="qf-event-configuration-section"><h2>Venta y configuración</h2><div className="qf-event-configuration-fields">
+              <label htmlFor="tipoPago">Tipo Pago<select id="tipoPago" value={tipoPago ?? ""} onChange={(event) => setTipoPago(event.target.value)}><option value="">Seleccioná un tipo</option>{[...(TIPOS_PAGO.includes(tipoPago) || !tipoPago ? [] : [tipoPago]), ...TIPOS_PAGO].map((option) => <option key={option} value={option}>{option}</option>)}</select></label>
+              <label htmlFor="linkVentaEntradas">Link Venta Entradas<input id="linkVentaEntradas" value={linkVentaEntradas ?? ""} onChange={(event) => setLinkVentaEntradas(event.target.value)} /></label>
+            </div><div className="qf-event-editor-toggles"><label htmlFor="tienePreventa"><input type="checkbox" id="tienePreventa" checked={Boolean(tienePreventa)} onChange={(event) => setTienePreventa(event.target.checked)} /> ¿Tiene preventa?</label><label htmlFor="tieneRepartidores"><input type="checkbox" id="tieneRepartidores" checked={Boolean(tieneRepartidores)} onChange={(event) => setTieneRepartidores(event.target.checked)} /> ¿Tiene Repartidores?</label><label htmlFor="tieneButacas"><input type="checkbox" id="tieneButacas" checked={Boolean(tieneButacas)} onChange={(event) => setTieneButacas(event.target.checked)} /> ¿Tiene Butacas?</label></div>
+              {tienePreventa && <div className="qf-event-presale-settings"><div className="qf-event-configuration-fields"><label htmlFor="fechaInicioPreventa">Fecha inicio preventa<input type="date" id="fechaInicioPreventa" value={fechaInicioPreventa ?? ""} onChange={(event) => setFechaInicioPreventa(event.target.value)} /></label><label htmlFor="fechaFinPreventa">Fecha fin preventa<input type="date" id="fechaFinPreventa" value={fechaFinPreventa ?? ""} onChange={(event) => setFechaFinPreventa(event.target.value)} /></label><label htmlFor="plazoPreventa">Plazo cancelación preventa<input type="number" id="plazoPreventa" value={plazoCancelacionPreventa ?? ""} onChange={(event) => setPlazoCancelacionPreventa(event.target.value)} /></label><label htmlFor="tipoPreventa">Tipo Preventa<select id="tipoPreventa" value={tipoPreventa ?? ""} onChange={(event) => setTipoPreventa(event.target.value)}><option value="">Seleccioná un tipo</option>{[1, 2, 3].map((value) => <option key={value} value={value}>Tipo {value}</option>)}</select></label></div></div>}
+              {tieneRepartidores && <div className="qf-event-editor-courier-count"><label htmlFor="cantidadRepartidores">Cantidad repartidores<input type="number" id="cantidadRepartidores" value={cantidadRepartidores ?? ""} onChange={(event) => setCantidadRepartidores(event.target.value)} /></label></div>}
+            </section>
+            <section className="qf-event-configuration-section"><h2>Restricciones personalizadas</h2><p>Requisitos que deben completar los participantes del evento.</p><div className="qf-event-editor-restriction-fields">
+              <label htmlFor="restriction-title">Título<input id="restriction-title" list="restricciones-titulo" value={nuevaColumna.titulo} onChange={(event) => setNuevaColumna({ ...nuevaColumna, titulo: event.target.value })} /><datalist id="restricciones-titulo">{restriccionesdb.map((restriction, index) => <option key={index} value={restriction.titulo} />)}</datalist></label>
+              <label htmlFor="restriction-type">Tipo<select id="restriction-type" value={nuevaColumna.tipo} onChange={(event) => setNuevaColumna({ ...nuevaColumna, tipo: event.target.value })}><option value="">Seleccioná un tipo</option>{["PDF", "Cadena de texto", "Numerico", "Imagen", "Opciones"].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+              <label htmlFor="restriction-options">Opciones<input id="restriction-options" list="restricciones-opciones" value={nuevaColumna.opciones} onChange={(event) => setNuevaColumna({ ...nuevaColumna, opciones: event.target.value })} /><datalist id="restricciones-opciones">{restriccionesdb.map((restriction, index) => <option key={index} value={restriction.opciones} />)}</datalist></label>
+              <label htmlFor="restriction-user">Usuario<select id="restriction-user" value={nuevaColumna.usuario} onChange={(event) => setNuevaColumna({ ...nuevaColumna, usuario: event.target.value })}><option value="">Seleccioná un usuario</option>{["Ambos", "Repartidor", "Encargado de puesto"].map((value) => <option key={value} value={value}>{value}</option>)}</select></label>
+            </div><div className="qf-event-editor-add-restriction"><button type="button" className="qf-event-registration-button" onClick={agregarColumna}><FaPlus aria-hidden="true" /> Agregar Restriccion</button></div><div className="qf-event-editor-restriction-table"><table><thead><tr><th>Título</th><th>Tipo</th><th>Opciones</th><th>Usuario</th><th>Acciones</th></tr></thead><tbody>{restriccionesEvento.length ? restriccionesEvento.map((restriction, index) => <tr key={restriction.id || `new-${index}`}><td>{restriction.titulo}</td><td>{restriction.tipo}</td><td>{restriction.opciones}</td><td>{restriction.usuario}</td><td><button type="button" className="qf-event-registration-button" onClick={() => eliminarfila(index)}><FaTrash aria-hidden="true" /> Eliminar</button></td></tr>) : <tr><td colSpan={5}>Este evento no tiene restricciones cargadas.</td></tr>}</tbody></table></div>
+            </section>
+          </fieldset>
+          <footer className="qf-event-registration-footer"><span>{editMode ? "Revisá los datos antes de guardar los cambios." : "Seleccioná Editar para modificar los datos del evento."}</span><div>{editMode ? <button key="save-event" type="submit" className="qf-event-registration-button qf-event-registration-button--primary" disabled={saving}><FaSave aria-hidden="true" />{saving ? "Guardando…" : "Guardar Cambios"}</button> : <button key="edit-event" type="button" className="qf-event-registration-button qf-event-registration-button--primary" onClick={handleEditModeToggle} disabled={loadingEvent || loadError || !session}><FaPen aria-hidden="true" /> Editar</button>}</div></footer>
+        </form>
+      </main><Footer />
     </PageLayout>
   );
 };
-
 export default ConsultarEvento;

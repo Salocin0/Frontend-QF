@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -7,11 +7,11 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import { useContext } from "react";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
-import useBreakpoint from "../../useBreakpoint";
+import { FaArrowLeft, FaArrowRight, FaCalendarAlt, FaCheck, FaTicketAlt } from "react-icons/fa";
+import "./RegistrarEvento.css";
 import Footer from "../ComponentesGenerales/Footer";
 
 const RegistrarEvento3 = () => {
-  const { isMobile } = useBreakpoint();
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const location = useLocation();
   const evento = location.state || {}; // Recuperar los datos del evento
@@ -303,381 +303,33 @@ const RegistrarEvento3 = () => {
     setRestricciones(nuevasRestricciones);
   };
 
-  const styles = {
-    rowFormEvento: {
-      display: "flex",
-      flexDirection: "column",
-      flex: 1,
-      minHeight: 0,
-      height: "100%",
-      boxSizing: "border-box",
-    },
-    formCol: {
-      flex: 1,
-      minHeight: 0,
-      padding: 0,
-      display: "flex",
-      boxSizing: "border-box",
-      overflowY: "auto",
-      width: "100%",
-    },
-    formWrapper: {
-      padding: "1rem",
-      borderRadius: "10px",
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      boxSizing: "border-box",
-      flex: 1,
-      minWidth: 0,
-      margin: isMobile ? "0 12px 20px" : "0 20px 20px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: `1px solid var(--qf-naranja)`,
-    },
-    formGroup: {
-      marginBottom: "1rem",
-      position: "relative",
-    },
-    formLabel: {
-      display: "block",
-      marginBottom: "0",
-      fontWeight: "bold",
-      color: "var(--qf-text-white)",
-    },
-    formInput: {
-      width: "100%",
-      padding: "0.5rem",
-      fontSize: "1rem",
-      borderRadius: "10px",
-      color: "var(--qf-negro-puro)",
-    },
-    optionContainerEvento: {
-      display: "flex",
-      justifyContent: "space-between",
-    },
-    opcionesEvento: {
-      padding: "0.5rem 1rem",
-      borderRadius: "4px",
-      cursor: "pointer",
-      backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-text-primary)",
-      textAlign: "center",
-      flex: 1,
-      margin: "0 0.5rem",
-    },
-    selected: {
-      backgroundColor: "var(--qf-naranja)",
-      color: "#fff",
-    },
-    disabledOption: {
-      padding: "0.5rem 1rem",
-      borderRadius: "4px",
-      backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-text-primary)",
-      textAlign: "center",
-      flex: 1,
-      margin: "0 0.5rem",
-      cursor: "not-allowed",
-    },
-    errorText: {
-      color: "red",
-      marginTop: "0.5rem",
-    },
-    submitButton: {
-      width: "100%",
-      padding: "0.75rem",
-      fontSize: "1rem",
-      fontWeight: "bold",
-      backgroundColor: "var(--qf-green)",
-      color: "#fff",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: "10px",
-    },
-    submitButtonDisabled: {
-      opacity: 0.7,
-      cursor: "not-allowed",
-    },
-    buttonsRow: {
-      display: "flex",
-      gap: "10px",
-      marginTop: "10px",
-    },
-    secondaryButton: {
-      width: "40%",
-      padding: "0.75rem",
-      fontSize: "1rem",
-      fontWeight: "bold",
-      backgroundColor: "var(--qf-text-secondary)",
-      color: "#fff",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-    },
-    tituloSeccion: {
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "20px",
-      fontSize: "24px",
-      color: "var(--qf-text-primary)",
-      width: "100%",
-    },
-    separator: {
-      border: "none",
-      marginBottom: "5px",
-      marginTop: "0px",
-      borderTop: `1px solid var(--qf-naranja)`,
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-      boxSizing: "border-box",
-      padding: isMobile ? "10px 12px 0" : "10px 20px 0",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    hr: {
-      color: "var(--qf-naranja)",
-      border: `1px solid var(--qf-naranja)`,
-      width: "100%",
-    },
-  };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis Eventos", url: "/listado-eventos-productor" },
-    { title: "Crear un Evento (2/4)", url: "registrar-evento3" },
-  ];
-
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.rowFormEvento}>
-        <div style={styles.tituloSeccion}>
-          <h1 style={{ textAlign: "center" }}>Crear un Evento</h1>
-        </div>
-        <hr style={styles.hr} />
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%" }}
-          />
-        </div>
-        <div style={styles.formCol}>
-          <div style={styles.formWrapper}>
-            <form action="#" method="POST">
-              <div style={styles.formGroup}>
-                <label htmlFor="fechaInicioEvento" style={styles.formLabel}>
-                  Fecha Inicio Evento*
-                </label>
-                <input
-                  type="datetime-local"
-                  id="fechaInicioEvento"
-                  style={styles.formInput}
-                  value={fechaHoraInicioEvento}
-                  onChange={(e) => setFechaInicioEvento(e.target.value)}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="fechaFinEvento" style={styles.formLabel}>
-                  Fecha Fin Evento*
-                </label>
-                <input
-                  type="datetime-local"
-                  id="fechaFinEvento"
-                  style={styles.formInput}
-                  value={fechaHoraFinEvento}
-                  onChange={(e) => setFechaFinEvento(e.target.value)}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="preventa" style={styles.formLabel}>
-                  Preventa*
-                </label>
-                <div style={styles.optionContainerEvento}>
-                  <div
-                    style={{
-                      ...styles.opcionesEvento,
-                      ...(selectedOptionPreventa === 1 ? styles.selected : {}),
-                    }}
-                    onClick={() => handleOptionClickPreventa(1)}
-                  >
-                    Sí
-                  </div>
-                  <div
-                    style={{
-                      ...styles.opcionesEvento,
-                      ...(selectedOptionPreventa === 2 ? styles.selected : {}),
-                    }}
-                    onClick={() => handleOptionClickPreventa(2)}
-                  >
-                    No
-                  </div>
-                </div>
-              </div>
-
-              {tienePreventa && (
-                <>
-                  <div style={styles.formGroup}>
-                    <label
-                      htmlFor="horasAntesInicioEvento"
-                      style={styles.formLabel}
-                    >
-                      ¿Cuándo iniciará la preventa?*
-                    </label>
-                    <input
-                      type="datetime-local"
-                      id="horasAntesInicioEvento"
-                      style={styles.formInput}
-                      value={horasAntesInicioEvento}
-                      onChange={handleHorasAntesInicioEventoChange}
-                    />
-                    {errorMensaje && (
-                      <div style={styles.errorText}>{errorMensaje}</div>
-                    )}
-                  </div>
-
-                  <div style={styles.formGroup}>
-                    <label
-                      htmlFor="todosLosDiasPreventa"
-                      style={styles.formLabel}
-                    >
-                      ¿La preventa será todos los días?*
-                    </label>
-                    <div style={styles.optionContainerEvento}>
-                      <div
-                        style={{
-                          ...styles.opcionesEvento,
-                          ...(selectedOptionPreventaDias === 1
-                            ? styles.selected
-                            : {}),
-                        }}
-                        onClick={() => handleOptionClickPreventaDias(1)}
-                      >
-                        Sí
-                      </div>
-                      <div style={styles.disabledOption}>No</div>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              <div style={styles.formGroup}>
-                <label htmlFor="butacas" style={styles.formLabel}>
-                  ¿El evento tiene butacas?*
-                </label>
-                <div style={styles.optionContainerEvento}>
-                  <div
-                    style={{
-                      ...styles.disabledOption,
-                      ...(selectedOptionButacas === 1 ? {} : {}),
-                    }}
-                    disabled
-                    /*onClick={() => handleOptionClickButacas(1)}*/
-                  >
-                    Sí
-                  </div>
-                  <div
-                    style={{
-                      ...styles.opcionesEvento,
-                      ...(selectedOptionButacas === 2 ? styles.selected : {}),
-                    }}
-                    onClick={() => handleOptionClickButacas(2)}
-                  >
-                    No
-                  </div>
-                </div>
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="repartidores" style={styles.formLabel}>
-                  ¿El evento tiene repartidores?*
-                </label>
-                <div style={styles.optionContainerEvento}>
-                  <div
-                    style={{
-                      ...styles.opcionesEvento,
-                      ...(selectedOptionRepartidores === 1
-                        ? styles.selected
-                        : {}),
-                    }}
-                    onClick={() => handleOptionClickRepartidores(1)}
-                  >
-                    Sí
-                  </div>
-                  <div
-                    style={{
-                      ...styles.disabledOption,
-                      ...(selectedOptionRepartidores === 2 ? {} : {}),
-                    }}
-                    /*onClick={() => handleOptionClickRepartidores(2)}*/
-                  >
-                    No
-                  </div>
-                </div>
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="capacidadMaxima" style={styles.formLabel}>
-                  Capacidad Máxima
-                </label>
-                <input
-                  type="number"
-                  id="capacidadMaxima"
-                  style={styles.formInput}
-                  value={capacidadMaxima}
-                  onChange={(e) => setCapacidadMaxima(e.target.value)}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="linkVentaEntradas" style={styles.formLabel}>
-                  Link Venta Entradas
-                </label>
-                <input
-                  type="text"
-                  id="linkVentaEntradas"
-                  style={styles.formInput}
-                  value={linkVentaEntradas}
-                  onChange={(e) => setLinkVentaEntradas(e.target.value)}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <div style={styles.buttonsRow}>
-                  <button
-                    type="button"
-                    style={styles.secondaryButton}
-                    onClick={handleVolver}
-                    disabled={isSubmitting}
-                  >
-                    Volver
-                  </button>
-                  <button
-                    type="button"
-                    style={{
-                      ...styles.submitButton,
-                      width: "60%",
-                      ...(isSubmitting ? styles.submitButtonDisabled : {}),
-                    }}
-                    onClick={handleSiguienteClick}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting && (
-                      <CircularProgress size={18} style={{ color: "var(--qf-text-primary)" }} />
-                    )}
-                    {isSubmitting ? "Guardando..." : "Siguiente"}
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <Footer />
+      <main className="qf-event-registration-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Crear un evento · Configuración", url: "/registrar-evento3" }]} />
+        <header className="qf-event-registration-heading"><h1>Crear un Evento</h1><p>Definí las fechas, la preventa y la configuración de tu evento.</p></header>
+        <ol className="qf-event-registration-steps" aria-label="Progreso del registro">{["Información", "Configuración", "Días del evento", "Puntos de encuentro"].map((step, index) => <li key={step} aria-current={index === 1 ? "step" : undefined} className={index === 0 ? "qf-event-step-completed" : ""}><span>{index === 0 ? <FaCheck aria-hidden="true" /> : index + 1}</span><div><small>Paso {index + 1}</small><strong>{step}</strong></div></li>)}</ol>
+        <form className="qf-event-registration-form qf-event-configuration-form" onSubmit={handleSiguienteClick} noValidate>
+          <fieldset disabled={isSubmitting} className="qf-event-configuration-sections"><legend className="qf-event-registration-sr">Configuración del evento</legend>
+            <section className="qf-event-configuration-section"><h2><FaCalendarAlt aria-hidden="true" /> Fechas del evento</h2><p>Elegí cuándo empieza y termina. En el próximo paso vas a configurar cada día.</p><div className="qf-event-configuration-fields">
+              <label htmlFor="fechaInicioEvento">Fecha Inicio Evento*<input type="datetime-local" id="fechaInicioEvento" value={fechaHoraInicioEvento} onChange={(event) => setFechaInicioEvento(event.target.value)} /></label>
+              <label htmlFor="fechaFinEvento">Fecha Fin Evento*<input type="datetime-local" id="fechaFinEvento" value={fechaHoraFinEvento} onChange={(event) => setFechaFinEvento(event.target.value)} /></label>
+            </div></section>
+            <section className="qf-event-configuration-section"><h2><FaTicketAlt aria-hidden="true" /> Preventa</h2><p>Permití que los asistentes compren antes del evento y retiren allí.</p>
+              <EventSettingChoice title="Preventa*" name="preventa" selected={selectedOptionPreventa} onSelect={handleOptionClickPreventa} />
+              {tienePreventa && <div className="qf-event-presale-settings"><label htmlFor="horasAntesInicioEvento">¿Cuándo iniciará la preventa?*<input type="datetime-local" id="horasAntesInicioEvento" value={horasAntesInicioEvento} onChange={handleHorasAntesInicioEventoChange} aria-describedby={errorMensaje ? "event-presale-error" : undefined} aria-invalid={Boolean(errorMensaje)} /></label>{errorMensaje && <p id="event-presale-error" className="qf-event-presale-error" role="alert">{errorMensaje}</p>}<EventSettingChoice title="¿La preventa será todos los días?*" name="preventa-dias" selected={selectedOptionPreventaDias} onSelect={handleOptionClickPreventaDias} disabledOptions={[2]} /></div>}
+            </section>
+            <section className="qf-event-configuration-section"><h2>Configuración del evento</h2><div className="qf-event-configuration-fields qf-event-configuration-toggles"><EventSettingChoice title="¿El evento tiene butacas?*" name="butacas" selected={selectedOptionButacas} onSelect={handleOptionClickButacas} disabledOptions={[1]} /><EventSettingChoice title="¿El evento tiene repartidores?*" name="repartidores" selected={selectedOptionRepartidores} onSelect={handleOptionClickRepartidores} disabledOptions={[2]} /></div><div className="qf-event-configuration-fields">
+              <label htmlFor="capacidadMaxima">Capacidad Máxima<input type="number" id="capacidadMaxima" value={capacidadMaxima} onChange={(event) => setCapacidadMaxima(event.target.value)} placeholder="Cantidad de asistentes" /></label>
+              <label htmlFor="linkVentaEntradas">Link Venta Entradas<input type="text" id="linkVentaEntradas" value={linkVentaEntradas} onChange={(event) => setLinkVentaEntradas(event.target.value)} placeholder="https://…" /></label>
+            </div></section>
+          </fieldset>
+          <footer className="qf-event-registration-footer"><span>Paso 2 de 4 · Tu avance se guarda al continuar.</span><div><button type="button" className="qf-event-registration-button" onClick={handleVolver} disabled={isSubmitting}><FaArrowLeft aria-hidden="true" /> Volver</button><button type="submit" className="qf-event-registration-button qf-event-registration-button--primary" disabled={isSubmitting}>{isSubmitting ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Guardando...</> : <>Siguiente <FaArrowRight aria-hidden="true" /></>}</button></div></footer>
+        </form>
+      </main><Footer />
     </PageLayout>
   );
 };
 
+const EventSettingChoice = ({ title, name, selected, onSelect, disabledOptions = [] }) => <fieldset className="qf-event-setting-choice"><legend>{title}</legend><div className="qf-event-registration-options">{[{ value: 1, label: "Sí" }, { value: 2, label: "No" }].map((option) => <label key={option.value}><input type="radio" name={name} checked={selected === option.value} disabled={disabledOptions.includes(option.value)} onChange={() => onSelect(option.value)} /><span>{option.label}</span></label>)}</div></fieldset>;
 export default RegistrarEvento3;
