@@ -24,6 +24,6 @@ describe('Crear Puesto de comida - integracion', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Crear un Puesto')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /crear un puesto/i })).toBeInTheDocument();
   });
 });

@@ -1,0 +1,36 @@
+.qf-my-associations-page { box-sizing: border-box; width: 100%; min-width: 0; flex: 0 0 auto; padding: 48px 24px 24px; font-family: var(--qf-font-family); color: var(--qf-text-primary); }
+.qf-my-associations-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 28px; }
+.qf-my-associations-heading h1 { font-size: 1.8rem; font-weight: 800; color: var(--qf-text-primary); margin: 0 0 8px; }
+.qf-my-associations-heading p { margin: 0; font-size: .95rem; color: var(--qf-text-muted); line-height: 1.5; text-align: left; }
+.page-layout .qf-my-associations-button { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-height: 44px; padding: 10px 16px; gap: 8px; background: transparent; color: var(--qf-text-primary); border: 1px solid color-mix(in srgb, var(--qf-text-primary) 22%, transparent); border-radius: 10px; font: inherit; font-size: .9rem; font-weight: 650; text-decoration: none; cursor: pointer; }
+.qf-my-associations-heading > a { flex-shrink: 0; }
+.page-layout a.qf-my-associations-button:hover { color: var(--qf-highlight-text); border-color: var(--qf-highlight-border); }
+.qf-my-associations-filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(210px, 280px); gap: 20px; }
+.qf-my-associations-filters label { display: flex; flex-direction: column; min-width: 0; gap: 8px; }
+.qf-my-associations-filters input, .qf-my-associations-filters select { width: 100%; }
+.qf-my-associations-count { color: var(--qf-text-muted); font-size: .85rem; text-align: left; margin: 20px 0 14px; }
+.qf-my-associations-list { display: grid; gap: 20px; justify-items: center; }
+.qf-my-association-card { display: flex; min-width: 0; width: 90%; min-height: 260px; overflow: hidden; box-sizing: border-box; border: 1px solid color-mix(in srgb, var(--qf-highlight-border) 45%, transparent); border-radius: 16px; background: var(--qf-bg-secondary); box-shadow: var(--qf-shadow-card); }
+.qf-my-association-image { width: 200px; flex-shrink: 0; background: var(--qf-bg-main); position: relative; }
+.qf-my-association-image img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.qf-my-association-body { display: flex; flex: 1; flex-direction: column; min-width: 0; padding: 24px; }
+.qf-my-association-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.qf-my-association-title h2 { color: var(--qf-text-primary); font-size: 1.45rem; font-weight: 750; line-height: 1.4; margin: 0; text-align: left; overflow-wrap: anywhere; }
+.qf-my-association-state { padding: 6px 11px; border-radius: 20px; font-size: .8rem; font-weight: 650; border: 1px solid color-mix(in srgb, var(--qf-text-primary) 20%, transparent); color: var(--qf-text-primary); text-align: center; line-height: 1.4; }
+.qf-my-association-state--pending { color: var(--qf-highlight-text); border-color: color-mix(in srgb, var(--qf-highlight-border) 45%, transparent); }
+.qf-my-association-state--inactive { color: var(--qf-text-muted); }
+.qf-my-association-description { color: var(--qf-text-muted); font-size: 1rem; line-height: 1.6; margin: 12px 0 14px; text-align: left; overflow-wrap: anywhere; }
+.qf-my-association-location { display: flex; align-items: baseline; gap: 8px; margin: 0 0 20px; color: var(--qf-highlight-text); font-size: .95rem; font-weight: 600; text-align: left; overflow-wrap: anywhere; }
+.qf-my-association-location svg { flex-shrink: 0; }
+.qf-my-association-body footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: auto; padding-top: 16px; border-top: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); }
+.qf-my-association-body footer > span { color: var(--qf-text-muted); font-size: .8rem; }
+.page-layout .qf-my-association-cancel { border-color: color-mix(in srgb, var(--qf-text-primary) 25%, transparent); font-size: .85rem; }
+.qf-my-association-cancel:disabled { opacity: .5; cursor: wait; }
+.qf-my-associations-feedback { text-align: center; color: var(--qf-text-primary); padding: 64px 16px; }
+.qf-my-associations-feedback > svg { font-size: 36px; color: var(--qf-highlight-text); margin-bottom: 20px; }
+.qf-my-associations-feedback h2 { color: var(--qf-text-primary); font-size: 1.3rem; }
+.qf-my-associations-feedback p { color: var(--qf-text-muted); margin: 12px 0 24px; }
+.qf-my-associations-page :focus-visible { outline: 2px solid var(--qf-highlight-border); outline-offset: 3px; }
+@media (hover: hover) { .qf-my-association-card:hover { border-color: var(--qf-highlight-border); } }
+@media (max-width: 1100px) { .qf-my-association-card { width: 100%; } .qf-my-association-image { width: 160px; } .qf-my-association-title { flex-wrap: wrap; gap: 10px; } }
+@media (max-width: 767px) { .qf-my-associations-page { padding: 0 12px 24px; } .qf-my-associations-heading { flex-direction: column; align-items: flex-start; gap: 16px; } .qf-my-associations-heading h1 { font-size: 1.6rem; } .qf-my-associations-filters { grid-template-columns: 1fr; gap: 14px; } .qf-my-association-card { flex-direction: column; } .qf-my-association-image { width: 100%; height: 170px; } .qf-my-association-body { padding: 18px; } .qf-my-association-title h2 { font-size: 1.3rem; } .qf-my-association-body footer > button { width: 100%; } }

@@ -8,12 +8,12 @@ import TiempoPromedioEntrega from "./TiempoPromedioEntrega";
 import ValoracionPromedio from "./ValoracionPromedio";
 import TotalRecaudadoEvento from "./TotalRecaudado";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb";
-import useBreakpoint from "../../../useBreakpoint";
+import "../../ComponentesGenerales/ListFilters.css";
+import "./PanelEncargado.css";
 import BotonDescargaPDF from "../BotonDescargaPDF";
 
 const PanelEncargado = () => {
   const { user } = useContext(UserContext);
-  const { isMobile } = useBreakpoint();
 
   const [eventos, setEventos] = useState([]);
   const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
@@ -21,112 +21,6 @@ const PanelEncargado = () => {
   const [puestoSeleccionado, setPuestoSeleccionado] = useState(null);
 
   const dashboardRef = useRef(null);
-  const windowWidth = useBreakpoint().width;
-
-  // Layout de grilla según el ancho de ventana:
-  //   >= 1200px → 9 columnas (div1|div2|div3 a la izquierda, toppuestos a la derecha, grafica abajo)
-  //   768-1199px → 3 columnas (div1|div2|div3 arriba, toppuestos full width, grafica abajo)
-  //   < 768px → 1 columna (todo apilado)
-  let gridCols, gridRows, gridAreas;
-  if (windowWidth >= 1200) {
-    gridCols = "repeat(9, 1fr)";
-    gridRows = "auto auto 1fr 1fr 1fr 1fr";
-    gridAreas = `
-      "div1 div1 div2 div2 div3 div3 toppuestos toppuestos toppuestos"
-      "div1 div1 div2 div2 div3 div3 toppuestos toppuestos toppuestos"
-      "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
-      "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
-      "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
-      "grafica grafica grafica grafica grafica grafica toppuestos toppuestos toppuestos"
-    `;
-  } else if (windowWidth >= 768) {
-    // Tablet: 3 cards arriba, toppuestos abajo full, grafica al final
-    gridCols = "repeat(3, 1fr)";
-    gridRows = "auto";
-    gridAreas = `
-      "div1 div2 div3"
-      "toppuestos toppuestos toppuestos"
-      "grafica grafica grafica"
-    `;
-  } else {
-    gridCols = "1fr";
-    gridRows = "auto";
-    gridAreas = `
-      "div1"
-      "div2"
-      "div3"
-      "toppuestos"
-      "grafica"
-    `;
-  }
-
-  const styles = {
-    pagina: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
-    },
-    tituloSeccion: {
-      textAlign: "center",
-      paddingTop: "1rem",
-      fontSize: "2rem",
-      color: "var(--qf-naranja)",
-      margin: 0,
-    },
-    hrFull: {
-      border: "none",
-      borderTop: "1px solid var(--qf-naranja)",
-      margin: 0,
-      width: "100%",
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-    },
-    selectsContainer: {
-      display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      gap: isMobile ? "10px" : "20px",
-      justifyContent: isMobile ? "stretch" : "flex-end",
-      alignItems: isMobile ? "stretch" : "flex-end",
-      padding: "0 20px",
-      marginBottom: "20px",
-    },
-    selectWrapper: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "5px",
-      width: isMobile ? "100%" : "auto",
-    },
-    selectLabel: {
-      color: "var(--qf-naranja)",
-      fontSize: "0.9rem",
-      fontWeight: "bold",
-    },
-    select: {
-      borderRadius: "5px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: "none",
-      color: "var(--qf-text-primary)",
-      padding: "5px",
-      width: isMobile ? "100%" : "200px",
-    },
-    mainContent: {
-      display: "flex",
-      flexDirection: "column",
-      backgroundColor: "var(--qf-bg-main)",
-      marginBottom: "50px",
-    },
-    graficaContainer: {
-      display: "grid",
-      width: "100%",
-      height: "100%",
-      gridTemplateColumns: gridCols,
-      gridTemplateRows: gridRows,
-      gap: "20px",
-      gridTemplateAreas: gridAreas,
-    },
-  };
-
   const handleEventoChange = (e) => {
     if (e.target.value === "Todos") {
       setEventoSeleccionado({ nombre: "Todos", id: "Todos" });
@@ -170,7 +64,7 @@ const PanelEncargado = () => {
 
         if (response.ok) {
           const data = await response.json();
-          const eventosConPedidos = data?.data || [];
+          const eventosConPedidos = Array.isArray(data?.data) ? data.data : [];
           setEventos([
             { nombre: "Todos", id: "Todos" },
             ...eventosConPedidos,
@@ -187,7 +81,7 @@ const PanelEncargado = () => {
           );
           if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
-            const allEventos = fallbackData?.data || [];
+            const allEventos = Array.isArray(fallbackData?.data) ? fallbackData.data : [];
             setEventos([
               { nombre: "Todos", id: "Todos" },
               ...allEventos,
@@ -222,7 +116,7 @@ const PanelEncargado = () => {
 
         if (response.ok) {
           const data = await response.json();
-          const puestosConPedidos = data?.data || [];
+          const puestosConPedidos = Array.isArray(data?.data) ? data.data : [];
           setPuestos([
             { nombreCarro: "Todos", id: "Todos" },
             ...puestosConPedidos,
@@ -244,7 +138,7 @@ const PanelEncargado = () => {
           );
           if (fallbackResponse.ok) {
             const fallbackData = await fallbackResponse.json();
-            const allPuestos = fallbackData?.data || [];
+            const allPuestos = Array.isArray(fallbackData?.data) ? fallbackData.data : [];
             setPuestos([
               { nombreCarro: "Todos", id: "Todos" },
               ...allPuestos,
@@ -265,99 +159,31 @@ const PanelEncargado = () => {
     }
   }, [user]);
 
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Estadisticas", url: "/grafica-encargado" },
-  ];
-
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.pagina}>
-        <h1 style={styles.tituloSeccion}>Estadísticas Encargado</h1>
-        <hr style={styles.hrFull} />
-        <div className="qf-page-content">
-          <div className="qf-page-content__main">
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%", margin: "8px 0" }}
-          />
+      <main className="qf-manager-dashboard">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Estadísticas", url: "/grafica-encargado" }]} />
+        <header className="qf-manager-dashboard-heading"><h1>Estadísticas de mis puestos</h1><p>Consultá la recaudación, la atención y los productos que más se venden.</p></header>
+        <div className="qf-manager-dashboard-toolbar">
+          <section className="qf-list-filters qf-manager-dashboard-filters" aria-label="Filtros de estadísticas">
+            <label htmlFor="dashboard-event">Evento<select id="dashboard-event" value={eventoSeleccionado?.id || "Todos"} onChange={handleEventoChange}>{!eventos.length && <option value="Todos">Todos los eventos</option>}{eventos.map((event) => <option key={event.id} value={event.id}>{event.id === "Todos" ? "Todos los eventos" : event.nombre}</option>)}</select></label>
+            <label htmlFor="dashboard-stand">Puesto<select id="dashboard-stand" value={puestoSeleccionado?.id || "Todos"} onChange={handlePuestoChange}>{!puestos.length && <option value="Todos">Todos los puestos</option>}{puestos.map((stand) => <option key={stand.id} value={stand.id}>{stand.id === "Todos" ? "Todos los puestos" : stand.nombreCarro}</option>)}</select></label>
+          </section>
+          <BotonDescargaPDF dashboardRef={dashboardRef} tipo="encargado" idConsumidor={user?.consumidorId} idEvento={eventoSeleccionado?.id || "Todos"} idPuesto={puestoSeleccionado?.id || "Todos"} nombreEvento={eventoSeleccionado?.id === "Todos" ? "Todos los eventos" : eventoSeleccionado?.nombre} nombrePuesto={puestoSeleccionado?.id === "Todos" ? "Todos los puestos" : puestoSeleccionado?.nombre} />
         </div>
-        <div style={styles.selectsContainer}>
-          <div style={styles.selectWrapper}>
-            <label style={styles.selectLabel}>Evento:</label>
-            <select
-              style={styles.select}
-              value={eventoSeleccionado?.id}
-              onChange={handleEventoChange}
-            >
-              {eventos.map((evento) => (
-                <option key={evento.id} value={evento.id}>
-                  {evento.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div style={styles.selectWrapper}>
-            <label style={styles.selectLabel}>Puesto:</label>
-            <select
-              style={styles.select}
-              value={puestoSeleccionado?.id}
-              onChange={handlePuestoChange}
-            >
-              {puestos.map((puesto) => (
-                <option key={puesto.id} value={puesto.id}>
-                  {puesto.nombreCarro}
-                </option>
-              ))}
-            </select>
-          </div>
-          <BotonDescargaPDF
-            dashboardRef={dashboardRef}
-            tipo="encargado"
-            idConsumidor={user?.consumidorId}
-            idEvento={eventoSeleccionado?.id || "Todos"}
-            idPuesto={puestoSeleccionado?.id || "Todos"}
-            nombreEvento={eventoSeleccionado?.nombre || "Todos los eventos"}
-            nombrePuesto={puestoSeleccionado?.nombre || "Todos los puestos"}
-          />
-        </div>
+        <div ref={dashboardRef} className="qf-manager-dashboard-content">
+          <section className="qf-manager-metrics" aria-label="Indicadores del puesto">
+            <TotalRecaudadoEvento puestoId={puestoSeleccionado?.id} eventoId={eventoSeleccionado?.id} />
+            <ValoracionPromedio puestoId={puestoSeleccionado?.id} eventoId={eventoSeleccionado?.id} />
+            <TiempoPromedioEntrega puestoId={puestoSeleccionado?.id} eventoId={eventoSeleccionado?.id} />
+          </section>
+          <div className="qf-manager-charts">
+            <section className="qf-manager-chart-card"><h2>Evolución de la recaudación</h2><p>Seleccioná una barra para explorar el detalle del día.</p><div className="qf-manager-revenue-chart"><GraficaLineas puestoId={puestoSeleccionado?.id} eventId={eventoSeleccionado?.id} /></div></section>
+            <TopProductos puestoId={puestoSeleccionado?.id} eventoId={eventoSeleccionado?.id} />
           </div>
         </div>
-      </div>
-      <div style={{ ...styles.mainContent, padding: "0 20px" }}>
-        <div ref={dashboardRef} style={styles.graficaContainer}>
-          <TotalRecaudadoEvento
-            puestoId={puestoSeleccionado?.id}
-            eventoId={eventoSeleccionado?.id}
-          />
-          <ValoracionPromedio
-            puestoId={puestoSeleccionado?.id}
-            eventoId={eventoSeleccionado?.id}
-          />
-          <TiempoPromedioEntrega
-            puestoId={puestoSeleccionado?.id}
-            eventoId={eventoSeleccionado?.id}
-          />
-          <TopProductos
-            puestoId={puestoSeleccionado?.id}
-            eventoId={eventoSeleccionado?.id}
-          />
-          <div
-            className="graficaBarrasEncargado"
-            style={{ gridArea: "grafica" }}
-          >
-            <GraficaLineas
-              key={eventoSeleccionado?.id}
-              puestoId={puestoSeleccionado?.id}
-              eventId={eventoSeleccionado?.id}
-            />
-          </div>
-        </div>
-        <Footer />
-      </div>
+      </main><Footer />
     </PageLayout>
   );
 };
-
 export default PanelEncargado;

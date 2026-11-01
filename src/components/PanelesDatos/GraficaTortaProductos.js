@@ -1,12 +1,15 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactECharts from "echarts-for-react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import useBreakpoint from "../../useBreakpoint";
+import useTheme from "../../useTheme";
 
 const GraficaTortaProductos = ({ height, productos }) => {
   const [chartData, setChartData] = useState([]);
   const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decaln
   const { isMobile } = useBreakpoint();
+  const { isDark } = useTheme();
+  const chartText = isDark ? "#f1eee8" : "#29251f";
   useEffect(() => {
     if (productos.length > 0) {
       const dataFormatted = productos.map((producto) => ({
@@ -41,7 +44,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
       left: "center",
       orient: "horizontal",
       textStyle: {
-        color: "#ffffff",
+        color: chartText,
       }
     },
     series: [
@@ -59,7 +62,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
           show: true,
           fontSize: "11px",
           fontWeight: "bold",
-          color: "#ffffff",
+          color: chartText,
           alignTo: "labelLine",
           overflow: "truncate",
           width: 90,
@@ -69,7 +72,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
           length: 12,
           length2: 10,
           lineStyle: {
-            color: "rgba(255,255,255,0.4)",
+            color: isDark ? "#ffffff66" : "#29251f66",
           },
         },
         data: chartData.map((item, index) => ({
@@ -85,6 +88,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
   return (
     <div style={{ position: "relative", height: tortaHeight, width: "100%", maxWidth: isMobile ? "100%" : "800px", minHeight: "300px", overflow: "visible" }} data-testid="grafica-wrapper">
       <button
+        aria-label={decalEnabled ? "Ocultar patrones del gráfico" : "Mostrar patrones del gráfico"}
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
           backgroundColor: "var(--qf-bg-main)",
@@ -102,7 +106,7 @@ const GraficaTortaProductos = ({ height, productos }) => {
       >
         <span>{decalEnabled ? <FaEye /> : <FaEyeSlash />}</span>
       </button>
-      <ReactECharts option={option} theme="dark" notMerge={true} style={{ height: "100%", width: "100%" }} />
+      <ReactECharts option={option} theme={isDark ? "dark" : undefined} notMerge={true} style={{ height: "100%", width: "100%" }} />
     </div>
   );
 };

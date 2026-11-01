@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { DndContext, closestCenter, PointerSensor, useSensor, useSensors, useDroppable, DragOverlay } from '@dnd-kit/core';
 import { SortableContext, useSortable, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import { UserContext } from '../ComponentesGenerales/UserContext';
 import { useContext } from 'react';
 import { FaEye } from 'react-icons/fa';
 import useBreakpoint from '../../useBreakpoint';
+import './KanbanVisual.css';
 
 const initialData = {
   tasks: {},
@@ -203,17 +204,17 @@ const KanbanBoard = ({id}) => {
   // Visual card content — reused in SortableItem and DragOverlay
   const TaskCardContent = ({ task, onVerDetalle }) => (
     <>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }} />
+      <div className="qf-kanban-order-title">Pedido #{task.id.replace('task-', '')}</div>
       {(task.consumerName || task.consumidorId) && (
-        <div style={{ fontSize: '0.9em', marginTop: '4px' }}>
+        <div className="qf-kanban-customer" style={{ fontSize: '0.9em', marginTop: '4px' }}>
           Consumidor: {task.consumerName || task.consumidorId}
         </div>
       )}
-      <div style={{ marginTop: '4px', marginBottom: '4px', fontSize: '0.9em' }}>
+      <div className="qf-kanban-date" style={{ marginTop: '4px', marginBottom: '4px', fontSize: '0.9em' }}>
         {formatDate(task.fecha)}
       </div>
       {task.detalles && task.detalles.length > 0 && (
-        <ul style={{ margin: '4px 0', paddingLeft: '18px', fontSize: '0.9em', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+        <ul className="qf-kanban-products" style={{ margin: '4px 0', paddingLeft: '18px', fontSize: '0.9em', wordBreak: 'break-word', overflowWrap: 'break-word' }}>
           {task.detalles.map((d) => (
             <li key={d.id}>
               {d.cantidad}x {d.producto?.nombre || d.productoId}
@@ -221,9 +222,11 @@ const KanbanBoard = ({id}) => {
           ))}
         </ul>
       )}
+      <div className="qf-kanban-total"><span>Total</span><strong>{new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(Number(task.total) || 0)}</strong></div>
       {onVerDetalle && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 'auto', paddingTop: '8px' }}>
           <button
+            className="qf-kanban-detail"
             onPointerDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.stopPropagation();
@@ -324,7 +327,7 @@ const KanbanBoard = ({id}) => {
       opacity: activeTask && activeTask.id === task.id ? 0.3 : 1,
     };
     return (
-      <div ref={setNodeRef} {...attributes} {...listeners} style={style}>
+      <div className="qf-kanban-task" ref={setNodeRef} {...attributes} {...listeners} style={style}>
         <TaskCardContent task={task} onVerDetalle={() => setInfoDialog({ open: true, task })} />
       </div>
     );
@@ -348,10 +351,11 @@ const KanbanBoard = ({id}) => {
     if (id === 'column-3') column.title = 'En Prep.';
 
     return (
-      <div key={column.id} style={{ flex: '0 0 auto', width: isMobile ? '80vw' : '280px', minWidth: isMobile ? '80vw' : '250px', margin: '0 6px', opacity: allowedColumns && !allowedColumns.includes(column.id) ? 0.4 : 1, display: 'flex', flexDirection: 'column' }}>
-        <h3 style={{ textAlign: 'center', color: '#FFF', backgroundColor: headerColors[column.id], padding: '8px', borderRadius: '4px', margin: 0 }}>{column.title}</h3>
-        <div ref={setNodeRef} style={{ background: '#333', padding: '8px', flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+      <div className={`qf-kanban-column qf-kanban-${column.id}`} key={column.id} style={{ flex: '0 0 auto', width: isMobile ? '80vw' : '280px', minWidth: isMobile ? '80vw' : '250px', margin: '0 6px', opacity: allowedColumns && !allowedColumns.includes(column.id) ? 0.4 : 1, display: 'flex', flexDirection: 'column' }}>
+        <h3 style={{ textAlign: 'center', color: '#FFF', backgroundColor: headerColors[column.id], padding: '8px', borderRadius: '4px', margin: 0 }}><span className="qf-kanban-column-name">{column.id === 'column-3' ? 'En preparación' : column.title}</span><span className="qf-kanban-counter" aria-label={`${tasks.length} pedidos`}>{tasks.length}</span></h3>
+        <div className="qf-kanban-dropzone" ref={setNodeRef} style={{ background: '#333', padding: '8px', flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           <SortableContext items={column.taskIds} strategy={verticalListSortingStrategy}>
+            {!tasks.length && <p className="qf-kanban-empty">Sin pedidos en este estado</p>}
             {tasks.map((task) => (
               <SortableItem key={task.id} task={task} />
             ))}
@@ -483,7 +487,7 @@ const KanbanBoard = ({id}) => {
   }, [infoDialog]);
 
   return (
-    <div ref={scrollRef} style={{ display: 'flex', flex: 1, minHeight: 0, height: isMobile ? 'auto' : '100%', margin: 0, padding: '4px 0', overflowX: 'auto', overflowY: 'hidden', gap: 0 }}>
+    <div className="qf-kanban-board" ref={scrollRef} style={{ display: 'flex', flex: 1, minHeight: 0, height: isMobile ? 'auto' : '100%', margin: 0, padding: '4px 0', overflowX: 'auto', overflowY: 'hidden', gap: 0 }}>
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragMove={handleDragMove} onDragCancel={() => { setAllowedColumns(null); setActiveTask(null); }} onDragEnd={handleDragEnd}>
         {data.columnOrder.map((columnId) => {
           const column = data.columns[columnId];
@@ -491,7 +495,7 @@ const KanbanBoard = ({id}) => {
         })}
         <DragOverlay dropAnimation={null}>
           {activeTask ? (
-            <div style={{
+            <div className="qf-kanban-task qf-kanban-overlay" style={{
               padding: '8px',
               margin: '0',
               minHeight: '120px',

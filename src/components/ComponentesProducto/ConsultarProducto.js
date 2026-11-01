@@ -1,294 +1,78 @@
-﻿import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { FaPen, FaSave, FaArrowLeft } from "react-icons/fa";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import useBreakpoint from "../../useBreakpoint";
+import imgDefault from "../img/productoDefecto.png";
+import "./ProductosGestion.css";
 
+const toFields = (product) => ({ nombre: product.nombre ?? "", descripcion: product.descripcion ?? "", aderezos: product.aderezos ?? "", precio: product.precio ?? "", estado: product.estado === true || product.estado === "true" ? "true" : "false" });
 const ConsultarProducto = () => {
-  const { isMobile } = useBreakpoint();
   const { id } = useParams();
   const { user } = useContext(UserContext);
-  const [producto, setProducto] = useState();
-  const [editMode, setEditMode] = useState(false);
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [aderezos, setAderezos] = useState("");
-  const [precio, setPrecio] = useState(0);
-  const [estado, setEstado] = useState("");
-
   const navigate = useNavigate();
-
-  const handleEditModeToggle = () => setEditMode(!editMode);
-
-  const handleSaveChanges = (e) => {
-    e.preventDefault();
-    const productoguardar = {
-      ...producto,
-      nombre,
-      descripcion,
-      precio,
-      aderezos,
-      estado,
-    };
-
-    if (!nombre.trim() || !descripcion.trim() || !precio.toString().trim()) {
-      toast.error("Nombre, descripción y precio son obligatorios");
-      return;
-    }
-
-    const precioNumerico = Number(precio);
-    if (!Number.isFinite(precioNumerico) || precioNumerico < 0) {
-      toast.error("El precio debe ser un número mayor o igual a 0");
-      return;
-    }
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ producto: productoguardar }),
-    })
-      .then((response) =>
-        response.json().then((data) => {
-          if (!response.ok) throw new Error(data?.msg || "Error al guardar los cambios");
-          return data;
-        })
-      )
-      .then(() => {
-        toast.success("Cambios guardados correctamente");
-        navigate(`/listado-productos/${producto?.puestoId}`);
-        setEditMode(false);
-      })
-      .catch((error) => toast.error(error?.message || "Error al guardar los cambios"));
-  };
-
+  const [producto, setProducto] = useState(null);
+  const [fields, setFields] = useState(toFields({}));
+  const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [saving, setSaving] = useState(false);
+  const busy = useRef(false);
   useEffect(() => {
-    fetch(`${process.env?.REACT_APP_BACK_URL}producto/${id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProducto(data.data);
-        setNombre(data.data.nombre);
-        setDescripcion(data.data.descripcion);
-        setAderezos(data.data.aderezos ?? "");
-        setPrecio(data.data.precio);
-        setEstado(data.data.estado);
-      })
-      .catch(console.error);
-  }, [id]);
-
-  const styles = {
-    pagina: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
-    },
-    tituloSeccion: {
-      textAlign: "center",
-      paddingTop: "1rem",
-      fontSize: "2rem",
-      color: "var(--qf-naranja)",
-      margin: 0,
-    },
-    hrFull: {
-      border: "none",
-      borderTop: "1px solid var(--qf-naranja)",
-      margin: 0,
-      width: "100%",
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-    },
-    content: {
-      display: "flex",
-      justifyContent: "center",
-      backgroundColor: "var(--qf-bg-main)",
-      padding: isMobile ? "0" : "0",
-    },
-    card: {
-      backgroundColor: "var(--qf-bg-secondary)",
-      borderRadius: "10px",
-      color: "var(--qf-text-primary)",
-      width: "100%",
-      padding: "20px",
-      border: `1px solid var(--qf-naranja)`,
-      boxSizing: "border-box",
-    },
-    label: { color: "var(--qf-text-primary)", padding: 0, margin: 0 },
-    buttonContainer: { display: "grid" },
-    button: { margin: "0.5rem 0" },
-    row: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-    },
-    input: {
-      width: "100%",
-      padding: "0.375rem 0.75rem",
-      fontSize: "1rem",
-      lineHeight: "1",
-      borderRadius: "0.375rem",
-      border: "1px solid #ccc",
-      marginBottom: "0.25rem",
-      color: "var(--qf-blanco-puro)",
-      backgroundColor: "var(--qf-bg-secondary)",
-      boxSizing: "border-box",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-    },
-    submitButton: {
-      backgroundColor: "var(--qf-green)",
-      color: "var(--qf-blanco-puro)",
-      padding: "0.5rem 1rem",
-      fontSize: "1rem",
-      fontWeight: "bold",
-      borderRadius: "0.375rem",
-      border: "none",
-      cursor: "pointer",
-    },
-    backButton: {
-      backgroundColor: "var(--qf-blue)",
-      color: "var(--qf-blanco-puro)",
-      padding: "0.5rem 1rem",
-      fontSize: "1rem",
-      fontWeight: "bold",
-      borderRadius: "0.375rem",
-      border: "none",
-      cursor: "pointer",
-      textAlign: "center",
-      marginTop: "10px",
-    },
+    const controller = new AbortController();
+    setLoading(true); setError(false); setEditMode(false);
+    (async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACK_URL}producto/${id}`, { signal: controller.signal });
+        if (!response.ok) throw new Error("No se pudo cargar el producto");
+        const data = await response.json();
+        if (!data.data?.id) throw new Error("Producto no encontrado");
+        if (!controller.signal.aborted) { setProducto(data.data); setFields(toFields(data.data)); }
+      } catch (err) { if (!controller.signal.aborted) setError(true); }
+      finally { if (!controller.signal.aborted) setLoading(false); }
+    })();
+    return () => controller.abort();
+  }, [id, attempt]);
+  const change = (event) => setFields((current) => ({ ...current, [event.target.name]: event.target.value }));
+  const cancel = () => { setFields(toFields(producto)); setEditMode(false); };
+  const handleSaveChanges = async (event) => {
+    event.preventDefault();
+    if (!editMode || busy.current) return;
+    if (!fields.nombre.trim() || !fields.descripcion.trim() || String(fields.precio).trim() === "") { toast.error("Nombre, descripción y precio son obligatorios"); return; }
+    if (!Number.isFinite(Number(fields.precio)) || Number(fields.precio) < 0) { toast.error("El precio debe ser un número mayor o igual a 0"); return; }
+    busy.current = true; setSaving(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACK_URL}producto/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ producto: { ...producto, ...fields, nombre: fields.nombre.trim(), descripcion: fields.descripcion.trim(), precio: Number(fields.precio), estado: fields.estado === "true" } }) });
+      if (!response.ok) throw new Error("No pudimos guardar los cambios. Intentá nuevamente.");
+      toast.success("Cambios guardados correctamente");
+      navigate(`/listado-productos/${producto.puestoId}`);
+    } catch (err) { toast.error(err.message); }
+    finally { busy.current = false; setSaving(false); }
   };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis Puestos", url: "/listado-puestos-encargado" },
-    { title: "Mis Productos", url: `/listado-productos/${producto?.puestoId ?? ""}` },
-    { title: "Actualizar Producto", url: `/producto/${producto?.id ?? ""}` },
-  ];
-
-  return (
-    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.pagina}>
-        {/* Título centrado */}
-        <h1 style={styles.tituloSeccion}>Actualizar Producto</h1>
-        {editMode && (
-          <p style={{ textAlign: "center", color: "var(--qf-text-muted)", margin: 0 }}>
-            Modo edición: modificá los datos y presioná "Guardar Cambios".
-          </p>
-        )}
-
-        <hr style={styles.hrFull} />
-
-        <div className="qf-page-content">
-          <div className="qf-page-content__main">
-            {/* Breadcrumb a ancho completo */}
-            <div style={styles.breadcrumbWrapper}>
-              <Breadcrumb
-                items={breadcrumbItems}
-                style={{ width: "100%", margin: "8px 0" }}
-              />
-            </div>
-
-            {/* Formulario centrado */}
-            <div style={styles.content}>
-              <div style={styles.card}>
-                <form onSubmit={handleSaveChanges}>
-              <div style={styles.row}>
-                <div style={{ width: "50%", marginRight: "10px" }}>
-                  <label style={styles.label}>Nombre</label>
-                  <input
-                    type="text"
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    disabled={!editMode}
-                    style={styles.input}
-                  />
-                </div>
-                <div style={{ width: "50%" }}>
-                <label style={styles.label}>Precio</label>
-                <input
-                  type="number"
-                  min="0"
-                  step="any"
-                  value={precio}
-                  onChange={(e) => setPrecio(e.target.value)}
-                  disabled={!editMode}
-                  style={styles.input}
-                />
-              </div>
-              </div>
-              <div>
-                  <label style={styles.label}>Descripción</label>
-                  <input
-                    type="text"
-                    value={descripcion}
-                    onChange={(e) => setDescripcion(e.target.value)}
-                    disabled={!editMode}
-                    style={styles.input}
-                  />
-                </div>
-              <div>
-                <label style={styles.label}>Aderezos</label>
-                <input
-                  type="text"
-                  value={aderezos}
-                  onChange={(e) => setAderezos(e.target.value)}
-                  disabled={!editMode}
-                  style={styles.input}
-                />
-              </div>
-              
-              <div>
-                <label style={styles.label}>Estado</label>
-                <select
-                  value={estado}
-                  onChange={(e) => setEstado(e.target.value)}
-                  style={styles.input}
-                  disabled={!editMode}
-                >
-                  <option value={false}>Standby</option>
-                  <option value={true}>Listo para la venta</option>
-                </select>
-              </div>
-              <div style={styles.buttonContainer}>
-                {!editMode && (
-                  <button
-                    type="button"
-                    onClick={handleEditModeToggle}
-                    style={styles.submitButton}
-                  >
-                    Editar
-                  </button>
-                )}
-                {editMode && (
-                  <button
-                    type="submit"
-                    style={styles.submitButton}
-                  >
-                    Guardar Cambios
-                  </button>
-                )}
-                <Link
-                to={`/listado-productos/${producto?.puestoId}`}
-                style={styles.backButton}
-              >
-                Volver
-              </Link>
-              </div>
-
-            </form>
-              </div>
-            </div>
-          </div>
+  const back = producto ? `/listado-productos/${producto.puestoId}` : "/listado-puestos-encargado";
+  return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+    <main className="qf-product-management">
+      <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis puestos", url: "/listado-puestos-encargado" }, { title: "Mis productos", url: back }, { title: "Detalle del producto", url: `/producto/${id}` }]} />
+      <header className="qf-management-header"><div><h1>{editMode ? "Editar producto" : "Detalle del producto"}</h1><p>{editMode ? "Actualizá los datos y guardá los cambios cuando termines." : "Consultá la información de tu producto o activá la edición para modificarla."}</p></div>{!saving && <Link className="qf-management-button" to={back}><FaArrowLeft aria-hidden="true" /> Volver</Link>}</header>
+      {loading ? <p className="qf-management-empty" role="status">Cargando producto…</p> : error ? <div className="qf-management-empty" role="alert"><h2>No pudimos cargar el producto</h2><button type="button" className="qf-management-button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : <form className={`qf-product-form qf-product-edit-form${editMode ? " qf-product-edit-form--editing" : ""}`} onSubmit={handleSaveChanges}>
+        <div className="qf-product-edit-heading"><h2>{producto.nombre}</h2><span>{editMode ? "Modo edición" : "Información del producto"}</span></div>
+        <div className="qf-product-entry-layout">
+          <div className="qf-product-photo-section"><div className="qf-product-photo-preview"><img src={producto.img || imgDefault} alt={producto.nombre} /></div><p className="qf-product-field-help">Imagen del producto en la carta del puesto.</p></div>
+          <fieldset disabled={!editMode || saving} className="qf-product-edit-fields"><legend className="qf-visually-hidden">Datos del producto</legend><div className="qf-product-entry-fields">
+            <label htmlFor="edit-name">Nombre<input id="edit-name" name="nombre" value={fields.nombre} onChange={change} required /></label>
+            <label htmlFor="edit-price">Precio<div className="qf-product-price-input"><span aria-hidden="true">$</span><input id="edit-price" aria-label="Precio" name="precio" type="number" inputMode="decimal" min="0" step="0.01" value={fields.precio} onChange={change} required /></div></label>
+            <label htmlFor="edit-description" className="qf-product-entry-wide">Descripción<textarea id="edit-description" name="descripcion" value={fields.descripcion} onChange={change} required /></label>
+            <label htmlFor="edit-extras" className="qf-product-entry-wide">Aderezos<textarea id="edit-extras" name="aderezos" value={fields.aderezos} onChange={change} placeholder="Sin aderezos" /></label>
+            <div className="qf-product-entry-wide qf-product-availability"><label htmlFor="edit-status">Estado<select id="edit-status" name="estado" value={fields.estado} onChange={change} aria-describedby="edit-status-help"><option value="false">Standby</option><option value="true">Listo para la venta</option></select></label><p id="edit-status-help" className="qf-product-field-help">{fields.estado === "true" ? "El producto está listo para la venta." : "El producto está en espera."}</p></div>
+          </div></fieldset>
         </div>
-      </div>
-      <Footer />
-    </PageLayout>
-  );
+        <div className="qf-product-form-actions"><span className="qf-product-field-help">{editMode ? "Los cambios se aplican al guardar." : "Seleccioná Editar para modificar los datos."}</span><div>{editMode ? <><button type="button" className="qf-management-button" disabled={saving} onClick={cancel}>Cancelar</button><button type="submit" className="qf-management-button qf-management-button--primary" disabled={saving}><FaSave aria-hidden="true" />{saving ? "Guardando…" : "Guardar Cambios"}</button></> : <button type="button" className="qf-management-button qf-management-button--primary" onClick={() => setEditMode(true)}><FaPen aria-hidden="true" /> Editar</button>}</div></div>
+      </form>}
+    </main><Footer />
+  </PageLayout>;
 };
-
 export default ConsultarProducto;

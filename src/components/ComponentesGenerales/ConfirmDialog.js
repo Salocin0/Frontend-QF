@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import useBreakpoint from "../../useBreakpoint";
 
 const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
@@ -27,7 +27,7 @@ const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
           transform: isMobile ? 'none' : 'translate(-50%,-50%)',
           bottom: isMobile ? 0 : 'auto',
           background: "var(--qf-bg-main)",
-          color: '#FFFFFF',
+          color: 'var(--qf-text-primary)',
           padding: '20px',
           zIndex: 1100,
           borderRadius: isMobile ? '12px 12px 0 0' : '8px',
@@ -36,15 +36,15 @@ const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
           textAlign: 'center',
         }}
       >
-        <h3 style={{ marginTop: 0, color: '#FFFFFF' }}>{title}</h3>
-        <p style={{ color: '#FFFFFF' }}>{message}</p>
+        <h3 style={{ marginTop: 0, color: 'var(--qf-text-primary)' }}>{title}</h3>
+        <p style={{ color: 'var(--qf-text-primary)' }}>{message}</p>
         <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-around' }}>
           <button
             onClick={onCancel}
             style={{
               padding: '8px 16px',
               backgroundColor: "var(--qf-bg-secondary)",
-              color: '#FFFFFF',
+              color: 'var(--qf-text-primary)',
               border: 'none',
               cursor: 'pointer',
               borderRadius: '10px',
@@ -56,8 +56,8 @@ const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
             onClick={onConfirm}
             style={{
               padding: '8px 16px',
-              backgroundColor: "var(--qf-naranja)",
-              color: '#FFFFFF',
+              backgroundColor: "var(--qf-highlight-surface)",
+              color: '#261c10',
               border: 'none',
               cursor: 'pointer',
               borderRadius: '10px',

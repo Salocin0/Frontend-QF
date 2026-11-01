@@ -1,0 +1,41 @@
+.qf-order-detail-dialog .MuiBackdrop-root { background: #0006; backdrop-filter: blur(4px); }
+.qf-order-detail-dialog .qf-order-detail-paper { box-sizing: border-box; width: calc(100% - 32px); max-width: 650px; max-height: calc(100dvh - 32px); margin: 16px; border-radius: 22px; background: var(--qf-bg-secondary); background-image: none; color: var(--qf-text-primary); font-family: var(--qf-font-family); border: 1px solid color-mix(in srgb, var(--qf-highlight-border) 28%, transparent); box-shadow: 0 24px 70px #0006, 0 2px 6px #0002; }
+.qf-order-detail-header { display: flex; align-items: center; gap: 13px; padding: 24px 26px 20px; border-bottom: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); flex-shrink: 0; }
+.qf-order-detail-title-icon { display: grid; place-items: center; width: 46px; height: 46px; flex-shrink: 0; border-radius: 14px; font-size: 21px; color: var(--qf-highlight-text); background: color-mix(in srgb, var(--qf-highlight-border) 12%, transparent); }
+.qf-order-detail-eyebrow { color: var(--qf-text-muted); font-size: .8rem; }
+.qf-order-detail-header h2 { color: var(--qf-text-primary); text-align: left; font-size: 1.5rem; font-weight: 800; margin: 3px 0 0; line-height: 1.3; }
+.qf-order-detail-dialog button.qf-order-detail-close { --qf-button-hover-bg: transparent; --qf-button-hover-text: var(--qf-text-primary); display: grid; place-items: center; flex-shrink: 0; width: 36px; height: 36px; margin-left: auto; padding: 8px; border: 0; border-radius: 10px; background: transparent; color: var(--qf-text-primary); cursor: pointer; box-shadow: none !important; }
+.qf-order-detail-body { padding: 24px 26px; overflow-y: auto; min-height: 0; }
+.qf-order-detail-summary { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 18px; margin-bottom: 24px; }
+.qf-order-detail-status { display: inline-flex; padding: 6px 12px; border: 1px solid color-mix(in srgb, var(--qf-highlight-border) 45%, transparent); border-radius: 20px; color: var(--qf-highlight-text); font-size: .85rem; font-weight: 700; }
+.qf-order-detail-summary p { display: flex; align-items: center; gap: 8px; color: var(--qf-text-muted); text-align: left; font-size: .8rem; margin: 12px 0 0; }
+.qf-order-detail-total { display: flex; flex-direction: column; gap: 5px; text-align: right; }
+.qf-order-detail-total > span { color: var(--qf-text-muted); font-size: .8rem; }
+.qf-order-detail-total strong { font-size: 1.9rem; font-weight: 800; color: var(--qf-highlight-text); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.qf-order-detail-logistics { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 18px; border-radius: 12px; padding: 16px; margin: 0 0 24px; background: color-mix(in srgb, var(--qf-bg-main) 65%, transparent); }
+.qf-order-detail-logistics dt { font-size: .8rem; font-weight: 500; color: var(--qf-text-muted); margin-bottom: 6px; }
+.qf-order-detail-logistics dd { margin: 0; font-size: .9rem; font-weight: 650; color: var(--qf-text-primary); overflow-wrap: anywhere; }
+.qf-order-detail-logistics .qf-order-detail-code { color: var(--qf-highlight-text); font-size: 1.1rem; letter-spacing: .08em; }
+.qf-order-detail-dialog h3 { color: var(--qf-text-primary); font-family: inherit; font-size: 1rem; font-weight: 750; margin: 0; }
+.qf-order-detail-section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
+.qf-order-detail-section-heading > span { font-size: .8rem; color: var(--qf-text-muted); }
+.qf-order-detail-products ul { list-style: none; padding: 0; margin: 0; }
+.qf-order-detail-products li { display: flex; align-items: center; gap: 12px; padding: 15px 0; border-top: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); }
+.qf-order-detail-quantity { display: grid; place-items: center; flex-shrink: 0; min-width: 36px; height: 36px; padding: 0 5px; box-sizing: border-box; background: color-mix(in srgb, var(--qf-highlight-border) 12%, transparent); border-radius: 10px; color: var(--qf-highlight-text); font-size: .95rem; font-weight: 750; }
+.qf-order-detail-products li > div { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.qf-order-detail-products li > div strong { display: block; font-size: .95rem; line-height: 1.5; color: var(--qf-text-primary); }
+.qf-order-detail-products li > div span { display: block; font-size: .75rem; margin-top: 3px; color: var(--qf-text-muted); }
+.qf-order-detail-unit-price { font-size: .95rem; font-weight: 650; color: var(--qf-text-primary); font-variant-numeric: tabular-nums; }
+.qf-order-detail-contacts { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-top: 24px; padding-top: 22px; border-top: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); }
+.qf-order-detail-contact { min-width: 0; }
+.qf-order-detail-contact h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.qf-order-detail-contact h3 svg { color: var(--qf-highlight-text); }
+.qf-order-detail-contact > strong { font-size: .95rem; display: block; margin-bottom: 8px; color: var(--qf-text-primary); overflow-wrap: anywhere; }
+.qf-order-detail-contact p { display: flex; align-items: baseline; gap: 8px; text-align: left; margin: 5px 0; font-size: .85rem; color: var(--qf-text-muted); }
+.qf-order-detail-contact p svg { flex-shrink: 0; font-size: .75rem; }
+.qf-order-detail-contact p span { overflow-wrap: anywhere; }
+.qf-order-detail-footer { flex-shrink: 0; display: flex; justify-content: flex-end; padding: 16px 26px; border-top: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); }
+.qf-order-detail-footer button { min-height: 44px; padding: 10px 24px; border: 1px solid var(--qf-highlight-border); border-radius: 10px; font: inherit; font-size: .95rem; font-weight: 700; background: var(--qf-highlight-surface); color: #261c10; cursor: pointer; }
+.qf-order-detail-empty, .qf-order-detail-loading { text-align: left; color: var(--qf-text-muted); font-size: .85rem; line-height: 1.5; }
+.qf-order-detail-dialog :focus-visible { outline: 2px solid var(--qf-highlight-border); outline-offset: 3px; }
+@media (max-width: 600px) { .qf-order-detail-header { padding: 20px 18px 16px; } .qf-order-detail-body { padding: 20px 18px; } .qf-order-detail-header h2 { font-size: 1.3rem; } .qf-order-detail-total strong { font-size: 1.6rem; } .qf-order-detail-footer { padding: 14px 18px; } .qf-order-detail-footer button { width: 100%; } .qf-order-detail-unit-price { font-size: .85rem; } }

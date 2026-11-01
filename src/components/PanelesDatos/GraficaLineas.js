@@ -1,9 +1,9 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
-import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 import useBreakpoint from "../../useBreakpoint";
+import useTheme from "../../useTheme";
 
 // Formato fijo DD/MM/YYYY, independiente del locale del navegador
 // (toLocaleDateString() devuelve M/D/YYYY en locales en-US, rompiendo el parseo posterior).
@@ -25,11 +25,17 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
   const [groupedData, setGroupedData] = useState({}); // Guardar datos agrupados en estado
   const [puestos, setPuestos] = useState([]); // Guardar puestos en estadon
   const { isMobile } = useBreakpoint();
+  const { isDark } = useTheme();
+  const chartText = isDark ? "#f1eee8" : "#29251f";
   useEffect(() => {
 
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+      setSelectedDay(null);
+      setChartData(null);
+      setCategorias([]);
+      setPuestos([]);
 
       try {
         const response = await fetch(
@@ -43,7 +49,6 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
         const data = await response.json();
 
         if (!data.data || data.data.length === 0) {
-          toast.error("No hay Pedidos en este evento para mostrar");
           setChartData(null);
           setLoading(false);
           return;
@@ -102,7 +107,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
           ? {
               show: true,
               position: "top",
-              color: "#ffffff",
+              color: chartText,
               fontWeight: "bold",
               formatter: (params) => {
                 const total = puestos.reduce(
@@ -134,37 +139,37 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
         text: "Recaudación por Día", 
         left: "center", 
         top: "1%",
-        textStyle: { color: "#ffffff" }
+        textStyle: { color: chartText }
       },
       legend: { 
         data: puestos, 
         top: "8%",
         left: "center",
         orient: "horizontal",
-        textStyle: { color: "#ffffff" }
+        textStyle: { color: chartText }
       },
       // Room for title + legend above the plot and for the labels of the tallest bar.
       grid: { top: isMobile ? 110 : 90, left: 16, right: 24, bottom: 16, containLabel: true },
       xAxis: { 
         type: "category", 
         data: categorias,
-        axisLabel: { color: "#ffffff" },
-        axisLine: { lineStyle: { color: "#ffffff" } }
+        axisLabel: { color: chartText },
+        axisLine: { lineStyle: { color: chartText } }
       },
       yAxis: { 
         type: "value",
         max: (value) => Math.ceil((value.max || 0) * 1.2),
         axisLabel: {
-          color: "#ffffff",
+          color: chartText,
           formatter: (value) => `$${Math.round(value).toLocaleString("es-AR")}`,
         },
-        axisLine: { lineStyle: { color: "#ffffff" } },
+        axisLine: { lineStyle: { color: chartText } },
         splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
       },
       series,
       backgroundColor: "transparent",
     });
-  }, [decalEnabled, categorias, groupedData, puestos, puestoId, isMobile]);
+  }, [decalEnabled, categorias, groupedData, puestos, puestoId, isMobile, chartText]);
 
   const onChartClick = (params) => {
     setSelectedDay(params.name);
@@ -181,9 +186,12 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
     </div>
   );
 
+  if (!chartData && !selectedDay) return <div className="qf-manager-chart-message">Todavía no hay recaudación para esta selección.</div>;
+
   return (
     <div style={{ position: "relative", height: "100%", width: "100%", minHeight: "400px", overflow: "visible" }} data-testid="grafica-wrapper">
       <button
+        aria-label={decalEnabled ? "Ocultar patrones del gráfico" : "Mostrar patrones del gráfico"}
         onClick={() => setDecalEnabled((prev) => !prev)}
         style={{
           backgroundColor: "var(--qf-bg-main)",
@@ -207,7 +215,7 @@ const GraficaBarras = ({ eventId = "Todos", puestoId = "Todos" }) => {
         chartData && (
           <ReactECharts
             option={chartData}
-            theme="dark"
+            theme={isDark ? "dark" : undefined}
             notMerge={true}
             style={{ height: "100%", width: "100%" }}
             onEvents={{ click: onChartClick }}
@@ -231,6 +239,8 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { isMobile } = useBreakpoint();
+  const { isDark } = useTheme();
+  const chartText = isDark ? "#f1eee8" : "#29251f";
 
   const formatFecha = (fecha) => {
     const [day, month, year] = fecha.split("/");
@@ -278,18 +288,18 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
             text: `Detalle de Ventas - ${selectedDay}`, 
             left: "center",
             top : "1%",
-            textStyle: { color: "#ffffff" }
+            textStyle: { color: chartText }
           },
           xAxis: { 
             type: "category", 
             data: xAxisData,
-            axisLabel: { color: "#ffffff" },
-            axisLine: { lineStyle: { color: "#ffffff" } }
+            axisLabel: { color: chartText },
+            axisLine: { lineStyle: { color: chartText } }
           },
           yAxis: { 
             type: "value",
-            axisLabel: { color: "#ffffff" },
-            axisLine: { lineStyle: { color: "#ffffff" } },
+            axisLabel: { color: chartText },
+            axisLine: { lineStyle: { color: chartText } },
             splitLine: { lineStyle: { color: "rgba(217, 143, 11, 0.2)" } }
           },
           grid: { bottom: isMobile ? 70 : 100, top: 60 },
@@ -298,7 +308,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
             bottom: 0,
             left: "center",
             orient: "horizontal",
-            textStyle: { color: "#ffffff" }
+            textStyle: { color: chartText }
           },
           series: Object.keys(seriesData).map((key) => ({
             name: key,
@@ -310,7 +320,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [selectedDay, idevento, idpuesto, isMobile]);
+  }, [selectedDay, idevento, idpuesto, isMobile, chartText]);
 
   if (loading) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%", width: "100%" }}>
@@ -325,7 +335,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
 
   return (
     <div style={{ position: "relative", overflow: "visible" }} className="h-100 w-100">
-      <ReactECharts option={chartData} theme="dark" notMerge={true} className="h-100 w-100" />
+      <ReactECharts option={chartData} theme={isDark ? "dark" : undefined} notMerge={true} className="h-100 w-100" />
       <button
         style={{
           position: "absolute",
@@ -333,7 +343,7 @@ const GraficaLineas = ({ selectedDay, setSelectedDay, idevento, idpuesto }) => {
           left: "20px",
           padding: "5px 10px",
           backgroundColor: "var(--qf-naranja)",
-          color: "white",
+          color: "#261c10",
           border: "none",
           borderRadius: "5px",
           cursor: "pointer",

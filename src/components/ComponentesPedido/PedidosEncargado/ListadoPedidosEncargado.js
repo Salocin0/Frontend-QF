@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import KanbanBoard from "../../ComponentesEPC/KanbanBoard.js";
 import PageLayout from "../../ComponentesGenerales/PageLayout";
@@ -7,10 +7,22 @@ import Footer from "../../ComponentesGenerales/Footer.js";
 import { useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Breadcrumb from "../../ComponentesGenerales/Breadcrumb.js";
-import useBreakpoint from "../../../useBreakpoint";
+import { FaExpand, FaCompress } from "react-icons/fa";
 
 const ListadoPedidosEncargado = () => {
-  const { isMobile } = useBreakpoint();
+  const [expanded, setExpanded] = useState(false);
+  const expandButton = useRef(null);
+  useEffect(() => {
+    if (!expanded) return;
+    const handleEscape = (event) => {
+      if (event.key === "Escape" && !event.defaultPrevented && !document.querySelector('[role="dialog"]')) {
+        setExpanded(false);
+        expandButton.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [expanded]);
   const { user } = useContext(UserContext);
   const [pedidos, setPedidos] = useState([]);
   const [recargar, setRecargar] = useState(0);
@@ -45,7 +57,7 @@ const ListadoPedidosEncargado = () => {
         id: pedido.id,
         content: `Pedido ID: ${pedido.id}, Consumidor: ${
           pedido.consumidorId
-        }, Total: ${pedido.total.toFixed(2)}`,
+        }, Total: ${Number(pedido.total).toFixed(2)}`,
         fecha: pedido.fecha,
         total: pedido.total,
         estado: pedido.estado,
@@ -139,18 +151,22 @@ const ListadoPedidosEncargado = () => {
   const breadcrumbItems = [
     { title: "Inicio", url: "/inicio" },
     { title: "Mis Puestos", url: "/listado-puestos-encargado" },
-    { title: "Mis Pedidos", url: `/pedidos-Encargado/${carrito.id}` },
+    { title: "Mis Pedidos", url: `/pedidos-Encargado/${carrito?.id ?? id}` },
   ];
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.pagina}>
+      <div className={`qf-kanban-page${expanded ? " qf-kanban-page--expanded" : ""}`} style={styles.pagina}>
         {/* Título centrado */}
-        <h1 style={styles.tituloSeccion}>
-          Pedidos {carrito?.nombreCarro}
-        </h1>
+        <div className="qf-kanban-page-heading">
+          <h1 style={styles.tituloSeccion}>Pedidos {carrito?.nombreCarro}</h1>
+          <button ref={expandButton} type="button" className="qf-kanban-expand" aria-pressed={expanded} aria-controls="qf-orders-panel" onClick={() => setExpanded((value) => !value)}>
+            {expanded ? <FaCompress aria-hidden="true" /> : <FaExpand aria-hidden="true" />}
+            {expanded ? "Salir de pantalla completa" : "Pantalla completa"}
+          </button>
+        </div>
 
-        <hr style={styles.hrFull} />
+        <p className="qf-kanban-page-description">Administrá tus pedidos y movelos entre estados según corresponda.</p>
 
         <div className="qf-page-content" style={{ flex: 1, minHeight: 0 }}>
           <div className="qf-page-content__main">
@@ -163,7 +179,7 @@ const ListadoPedidosEncargado = () => {
             </div>
 
             {/* Kanban board */}
-            <div style={styles.boardWrapper}>
+            <div id="qf-orders-panel" className="qf-kanban-board-wrapper" style={styles.boardWrapper}>
               {Array.isArray(pedidos) && pedidos.length > 0 ? (
                 <KanbanBoard
                   initialData={initialData}
