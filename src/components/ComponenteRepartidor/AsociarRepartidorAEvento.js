@@ -1,212 +1,51 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
-import { CircularProgress } from "@mui/material";
-import { FaChevronDown } from "react-icons/fa";
+import React, { useContext, useEffect, useState } from "react";
+import { FaCalendarAlt } from "react-icons/fa";
 import PageLayout from "../ComponentesGenerales/PageLayout";
-import "./../sass/main.scss";
 import EventoRepartidor from "./EventoRepartidor";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Footer from "../ComponentesGenerales/Footer";
-import Buscador from "../Filtros y Buscadores/Buscador";
-import Filtros from "../Filtros y Buscadores/Filtros";
+import "../ComponentesGenerales/ListFilters.css";
+import "../ComponentesEventos/EventosProductor.css";
+import "./EventosRepartidor.css";
 
+const normalizeState = (state) => state?.startsWith("EnPreparacion") ? "EnPreparacion" : state;
+const labelState = (state) => state === "EnPreparacion" ? "En preparación" : state;
 const AsociarRepartidorAEvento = () => {
   const { user } = useContext(UserContext);
   const [eventos, setEventos] = useState([]);
-  const [recargar, setRecargar] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterState, setFilterState] = useState("");
-
-  const contentRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(999);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const isNarrowLayout = contentWidth <= 780;
-
+  const [attempt, setAttempt] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [search, setSearch] = useState("");
+  const [state, setState] = useState("");
+  const consumerId = user?.consumidorId;
+  const reload = () => setAttempt((value) => value + 1);
   useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setContentWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const recargarComponente = () => {
-    setRecargar((valor) => valor + 1);
-  };
-
-  useEffect(() => {
-    if (user) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", user.consumidorId);
-
-      setIsLoading(true);
-      const estadosEnPreparacion = ["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];
-      Promise.all(
-        estadosEnPreparacion.map((estado) =>
-          fetch(`${process.env?.REACT_APP_BACK_URL}evento/enEstado/${estado}`, {
-            method: "GET",
-            headers: headers,
-          })
-            .then((response) => response.json())
-            .then((data) => (Array.isArray(data.data) ? data.data : []))
-            .catch(() => [])
-        )
-      )
-        .then((resultados) => setEventos(resultados.flat()))
-        .catch((error) => console.log("No existen eventos.", error))
-        .finally(() => setIsLoading(false));
-    }
-  }, [user, recargar]);
-
-  const normalizarEstadoFiltro = (estado) => {
-    if (!estado) return estado;
-    return estado.startsWith("EnPreparacion") ? "EnPreparacion" : estado;
-  };
-
-  const estadoGroup = {
-    nombre: "estado",
-    opciones: Array.from(
-      new Set(eventos.map((e) => normalizarEstadoFiltro(e.estado)))
-    ).map((estado) => ({
-      valor: estado,
-      // "EnPreparacion" -> "En Preparacion" (the numeric suffix of sub-states must never reach the label).
-      etiqueta: estado ? estado.replace(/\d+$/, "").replace(/([A-Z])/g, " $1").trim() : estado,
-    })),
-  };
-
-  const filteredEventos = eventos.filter((evento) => {
-    const matchesSearch = searchTerm
-      ? evento.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
-      : true;
-    const matchesState = filterState
-      ? normalizarEstadoFiltro(evento.estado) === filterState
-      : true;
-    return matchesSearch && matchesState;
-  });
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Asociarte a evento", url: "/asociarRepartidorAEvento" },
-  ];
-
-  return (
-    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{ width: "100%" }}>
-        {/* Header centrado */}
-        <div className="qf-page-header--full" style={{ paddingTop: "1rem" }}>
-          <h1 style={{ color: "var(--qf-naranja)", textAlign: "center" }}>
-            Asociate a un Evento
-          </h1>
-        </div>
-        <hr className="qf-separator qf-separator--spaced" />
-
-        <div
-          ref={contentRef}
-          className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`}
-        >
-          <div className="qf-page-content__main">
-            {/* Breadcrumb con borde dorado */}
-            <Breadcrumb
-              items={breadcrumbItems}
-              style={{
-                border: "1px solid var(--qf-naranja)",
-                width: "100%",
-                margin: 0,
-              }}
-            />
-
-            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
-            {isNarrowLayout && (
-              <div className="qf-narrow-filters" style={{ margin: "8px 0" }}>
-                <div className="qf-search-box" style={{ marginBottom: "8px" }}>
-                  <Buscador
-                    placeholder="Buscar eventos..."
-                    onBuscar={setSearchTerm}
-                    botonBuscar={false}
-                  />
-                </div>
-                <div className="qf-filter-box" style={{ margin: 0 }}>
-                  <div
-                    className="qf-collapsible-header"
-                    onClick={() => setFiltersOpen((prev) => !prev)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
-                  >
-                    <span className="qf-collapsible-title">ESTADOS</span>
-                    <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
-                  </div>
-                  {filtersOpen && (
-                    <div className="qf-collapsible-body">
-                      <Filtros
-                        gruposFiltros={[estadoGroup]}
-                        onFiltrar={(f) => setFilterState(f.estado || "")}
-                        titulo="ESTADOS"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Listado de eventos */}
-            <div style={{ padding: "1rem 0 2rem 0" }}>
-              {isLoading ? (
-                <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-                  <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-                </div>
-              ) : filteredEventos.length > 0 ? (
-                <div>
-                  {filteredEventos.map((evento, index) => (
-                    <div key={index}>
-                      <EventoRepartidor
-                        evento={evento}
-                        recargar={recargarComponente}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <h2
-                  style={{
-                    color: "var(--qf-naranja)",
-                    fontWeight: "bold",
-                    textAlign: "center",
-                  }}
-                >
-                  No hay eventos activos en este momento.
-                </h2>
-              )}
-            </div>
-          </div>
-
-          {/* Aside: buscador + filtros (solo en layout ancho) */}
-          {!isNarrowLayout && (
-            <aside className="qf-page-content__aside">
-              <div className="qf-search-box">
-                <Buscador
-                  placeholder="Buscar eventos..."
-                  onBuscar={setSearchTerm}
-                  botonBuscar={false}
-                />
-              </div>
-              <div className="qf-filter-box">
-                <Filtros
-                  gruposFiltros={[estadoGroup]}
-                  onFiltrar={(f) => setFilterState(f.estado || "")}
-                  titulo="ESTADOS"
-                />
-              </div>
-            </aside>
-          )}
-        </div>
-      </div>
-      <Footer />
-    </PageLayout>
-  );
+    if (consumerId == null) return;
+    const controller = new AbortController();
+    setLoading(true); setError(false);
+    (async () => {
+      try {
+        const results = await Promise.all(["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"].map(async (status) => {
+          const response = await fetch(`${process.env.REACT_APP_BACK_URL}evento/enEstado/${status}`, { method: "GET", headers: { ConsumidorId: consumerId }, signal: controller.signal });
+          if (!response.ok) throw new Error("No se pudieron cargar los eventos");
+          const result = await response.json();
+          return Array.isArray(result.data) ? result.data : [];
+        }));
+        if (!controller.signal.aborted) setEventos(Array.from(new Map(results.flat().map((event) => [event.id, event])).values()));
+      } catch (err) { if (!controller.signal.aborted) setError(true); }
+      finally { if (!controller.signal.aborted) setLoading(false); }
+    })();
+    return () => controller.abort();
+  }, [consumerId, attempt]);
+  const filtered = eventos.filter((event) => (!state || normalizeState(event.estado) === state) && String(event.nombre || "").toLocaleLowerCase("es").includes(search.trim().toLocaleLowerCase("es")));
+  const states = Array.from(new Set(eventos.map((event) => normalizeState(event.estado)).filter(Boolean)));
+  return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}><main className="qf-producer-events-page qf-courier-events-page">
+    <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Asociarme a un evento", url: "/asociarRepartidorAEvento" }]} />
+    <header className="qf-producer-events-heading"><div><h1>Asociarme a un evento</h1><p>Encontrá un evento y enviá tu solicitud para participar como repartidor.</p></div></header>
+    <section className="qf-list-filters qf-producer-event-filters" aria-label="Filtros de eventos"><label htmlFor="courier-event-search">Buscar evento<input id="courier-event-search" type="search" placeholder="Nombre del evento…" value={search} onChange={(event) => setSearch(event.target.value)} /></label><label htmlFor="courier-event-state">Estado<select id="courier-event-state" value={state} onChange={(event) => setState(event.target.value)}><option value="">Todos los estados</option>{states.map((status) => <option key={status} value={status}>{labelState(status)}</option>)}</select></label></section>
+    {loading ? <p className="qf-producer-events-feedback" role="status">Cargando eventos…</p> : error ? <div className="qf-producer-events-feedback" role="alert"><h2>No pudimos cargar los eventos</h2><p>Intentá nuevamente en unos instantes.</p><button type="button" className="qf-producer-event-button" onClick={reload}>Reintentar</button></div> : <><p className="qf-producer-events-count" aria-live="polite">{filtered.length} {filtered.length === 1 ? "evento disponible" : "eventos disponibles"}</p>{filtered.length ? <div className="qf-producer-events-list">{filtered.map((event) => <EventoRepartidor key={event.id} evento={event} recargar={reload} />)}</div> : <div className="qf-producer-events-feedback"><FaCalendarAlt aria-hidden="true" /><h2>{search || state ? "No encontramos eventos con esos filtros" : "Todavía no hay eventos disponibles"}</h2><p>{search || state ? "Probá otro nombre o seleccioná otro estado." : "Los eventos disponibles para asociarte aparecerán acá."}</p>{(search || state) && <button type="button" className="qf-producer-event-button" onClick={() => { setSearch(""); setState(""); }}>Limpiar filtros</button>}</div>}</>}
+  </main><Footer /></PageLayout>;
 };
-
 export default AsociarRepartidorAEvento;

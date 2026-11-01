@@ -1,4 +1,8 @@
-﻿import { default as React, useContext, useEffect, useState, useRef } from "react";
+import { default as React, useContext, useEffect, useState } from "react";
+import { Dialog } from "@mui/material";
+import { FaCalendarAlt, FaMapMarkerAlt, FaMotorcycle, FaTimes } from "react-icons/fa";
+import "../ComponentesEventos/EventosProductor.css";
+import "./EventosRepartidor.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -11,6 +15,14 @@ const etiquetaEstado = (estado) =>
 
 const ESTADOS_ASOCIABLES = ["EnPreparacion", "EnPreparacion1", "EnPreparacion2", "EnPreparacion3", "Confirmado"];
 
+const readRestrictions = async (response) => {
+    if (response.status === 404) return false;
+    if (response.status !== 200) throw new Error("No se pudieron consultar las restricciones");
+    const result = await response.json();
+    if (!Array.isArray(result.data)) throw new Error("Respuesta de restricciones inválida");
+    return result.data.length > 0;
+  };
+
 const EventoRepartidor = ({ evento, recargar }) => {
   const navigate = useNavigate();
   const [isEnPreparacion,] = useState(
@@ -20,222 +32,17 @@ const EventoRepartidor = ({ evento, recargar }) => {
     useState(false);
   const [modalConfirmVisible, setModalConfirmVisible] = useState(false);
   const { user } = useContext(UserContext);
-  const cardRef = useRef(null);
-  const [isCardNarrow, setIsCardNarrow] = useState(false);
-
+  const [restrictionStatus, setRestrictionStatus] = useState("loading");
   useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        setIsCardNarrow(entry.contentRect.width <= 768);
-      }
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const styles = {
-    hr:{
-      border: "none",
-      borderTop: "1px solid var(--qf-naranja)",
-      margin: 0,
-      width: "100%",
-    },
-    datos:{
-      width: "90%",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-    },
-    datosNarrow: {
-      width: "100%",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      textAlign: "center",
-    },
-    card: {
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      margin: "0 0 15px 0",
-      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-      backgroundColor: "var(--qf-bg-secondary)",
-      position: "relative",
-    },
-    cardBody: {
-      padding: "15px",
-    },
-    row: {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      marginRight: "15%",
-    },
-    rowNarrow: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    img: {
-      maxWidth: "100%",
-      height: "200px",
-      borderRadius: "5px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      overflow: "hidden",
-      objectFit: "cover",
-      marginLeft: "3%",
-    },
-    imgNarrow: {
-      width: "100%",
-      height: "200px",
-      borderRadius: "5px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      overflow: "hidden",
-      objectFit: "cover",
-      margin: 0,
-    },
-    cardTitle: {
-      fontSize: "24px",
-      fontWeight: "bold",
-      color: "var(--qf-naranja)"
-    },
-    cardDescripcion: {
-      fontSize: "1rem",
-      color: "var(--qf-text-white)",
-      marginBottom: "10px",
-    },
-    cardText: {
-      fontSize: "0.9rem",
-      color: "var(--qf-text-white)",
-    },
-    cardEstado: {
-      fontSize: "1rem",
-      fontWeight: "bold",
-      color:  "var(--qf-text-white)",
-      position: "absolute",
-      top: "30px",
-      right: "30px",
-      backgroundColor: "var(--qf-green)",
-      padding: "5px 10px",
-      borderRadius: "10px",
-    },
-    cardEstadoNarrow: {
-      fontSize: "1rem",
-      fontWeight: "bold",
-      color:  "var(--qf-text-white)",
-      position: "static",
-      marginTop: "0.5rem",
-      backgroundColor: "var(--qf-green)",
-      padding: "5px 10px",
-      borderRadius: "10px",
-      display: "inline-block",
-    },
-    cardTextFecha: {
-      fontSize: "0.8rem",
-      color: "var(--qf-text-white)",
-    },
-    mt2: {
-      marginTop: "10px",
-      padding: "0 15px 15px 15px",
-    },
-    btnSuccess: {
-      backgroundColor: "var(--qf-green)",
-      color: "var(--qf-text-primary)",
-      border: "none",
-      padding: "10px 20px",
-      borderRadius: "5px",
-      cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    cardTextYellow: {
-      fontSize: "0.9rem",
-      color: "var(--qf-naranja)",
-      fontWeight: "bold",
-    },
-    dialogContainer: {
-      display: "flex",
-      position: "fixed",
-      top: "0",
-      left: "0",
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      zIndex: "1000",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    dialogContent: {
-      backgroundColor: "var(--qf-bg-secondary)",
-      padding: "20px",
-      borderRadius: "10px",
-      width: "80%",
-      maxWidth: "400px",
-      textAlign: "center",
-    },
-    dialogTitle: {
-      textAlign: "center",
-      color: "var(--qf-naranja)",
-      marginBottom: "1rem",
-    },
-    infoSection: {
-      backgroundColor: "var(--qf-bg-main)",
-      padding: "16px",
-      borderRadius: "8px",
-      marginBottom: "1.5rem",
-      border: `1px solid var(--qf-naranja)33`,
-    },
-    infoRow: {
-      display: "flex",
-      alignItems: "center",
-      marginBottom: "10px",
-      gap: "10px",
-    },
-    infoLabel: {
-      color: "var(--qf-naranja)",
-      fontWeight: "bold",
-      minWidth: "100px",
-      display: "flex",
-      alignItems: "center",
-      gap: "8px",
-      fontSize: "14px",
-    },
-    infoValue: {
-      color: "var(--qf-text-white)",
-      fontSize: "15px",
-    },
-    dialogButtons: {
-      display: "flex",
-      justifyContent: "space-around",
-      marginTop: "1rem",
-    },
-    dialogButton: {
-      padding: "0.5rem 1rem",
-      border: "none",
-      borderRadius: "0.2rem",
-      cursor: "pointer",
-      fontWeight: "bold",
-    },
-    btnCancel: {
-      backgroundColor: "var(--qf-rojo)",
-      color: "var(--qf-blanco-puro)",
-    },
-    btnConfirm: {
-      backgroundColor: "var(--qf-green)",
-      color: "var(--qf-blanco-puro)",
-    },
-  };
-
+    const controller = new AbortController();
+    setRestrictionStatus("loading");
+    fetch(`${process.env.REACT_APP_BACK_URL}restriccion/evento/${evento.id}`, { headers: { ConsumidorId: user?.consumidorId }, signal: controller.signal })
+      .then(readRestrictions)
+      .then((hasRestrictions) => { if (!controller.signal.aborted) setRestrictionStatus(hasRestrictions ? "with" : "without"); })
+      .catch(() => { if (!controller.signal.aborted) setRestrictionStatus("error"); });
+    return () => controller.abort();
+  }, [evento.id, user?.consumidorId]);
+  const restrictionLabel = { loading: "Consultando restricciones…", with: "Con restricciones", without: "Sin restricciones", error: "Restricciones sin confirmar" }[restrictionStatus];
   const asociarmeAEvento = () => {
     const headers = new Headers();
     headers.append("ConsumidorId", user?.consumidorId);
@@ -276,15 +83,10 @@ const EventoRepartidor = ({ evento, recargar }) => {
           headers: headers,
         }
       );
-      if (response.status === 404) {
-        asociarmeAEvento(evento.id);
-      } else if (response.status === 200) {
-        //const responseData = await response.json();
-        handleCrearForm();
-      } else {
-        console.error(`Error: ${response.status}`);
-        toast.error("Error al comunicarse con el servidor");
-      }
+      const hasRestrictions = await readRestrictions(response);
+      setRestrictionStatus(hasRestrictions ? "with" : "without");
+      if (hasRestrictions) handleCrearForm();
+      else asociarmeAEvento();
     } catch (error) {
       console.error(error);
       toast.error("Error al crear el formulario");
@@ -324,91 +126,21 @@ const EventoRepartidor = ({ evento, recargar }) => {
     }
   }, [evento, user, isEnPreparacion]);
 
-  return (
-    <div ref={cardRef} style={styles.card}>
-      <div style={styles.cardBody}>
-        <div style={isCardNarrow ? styles.rowNarrow : styles.row}>
-          <img
-            src={
-              evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
-                ? evento.img
-                : imgDefault
-            }
-            alt="Logo del Evento"
-            style={isCardNarrow ? styles.imgNarrow : styles.img}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = imgDefault;
-            }}
-          />
-          <div style={isCardNarrow ? styles.datosNarrow : styles.datos}>
-            <h5 style={styles.cardTitle}>{evento.nombre}</h5>
-            <p style={styles.cardDescripcion}>{evento.descripcion}</p>
-            <p style={styles.cardText}>
-              {formatUbicacion(evento)}
-            </p>
-            <p style={isCardNarrow ? styles.cardEstadoNarrow : styles.cardEstado}>{etiquetaEstado(evento.estado)}</p>
-          </div>
-        </div>
+  const date = (value) => value && !Number.isNaN(new Date(value).getTime()) ? new Date(value).toLocaleDateString("es-AR") : "Sin fecha informada";
+  const image = evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar") ? evento.img : imgDefault;
+  return <>
+    <article className="qf-producer-event-card qf-courier-event-card" aria-label={evento.nombre}>
+      <div className={`qf-producer-event-image${image === imgDefault ? " qf-courier-event-image--logo" : ""}`}><img src={image} alt={evento.nombre} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = imgDefault; event.currentTarget.parentElement.classList.add("qf-courier-event-image--logo"); }} /></div>
+      <div className="qf-producer-event-body"><header className="qf-producer-event-title"><h2>{evento.nombre}</h2><div className="qf-courier-event-badges"><span className="qf-producer-event-state">{etiquetaEstado(evento.estado)}</span><span className={`qf-courier-restrictions-badge qf-courier-restrictions-badge--${restrictionStatus}`}>{restrictionLabel}</span></div></header>
+        {evento.descripcion && <p className="qf-courier-event-description">{evento.descripcion}</p>}
+        <dl className="qf-courier-event-data"><div><dt><FaMapMarkerAlt aria-hidden="true" /> Ubicación</dt><dd>{formatUbicacion(evento) || "Sin ubicación informada"}</dd></div><div><dt><FaCalendarAlt aria-hidden="true" /> Inicio</dt><dd>{date(evento.fechaHoraInicio)}</dd></div><div><dt><FaCalendarAlt aria-hidden="true" /> Fin</dt><dd>{date(evento.fechaHoraFin)}</dd></div></dl>
+        <footer className="qf-courier-event-actions">{!tieneAsociacionPendiente && isEnPreparacion && <button type="button" className="qf-producer-event-button qf-producer-event-button--primary" onClick={() => setModalConfirmVisible(true)}><FaMotorcycle aria-hidden="true" /> Asociarme a evento</button>}{tieneAsociacionPendiente && <p role="status" className="qf-courier-event-pending">Ya tenés una asociación pendiente para este evento.</p>}</footer>
       </div>
-      <hr style={styles.hr}/>
-      <div style={styles.mt2}>
-        <div style={{width: "100%", display: "flex", justifyContent: "center"}}>
-          {!tieneAsociacionPendiente && isEnPreparacion && (
-            <button
-              style={styles.btnSuccess}
-              onClick={() => setModalConfirmVisible(true)}
-            >
-              Asociarme a Evento
-            </button>
-          )}
-          {tieneAsociacionPendiente && (
-            <p style={styles.cardTextYellow}>
-              Tiene una asociación pendiente
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* Modal de confirmación */}
-      {modalConfirmVisible && (
-        <div style={styles.dialogContainer}>
-          <div style={styles.dialogContent}>
-            <h3 style={styles.dialogTitle}>Confirmar asociación</h3>
-            <div style={styles.infoSection}>
-              <div style={styles.infoRow}>
-                <span style={styles.infoLabel}>Evento:</span>
-                <span style={styles.infoValue}>{evento.nombre}</span>
-              </div>
-              <div style={styles.infoRow}>
-                <span style={styles.infoLabel}>Ubicación:</span>
-                <span style={styles.infoValue}>
-                  {formatUbicacion(evento)}
-                </span>
-              </div>
-            </div>
-            <div style={styles.dialogButtons}>
-              <button
-                style={{ ...styles.dialogButton, ...styles.btnCancel }}
-                onClick={() => setModalConfirmVisible(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                style={{ ...styles.dialogButton, ...styles.btnConfirm }}
-                onClick={() => {
-                  setModalConfirmVisible(false);
-                  handleTieneRestriciones();
-                }}
-              >
-                Confirmar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+    </article>
+    <Dialog open={modalConfirmVisible} onClose={() => setModalConfirmVisible(false)} fullWidth maxWidth="sm" className="qf-courier-association-dialog" aria-labelledby={`courier-association-${evento.id}`} slotProps={{ paper: { className: "qf-courier-association-paper" } }}>
+      <header><div><span>Solicitud de participación</span><h2 id={`courier-association-${evento.id}`}>Confirmar asociación</h2></div><button type="button" className="qf-courier-dialog-close" aria-label="Cerrar" onClick={() => setModalConfirmVisible(false)}><FaTimes aria-hidden="true" /></button></header>
+      <div className="qf-courier-dialog-body"><p>{restrictionStatus === "with" ? "¿Estás seguro de que querés unirte a este evento? Tiene restricciones: en el siguiente paso deberás completar los requisitos y adjuntar los documentos solicitados. El productor podrá descargarlos para revisar tu solicitud." : "¿Estás seguro de que querés unirte a este evento? Se enviará tu solicitud de participación al organizador."}</p><dl className="qf-courier-event-data"><div><dt>Evento</dt><dd>{evento.nombre}</dd></div><div><dt>Ubicación</dt><dd>{formatUbicacion(evento)}</dd></div></dl><footer className="qf-courier-event-actions"><button type="button" className="qf-producer-event-button" onClick={() => setModalConfirmVisible(false)}>Cancelar</button><button type="button" className="qf-producer-event-button qf-producer-event-button--primary" onClick={() => { setModalConfirmVisible(false); handleTieneRestriciones(); }}>Confirmar</button></footer></div>
+    </Dialog>
+  </>;
 };
-
 export default EventoRepartidor;
