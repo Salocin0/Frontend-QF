@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 import "bootstrap/dist/css/bootstrap.min.css"; // Importar Bootstrap si no lo tienes
 import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -9,10 +9,10 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
-import useBreakpoint from "../../useBreakpoint";
+import { FaArrowLeft, FaArrowRight, FaCheck, FaCalendarAlt } from "react-icons/fa";
+import "./RegistrarEvento.css";
 
 const RegistrarEvento4 = () => {
-  const { isMobile } = useBreakpoint();
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const { diferenciaDiasEvento } = useParams();
   const navigate = useNavigate();
@@ -154,205 +154,28 @@ const RegistrarEvento4 = () => {
     navigate(`/registrar-evento3`, { state: { eventoId } });
   };
 
-  const styles = {
-    pageWrapper: {
-      display: "flex",
-      flexDirection: "column",
-      flex: 1,
-      minHeight: 0,
-      height: "100%",
-      boxSizing: "border-box",
-    },
-    rowFormEvento: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    colForm: {
-      flex: 1,
-      minHeight: 0,
-      padding: 0,
-      display: "flex",
-      boxSizing: "border-box",
-      overflowY: "auto",
-      width: "100%",
-    },
-    formWrapper: {
-      color: "var(--qf-text-primary)",
-      padding: "2rem",
-      boxSizing: "border-box",
-      flex: 1,
-      minWidth: 0,
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "10px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      margin: isMobile ? "0 12px 20px" : "0 20px 20px",
-    },
-    formGroup: {
-      marginBottom: "1rem",
-    },
-    formLabel: {
-      display: "block",
-      marginBottom: "0.5rem",
-      fontWeight: "bold",
-    },
-    formInput: {
-      width: "100%",
-      padding: "0.5rem",
-      fontSize: "1rem",
-      borderRadius: "10px",
-      color: "var(--qf-negro-puro)",
-    },
-    buttonContainer: {
-      display: "flex",
-      justifyContent: "end",
-      gap: "0.5rem",
-    },
-    button: {
-      backgroundColor: "var(--qf-blue)",
-      color: "var(--qf-text-primary)",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      width: "100%",
-      padding: "0.75rem",
-      fontSize: "1rem",
-      fontWeight: "bold",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: "10px",
-    },
-    buttonSecondary: {
-      backgroundColor: "var(--qf-text-secondary)",
-    },
-    buttonDisabled: {
-      opacity: 0.7,
-      cursor: "not-allowed",
-    },
-    tituloSeccion: {
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "20px",
-      fontSize: "24px",
-      color: "var(--qf-text-primary)",
-      width: "100%",
-    },
-    separator: {
-      border: "none",
-      marginBottom: "5px",
-      marginTop: "0px",
-      borderTop: `1px solid var(--qf-naranja)`,
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-      boxSizing: "border-box",
-      padding: isMobile ? "10px 12px 0" : "10px 20px 0",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    hr: {
-      color: "var(--qf-naranja)",
-      border: `1px solid var(--qf-naranja)`,
-      width: "100%",
-    },
+  const dayLabel = (value) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "Configurá los horarios de este día" : date.toLocaleDateString("es-AR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis Eventos", url: "/listado-eventos-productor" },
-    { title: "Crear un Evento (3/4)", url: "registrar-evento4" },
-  ];
-
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.pageWrapper}>
-        <div style={styles.tituloSeccion}>
-          <h1 style={{ textAlign: "center" }}>Crear un Evento</h1>
-        </div>
-        <hr style={styles.hr} />
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%" }}
-          />
-        </div>
-        <div style={styles.colForm}>
-          <div style={styles.formWrapper}>
-            <form action="#" method="POST">
-              {horasPorDia.map((hora) => (
-                <div key={hora.dia} style={styles.rowFormEvento}>
-                  <div style={{ width: "50%", paddingRight: "1rem" }}>
-                    <div style={styles.formGroup}>
-                      <label style={styles.formLabel}>
-                        Fecha y Hora de Inicio - Día {hora.dia}*
-                      </label>
-                      <input
-                        style={styles.formInput}
-                        type="datetime-local"
-                        value={hora.horaInicio}
-                        onChange={(e) =>
-                          handleInputChange(
-                            hora.dia,
-                            "horaInicio",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
-                  <div style={{ width: "50%", paddingLeft: "1rem" }}>
-                    <div style={styles.formGroup}>
-                      <label style={styles.formLabel}>
-                        Fecha y Hora de Fin - Día {hora.dia}*
-                      </label>
-                      <input
-                        style={styles.formInput}
-                        type="datetime-local"
-                        value={hora.horaFin}
-                        onChange={(e) =>
-                          handleInputChange(hora.dia, "horaFin", e.target.value)
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              <div style={styles.buttonContainer}>
-                <button
-                  type="button"
-                  style={{
-                    ...styles.button,
-                    ...styles.buttonSecondary,
-                    ...(isSubmitting ? styles.buttonDisabled : {}),
-                  }}
-                  onClick={handleVolver}
-                  disabled={isSubmitting}
-                >
-                  Volver
-                </button>
-                <button
-                  type="button"
-                  style={{
-                    ...styles.button,
-                    ...(isSubmitting ? styles.buttonDisabled : {}),
-                  }}
-                  onClick={handleSiguienteClick}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting && (
-                    <CircularProgress size={18} style={{ color: "var(--qf-text-primary)" }} />
-                  )}
-                  {isSubmitting ? "Guardando..." : "Siguiente"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <Footer />
+      <main className="qf-event-registration-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Crear un evento · Días", url: `/registrar-evento4/${diferenciaDiasEvento}` }]} />
+        <header className="qf-event-registration-heading"><h1>Crear un Evento</h1><p>Revisá las fechas y los horarios de cada día antes de continuar.</p></header>
+        <ol className="qf-event-registration-steps" aria-label="Progreso del registro">{["Información", "Configuración", "Días del evento", "Puntos de encuentro"].map((step, index) => <li key={step} aria-current={index === 2 ? "step" : undefined} className={index < 2 ? "qf-event-step-completed" : ""}><span>{index < 2 ? <FaCheck aria-hidden="true" /> : index + 1}</span><div><small>Paso {index + 1}</small><strong>{step}</strong></div></li>)}</ol>
+        <form className="qf-event-registration-form qf-event-days-form" onSubmit={handleSiguienteClick} noValidate>
+          <div className="qf-event-days-heading"><div><h2><FaCalendarAlt aria-hidden="true" /> Días del evento</h2><p>Podés ajustar los horarios de cada jornada.</p></div><span>{horasPorDia.length} {horasPorDia.length === 1 ? "día" : "días"}</span></div>
+          <fieldset disabled={isSubmitting}><legend className="qf-event-registration-sr">Horarios por día</legend>
+            <div className="qf-event-days-list">{horasPorDia.map((hora) => <section key={hora.dia} className="qf-event-day-card" aria-labelledby={`event-day-title-${hora.dia}`}>
+              <header><span className="qf-event-day-index">{String(hora.dia).padStart(2, "0")}</span><div><h3 id={`event-day-title-${hora.dia}`}>Día {hora.dia}</h3><p>{dayLabel(hora.horaInicio)}</p></div></header>
+              <div className="qf-event-configuration-fields"><label htmlFor={`day-start-${hora.dia}`}>Fecha y Hora de Inicio - Día {hora.dia}*<input id={`day-start-${hora.dia}`} type="datetime-local" value={hora.horaInicio} onChange={(event) => handleInputChange(hora.dia, "horaInicio", event.target.value)} /></label><label htmlFor={`day-end-${hora.dia}`}>Fecha y Hora de Fin - Día {hora.dia}*<input id={`day-end-${hora.dia}`} type="datetime-local" value={hora.horaFin} onChange={(event) => handleInputChange(hora.dia, "horaFin", event.target.value)} /></label></div>
+            </section>)}</div>
+          </fieldset>
+          <footer className="qf-event-registration-footer"><span>Paso 3 de 4 · Tu avance se guarda al continuar.</span><div><button type="button" className="qf-event-registration-button" onClick={handleVolver} disabled={isSubmitting}><FaArrowLeft aria-hidden="true" /> Volver</button><button type="submit" className="qf-event-registration-button qf-event-registration-button--primary" disabled={isSubmitting}>{isSubmitting ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Guardando...</> : <>Siguiente <FaArrowRight aria-hidden="true" /></>}</button></div></footer>
+        </form>
+      </main><Footer />
     </PageLayout>
   );
 };
-
 export default RegistrarEvento4;

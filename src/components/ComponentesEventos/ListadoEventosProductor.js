@@ -1,269 +1,52 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaChevronDown } from "react-icons/fa";
+import { FaPlus, FaCalendarAlt } from "react-icons/fa";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import EventoProductor from "./EventoProductor";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import { useContext } from "react";
 import Footer from "../ComponentesGenerales/Footer";
-import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import Buscador from "../Filtros y Buscadores/Buscador";
-import Filtros from "../Filtros y Buscadores/Filtros";
-import { CircularProgress } from "@mui/material";
+import "../ComponentesGenerales/ListFilters.css";
+import "./EventosProductor.css";
+
+const normalizeState = (state) => state?.startsWith("EnPreparacion") ? "EnPreparacion" : state;
+const stateLabel = (state) => state === "EnPreparacion" ? "En preparación" : String(state || "Sin estado").replace(/([a-z])([A-Z])/g, "$1 $2");
+const parseDate = (value) => { if (!value) return null; const date = new Date(value); return Number.isNaN(date.getTime()) ? null : date; };
+export const filterProducerEvents = (events, search, state) => events.filter((event) => (!state || normalizeState(event.estado) === state) && String(event.nombre || "").toLocaleLowerCase("es").includes(search.trim().toLocaleLowerCase("es")));
 
 const ListadoEventosProductor = () => {
-  const [eventos, setEventos] = useState([]);
-  const [recargar, setRecargar] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterState, setFilterState] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  const contentRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(999);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const isNarrowLayout = contentWidth <= 780;
-
+  const [events, setEvents] = useState([]);
+  const [attempt, setAttempt] = useState(0);
+  const [search, setSearch] = useState("");
+  const [state, setState] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const consumerId = user?.consumidorId;
   useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setContentWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const recargarComponente = () => {
-    setTimeout(() => {
-      setRecargar(recargar + 1);
-    }, 100);
-  };
-
-  const parseDate = (dateStr) => {
-    if (!dateStr) return null;
-    const date = new Date(dateStr);
-    return isNaN(date.getTime()) ? null : date;
-  };
-
-  useEffect(() => {
-    if (user) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", user.consumidorId);
-
-      setIsLoading(true);
-      fetch(`${process.env?.REACT_APP_BACK_URL}evento/all`, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          const eventosProcesados = data.data.map((evento) => ({
-            ...evento,
-            fechaInicio: parseDate(evento.fechaHoraInicio),
-            horaInicio: parseDate(evento.fechaHoraInicio),
-            fechaFin: parseDate(evento.fechaHoraFin),
-          }));
-
-          setEventos(eventosProcesados);
-        })
-        .catch((error) => console.log("No existen eventos.", error))
-        .finally(() => setIsLoading(false));
-    }
-  }, [user, recargar]);
-
-  const agregarNuevo = () => {
-    navigate(`/registrar-evento2`);
-  };
-
-  const normalizarEstadoFiltro = (estado) => {
-    if (!estado) return estado;
-    return estado.startsWith("EnPreparacion") ? "EnPreparacion" : estado;
-  };
-
-  const estadoGroup = {
-    nombre: 'estado',
-    opciones: Array.from(
-      new Set(eventos.map((e) => normalizarEstadoFiltro(e.estado)))
-    ).map((estado) => ({
-      valor: estado,
-      etiqueta: estado ? estado.replace(/([A-Z])/g, ' $1').trim() : estado,
-    })),
-  };
-
-  const filteredEventos = eventos.filter((evento) => {
-    const matchesSearch = searchTerm
-      ? evento.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
-      : true;
-    const matchesState = filterState
-      ? normalizarEstadoFiltro(evento.estado) === filterState
-      : true;
-    return matchesSearch && matchesState;
-  });
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis Eventos", url: "/listado-eventos-productor" },
-  ];
-
-  return (
-    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-      }}>
-        {/* Header full-width */}
-        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
-          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
-            Eventos
-          </h1>
-          <hr className="qf-separator qf-separator--spaced" />
-        </div>
-
-        {/* Contenido en dos columnas */}
-        <div
-          ref={contentRef}
-          className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`}
-          style={{ flex: 1, minHeight: 0 }}
-        >
-          {/* Columna principal: breadcrumb + listado */}
-          <div className="qf-page-content__main">
-            <Breadcrumb items={breadcrumbItems} style={{
-              margin: 0,
-              backgroundColor: 'var(--qf-bg-secondary)',
-              width: '100%',
-              padding: '8px 16px',
-              borderRadius: '10px',
-              border: '1px solid var(--qf-naranja)',
-              boxSizing: 'border-box',
-            }} />
-
-            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
-            {isNarrowLayout && (
-            <div className="qf-narrow-filters" style={{ marginBottom: "8px" }}>
-              <div className="qf-search-box" style={{ marginBottom: "8px" }}>
-                <Buscador
-                  placeholder="Buscar eventos..."
-                  onBuscar={setSearchTerm}
-                  botonBuscar={false}
-                />
-              </div>
-              <div className="qf-filter-box" style={{ margin: 0 }}>
-                <div
-                  className="qf-collapsible-header"
-                  onClick={() => setFiltersOpen((prev) => !prev)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
-                >
-                  <span className="qf-collapsible-title">ESTADOS</span>
-                  <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
-                </div>
-                {filtersOpen && (
-                  <div className="qf-collapsible-body">
-                    <Filtros
-                      gruposFiltros={[estadoGroup]}
-                      onFiltrar={(f) => setFilterState(f.estado || '')}
-                      titulo="ESTADOS"
-                    />
-                  </div>
-                )}
-              </div>
-              <button
-                onClick={agregarNuevo}
-                className="qf-btn qf-btn--primary"
-                style={{ width: "100%", marginTop: "8px" }}
-              >
-                Agregar Evento
-              </button>
-            </div>
-          )}
-
-          <div className="qf-scrollable" style={{ paddingTop: "8px", paddingBottom: "60px" }}>
-            {isLoading || !user ? (
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
-                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-              </div>
-            ) : filteredEventos.length > 0 ? (
-              filteredEventos.map((evento, index) => (
-                <EventoProductor
-                  key={index}
-                  evento={evento}
-                  recargarComponente={recargarComponente}
-                />
-              ))
-            ) : (
-              <div style={{ textAlign: "center", padding: "40px 20px", margin: "40px" }}>
-                <div style={{ fontSize: "1.5rem", color: "var(--qf-naranja)" }}>
-                  <h2>Eventos</h2>
-                </div>
-                <div style={{ marginBottom: "20px", fontSize: "18px", color: "var(--qf-text-primary)" }}>
-                  <p>
-                    Con Quickfood, crea tu evento para hacerlo mejor. Descubre
-                    nuestras increíbles características y ofrece una experiencia
-                    única a tus consumidores.
-                  </p>
-                </div>
-                <Link
-                  to={`/registrar-evento`}
-                  style={{
-                    textDecoration: "none",
-                    backgroundColor: "var(--qf-naranja)",
-                    padding: "10px 20px",
-                    color: "var(--qf-text-primary)",
-                    borderRadius: "5px",
-                    fontWeight: "bold",
-                    fontSize: "18px",
-                    transition: "background-color 0.3s",
-                    display: "inline-block",
-                  }}
-                >
-                  Crear Evento
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Aside: buscador + filtros (solo en layout ancho) */}
-        {!isNarrowLayout && (
-          <aside className="qf-page-content__aside">
-            <div className="qf-search-box">
-              <Buscador
-                placeholder="Buscar eventos..."
-                onBuscar={setSearchTerm}
-                botonBuscar={false}
-              />
-            </div>
-            <div className="qf-filter-box">
-              <Filtros
-                gruposFiltros={[estadoGroup]}
-                onFiltrar={(f) => setFilterState(f.estado || '')}
-                titulo="ESTADOS"
-              />
-            </div>
-            <button
-              onClick={agregarNuevo}
-              className="qf-btn qf-btn--primary"
-              style={{ width: "100%" }}
-            >
-              Agregar Evento
-            </button>
-          </aside>
-        )}
-        </div>
-
-      </div>
-
-      <Footer />
-    </PageLayout>
-  );
+    if (!consumerId) return;
+    const controller = new AbortController();
+    setLoading(true); setError(false);
+    (async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACK_URL}evento/all`, { method: "GET", headers: { ConsumidorId: consumerId }, signal: controller.signal });
+        if (!response.ok) throw new Error("No se pudieron cargar los eventos");
+        const result = await response.json();
+        const data = Array.isArray(result.data) ? result.data : [];
+        if (!controller.signal.aborted) setEvents(data.map((event) => ({ ...event, fechaInicio: parseDate(event.fechaHoraInicio), horaInicio: parseDate(event.fechaHoraInicio), fechaFin: parseDate(event.fechaHoraFin) })));
+      } catch (err) { if (!controller.signal.aborted) setError(true); }
+      finally { if (!controller.signal.aborted) setLoading(false); }
+    })();
+    return () => controller.abort();
+  }, [consumerId, attempt]);
+  const filtered = filterProducerEvents(events, search, state);
+  return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+    <main className="qf-producer-events-page">
+      <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }]} />
+      <header className="qf-producer-events-heading"><div><h1>Mis eventos</h1><p>Administrá tus eventos, revisá las solicitudes y consultá su estado.</p></div><Link className="qf-producer-event-button qf-producer-event-button--primary" to="/registrar-evento2"><FaPlus aria-hidden="true" /> Agregar evento</Link></header>
+      <section className="qf-list-filters qf-producer-event-filters" aria-label="Filtros de mis eventos"><label htmlFor="producer-event-search">Buscar evento<input id="producer-event-search" type="search" placeholder="Nombre del evento" value={search} onChange={(event) => setSearch(event.target.value)} /></label><label htmlFor="producer-event-state">Estado<select id="producer-event-state" value={state} onChange={(event) => setState(event.target.value)}><option value="">Todos los estados</option>{[...new Set(events.map((event) => normalizeState(event.estado)).filter(Boolean))].map((value) => <option key={value} value={value}>{stateLabel(value)}</option>)}</select></label></section>
+      {loading || !consumerId ? <div className="qf-producer-events-feedback" role="status">Cargando tus eventos…</div> : error ? <div className="qf-producer-events-feedback" role="alert"><h2>No pudimos cargar tus eventos</h2><p>Intentá nuevamente en unos instantes.</p><button className="qf-producer-event-button" type="button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : <><p className="qf-producer-events-count" aria-live="polite">{filtered.length} {filtered.length === 1 ? "evento" : "eventos"}{search || state ? ` de ${events.length}` : ""}</p>{filtered.length ? <div className="qf-producer-events-list">{filtered.map((event) => <EventoProductor key={event.id} evento={event} recargarComponente={() => setAttempt((value) => value + 1)} />)}</div> : <div className="qf-producer-events-feedback"><FaCalendarAlt aria-hidden="true" /><h2>{search || state ? "No encontramos eventos con esos filtros" : "Tu próximo evento empieza acá"}</h2><p>{search || state ? "Probá otro nombre o seleccioná un estado diferente." : "Creá tu primer evento para organizar los puestos y recibir solicitudes."}</p>{search || state ? <button className="qf-producer-event-button" type="button" onClick={() => { setSearch(""); setState(""); }}>Limpiar filtros</button> : <Link className="qf-producer-event-button qf-producer-event-button--primary" to="/registrar-evento2">Crear evento</Link>}</div>}</>}
+    </main><Footer />
+  </PageLayout>;
 };
-
 export default ListadoEventosProductor;

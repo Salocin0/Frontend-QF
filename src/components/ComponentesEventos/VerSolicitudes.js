@@ -1,14 +1,14 @@
-﻿import { useContext, useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaChevronDown } from "react-icons/fa";
+import { FaArrowLeft, FaCheck, FaTimes, FaInfoCircle, FaStore, FaMotorcycle, FaPhone } from "react-icons/fa";
+import { Dialog } from "@mui/material";
+import "../ComponentesGenerales/ListFilters.css";
+import "./SolicitudesEvento.css";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import CircularProgress from "@mui/material/CircularProgress";
-import Buscador from "../Filtros y Buscadores/Buscador";
-import Filtros from "../Filtros y Buscadores/Filtros";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 
 const VerSolicitudesEvento = () => {
@@ -25,34 +25,6 @@ const VerSolicitudesEvento = () => {
   const [infoDialogOpen, setInfoDialogOpen] = useState(false);
   const [selectedAsociacion, setSelectedAsociacion] = useState(null);
 
-  const contentRef = useRef(null);
-  const cardAreaRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(999);
-  const [cardAreaWidth, setCardAreaWidth] = useState(999);
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const isNarrowLayout = contentWidth <= 780;
-  const isCardNarrow = cardAreaWidth <= 520;
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setContentWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const el = cardAreaRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setCardAreaWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const recargarComponente = () => {
     setRecargar((prev) => prev + 1);
   };
@@ -67,7 +39,7 @@ const VerSolicitudesEvento = () => {
         return response.json();
       })
       .then((data) => {
-        setAsociaciones(data.data);
+        setAsociaciones(Array.isArray(data.data) ? data.data : []);
       })
       .catch((error) => {
         console.error("Error al obtener las asociaciones:", error);
@@ -91,7 +63,7 @@ const VerSolicitudesEvento = () => {
       .catch((error) => {
         console.error("Error al obtener el evento:", error);
       });
-  }, [evento, eventos.length, recargar]);
+  }, [evento, recargar]);
 
   const aceptarSolicitud = (asociacionId) => {
     setPendingAction({
@@ -183,11 +155,6 @@ const VerSolicitudesEvento = () => {
     { valor: 'Cancelada', etiqueta: 'Cancelada' },
   ];
 
-  const estadoGroup = {
-    nombre: 'estado',
-    opciones: allPossibleEstados,
-  };
-
   // compute filtered list
   const filteredAsociaciones = asociaciones.filter((asociacion) => {
     const matchesSearch = searchTerm
@@ -200,22 +167,6 @@ const VerSolicitudesEvento = () => {
       : true;
     return matchesSearch && matchesState;
   });
-
-  const infoRowStyle = {
-    display: "flex",
-    marginBottom: "10px",
-    alignItems: "center",
-  };
-  const infoLabelStyle = {
-    color: "var(--qf-naranja)",
-    fontWeight: "bold",
-    minWidth: "150px",
-    fontSize: "1rem",
-  };
-  const infoValueStyle = {
-    color: "var(--qf-text-primary)",
-    fontSize: "1rem",
-  };
 
   const handleConfirm = () => {
     if (!pendingAction) return;
@@ -253,383 +204,33 @@ const VerSolicitudesEvento = () => {
     setSelectedAsociacion(null);
   };
 
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis Eventos", url: "/listado-eventos-productor" },
-    { title: "Ver Solicitudes", url: "/listado-eventos-productor" },
-  ];
-
+  const formatState = (state) => state === "PendienteDeAceptacion" ? "Pendiente de aceptación" : state === "ConObservacion" ? "Con observación" : state || "Sin estado";
+  const applicantName = (association) => association?.puesto?.nombreCarro || [association?.repartidor?.nombre, association?.repartidor?.apellido].filter(Boolean).join(" ") || "Solicitante";
+  const phone = (association) => association?.puesto?.telefonoCarro || association?.repartidor?.telefono || "Sin teléfono";
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-      }}>
-        {/* Header full-width */}
-        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
-          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
-            Mis Solicitudes para {eventos.nombre}
-          </h1>
-          <hr className="qf-separator qf-separator--spaced" />
-        </div>
-
-        {/* Contenido en dos columnas */}
-        <div
-          ref={contentRef}
-          className={`qf-page-content ${isNarrowLayout ? "qf-page-content--narrow" : ""}`}
-          style={{ flex: 1, minHeight: 0 }}
-        >
-          {/* Columna principal: breadcrumb + listado */}
-          <div className="qf-page-content__main">
-            <Breadcrumb items={breadcrumbItems} style={{
-              margin: 0,
-              backgroundColor: 'var(--qf-bg-secondary)',
-              width: '100%',
-              padding: '8px 16px',
-              borderRadius: '10px',
-              border: '1px solid var(--qf-naranja)',
-              boxSizing: 'border-box',
-            }} />
-
-            {/* En modo angosto: buscador + filtros colapsables */}
-            {isNarrowLayout && (
-              <div className="qf-narrow-filters" style={{ marginBottom: "8px" }}>
-                <div className="qf-search-box" style={{ marginBottom: "8px" }}>
-                  <Buscador
-                    placeholder="Buscar por nombre..."
-                    onBuscar={setSearchTerm}
-                    botonBuscar={false}
-                  />
-                </div>
-                <div className="qf-filter-box" style={{ margin: 0 }}>
-                  <div
-                    className="qf-collapsible-header"
-                    onClick={() => setFiltersOpen((prev) => !prev)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && setFiltersOpen((prev) => !prev)}
-                  >
-                    <span className="qf-collapsible-title">ESTADOS</span>
-                    <FaChevronDown className={`qf-collapsible-icon ${filtersOpen ? "qf-collapsible-icon--open" : ""}`} />
-                  </div>
-                  {filtersOpen && (
-                    <div className="qf-collapsible-body">
-                      <Filtros
-                        gruposFiltros={[estadoGroup]}
-                        onFiltrar={(f) => setFilterState(f.estado || '')}
-                        titulo="ESTADOS"
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            <div ref={cardAreaRef} className="qf-scrollable" style={{ paddingTop: "8px", paddingBottom: "60px" }}>
-              {loading ? (
-                <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
-                  <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-                </div>
-              ) : filteredAsociaciones.length > 0 ? (
-                filteredAsociaciones.map((asociacion, index) => (
-                  <div key={index} style={{ marginBottom: "1rem", position: "relative" }}>
-                    {!isCardNarrow && (
-                      <div style={{
-                        fontSize: "1rem",
-                        color: "var(--qf-text-primary)",
-                        position: "absolute",
-                        top: "20px",
-                        right: "20px",
-                        backgroundColor: "var(--qf-green)",
-                        padding: "5px 10px",
-                        borderRadius: "5px",
-                        zIndex: 1,
-                      }}>
-                        {asociacion?.estado === "PendienteDeAceptacion"
-                          ? "Pendiente de Aceptacion"
-                          : asociacion?.estado === "ConObservacion"
-                          ? "Con Observacion"
-                          : asociacion?.estado}
-                      </div>
-                    )}
-                    <div style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      backgroundColor: "var(--qf-bg-secondary)",
-                      borderRadius: "10px",
-                      border: "1px solid var(--qf-naranja)",
-                      width: "100%",
-                      padding: "20px",
-                      boxSizing: "border-box",
-                    }}>
-                      <h5 style={{
-                        fontSize: "2rem",
-                        fontWeight: "bold",
-                        color: "var(--qf-naranja)",
-                        margin: "0 0 8px 0",
-                        textAlign: isCardNarrow ? "center" : "left",
-                      }}>
-                        {asociacion?.puesto?.nombreCarro ||
-                          asociacion?.repartidor?.nombre + ", " + asociacion?.repartidor?.apellido}
-                      </h5>
-                      <p style={{ fontSize: "1rem", color: "var(--qf-text-primary)", margin: "0 0 4px 0", textAlign: isCardNarrow ? "center" : "left" }}>
-                        <strong>Teléfono:</strong>{" "}
-                        {asociacion?.puesto?.telefonoCarro
-                          ? asociacion?.puesto?.telefonoCarro
-                          : asociacion?.repartidor?.telefono}
-                      </p>
-                      {asociacion?.puesto?.tipoNegocio && (
-                        <p style={{ fontSize: "1rem", color: "var(--qf-text-primary)", margin: "0 0 4px 0", textAlign: isCardNarrow ? "center" : "left" }}>
-                          <strong>Tipo de Negocio:</strong> {asociacion?.puesto?.tipoNegocio}
-                        </p>
-                      )}
-
-                      {/* Estado como fila de datos en cards angostas */}
-                      {isCardNarrow && (
-                        <p style={{ fontSize: "1rem", color: "var(--qf-text-primary)", margin: "0 0 4px 0", textAlign: "center" }}>
-                          <strong>Estado:</strong>{" "}
-                          {asociacion?.estado === "PendienteDeAceptacion"
-                            ? "Pendiente de Aceptacion"
-                            : asociacion?.estado === "ConObservacion"
-                            ? "Con Observacion"
-                            : asociacion?.estado}
-                        </p>
-                      )}
-
-                      {/* Separador entre datos y botones en cards angostas */}
-                      {isCardNarrow && <hr style={{ borderColor: "var(--qf-naranja)", margin: "12px 0" }} />}
-
-                      <div style={{
-                        display: "flex",
-                        flexDirection: isCardNarrow ? "column" : "row",
-                        justifyContent: "center",
-                        marginTop: "1rem",
-                        flexWrap: "wrap",
-                        gap: "8px",
-                        alignItems: isCardNarrow ? "stretch" : "center",
-                      }}>
-                        {asociacion.estado !== "Aceptada" &&
-                          asociacion.estado !== "Cancelada" &&
-                          asociacion.estado !== "Rechazada" && (
-                            <button
-                              className="btn btn-success"
-                              style={{
-                                margin: 0,
-                                width: isCardNarrow ? "100%" : "auto",
-                                textAlign: "center",
-                                padding: isCardNarrow ? "0.375rem 0" : "",
-                              }}
-                              onClick={() => aceptarSolicitud(asociacion.id)}
-                            >
-                              Aceptar Solicitud
-                            </button>
-                          )}
-                        {asociacion.estado !== "Rechazada" &&
-                          asociacion.estado !== "Cancelada" &&
-                          asociacion.estado !== "Aceptada" && (
-                            <button
-                              className="btn btn-danger"
-                              style={{
-                                margin: 0,
-                                width: isCardNarrow ? "100%" : "auto",
-                                textAlign: "center",
-                                padding: isCardNarrow ? "0.375rem 0" : "",
-                              }}
-                              onClick={() => rechazarSolicitud(asociacion.id)}
-                            >
-                              Rechazar Solicitud
-                            </button>
-                          )}
-                        {asociacion.estado === "Aceptada" && (
-                          <button
-                            className="btn btn-danger"
-                            style={{
-                              margin: 0,
-                              width: isCardNarrow ? "100%" : "auto",
-                              textAlign: "center",
-                              padding: isCardNarrow ? "0.375rem 0" : "",
-                            }}
-                            onClick={() => cancelarSolicitud(asociacion.id)}
-                          >
-                            Cancelar Solicitud
-                          </button>
-                        )}
-                        <button
-                          className="btn btn-secondary"
-                          style={{
-                            margin: 0,
-                            width: isCardNarrow ? "100%" : "auto",
-                            textAlign: "center",
-                            padding: isCardNarrow ? "0.375rem 0" : "",
-                          }}
-                          onClick={() => handleOpenInfo(asociacion)}
-                        >
-                          Info
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div style={{ textAlign: "center", padding: "40px 20px", margin: "40px" }}>
-                  <div style={{ fontSize: "1.5rem", color: "var(--qf-naranja)" }}>
-                    <h2 style={{ color: "var(--qf-naranja)" }}>Solicitudes</h2>
-                  </div>
-                  <div style={{ marginBottom: "20px", fontSize: "18px" }}>
-                    <p style={{ color: "#FFFFFF", margin: "0" }}>
-                      Este evento no tiene solicitudes pendientes. Invita a tus
-                      puestos favoritos a unirse.
-                    </p>
-                  </div>
-                  <Link
-                    to={`/listado-eventos-productor`}
-                    style={{
-                      textDecoration: "none",
-                      backgroundColor: "var(--qf-naranja)",
-                      padding: "10px 20px",
-                      color: "var(--qf-text-primary)",
-                      borderRadius: "5px",
-                      fontWeight: "bold",
-                      fontSize: "18px",
-                      transition: "background-color 0.3s",
-                      display: "inline-block",
-                    }}
-                  >
-                    Volver a mis Eventos
-                  </Link>
-                </div>
-              )}
+      <main className="qf-event-requests-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Solicitudes", url: `/ver-solicitudes-evento/${evento}` }]} />
+        <header className="qf-event-requests-heading"><div><h1>Solicitudes del evento</h1><p>{eventos.nombre || "Revisá las solicitudes de puestos y repartidores."}</p></div><Link className="qf-event-request-button" to={`/evento-detalle/${evento}`}><FaArrowLeft aria-hidden="true" /> Ver evento</Link></header>
+        <section className="qf-list-filters qf-event-request-filters" aria-label="Filtros de solicitudes"><label htmlFor="request-search">Buscar solicitante<input id="request-search" type="search" placeholder="Nombre del puesto o repartidor" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} /></label><label htmlFor="request-state">Estado de la solicitud<select id="request-state" value={filterState} onChange={(event) => setFilterState(event.target.value)}><option value="">Todos los estados</option>{allPossibleEstados.map((state) => <option key={state.valor} value={state.valor}>{formatState(state.valor)}</option>)}</select></label></section>
+        {loading ? <p className="qf-event-requests-feedback" role="status">Cargando solicitudes…</p> : <><p className="qf-event-requests-count" aria-live="polite">{filteredAsociaciones.length} {filteredAsociaciones.length === 1 ? "solicitud" : "solicitudes"}{searchTerm || filterState ? ` de ${asociaciones.length}` : ""}</p>{filteredAsociaciones.length > 0 ? <div className="qf-event-requests-list">{filteredAsociaciones.map((association) => <article key={association.id} className="qf-event-request-card">
+          <div className="qf-event-request-icon" aria-hidden="true">{association.puesto ? <FaStore /> : <FaMotorcycle />}</div>
+          <div className="qf-event-request-body"><div className="qf-event-request-title"><div><span>{association.puesto ? "Puesto de comida" : "Repartidor"}</span><h2>{applicantName(association)}</h2></div><span className={`qf-event-request-state qf-event-request-state--${association.estado}`}>{formatState(association.estado)}</span></div>
+            <dl className="qf-event-request-data"><div><dt><FaPhone aria-hidden="true" /> Teléfono</dt><dd>{phone(association)}</dd></div>{association.puesto?.tipoNegocio && <div><dt>Tipo de negocio</dt><dd>{association.puesto.tipoNegocio}</dd></div>}</dl>
+            <div className="qf-event-request-actions"><button type="button" className="qf-event-request-button" onClick={() => handleOpenInfo(association)}><FaInfoCircle aria-hidden="true" /> Info</button>
+              {association.estado !== "Aceptada" && association.estado !== "Cancelada" && association.estado !== "Rechazada" && <button type="button" className="qf-event-request-button qf-event-request-button--primary" onClick={() => aceptarSolicitud(association.id)}><FaCheck aria-hidden="true" /> Aceptar Solicitud</button>}
+              {association.estado !== "Rechazada" && association.estado !== "Cancelada" && association.estado !== "Aceptada" && <button type="button" className="qf-event-request-button" onClick={() => rechazarSolicitud(association.id)}><FaTimes aria-hidden="true" /> Rechazar Solicitud</button>}
+              {association.estado === "Aceptada" && <button type="button" className="qf-event-request-button" onClick={() => cancelarSolicitud(association.id)}><FaTimes aria-hidden="true" /> Cancelar Solicitud</button>}
             </div>
           </div>
-
-          {/* Aside: buscador + filtros (solo en layout ancho) */}
-          {!isNarrowLayout && (
-            <aside className="qf-page-content__aside">
-              <div className="qf-search-box">
-                <Buscador
-                  placeholder="Buscar por nombre..."
-                  onBuscar={setSearchTerm}
-                  botonBuscar={false}
-                />
-              </div>
-              <div className="qf-filter-box">
-                <Filtros
-                  gruposFiltros={[estadoGroup]}
-                  onFiltrar={(f) => setFilterState(f.estado || '')}
-                  titulo="ESTADOS"
-                />
-              </div>
-            </aside>
-          )}
-        </div>
-      </div>
-
-      {/* Dialog de Confirmación */}
-      <ConfirmDialog
-        open={confirmOpen}
-        title={pendingAction?.title || 'Confirmar Acción'}
-        message={pendingAction?.message || '¿Estás seguro de que deseas realizar esta acción?'}
-        onConfirm={handleConfirm}
-        onCancel={handleCancelConfirm}
-      />
-
-      {/* Dialog de Información */}
-      {selectedAsociacion && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          display: infoDialogOpen ? 'flex' : 'none',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000,
-        }}>
-          <div style={{
-            backgroundColor: "var(--qf-bg-secondary)",
-            borderRadius: '10px',
-            border: `2px solid var(--qf-naranja)`,
-            padding: '30px',
-            maxWidth: '500px',
-            width: '90%',
-            maxHeight: '80vh',
-            overflowY: 'auto',
-          }}>
-            <h2 style={{ color: "var(--qf-naranja)", marginBottom: '20px', textAlign: 'center' }}>Detalles de la Solicitud</h2>
-            
-            <div style={infoRowStyle}>
-              <span style={infoLabelStyle}>Nombre:</span>
-              <span style={infoValueStyle}>
-                {selectedAsociacion?.puesto?.nombreCarro ||
-                  `${selectedAsociacion?.repartidor?.nombre} ${selectedAsociacion?.repartidor?.apellido}`}
-              </span>
-            </div>
-
-            <div style={infoRowStyle}>
-              <span style={infoLabelStyle}>Estado:</span>
-              <span style={infoValueStyle}>
-                {selectedAsociacion?.estado === 'PendienteDeAceptacion'
-                  ? 'Pendiente de Aceptación'
-                  : selectedAsociacion?.estado === 'ConObservacion'
-                  ? 'Con Observación'
-                  : selectedAsociacion?.estado}
-              </span>
-            </div>
-
-            {selectedAsociacion?.puesto && (
-              <>
-                <h3 style={{ color: "var(--qf-naranja)", marginTop: '20px', fontSize: '1.1rem' }}>Información del Puesto</h3>
-                <div style={infoRowStyle}>
-                  <span style={infoLabelStyle}>Teléfono:</span>
-                  <span style={infoValueStyle}>{selectedAsociacion?.puesto?.telefonoCarro}</span>
-                </div>
-                <div style={infoRowStyle}>
-                  <span style={infoLabelStyle}>Tipo de Negocio:</span>
-                  <span style={infoValueStyle}>{selectedAsociacion?.puesto?.tipoNegocio}</span>
-                </div>
-              </>
-            )}
-
-            {selectedAsociacion?.repartidor && (
-              <>
-                <h3 style={{ color: "var(--qf-naranja)", marginTop: '20px', fontSize: '1.1rem' }}>Información del Repartidor</h3>
-                <div style={infoRowStyle}>
-                  <span style={infoLabelStyle}>Teléfono:</span>
-                  <span style={infoValueStyle}>{selectedAsociacion?.repartidor?.telefono}</span>
-                </div>
-              </>
-            )}
-
-            <div style={{ display: 'flex', gap: '10px', marginTop: '30px', justifyContent: 'center' }}>
-              <button
-                onClick={handleCloseInfo}
-                style={{
-                  backgroundColor: "var(--qf-naranja)",
-                  color: "var(--qf-text-primary)",
-                  border: 'none',
-                  padding: '10px 20px',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontSize: '1rem',
-                  fontWeight: 'bold',
-                }}
-              >
-                Cerrar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
+        </article>)}</div> : <div className="qf-event-requests-feedback"><h2>{searchTerm || filterState ? "No encontramos solicitudes con esos filtros" : "Este evento todavía no tiene solicitudes"}</h2><p>{searchTerm || filterState ? "Probá otro nombre o seleccioná un estado diferente." : "Las solicitudes de puestos y repartidores aparecerán acá."}</p>{searchTerm || filterState ? <button type="button" className="qf-event-request-button" onClick={() => { setSearchTerm(""); setFilterState(""); }}>Limpiar filtros</button> : <Link className="qf-event-request-button" to="/listado-eventos-productor">Volver a mis eventos</Link>}</div>}</>}
+      </main>
+      <ConfirmDialog open={confirmOpen} title={pendingAction?.title || 'Confirmar Acción'} message={pendingAction?.message || '¿Estás seguro de que deseas realizar esta acción?'} onConfirm={handleConfirm} onCancel={handleCancelConfirm} />
+      <Dialog open={infoDialogOpen} onClose={handleCloseInfo} fullWidth maxWidth="sm" className="qf-request-info-dialog" aria-labelledby="request-info-title" slotProps={{ paper: { className: "qf-request-info-paper" } }}>
+        {selectedAsociacion && <><header><div><span>Detalles de la Solicitud</span><h2 id="request-info-title">{applicantName(selectedAsociacion)}</h2></div><button type="button" className="qf-request-info-close" aria-label="Cerrar información" onClick={handleCloseInfo}><FaTimes aria-hidden="true" /></button></header><div className="qf-request-info-content"><span className={`qf-event-request-state qf-event-request-state--${selectedAsociacion.estado}`}>{formatState(selectedAsociacion.estado)}</span><h3>{selectedAsociacion.puesto ? "Información del Puesto" : "Información del Repartidor"}</h3><dl><div><dt>Teléfono</dt><dd>{phone(selectedAsociacion)}</dd></div>{selectedAsociacion.puesto && <div><dt>Tipo de negocio</dt><dd>{selectedAsociacion.puesto.tipoNegocio || "Sin especificar"}</dd></div>}</dl></div><footer><button type="button" className="qf-event-request-button qf-event-request-button--primary" onClick={handleCloseInfo}>Cerrar</button></footer></>}
+      </Dialog>
       <Footer />
     </PageLayout>
   );
 };
-
 export default VerSolicitudesEvento;

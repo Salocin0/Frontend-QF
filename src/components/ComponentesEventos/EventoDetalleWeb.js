@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import { Dialog } from "@mui/material";
+import { FaArrowLeft, FaCalendarAlt, FaMapMarkerAlt, FaClock, FaTimes, FaMap, FaPen } from "react-icons/fa";
+import "./EventoDetalleWeb.css";
 import useBreakpoint from "../../useBreakpoint";
 import imgDefault from "../img/qf-new-logo-transparent.png";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
@@ -103,7 +106,7 @@ const EventoDetalleWeb = () => {
       const puntosData = puntosRes.ok ? await puntosRes.json() : { data: [] };
 
       setEvento(eventoData.data || eventoData);
-      setPuntosEncuentro(puntosData.data || []);
+      setPuntosEncuentro(Array.isArray(puntosData.data) ? puntosData.data : []);
     } catch (err) {
       console.error("Error al cargar los datos del evento:", err);
       setError("Error al cargar los datos del evento");
@@ -176,365 +179,36 @@ const EventoDetalleWeb = () => {
     { title: evento?.nombre || "Evento", url: `/evento-detalle/${id}` },
   ];
 
-  const doradoBorder = "1px solid var(--qf-naranja)";
-
-  const containerStyles = {
-    width: "100%",
-    padding: "20px",
-    boxSizing: "border-box",
-  };
-
-  if (loading) {
-    return (
-      <PageLayout sidebarProps={{}}>
-        <div style={containerStyles}>
-          <p style={{ color: "var(--qf-text-muted)", textAlign: "center" }}>
-            Cargando...
-          </p>
-        </div>
-        <Footer />
-      </PageLayout>
-    );
-  }
-
-  if (error || !evento) {
-    return (
-      <PageLayout sidebarProps={{}}>
-        <div style={containerStyles}>
-          <p style={{ color: "var(--qf-text-muted)", textAlign: "center" }}>
-            {error || "Error al cargar los datos del evento"}
-          </p>
-        </div>
-        <Footer />
-      </PageLayout>
-    );
-  }
+  if (loading) return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}><main className="qf-event-detail-page"><p className="qf-event-detail-feedback" role="status">Cargando...</p></main><Footer /></PageLayout>;
+  if (error || !evento) return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}><main className="qf-event-detail-page"><div className="qf-event-detail-feedback" role="alert"><p>{error || "Error al cargar los datos del evento"}</p><button className="qf-event-detail-button" type="button" onClick={fetchData}>Reintentar</button></div></main><Footer /></PageLayout>;
 
   return (
-    <PageLayout sidebarProps={{}}>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-        flex: 1,
-        minHeight: 0,
-        boxSizing: "border-box",
-      }}>
-        {/* Header full-width */}
-        <div className="qf-page-header qf-page-header--full" style={{ textAlign: "center" }}>
-          <h1 className="qf-page-title" style={{ textAlign: "center", fontSize: "1.75rem" }}>
-            Evento
-          </h1>
-          <hr className="qf-separator qf-separator--spaced" />
+    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+      <main className="qf-event-detail-page">
+        <Breadcrumb items={breadcrumbItems} />
+        <header className="qf-event-detail-page-heading"><div><h1>Detalle del evento</h1><p>Información general, días y puntos de encuentro.</p></div><div className="qf-event-detail-header-actions">{String(user?.tipoUsuario).toLowerCase() === "productor" && <Link className="qf-event-detail-button qf-event-detail-edit" to={`/evento/${id}`}><FaPen aria-hidden="true" /> Editar evento</Link>}<button className="qf-event-detail-button" type="button" onClick={() => window.history.back()}><FaArrowLeft aria-hidden="true" /> Volver</button></div></header>
+        {actions.length > 0 && <section className="qf-event-detail-actions" aria-label="Acciones del evento"><div><h2>Administrar evento</h2><p>Acciones disponibles según su estado actual.</p></div><div className="qf-event-detail-action-buttons">{actions.map((act) => <button type="button" key={act.action} className={`${act.className} qf-event-detail-button`} onClick={() => handleStateAction(act.action, act.label)}>{act.label}</button>)}</div></section>}
+        <section className="qf-event-detail-hero" aria-labelledby="event-name">
+          <div className="qf-event-detail-image"><img src={imageSrc} alt={evento.nombre} onError={(event) => { if (event.currentTarget.getAttribute("src") !== imgDefault) event.currentTarget.src = imgDefault; }} /></div>
+          <div className="qf-event-detail-overview"><div className="qf-event-detail-title-row"><h2 id="event-name">{evento.nombre}</h2><span className="qf-event-detail-state">{formatearEstado(evento.estado)}</span></div><p className="qf-event-detail-description">{evento.descripcion}</p>
+            <dl className="qf-event-detail-facts"><div><dt>Tipo de evento</dt><dd>{evento.tipoEvento || "Sin especificar"}</dd></div><div className="qf-event-detail-fact-location"><dt><FaMapMarkerAlt aria-hidden="true" /> Ubicación</dt><dd>{formatUbicacion(evento) || "Sin especificar"}</dd></div><div><dt><FaCalendarAlt aria-hidden="true" /> Inicio</dt><dd>{formatDate(eventoFechaInicio) || "Sin fecha"} {formatTime(eventoFechaInicio)}</dd></div><div><dt><FaClock aria-hidden="true" /> Finalización</dt><dd>{formatDate(eventoFechaFin) || "Sin fecha"} {formatTime(eventoFechaFin)}</dd></div></dl>
+          </div>
+        </section>
+
+        <div className="qf-event-detail-sections">
+          <section className="qf-event-detail-section"><header><h2><FaCalendarAlt aria-hidden="true" /> Días del evento</h2><span>{evento.diaEventos?.length || 0}</span></header>
+            {evento.diaEventos?.length > 0 ? <ul className="qf-event-detail-days">{evento.diaEventos.map((dia, index) => <li key={dia.id || index}><div className="qf-event-detail-day-number">{String(index + 1).padStart(2, "0")}</div><div><h3>{dia.nombre || `Día ${index + 1}`}</h3><dl><div><dt>Inicio</dt><dd>{(isMobile ? formatDateShort(dia.fechaHoraInicioDiaEvento) : formatDate(dia.fechaHoraInicioDiaEvento)) || "Sin fecha"} {formatTime(dia.fechaHoraInicioDiaEvento)}</dd></div><div><dt>Fin</dt><dd>{(isMobile ? formatDateShort(dia.fechaHoraFinDiaEvento) : formatDate(dia.fechaHoraFinDiaEvento)) || "Sin fecha"} {formatTime(dia.fechaHoraFinDiaEvento)}</dd></div></dl></div></li>)}</ul> : <p className="qf-event-detail-empty">No hay días registrados para este evento.</p>}
+          </section>
+          <section className="qf-event-detail-section"><header><h2><FaMapMarkerAlt aria-hidden="true" /> Puntos de encuentro</h2><span>{puntosEncuentro.length}</span></header>
+            {puntosEncuentro.length > 0 ? <ul className="qf-event-detail-meeting-points">{puntosEncuentro.map((punto, index) => <li key={punto.id || index}><span className="qf-event-detail-point-icon"><FaMapMarkerAlt aria-hidden="true" /></span><strong>{punto.nombre}</strong><button className="qf-event-detail-button" type="button" onClick={() => setMapPunto(punto)}><FaMap aria-hidden="true" /> Ver Mapa</button></li>)}</ul> : <p className="qf-event-detail-empty">No hay puntos de encuentro registrados.</p>}
+          </section>
         </div>
-
-        <div style={containerStyles}>
-          {/* Breadcrumb */}
-          <Breadcrumb items={breadcrumbItems} style={{
-            margin: 0,
-            backgroundColor: 'var(--qf-bg-secondary)',
-            width: '100%',
-            padding: '8px 16px',
-            borderRadius: '10px',
-            border: doradoBorder,
-            boxSizing: 'border-box',
-          }} />
-
-          {/* Event card */}
-          <div
-            className="qf-card"
-            style={{
-              background: "var(--qf-bg-main)",
-              border: doradoBorder,
-              borderRadius: "10px",
-              padding: "24px",
-              marginTop: "16px",
-              marginBottom: "20px",
-            }}
-          >
-            {/* Image */}
-            <div style={{ textAlign: "center", marginBottom: "16px" }}>
-              <img
-                src={imageSrc}
-                alt={evento.nombre}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "300px",
-                  borderRadius: "10px",
-                  objectFit: "cover",
-                }}
-              />
-            </div>
-
-            {/* Name */}
-            <h2 style={{ color: "var(--qf-text-primary)", marginBottom: "8px" }}>
-              {evento.nombre}
-            </h2>
-
-            {/* Description */}
-            <p style={{ color: "var(--qf-text-muted)", marginBottom: "16px" }}>
-              {evento.descripcion}
-            </p>
-
-            {/* Info grid */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-                gap: "12px",
-                marginBottom: "16px",
-              }}
-            >
-              <div>
-                <strong style={{ color: "var(--qf-text-primary)" }}>Tipo:</strong>{" "}
-                <span style={{ color: "var(--qf-text-muted)" }}>{evento.tipoEvento}</span>
-              </div>
-              <div>
-                <strong style={{ color: "var(--qf-text-primary)" }}>Estado:</strong>{" "}
-                <span
-                  style={{
-                    background: "var(--qf-naranja)",
-                    color: "#000",
-                    padding: "2px 8px",
-                    borderRadius: "10px",
-                    fontSize: "0.85rem",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {formatearEstado(evento.estado)}
-                </span>
-              </div>
-              <div>
-                <strong style={{ color: "var(--qf-text-primary)" }}>Ubicación:</strong>{" "}
-                <span style={{ color: "var(--qf-text-muted)" }}>
-                  {formatUbicacion(evento)}
-                </span>
-              </div>
-              <div>
-                <strong style={{ color: "var(--qf-text-primary)" }}>Fecha:</strong>{" "}
-                <span style={{ color: "var(--qf-text-muted)" }}>
-                  {eventoFechaInicio ? `${formatDate(eventoFechaInicio)} ${formatTime(eventoFechaInicio)}` : ""}
-                  {eventoFechaInicio && eventoFechaFin ? " - " : ""}
-                  {eventoFechaFin ? `${formatDate(eventoFechaFin)} ${formatTime(eventoFechaFin)}` : ""}
-                </span>
-              </div>
-            </div>
-
-            {/* State action buttons */}
-            {actions.length > 0 && (
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "10px",
-                  marginTop: "16px",
-                }}
-              >
-                {actions.map((act) => (
-                  <button
-                    key={act.action}
-                    className={act.className}
-                    onClick={() => handleStateAction(act.action, act.label)}
-                  >
-                    {act.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Event days */}
-          <div
-            className="qf-card"
-            style={{
-              background: "var(--qf-bg-main)",
-              border: doradoBorder,
-              borderRadius: "10px",
-              padding: "24px",
-              marginBottom: "20px",
-            }}
-          >
-            <h3 style={{ color: "var(--qf-text-primary)", marginBottom: "12px" }}>
-              Días del evento
-            </h3>
-            {evento.diaEventos && evento.diaEventos.length > 0 ? (
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr>
-                    <th style={{ color: "var(--qf-text-primary)", textAlign: "left", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)" }}>
-                      Nombre
-                    </th>
-                    <th style={{ color: "var(--qf-text-primary)", textAlign: "left", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)" }}>
-                      Inicio
-                    </th>
-                    <th style={{ color: "var(--qf-text-primary)", textAlign: "left", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)" }}>
-                      Fin
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {evento.diaEventos.map((dia, idx) => (
-                    <tr key={dia.id || idx}>
-                      <td style={{ color: "var(--qf-text-muted)", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)", fontSize: isMobile ? "0.8rem" : "inherit" }}>
-                        {dia.nombre || `Día ${idx + 1}`}
-                      </td>
-                      <td style={{ color: "var(--qf-text-muted)", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)", fontSize: isMobile ? "0.8rem" : "inherit" }}>
-                        {isMobile ? formatDateShort(dia.fechaHoraInicioDiaEvento) : formatDate(dia.fechaHoraInicioDiaEvento)} {formatTime(dia.fechaHoraInicioDiaEvento)}
-                      </td>
-                      <td style={{ color: "var(--qf-text-muted)", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)", fontSize: isMobile ? "0.8rem" : "inherit" }}>
-                        {isMobile ? formatDateShort(dia.fechaHoraFinDiaEvento) : formatDate(dia.fechaHoraFinDiaEvento)} {formatTime(dia.fechaHoraFinDiaEvento)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p style={{ color: "var(--qf-text-muted)" }}>
-                No hay días registrados para este evento.
-              </p>
-            )}
-          </div>
-
-          {/* Meeting points */}
-          <div
-            className="qf-card"
-            style={{
-              background: "var(--qf-bg-main)",
-              border: doradoBorder,
-              borderRadius: "10px",
-              padding: "24px",
-              marginBottom: "20px",
-            }}
-          >
-            <h3 style={{ color: "var(--qf-text-primary)", marginBottom: "12px" }}>
-              Puntos de encuentro
-            </h3>
-            {puntosEncuentro && puntosEncuentro.length > 0 ? (
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr>
-                    <th style={{ color: "var(--qf-text-primary)", textAlign: "left", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)" }}>
-                      Nombre
-                    </th>
-                    <th style={{ color: "var(--qf-text-primary)", textAlign: "left", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)" }}>
-                      Mapa
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {puntosEncuentro.map((punto, idx) => (
-                    <tr key={punto.id || idx}>
-                      <td style={{ color: "var(--qf-text-muted)", padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)" }}>
-                        {punto.nombre}
-                      </td>
-                    <td style={{ padding: "8px", borderBottom: "1px solid var(--qf-bg-secondary)" }}>
-                      <button
-                        onClick={() => setMapPunto(punto)}
-                        style={{
-                          background: "var(--qf-naranja)",
-                          color: "#000",
-                          border: "none",
-                          padding: "6px 14px",
-                          borderRadius: "6px",
-                          fontWeight: "bold",
-                          cursor: "pointer",
-                          fontSize: "0.85rem",
-                        }}
-                      >
-                        Ver Mapa
-                      </button>
-                    </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <p style={{ color: "var(--qf-text-muted)" }}>
-                No hay puntos de encuentro registrados.
-              </p>
-            )}
-          </div>
-
-          <button
-            onClick={() => window.history.back()}
-            className="qf-btn qf-btn--primary"
-            style={{ width: "100%", marginTop: "8px" }}
-          >
-            Volver
-          </button>
-        </div>
-      </div>
-
-      <Footer />
-
-      <ConfirmDialog
-        open={confirmDialog.open}
-        title={confirmDialog.title}
-        message={confirmDialog.message}
-        onConfirm={handleConfirm}
-        onCancel={handleCancel}
-      />
-
-      {/* Map dialog */}
-      {mapPunto && (
-        <div
-          onClick={() => setMapPunto(null)}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0,0,0,0.6)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 2000,
-          }}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              background: "var(--qf-bg-main)",
-              borderRadius: "10px",
-              border: "1px solid var(--qf-naranja)",
-              padding: "20px",
-              width: isMobile ? "95%" : "600px",
-              maxWidth: "95vw",
-              maxHeight: "90vh",
-              boxSizing: "border-box",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-              <h3 style={{ margin: 0, color: "var(--qf-naranja)" }}>{mapPunto.nombre}</h3>
-              <button
-                onClick={() => setMapPunto(null)}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "var(--qf-text-primary)",
-                  fontSize: "1.5rem",
-                  cursor: "pointer",
-                  padding: "0 4px",
-                }}
-              >
-                &times;
-              </button>
-            </div>
-            <iframe
-              title={`Mapa - ${mapPunto.nombre}`}
-              width="100%"
-              height="400"
-              style={{ border: 0, borderRadius: "8px" }}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              src={`https://www.google.com/maps?q=${mapPunto.latitud},${mapPunto.longitud}&z=15&output=embed`}
-            />
-          </div>
-        </div>
-      )}
+      </main><Footer />
+      <ConfirmDialog open={confirmDialog.open} title={confirmDialog.title} message={confirmDialog.message} onConfirm={handleConfirm} onCancel={handleCancel} />
+      <Dialog open={Boolean(mapPunto)} onClose={() => setMapPunto(null)} fullWidth maxWidth="sm" className="qf-event-map-dialog" aria-labelledby="event-map-title" slotProps={{ paper: { className: "qf-event-map-paper" } }}>
+        {mapPunto && <><header><div><span>Punto de encuentro</span><h2 id="event-map-title">{mapPunto.nombre}</h2></div><button className="qf-event-map-close" type="button" aria-label="Cerrar mapa" onClick={() => setMapPunto(null)}><FaTimes aria-hidden="true" /></button></header><iframe title={`Mapa - ${mapPunto.nombre}`} width="100%" height="400" loading="lazy" referrerPolicy="no-referrer-when-downgrade" src={`https://www.google.com/maps?q=${mapPunto.latitud},${mapPunto.longitud}&z=15&output=embed`} /></>}
+      </Dialog>
     </PageLayout>
   );
 };
-
 export default EventoDetalleWeb;

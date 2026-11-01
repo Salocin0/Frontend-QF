@@ -1,12 +1,14 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
-import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { CircularProgress } from "@mui/material";
 import useBreakpoint from "../../useBreakpoint";
+import useTheme from "../../useTheme";
 
 const cssVar = (name) =>
   getComputedStyle(document.documentElement).getPropertyValue(name).trim() || name;
+
+const CHART_PATTERNS = ["circle", "rect", "triangle", "diamond", "line"];
 
 const GraficaBarras = ({ eventId }) => {
   const [chartData, setChartData] = useState(null); // Estado para los datos de la gráfica
@@ -14,19 +16,25 @@ const GraficaBarras = ({ eventId }) => {
   const [error, setError] = useState(null); // Estado para errores
   const [decalEnabled, setDecalEnabled] = useState(true); // Estado para activar/desactivar decaln
   const { isMobile } = useBreakpoint();
+  const { isDark } = useTheme();
   useEffect(() => {
+    const controller = new AbortController();
     const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      setChartData(null);
       try {
         const response = await fetch(
-          `${process.env?.REACT_APP_BACK_URL}estadisticas/pedidos-por-tiempo-y-carrito/${eventId}`
+          `${process.env?.REACT_APP_BACK_URL}estadisticas/pedidos-por-tiempo-y-carrito/${eventId}`,
+          { signal: controller.signal }
         );
         if (!response.ok) {
           throw new Error(`Error en la solicitud: ${response.statusText}`);
         }
         const data = await response.json();
+        if (controller.signal.aborted) return;
 
-        if (data.data === 0) {
-          toast.error("No hay Pedidos en este evento para mostrar");
+        if (!Array.isArray(data.data) || data.data.length === 0) {
           setChartData(null);
           setLoading(false);
           return;
@@ -61,17 +69,7 @@ const GraficaBarras = ({ eventId }) => {
           });
         });
 
-        let index = 0;
-        const patterns = [
-          { symbol: "circle" },
-          { symbol: "rect" },
-          { symbol: "triangle" },
-          { symbol: "diamond" },
-          { symbol: "line" },
-        ];
         puestosMap.forEach((data, puesto) => {
-          const pattern = patterns[index % patterns.length];
-
           seriesData.push({
             name: puesto,
             type: "bar",
@@ -79,12 +77,7 @@ const GraficaBarras = ({ eventId }) => {
             label: { show: false },
             emphasis: { focus: "series" },
             data,
-            itemStyle: {
-              decal: decalEnabled ? { symbol: pattern.symbol } : null,
-            },
           });
-
-          index++;
         });
 
         setChartData({
@@ -94,42 +87,18 @@ const GraficaBarras = ({ eventId }) => {
 
         setLoading(false);
       } catch (err) {
-        console.error("Error al obtener los datos:", err);
-        setError(err.message);
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setError(err.message);
+          setLoading(false);
+        }
       }
     };
 
     if (eventId) {
       fetchData();
     }
+    return () => controller.abort();
   }, [eventId]);
-
-  // Separate useEffect for chart update when decal changes
-  useEffect(() => {
-    if (!chartData) return;
-
-    const patterns = [
-      { symbol: "circle" },
-      { symbol: "rect" },
-      { symbol: "triangle" },
-      { symbol: "diamond" },
-      { symbol: "line" },
-    ];
-
-    const updatedSeries = chartData.seriesData.map((series, index) => ({
-      ...series,
-      label: { show: false },
-      itemStyle: {
-        decal: decalEnabled ? { symbol: patterns[index % patterns.length].symbol } : null,
-      },
-    }));
-
-    setChartData((prev) => ({
-      ...prev,
-      seriesData: updatedSeries,
-    }));
-  }, [decalEnabled]);
 
   if (loading) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
@@ -138,7 +107,7 @@ const GraficaBarras = ({ eventId }) => {
   );
   if (error) return <div>Error: {error}</div>;
 
-  const naranja = cssVar("--qf-naranja");
+  const naranja = cssVar("--qf-highlight-text");
   const bgSecondary = cssVar("--qf-bg-secondary");
   const formatMonto = (valor) => `$${Math.round(Number(valor) || 0).toLocaleString("es-AR")}`;
   const option = chartData ? {
@@ -156,8 +125,7 @@ const GraficaBarras = ({ eventId }) => {
     },
     backgroundColor: bgSecondary,
     title: {
-      text: "Recaudación por Puesto y Día",
-      subtext: "Total Recaudado por cada Puesto en cada Dia",
+      text: "Recaudación por día",
       top: "3%",
       left: "center",
       textStyle: {
@@ -168,7 +136,8 @@ const GraficaBarras = ({ eventId }) => {
       },
     },
     legend: {
-      top: "16%",
+      type: "scroll",
+      top: "14%",
       left: "center",
       orient: "horizontal",
       textStyle: {
@@ -184,6 +153,7 @@ const GraficaBarras = ({ eventId }) => {
     },
     yAxis: {
       type: "value",
+      max: (value) => Math.ceil((value.max || 0) * 1.2),
       axisLabel: {
         color: naranja,
         formatter: (value) => `$${Math.round(value).toLocaleString("es-AR")}`,
@@ -207,10 +177,11 @@ const GraficaBarras = ({ eventId }) => {
       },
     },
     series: chartData.seriesData.map((serie, idx) => {
-      if (idx !== chartData.seriesData.length - 1) return serie;
+      const styledSerie = { ...serie, itemStyle: { ...serie.itemStyle, decal: decalEnabled ? { symbol: CHART_PATTERNS[idx % CHART_PATTERNS.length] } : null } };
+      if (idx !== chartData.seriesData.length - 1) return styledSerie;
       // Última serie del stack: mostrar el total de la barra completa arriba
       return {
-        ...serie,
+        ...styledSerie,
         label: {
           show: true,
           position: "top",
@@ -234,10 +205,12 @@ const GraficaBarras = ({ eventId }) => {
         <>
           <ReactECharts
             option={option}
-            theme="dark"
+            theme={isDark ? "dark" : undefined}
+            notMerge={true}
             className="h-100 w-100"
           />
           <button
+            aria-label={decalEnabled ? "Ocultar patrones del gráfico" : "Mostrar patrones del gráfico"}
             onClick={() => setDecalEnabled(!decalEnabled)}
             style={{
               backgroundColor: "var(--qf-bg-main)",
@@ -268,7 +241,7 @@ const GraficaBarras = ({ eventId }) => {
         >
           <h1
             style={{
-              color: "var(--qf-blanco-puro)",
+              color: "var(--qf-text-primary)",
               fontSize: "18px",
             }}
           >

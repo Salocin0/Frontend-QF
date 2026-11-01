@@ -311,4 +311,30 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
     expect(screen.getByText('Preparar Evento')).toBeInTheDocument();
     expect(screen.getByText('Continuar Evento')).toBeInTheDocument();
   });
+  test('opens the selected meeting point map and closes the accessible dialog', async () => {
+    fetchSpy
+      .mockResolvedValueOnce(mockFetchResponse({ data: fullEvent }))
+      .mockResolvedValueOnce(mockFetchResponse({ data: fullPuntos }));
+    renderWithContext(<EventoDetalleWeb />);
+    await screen.findByText('Entrada Norte');
+    fireEvent.click(screen.getAllByRole('button', { name: 'Ver Mapa' })[0]);
+    expect(screen.getByRole('dialog', { name: 'Entrada Norte' })).toBeInTheDocument();
+    expect(screen.getByTitle('Mapa - Entrada Norte')).toHaveAttribute('src', expect.stringContaining('-31.4167,-64.1833'));
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar mapa' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  test('producer has a direct edit link from event detail', async () => {
+    fetchSpy.mockResolvedValueOnce(mockFetchResponse({ data: fullEvent })).mockResolvedValueOnce(mockFetchResponse({ data: [] }));
+    renderWithContext(<EventoDetalleWeb />);
+    expect(await screen.findByRole('link', { name: 'Editar evento' })).toHaveAttribute('href', expect.stringMatching(/\/evento\//));
+  });
+
+  test('encargado does not see the producer edit link', async () => {
+    fetchSpy.mockResolvedValueOnce(mockFetchResponse({ data: fullEvent })).mockResolvedValueOnce(mockFetchResponse({ data: [] }));
+    renderWithContext(<EventoDetalleWeb />, { userOverride: { consumidorId: 2, tipoUsuario: 'encargado' } });
+    await screen.findByRole('heading', { name: fullEvent.nombre });
+    expect(screen.queryByRole('link', { name: 'Editar evento' })).not.toBeInTheDocument();
+  });
+
 });

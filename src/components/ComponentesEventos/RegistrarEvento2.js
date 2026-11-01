@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+/* eslint-disable no-unused-vars */
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -9,13 +9,13 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
-import useBreakpoint from "../../useBreakpoint";
+import { FaArrowLeft, FaArrowRight, FaImage, FaMapMarkerAlt, FaRegSave } from "react-icons/fa";
+import "./RegistrarEvento.css";
 import { TIPOS_EVENTO, TIPOS_PAGO } from "../../constants/eventos";
 
 const DRAFT_ESTADOS = ["EnPreparacion1", "EnPreparacion2", "EnPreparacion3"];
 
 const RegistrarEvento2 = () => {
-  const { isMobile } = useBreakpoint();
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
   const [nombre, setNombre] = useState("");
   const [imagenEvento, setImagenEvento] = useState(null);
@@ -85,7 +85,8 @@ const RegistrarEvento2 = () => {
   };
 
   const handleImagenEventoChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     fileToBase64(file, (base64) => {
       setImagenEvento(base64);
@@ -93,7 +94,8 @@ const RegistrarEvento2 = () => {
   };
 
   const handleCroquisChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
 
     fileToBase64(file, (base64) => {
       setCroquis(base64);
@@ -393,360 +395,31 @@ const RegistrarEvento2 = () => {
     };
   }, []);
 
-  const styles = {
-    rowFormEvento: {
-      display: "flex",
-      flexDirection: "column",
-      flex: 1,
-      minHeight: 0,
-      height: "100%",
-      boxSizing: "border-box",
-    },
-    colForm: {
-      flex: 1,
-      minHeight: 0,
-      padding: 0,
-      display: "flex",
-      boxSizing: "border-box",
-      overflowY: "auto",
-      width: "100%",
-    },
-    darkFormWrapper: {
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: `1px solid var(--qf-naranja)`,
-      padding: "1rem",
-      borderRadius: "10px",
-      boxSizing: "border-box",
-      width: "100%",
-      height: "fit-content",
-      margin: isMobile ? "0 12px 20px" : "0 20px 20px",
-    },
-    formGroup: {
-      marginBottom: "0.5rem",
-      position: "relative",
-    },
-    formLabel: {
-      display: "block",
-      fontSize: "1rem",
-      color: "var(--qf-text-white)",
-      margin: "0",
-    },
-    formInput: {
-      width: "100%",
-      padding: "0.5rem",
-      fontSize: "1rem",
-      borderRadius: "10px",
-    },
-    optionContainerEvento: {
-      display: "flex",
-      flexWrap: "wrap",
-      rowGap: "0.5rem",
-      justifyContent: "space-between",
-    },
-    opcionesEvento: {
-      padding: "0.5rem 1rem",
-      backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-text-primary)",
-      cursor: "pointer",
-      borderRadius: "5px",
-      textAlign: "center",
-      flex: 1,
-      marginRight: "0.5rem",
-    },
-    opcionesEventoSelected: {
-      backgroundColor: "var(--qf-naranja)",
-    },
-    optionContainerPago: {
-      display: "flex",
-      flexWrap: "wrap",
-      rowGap: "0.5rem",
-      justifyContent: "space-between",
-    },
-    opcionesPago: {
-      padding: "0.5rem 1rem",
-      backgroundColor: "var(--qf-bg-main)",
-      color: "var(--qf-text-primary)",
-      cursor: "pointer",
-      borderRadius: "5px",
-      textAlign: "center",
-      flex: 1,
-      marginRight: "0.5rem",
-    },
-    opcionesPagoSelected: {
-      backgroundColor: "var(--qf-naranja)",
-    },
-    suggestionsList: {
-      listStyleType: "none",
-      padding: 0,
-      margin: 0,
-      backgroundColor: "var(--qf-text-primary)",
-      borderRadius: "5px",
-      boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-      position: "absolute", // Para que las sugerencias estén sobre el formulario
-      top: "100%", // Justo debajo del input
-      left: 0,
-      right: 0,
-      zIndex: 10, // Asegura que esté por encima de otros elementos
-    },
-    suggestionItem: {
-      padding: "0.5rem",
-      cursor: "pointer",
-    },
-    suggestionItemHover: {
-      backgroundColor: "var(--qf-text-primary)",
-    },
-    btnPrimary: {
-      width: "100%",
-      padding: "0.8rem",
-      fontSize: "1rem",
-      color: "var(--qf-text-primary)",
-      backgroundColor: "var(--qf-green)",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      gap: "10px",
-    },
-    draftBanner: {
-      border: "1px solid var(--qf-naranja)",
-      borderRadius: "8px",
-      padding: "12px",
-      marginBottom: "16px",
-      color: "var(--qf-text-primary)",
-    },
-    btnPrimaryDisabled: {
-      opacity: 0.7,
-      cursor: "not-allowed",
-    },
-    buttonsRow: {
-      display: "flex",
-      gap: "10px",
-      marginTop: "10px",
-    },
-    btnSecondary: {
-      width: "40%",
-      padding: "0.8rem",
-      fontSize: "1rem",
-      color: "var(--qf-text-primary)",
-      backgroundColor: "var(--qf-text-secondary)",
-      border: "none",
-      borderRadius: "5px",
-      cursor: "pointer",
-      fontWeight: "bold",
-    },
-    title: {
-      fontSize: "1.25rem",
-      fontWeight: "bold",
-      marginBottom: "0.5rem",
-      color: "var(--qf-naranja)",
-    },
-    tituloSeccion: {
-      display: "flex",
-      justifyContent: "center",
-      marginTop: "20px",
-      fontSize: "24px",
-      color: "var(--qf-text-primary)",
-    },
-    separator: {
-      border: "none",
-      marginBottom: "5px",
-      marginTop: "0px",
-      borderTop: `1px solid var(--qf-naranja)`,
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-      boxSizing: "border-box",
-      padding: isMobile ? "10px 12px 0" : "10px 20px 0",
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-    },
-    hr: {
-      color: "var(--qf-naranja)",
-      border: `1px solid var(--qf-naranja)`,
-      width: "100%",
-    },
-  };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis Eventos", url: "/listado-eventos-productor" },
-    { title: "Crear un Evento (1/4)", url: "registrar-evento2" },
-  ];
-
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.rowFormEvento}>
-        <div style={styles.tituloSeccion}>
-          <h1>Crear un Evento</h1>
-        </div>
-        <hr style={styles.hr} />
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%" }}
-          />
-        </div>
-        <div style={styles.colForm}>
-          <div style={styles.darkFormWrapper}>
-            {pendingDraft && (
-              <div style={styles.draftBanner} role="alert">
-                <p style={{ margin: "0 0 8px" }}>
-                  Tenés un borrador sin terminar: <strong>{pendingDraft.nombre || "Evento sin nombre"}</strong>.
-                  Si continuás con el borrador, se van a editar sus datos.
-                </p>
-                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-                  <button type="button" style={{ ...styles.btnPrimary, width: "auto", padding: "0.5rem 1rem" }} onClick={handleContinueDraft}>
-                    Continuar borrador
-                  </button>
-                  <button type="button" style={{ ...styles.btnSecondary, width: "auto", padding: "0.5rem 1rem" }} onClick={handleDiscardDraft}>
-                    Empezar uno nuevo
-                  </button>
-                </div>
-              </div>
-            )}
-            <form action="#" method="POST">
-              <div style={styles.formGroup}>
-                <label htmlFor="nombre" style={styles.formLabel}>
-                  Nombre Del Evento*
-                </label>
-                <input
-                  type="text"
-                  id="nombre"
-                  style={styles.formInput}
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="descripcion" style={styles.formLabel}>
-                  Descripción Del Evento*
-                </label>
-                <textarea
-                  id="descripcion"
-                  style={styles.formInput}
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
-                  rows={2}
-                />
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="tipoEvento" style={styles.formLabel}>
-                  Tipo de Evento*
-                </label>
-                <div style={styles.optionContainerEvento}>
-                  {TIPOS_EVENTO.map((opcion) => (
-                    <div
-                      key={opcion}
-                      style={{
-                        ...styles.opcionesEvento,
-                        ...(selectedOptionEvento === opcion ? styles.opcionesEventoSelected : {}),
-                      }}
-                      onClick={() => handleOptionClickEvento(opcion)}
-                    >
-                      {opcion}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div style={styles.formGroup}>
-                <label htmlFor="tipoPago" style={styles.formLabel}>
-                  Tipo de Pago*
-                </label>
-                <div style={styles.optionContainerPago}>
-                  {TIPOS_PAGO.map((opcion) => (
-                    <div
-                      key={opcion}
-                      style={{
-                        ...styles.opcionesPago,
-                        ...(selectedOptionPago === opcion ? styles.opcionesPagoSelected : {}),
-                      }}
-                      onClick={() => handleOptionClickPago(opcion)}
-                    >
-                      {opcion}
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div style={{display: "flex", flexDirection: isMobile ? "column" : "row", gap: isMobile ? "0.5rem" : 0}}>
-                <div style={{...styles.formGroup, width: isMobile ? "100%" : "50%", marginRight: isMobile ? 0 : "10px"}}>
-                  <label htmlFor="ubicacion" style={styles.formLabel}>
-                    Ubicación Del Evento*
-                  </label>
-                  <input
-                    type="text"
-                    id="ubicacion"
-                    style={styles.formInput}
-                    value={ubicacion}
-                    onChange={handleUbicacionChange}
-                  />
-                  {showSuggestions && (
-                    <ul style={styles.suggestionsList}>
-                      {suggestionResults.map((suggestion, index) => (
-                        <li
-                          key={index}
-                          style={styles.suggestionItem}
-                          onClick={() => handleSuggestionClick(suggestion)}
-                        >
-                          {suggestion.formatted}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-
-                <div style={{...styles.formGroup, width: isMobile ? "100%" : "50%"}}>
-                  <label htmlFor="imagen" style={styles.formLabel}>
-                    Imagen del Evento
-                  </label>
-                  <input
-                    type="file"
-                    id="imagen"
-                    accept="image/*"
-                    onChange={handleImagenEventoChange}
-                    style={{
-                      ...styles.formInput,
-                      backgroundColor: "var(--qf-text-primary)",
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div style={styles.buttonsRow}>
-                <button
-                  type="button"
-                  style={styles.btnSecondary}
-                  onClick={handleVolver}
-                  disabled={isSubmitting}
-                >
-                  Volver
-                </button>
-                <button
-                  type="button"
-                  style={{
-                    ...styles.btnPrimary,
-                    width: "60%",
-                    ...(isSubmitting ? styles.btnPrimaryDisabled : {}),
-                  }}
-                  onClick={handleSiguienteClick}
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting && (
-                    <CircularProgress size={18} style={{ color: "var(--qf-text-primary)" }} />
-                  )}
-                  {isSubmitting ? "Guardando..." : "Siguiente"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      <Footer />
+      <main className="qf-event-registration-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Crear un evento", url: "/registrar-evento2" }]} />
+        <header className="qf-event-registration-heading"><h1>Crear un Evento</h1><p>Empezá con la información general y la ubicación. Después vas a configurar las fechas y los puntos de encuentro.</p></header>
+        <ol className="qf-event-registration-steps" aria-label="Progreso del registro">{["Información", "Configuración", "Días del evento", "Puntos de encuentro"].map((step, index) => <li key={step} aria-current={index === 0 ? "step" : undefined}><span>{index + 1}</span><div><small>Paso {index + 1}</small><strong>{step}</strong></div></li>)}</ol>
+        {pendingDraft && <aside className="qf-event-draft-banner" role="alert"><div><FaRegSave aria-hidden="true" /><p>Tenés un borrador sin terminar: <strong>{pendingDraft.nombre || "Evento sin nombre"}</strong>.<br />Si continuás con el borrador, se van a editar sus datos.</p></div><div><button type="button" className="qf-event-registration-button qf-event-registration-button--primary" onClick={handleContinueDraft}>Continuar borrador</button><button type="button" className="qf-event-registration-button" onClick={handleDiscardDraft}>Empezar uno nuevo</button></div></aside>}
+        <form className="qf-event-registration-form" onSubmit={handleSiguienteClick} noValidate>
+          <fieldset disabled={isSubmitting} className="qf-event-registration-layout">
+            <legend className="qf-event-registration-sr">Información general del evento</legend>
+            <div className="qf-event-registration-fields">
+              <section className="qf-event-registration-section"><h2>Información del evento</h2><p>Contá de qué se trata y cómo lo van a encontrar los asistentes.</p>
+                <label htmlFor="nombre">Nombre Del Evento*<input type="text" id="nombre" value={nombre} onChange={(event) => setNombre(event.target.value)} placeholder="Ej.: Fiesta del Cuarteto" /></label>
+                <label htmlFor="descripcion">Descripción Del Evento*<textarea id="descripcion" value={descripcion} onChange={(event) => setDescripcion(event.target.value)} placeholder="Contá qué ofrece tu evento y qué lo hace especial." rows={4} /></label>
+              </section>
+              <fieldset className="qf-event-registration-section qf-event-type-options"><legend>Tipo de Evento*</legend><div className="qf-event-registration-options">{TIPOS_EVENTO.map((option) => <label key={option}><input type="radio" name="event-type" checked={selectedOptionEvento === option} onChange={() => handleOptionClickEvento(option)} /><span>{option}</span></label>)}</div></fieldset>
+              <fieldset className="qf-event-registration-section qf-event-payment-options"><legend>Tipo de Pago*</legend><div className="qf-event-registration-options">{TIPOS_PAGO.map((option) => <label key={option}><input type="radio" name="payment-type" checked={selectedOptionPago === option} onChange={() => handleOptionClickPago(option)} /><span>{option}</span></label>)}</div></fieldset>
+              <section className="qf-event-registration-section qf-event-registration-location"><h2><FaMapMarkerAlt aria-hidden="true" /> Ubicación</h2><label htmlFor="ubicacion">Ubicación Del Evento*<input type="text" id="ubicacion" value={ubicacion} onChange={handleUbicacionChange} placeholder="Dirección, localidad y provincia" autoComplete="off" aria-describedby="event-address-help" /></label><p id="event-address-help">Elegí una sugerencia para ubicar el evento con mayor precisión.</p>{showSuggestions && <ul className="qf-event-address-suggestions" aria-label="Direcciones sugeridas">{suggestionResults.map((suggestion, index) => <li key={index}><button type="button" onClick={() => handleSuggestionClick(suggestion)}><FaMapMarkerAlt aria-hidden="true" /><span>{suggestion.formatted}</span></button></li>)}</ul>}</section>
+            </div>
+            <aside className="qf-event-registration-photo"><h2>Imagen del evento</h2><p>Elegí una imagen que ayude a reconocerlo.</p><div className="qf-event-registration-preview">{imagenEvento ? <img src={imagenEvento} alt="Vista previa del evento" /> : <div><FaImage aria-hidden="true" /><span>Tu evento empieza a verse acá</span></div>}</div><label htmlFor="imagen">Imagen del Evento<input type="file" id="imagen" accept="image/*" onChange={handleImagenEventoChange} /></label><span className="qf-event-photo-help">Usá una foto clara, con el contenido principal en el centro.</span></aside>
+          </fieldset>
+          <footer className="qf-event-registration-footer"><span>Paso 1 de 4 · Tu avance se guarda al continuar.</span><div><button type="button" className="qf-event-registration-button" onClick={handleVolver} disabled={isSubmitting}><FaArrowLeft aria-hidden="true" /> Volver</button><button type="submit" className="qf-event-registration-button qf-event-registration-button--primary" disabled={isSubmitting}>{isSubmitting ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Guardando...</> : <>Siguiente <FaArrowRight aria-hidden="true" /></>}</button></div></footer>
+        </form>
+      </main><Footer />
     </PageLayout>
   );
 };
-
 export default RegistrarEvento2;
