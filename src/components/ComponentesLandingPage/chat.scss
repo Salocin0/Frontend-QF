@@ -29,6 +29,8 @@
   &__suggestions button { --qf-button-hover-bg: #ffbd59; --qf-button-hover-text: #261c10; --qf-button-hover-border: #ffbd59; background: transparent; border: 1px solid var(--chat-link); color: var(--chat-link); padding: 8px 12px; border-radius: 12px; font-size: 0.82rem; text-align: left; cursor: pointer; }
   &__suggestions button span { margin-left: 12px; }
   &__account { display: flex; justify-content: center; gap: 6px; padding: 8px 12px; font-size: 0.78rem; color: var(--chat-muted); flex-shrink: 0; }
+  &__account a { color: var(--chat-link); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; transition: color 0.15s ease; }
+  &__account a:hover, &__account a:focus-visible { color: #fff; }
   &__composer { display: flex; gap: 8px; padding: 12px 14px 6px; border-top: 1px solid var(--chat-surface); flex-shrink: 0; }
   &__composer input { flex: 1; min-width: 0; background: var(--chat-surface); color: var(--chat-text); border: 1px solid var(--chat-muted); border-radius: 14px; padding: 12px; font-size: 16px; }
   &__composer input::placeholder { color: var(--chat-muted); }
@@ -48,7 +50,8 @@
 @media (prefers-reduced-motion: reduce) { .qf-chat__typing > span { animation: none; } }
 
 .qf-chat {
-  &__footerLink { color: var(--chat-link); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+  &__footerLink { color: var(--chat-link); text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; cursor: pointer; transition: color 0.15s ease, background-color 0.15s ease; }
+  &__footerLink:hover, &__footerLink:focus-visible { color: #fff; background-color: rgba(255, 189, 89, 0.18); border-radius: 3px; }
   &__bold { font-weight: 800; }
   &__richHeading { font-weight: 800; font-size: 1rem; margin-bottom: 8px; }
   &__richParagraph { margin: 0 0 8px; }

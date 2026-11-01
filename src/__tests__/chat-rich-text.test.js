@@ -38,6 +38,30 @@ describe('parseInline', () => {
     expect(parseInline('')).toEqual([]);
     expect(parseInline(undefined)).toEqual([]);
   });
+
+  // The model frequently wraps a link in bold ("**[Evento](url)**"). Treating the
+  // whole thing as bold text left the answer without a clickable link.
+  test('keeps a link clickable when it is wrapped in bold', () => {
+    expect(parseInline('**[Cosquín](https://qf.app/x)**')).toEqual([
+      { type: 'link', label: 'Cosquín', href: 'https://qf.app/x' },
+    ]);
+  });
+
+  test('keeps bold text around a bold-wrapped link', () => {
+    expect(parseInline('**Ver [Cosquín](https://qf.app/x) ahora**')).toEqual([
+      { type: 'bold', value: 'Ver ' },
+      { type: 'link', label: 'Cosquín', href: 'https://qf.app/x' },
+      { type: 'bold', value: ' ahora' },
+    ]);
+  });
+
+  test('parses several bold-wrapped links in the same line', () => {
+    const spans = parseInline('**[A](https://qf.app/a)** y **[B](https://qf.app/b)**');
+    expect(spans.filter((s) => s.type === 'link')).toEqual([
+      { type: 'link', label: 'A', href: 'https://qf.app/a' },
+      { type: 'link', label: 'B', href: 'https://qf.app/b' },
+    ]);
+  });
 });
 
 describe('parseChatText', () => {

@@ -121,10 +121,26 @@
     border-color: black !important;
   }
 
-  a:-webkit-any-link {
+  // Scoped to the navbar only: as a bare `a:-webkit-any-link` this rule compiled
+  // to `.qf-landing a:-webkit-any-link` (specificity 0,2,1) and beat every
+  // single-class link style inside the landing, including the chat links.
+  nav a:-webkit-any-link {
     color: inherit;
     cursor: auto;
     text-decoration: none;
+  }
+
+  // The navbar links carry inline styles, so hover feedback needs !important.
+  nav a[href="/login"]:hover,
+  nav a[href="/login"]:focus-visible {
+    background-color: #bb8c15 !important;
+    box-shadow: 0 0 0 2px #bb8c15;
+  }
+
+  nav a[href="/seleccion-perfil"]:hover,
+  nav a[href="/seleccion-perfil"]:focus-visible {
+    background-color: var(--qf-naranja) !important;
+    color: var(--qf-negro-puro) !important;
   }
 
   .divimagenimg {
@@ -274,7 +290,8 @@
   .qf-event-slide__badge { color: #261c10; background: #ffbd59; padding: 5px 10px; border-radius: 30px; font-size: 0.7rem; font-weight: 700; margin-bottom: 12px; }
   .qf-event-slide h3 { font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-weight: 700; overflow-wrap: anywhere; margin: 0 0 8px; }
   .qf-event-slide p { color: #ffbd59; font-size: 0.9rem; margin-bottom: 12px; }
-  .qf-event-slide a { color: #ffbd59; text-decoration: none; font-weight: 700; display: flex; gap: 16px; }
+  .qf-event-slide a { color: #ffbd59; text-decoration: none; font-weight: 700; display: flex; gap: 16px; cursor: pointer; transition: color 0.15s ease, gap 0.15s ease; }
+  .qf-event-slide a:hover, .qf-event-slide a:focus-visible { color: #fff; gap: 22px; text-decoration: underline; text-underline-offset: 4px; }
   .carousel-control-prev, .carousel-control-next { width: 40px; }
   .carousel-control-prev-icon, .carousel-control-next-icon { background-color: #261c10; border-radius: 50%; background-size: 55%; width: 32px; height: 32px; }
   .qf-event-empty { min-height: 380px; padding: 40px 24px; background: var(--qf-bg-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
