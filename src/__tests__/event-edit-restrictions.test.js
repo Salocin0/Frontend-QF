@@ -7,6 +7,7 @@ jest.mock('react-router-dom', () => ({ useParams: () => ({ id: '1' }), Link: ({ 
 jest.mock('../components/ComponentesGenerales/PageLayout', () => ({ children }) => <div>{children}</div>);
 jest.mock('../components/ComponentesGenerales/Footer', () => () => null);
 jest.mock('react-toastify', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
+const originalBackUrl = process.env.REACT_APP_BACK_URL;
 const wrapper = ({ children }) => <UserContext.Provider value={{ user: { consumidorId: 7, tipoUsuario: 'productor' } }}>{children}</UserContext.Provider>;
 const setup = (restrictionData, eventData = {}) => jest.spyOn(global, 'fetch').mockImplementation(async (url) => ({ ok: true, json: async () => {
   if (String(url).includes('georef')) return { provincias: [] };
@@ -14,7 +15,11 @@ const setup = (restrictionData, eventData = {}) => jest.spyOn(global, 'fetch').m
   if (String(url).includes('restriccion')) return { data: restrictionData };
   return { data: { id: 1, nombre: 'Cuarteto', descripcion: '', ubicacion: '', localidad: '', provincia: '', tipoEvento: '', tipoPago: '', estado: 'EnPreparacion', ...eventData } };
 } }));
-afterEach(() => { global.fetch.mockRestore(); localStorage.clear(); jest.clearAllMocks(); });
+afterEach(() => {
+  global.fetch.mockRestore(); localStorage.clear(); jest.clearAllMocks();
+  if (originalBackUrl === undefined) delete process.env.REACT_APP_BACK_URL;
+  else process.env.REACT_APP_BACK_URL = originalBackUrl;
+});
 
 test.each([{}, null, undefined, []])('edit form opens with non-list or empty restrictions: %p', async (data) => {
   const fetchMock = setup(data);
@@ -91,14 +96,16 @@ test('prefills from the current user context without calling the legacy session 
   expect(screen.getByRole('button', { name: 'Editar' })).toBeEnabled();
 });
 
-test('failed loading blocks editing and retries with the existing event data', async () => {
+test.each([undefined, '', 'https://api.quickfood.test/'])('failed loading blocks editing and retries regardless of backend URL: %p', async (backUrl) => {
+  if (backUrl === undefined) delete process.env.REACT_APP_BACK_URL;
+  else process.env.REACT_APP_BACK_URL = backUrl;
+  const eventUrl = `${process.env.REACT_APP_BACK_URL}evento/1`;
   const fetchMock = setup([]);
-  fetchMock.mockImplementationOnce(async () => ({ json: async () => ({ provincias: [] }) }));
   // Route requests independently: fail the first event load, succeed on retry.
   let first = true;
   const working = fetchMock.getMockImplementation();
   fetchMock.mockImplementation(async (url, options) => {
-    if (String(url).includes('/evento/1') && first) { first = false; return { ok: false }; }
+    if (String(url) === eventUrl && first) { first = false; return { ok: false }; }
     return working(url, options);
   });
   render(<ConsultarEvento />, { wrapper });
@@ -107,6 +114,7 @@ test('failed loading blocks editing and retries with the existing event data', a
   fireEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
   expect(await screen.findByDisplayValue('Cuarteto')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Editar' })).toBeEnabled();
+  expect(fetchMock.mock.calls.filter(([url]) => String(url) === eventUrl)).toHaveLength(2);
 });
 
 test('saving an unrelated edit preserves the original event timestamps', async () => {
