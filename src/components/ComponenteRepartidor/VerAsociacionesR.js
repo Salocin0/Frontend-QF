@@ -1,393 +1,89 @@
-﻿import { useEffect, useState, useContext, useRef } from "react";
-import { CircularProgress } from "@mui/material";
+import React, { useEffect, useState, useContext, useRef } from "react";
+import { Dialog } from "@mui/material";
 import { Link } from "react-router-dom";
+import { FaCalendarAlt, FaMapMarkerAlt, FaPlus, FaTimes, FaMotorcycle, FaBoxOpen } from "react-icons/fa";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import HistorialEntregasEvento from "./HistorialEntregasEvento";
 import imgDefault from "../img/qf-new-logo-transparent.png";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
+import "../ComponentesGenerales/ListFilters.css";
+import "../ComponentesEventos/EventosProductor.css";
+import "./EventosRepartidor.css";
 
+const stateLabel = (state) => ({ PendienteDeAceptacion: "Pendiente", ConObservacion: "Con observación" }[state] || state || "Sin asociación informada");
+const dateLabel = (value) => value && !Number.isNaN(new Date(value).getTime()) ? new Date(value).toLocaleDateString("es-AR") : "Sin fecha informada";
 const AsociacionesR = () => {
   const { user } = useContext(UserContext);
+  const consumerId = user?.consumidorId;
   const [eventos, setEventos] = useState([]);
   const [asociaciones, setAsociaciones] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [asociacionToCancel, setAsociacionToCancel] = useState(null);
-  const cardRef = useRef(null);
-  const [isCardNarrow, setIsCardNarrow] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [search, setSearch] = useState("");
+  const [state, setState] = useState("");
+  const [selected, setSelected] = useState(null);
+  const [historyEvent, setHistoryEvent] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const savingRef = useRef(false);
+  const reload = () => setAttempt((value) => value + 1);
+  const close = () => { if (!savingRef.current) setSelected(null); };
   useEffect(() => {
-    const el = cardRef.current;
-    if (!el || eventos.length === 0) return;
-    const observer = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        setIsCardNarrow(entry.contentRect.width <= 650);
+    if (consumerId == null) return;
+    const controller = new AbortController();
+    setLoading(true); setError(false);
+    (async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACK_URL}asociacion/buscarR/${consumerId}`, { method: "GET", headers: { ConsumidorId: consumerId }, signal: controller.signal });
+        if (!response.ok) throw new Error("No se pudieron cargar las asociaciones");
+        const result = await response.json();
+        if (!controller.signal.aborted) { setEventos(Array.isArray(result.data?.eventos) ? result.data.eventos : []); setAsociaciones(Array.isArray(result.data?.asociaciones) ? result.data.asociaciones : []); }
+      } catch (err) { if (!controller.signal.aborted) setError(true); }
+      finally { if (!controller.signal.aborted) setLoading(false); }
+    })();
+    return () => controller.abort();
+  }, [consumerId, attempt]);
+  const cancel = async () => {
+    if (savingRef.current || selected?.asociacion?.estado !== "PendienteDeAceptacion") return;
+    savingRef.current = true; setSaving(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACK_URL}asociacion/cambiarEstado/${selected.asociacion.id}/cancelar`, { method: "POST" });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || data.msg || "No pudimos cancelar la asociación. Intentá nuevamente.");
       }
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [eventos]);
-
-  const getEstadoStyle = (estado) => {
-    const base = { padding: "4px 12px", borderRadius: "10px", fontWeight: "bold", fontSize: "14px" };
-    switch(estado) {
-      case "Aceptada": return { ...base, backgroundColor: "var(--qf-green)", color: "white" };
-      case "PendienteDeAceptacion": return { ...base, backgroundColor: "var(--qf-naranja)", color: "white" };
-      case "Rechazada": return { ...base, backgroundColor: "var(--qf-rojo)", color: "white" };
-      case "Cancelada": return { ...base, backgroundColor: "#666", color: "white" };
-      default: return { ...base, backgroundColor: "#666", color: "white" };
-    }
+      toast.success("Asociación cancelada correctamente"); setSelected(null); reload();
+    } catch (err) { toast.error(err.message || "No pudimos cancelar la asociación. Intentá nuevamente."); }
+    finally { savingRef.current = false; setSaving(false); }
   };
-
-  const getEstadoLabel = (estado) => {
-    switch(estado) {
-      case "Aceptada": return "Aceptada";
-      case "PendienteDeAceptacion": return "Pendiente";
-      case "Rechazada": return "Rechazada";
-      case "Cancelada": return "Cancelada";
-      default: return estado;
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", user.consumidorId);
-
-      setIsLoading(true);
-      fetch(
-        `${process.env?.REACT_APP_BACK_URL}asociacion/buscarR/${user.consumidorId}`,
-        {
-          method: "GET",
-          headers: headers,
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setEventos(data.data.eventos);
-          setAsociaciones(data.data.asociaciones);
-        })
-        .catch((error) => console.log("No existen eventos.", error))
-        .finally(() => setIsLoading(false));
-    }
-  }, [user]);
-
-  const cancelarAsociacion = (asociacionID) => {
-    fetch(
-      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${asociacionID}/cancelar`,
-      {
-        method: "POST",
-      }
-    ).then((response) => {
-      if (response.ok) {
-        toast.success("Asociacion Cancelada correctamente");
-        window.location.reload();
-      } else {
-        response.json().then((errorData) => {
-          const errorMessage = errorData.message || "Ha ocurrido un error";
-          toast.error(errorMessage);
-        });
-      }
-    });
-  };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis asociaciones", url: "/misAsociacionesR" },
-  ];
-
-  return (
-    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={{ width: "100%" }}>
-        {/* Header centrado */}
-        <div className="qf-page-header--full">
-          <h1 style={{ color: "var(--qf-naranja)", textAlign: "center" }}>
-            Mis Asociaciones
-          </h1>
-        </div>
-        <hr className="qf-separator qf-separator--spaced" />
-
-        {/* Breadcrumb con borde dorado */}
-        <Breadcrumb
-          items={breadcrumbItems}
-          style={{
-            border: "1px solid var(--qf-naranja)",
-            margin: "0 20px",
-            width: "auto",
-          }}
-        />
-
-        {/* Listado de cards */}
-        <div style={{ padding: "1rem 20px 2rem 20px" }}>
-          {isLoading ? (
-            <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-              <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-            </div>
-          ) : eventos.length > 0 ? (
-            <>
-              {eventos.map((evento, index) => {
-                const asociacion = asociaciones.find(
-                  (asoc) => asoc.eventoId === evento.id
-                );
-                return (
-                  <div
-                    key={index}
-                    ref={index === 0 ? cardRef : undefined}
-                    style={{
-                      border: "1px solid var(--qf-naranja)",
-                      borderRadius: "8px",
-                      backgroundColor: "var(--qf-bg-secondary)",
-                      marginBottom: "20px",
-                    }}
-                  >
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <div
-                        style={{
-                          padding: "20px",
-                          display: "flex",
-                          flexDirection: isCardNarrow ? "column" : "row",
-                          alignItems: isCardNarrow ? "center" : "stretch",
-                          justifyContent: "space-between",
-                          gap: isCardNarrow ? "1rem" : "0",
-                        }}
-                      >
-                        <img
-                          src={
-                            evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
-                              ? evento.img
-                              : imgDefault
-                          }
-                          alt="Logo del Evento"
-                          style={{
-                            width: isCardNarrow ? "100%" : "auto",
-                            height: isCardNarrow ? "200px" : "150px",
-                            borderRadius: "8px",
-                            objectFit: "cover",
-                          }}
-                          onError={(e) => {
-                            e.target.onerror = null;
-                            e.target.src = imgDefault;
-                          }}
-                        />
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            textAlign: "center",
-                            width: "100%",
-                          }}
-                        >
-                          <h5
-                            style={{
-                              fontSize: "28px",
-                              fontWeight: "bold",
-                              color: "var(--qf-naranja)",
-                              textAlign: "center",
-                            }}
-                          >
-                            {evento.nombre}
-                          </h5>
-                          <p style={{ fontSize: "20px", margin: "5px 0", color: "var(--qf-text-white)" }}>
-                            {evento.descripcion}
-                          </p>
-                          <p style={{ fontSize: "20px", margin: "5px 0", color: "var(--qf-text-white)" }}>
-                            {evento.ubicacion} - {evento.localidad},{" "}
-                            {evento.provincia}
-                          </p>
-                          {/* Estado de la asociación siempre visible */}
-                          {asociacion && (
-                            <span style={{ ...getEstadoStyle(asociacion.estado), marginTop: "0.5rem" }}>
-                              {getEstadoLabel(asociacion.estado)}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {asociacion.estado === "PendienteDeAceptacion" && (
-                        <>
-                          <hr style={{
-                            border: "none",
-                            borderTop: "1px solid var(--qf-naranja)",
-                            margin: 0,
-                            width: "100%",
-                          }} />
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              padding: "10px",
-                            }}
-                          >
-                            <button
-                              style={{
-                                margin: "10px",
-                                padding: "10px 20px",
-                                cursor: "pointer",
-                                width: "200px",
-                                borderRadius: "10px",
-                                border: "none",
-                                backgroundColor: "var(--qf-rojo)",
-                                color: "var(--qf-text-white)",
-                              }}
-                              onClick={() =>
-                                setAsociacionToCancel({ asociacion, evento })
-                              }
-                            >
-                              Cancelar Asociacion
-                            </button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </>
-          ) : (
-            <div style={{ textAlign: "center", paddingBottom: "50px" }}>
-              <h2 style={{ color: "var(--qf-naranja)" }}>Mis Asociaciones</h2>
-              <p style={{ color: "var(--qf-text-white)" }}>
-                Con Quickfood, asocia tu evento para hacerlo mejor. Descubre
-                nuestras increíbles características y ofrece una experiencia
-                única a tus consumidores.
-              </p>
-              <Link
-                to={`/registrar-evento`}
-                style={{
-                  color: "var(--qf-naranja)",
-                  fontWeight: "bold",
-                  textDecoration: "underline",
-                }}
-              >
-                Asociarme a Evento
-              </Link>
-            </div>
-          )}
-        </div>
-        <Footer />
-      </div>
-
-      {/* Modal de confirmación para cancelar asociación */}
-      {asociacionToCancel && (
-        <div style={{
-          display: "flex",
-          position: "fixed",
-          top: "0",
-          left: "0",
-          width: "100%",
-          height: "100%",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-          zIndex: "1000",
-          justifyContent: "center",
-          alignItems: "center",
-        }}>
-          <div style={{
-            backgroundColor: "var(--qf-bg-secondary)",
-            padding: "20px",
-            borderRadius: "10px",
-            width: "80%",
-            maxWidth: "400px",
-            textAlign: "center",
-          }}>
-            <h3 style={{
-              textAlign: "center",
-              color: "var(--qf-naranja)",
-              marginBottom: "1rem",
-            }}>
-              Cancelar asociación
-            </h3>
-            <div style={{
-              backgroundColor: "var(--qf-bg-main)",
-              padding: "16px",
-              borderRadius: "8px",
-              marginBottom: "1.5rem",
-              border: "1px solid var(--qf-naranja)33",
-            }}>
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "10px",
-                gap: "10px",
-              }}>
-                <span style={{
-                  color: "var(--qf-naranja)",
-                  fontWeight: "bold",
-                  minWidth: "100px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: "14px",
-                }}>Evento:</span>
-                <span style={{ color: "var(--qf-text-white)", fontSize: "15px" }}>
-                  {asociacionToCancel.evento.nombre}
-                </span>
-              </div>
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "10px",
-              }}>
-                <span style={{
-                  color: "var(--qf-naranja)",
-                  fontWeight: "bold",
-                  minWidth: "100px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  fontSize: "14px",
-                }}>Ubicación:</span>
-                <span style={{ color: "var(--qf-text-white)", fontSize: "15px" }}>
-                  {asociacionToCancel.evento.ubicacion} - {asociacionToCancel.evento.localidad}
-                </span>
-              </div>
-            </div>
-            <div style={{
-              display: "flex",
-              justifyContent: "space-around",
-              marginTop: "1rem",
-            }}>
-              <button
-                style={{
-                  padding: "0.5rem 1rem",
-                  border: "none",
-                  borderRadius: "0.2rem",
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                  backgroundColor: "var(--qf-rojo)",
-                  color: "var(--qf-blanco-puro)",
-                }}
-                onClick={() => setAsociacionToCancel(null)}
-              >
-                Volver
-              </button>
-              <button
-                style={{
-                  padding: "0.5rem 1rem",
-                  border: "none",
-                  borderRadius: "0.2rem",
-                  cursor: "pointer",
-                  fontWeight: "bold",
-                  backgroundColor: "var(--qf-green)",
-                  color: "var(--qf-blanco-puro)",
-                }}
-                onClick={() => {
-                  const id = asociacionToCancel.asociacion.id;
-                  setAsociacionToCancel(null);
-                  cancelarAsociacion(id);
-                }}
-              >
-                Confirmar
-              </button>
-            </div>
+  const rows = eventos.map((evento) => ({ evento, asociacion: asociaciones.find((association) => String(association.eventoId) === String(evento.id)) }));
+  const filtered = rows.filter(({ evento, asociacion }) => (!state || asociacion?.estado === state) && String(evento.nombre || "").toLocaleLowerCase("es").includes(search.trim().toLocaleLowerCase("es")));
+  const states = Array.from(new Set(asociaciones.map((association) => association.estado).filter(Boolean)));
+  return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+    <main className="qf-producer-events-page qf-courier-events-page">
+      <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis asociaciones", url: "/misAsociacionesR" }]} />
+      <header className="qf-producer-events-heading"><div><h1>Mis asociaciones</h1><p>Seguí el estado de tus solicitudes para participar como repartidor.</p></div><Link className="qf-producer-event-button qf-producer-event-button--primary" to="/asociarRepartidorAEvento"><FaPlus aria-hidden="true" /> Asociarme a un evento</Link></header>
+      <section className="qf-list-filters qf-producer-event-filters" aria-label="Filtros de asociaciones"><label htmlFor="courier-association-search">Buscar evento<input id="courier-association-search" type="search" placeholder="Nombre del evento…" value={search} onChange={(event) => setSearch(event.target.value)} /></label><label htmlFor="courier-association-state">Estado de la solicitud<select id="courier-association-state" value={state} onChange={(event) => setState(event.target.value)}><option value="">Todos los estados</option>{states.map((status) => <option key={status} value={status}>{stateLabel(status)}</option>)}</select></label></section>
+      {loading ? <p className="qf-producer-events-feedback" role="status">Cargando asociaciones…</p> : error ? <div className="qf-producer-events-feedback" role="alert"><h2>No pudimos cargar tus asociaciones</h2><p>Intentá nuevamente en unos instantes.</p><button type="button" className="qf-producer-event-button" onClick={reload}>Reintentar</button></div> : <><p className="qf-producer-events-count" aria-live="polite">{filtered.length} {filtered.length === 1 ? "asociación" : "asociaciones"}</p>{filtered.length ? <div className="qf-producer-events-list">{filtered.map(({ evento, asociacion }) => {
+        const image = evento.img && !String(evento.img).includes("vendimia.mendoza.gov.ar") ? evento.img : imgDefault;
+        return <article key={evento.id} className="qf-producer-event-card qf-courier-event-card" aria-label={evento.nombre}>
+          <div className={`qf-producer-event-image${image === imgDefault ? " qf-courier-event-image--logo" : ""}`}><img src={image} alt={evento.nombre} onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = imgDefault; event.currentTarget.parentElement.classList.add("qf-courier-event-image--logo"); }} /></div>
+          <div className="qf-producer-event-body"><header className="qf-producer-event-title"><h2>{evento.nombre}</h2><span className={`qf-producer-event-state qf-courier-association-state qf-courier-association-state--${asociacion?.estado}`}>{stateLabel(asociacion?.estado)}</span></header>{evento.descripcion && <p className="qf-courier-event-description">{evento.descripcion}</p>}
+            <dl className="qf-courier-event-data"><div><dt><FaMapMarkerAlt aria-hidden="true" /> Ubicación</dt><dd>{formatUbicacion(evento) || "Sin ubicación informada"}</dd></div><div><dt><FaCalendarAlt aria-hidden="true" /> Inicio</dt><dd>{dateLabel(evento.fechaHoraInicio)}</dd></div><div><dt><FaCalendarAlt aria-hidden="true" /> Fin</dt><dd>{dateLabel(evento.fechaHoraFin)}</dd></div></dl>
+            <footer className="qf-courier-event-actions"><button type="button" className="qf-producer-event-button" onClick={() => setHistoryEvent(evento)}><FaBoxOpen aria-hidden="true" /> Mis entregas</button>{asociacion?.estado === "PendienteDeAceptacion" && <><button type="button" className="qf-producer-event-button" onClick={() => setSelected({ evento, asociacion })}><FaTimes aria-hidden="true" /> Cancelar asociación</button></>}</footer>
           </div>
-        </div>
-      )}
-    </PageLayout>
-  );
+        </article>;
+      })}</div> : <div className="qf-producer-events-feedback"><FaMotorcycle aria-hidden="true" /><h2>{search || state ? "No encontramos asociaciones con esos filtros" : "Todavía no tenés asociaciones"}</h2><p>{search || state ? "Probá otro nombre o seleccioná otro estado." : "Buscá un evento y enviá tu solicitud para participar como repartidor."}</p>{search || state ? <button type="button" className="qf-producer-event-button" onClick={() => { setSearch(""); setState(""); }}>Limpiar filtros</button> : <Link className="qf-producer-event-button" to="/asociarRepartidorAEvento">Explorar eventos</Link>}</div>}</>}
+    </main><Footer />
+    {historyEvent && <HistorialEntregasEvento evento={historyEvent} consumidorId={consumerId} onClose={() => setHistoryEvent(null)} />}
+    <Dialog open={Boolean(selected)} onClose={close} fullWidth maxWidth="sm" className="qf-courier-association-dialog" aria-labelledby="courier-cancel-title" slotProps={{ paper: { className: "qf-courier-association-paper" } }}>
+      <header><div><span>Solicitud pendiente</span><h2 id="courier-cancel-title">Cancelar asociación</h2></div><button type="button" className="qf-courier-dialog-close" aria-label="Cerrar" disabled={saving} onClick={close}><FaTimes aria-hidden="true" /></button></header>
+      <div className="qf-courier-dialog-body"><p>¿Querés cancelar tu solicitud de participación en este evento?</p><dl className="qf-courier-event-data"><div><dt>Evento</dt><dd>{selected?.evento.nombre}</dd></div><div><dt>Ubicación</dt><dd>{selected ? formatUbicacion(selected.evento) : ""}</dd></div></dl><footer className="qf-courier-event-actions"><button type="button" className="qf-producer-event-button" onClick={close} disabled={saving}>Volver</button><button type="button" className="qf-producer-event-button qf-producer-event-button--primary" onClick={cancel} disabled={saving}>{saving ? "Cancelando…" : "Confirmar cancelación"}</button></footer></div>
+    </Dialog>
+  </PageLayout>;
 };
-
 export default AsociacionesR;

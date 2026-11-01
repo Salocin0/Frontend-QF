@@ -1,0 +1,82 @@
+import React from 'react';
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { toast } from 'react-toastify';
+import ListadoPedidosRepartidor from '../components/ComponentesPedido/PedidosRepartidor/ListadoPedidosRepartidor';
+import PedidoRepartidor from '../components/ComponentesPedido/PedidosRepartidor/PedidoRepartidor';
+import { UserContext } from '../components/ComponentesGenerales/UserContext';
+jest.mock('react-router-dom', () => ({ Link: ({ children, to }) => <a href={to}>{children}</a> }));
+jest.mock('../components/ComponentesGenerales/PageLayout', () => ({ children }) => <div>{children}</div>);
+jest.mock('../components/ComponentesGenerales/Footer', () => () => null);
+jest.mock('react-toastify', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));
+const order = { id: 17, estado: 'EnCamino', fecha: '2026-11-01T12:00:00Z', total: '1500', codigoEntrega: 'ABC123', puesto: { nombreCarro: 'Papas Demo' }, consumidore: { nombre: 'Ana', apellido: 'Pérez' }, puntoEncuentro: { nombre: 'Entrada principal', latitud: 0, longitud: -64 }, detalles: [{ id: 1, cantidad: 2, producto: { nombre: 'Papas', precio: '750' } }] };
+const renderPage = () => render(<UserContext.Provider value={{ user: { consumidorId: 7, tipoUsuario: 'repartidor' } }}><ListadoPedidosRepartidor /></UserContext.Provider>);
+afterEach(() => { if (global.fetch.mockRestore) global.fetch.mockRestore(); jest.clearAllMocks(); });
+test.each(['Pendiente', 'Aceptado', 'EnPreparacion', 'EnCamino', 'Entregado', 'Cancelado', 'Precomprado'])('preserves available actions for %s', (state) => {
+  render(<PedidoRepartidor pedido={{ ...order, estado: state }} recargar={jest.fn()} />);
+  const actions = within(screen.getByRole('article')).getAllByRole('button').map((button) => button.textContent.trim());
+  expect(actions).toEqual(state === 'EnCamino' ? ['Ver detalle', 'Ver mapa', 'Entregar'] : ['Ver detalle']);
+});
+test('search and state combine, and loading uses the current consumer', async () => {
+  const fetchMock = jest.spyOn(global, 'fetch').mockResolvedValue({ ok: true, json: async () => ({ data: [order, { ...order, id: 18, estado: 'Entregado', puesto: { nombreCarro: 'Pizza Demo' } }] }) });
+  renderPage();
+  await screen.findByRole('heading', { name: 'Papas Demo' });
+  expect(fetchMock.mock.calls[0][1].headers.ConsumidorId).toBe(7);
+  fireEvent.change(screen.getByRole('searchbox'), { target: { value: '17' } });
+  expect(screen.queryByRole('heading', { name: 'Pizza Demo' })).not.toBeInTheDocument();
+  fireEvent.change(screen.getByRole('combobox'), { target: { value: 'Entregado' } });
+  expect(screen.getByText('No encontramos pedidos con esos filtros')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Limpiar filtros' }));
+  expect(screen.getAllByRole('article')).toHaveLength(2);
+});
+test('failed load offers retry instead of displaying an empty list', async () => {
+  jest.spyOn(global, 'fetch').mockResolvedValueOnce({ ok: false }).mockResolvedValue({ ok: true, json: async () => ({ data: [] }) });
+  renderPage();
+  expect(await screen.findByRole('alert')).toHaveTextContent('No pudimos cargar tus pedidos');
+  fireEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
+  expect(await screen.findByText('Todavía no tenés pedidos asignados')).toBeInTheDocument();
+});
+test('detail shows products and numeric string total; map supports zero coordinates', async () => {
+  render(<PedidoRepartidor pedido={order} recargar={jest.fn()} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Ver detalle' }));
+  const dialog = screen.getByRole('dialog', { name: 'Detalle del pedido #17' });
+  expect(within(dialog).getByRole('cell', { name: 'Papas' })).toBeInTheDocument();
+  expect(within(dialog).getByText('Ana Pérez')).toBeInTheDocument();
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Cerrar detalle' }));
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  fireEvent.click(screen.getByRole('button', { name: 'Ver mapa' }));
+  expect(screen.getByTitle('Mapa del punto de encuentro')).toHaveAttribute('src', expect.stringContaining('0%2C-64'));
+});
+test('delivery requires matching code and refreshes only after a successful response', async () => {
+  const refresh = jest.fn();
+  const fetchMock = jest.spyOn(global, 'fetch').mockResolvedValueOnce({ ok: false }).mockResolvedValue({ ok: true });
+  render(<PedidoRepartidor pedido={order} recargar={refresh} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Entregar' }));
+  fireEvent.change(screen.getByLabelText('Código de entrega'), { target: { value: 'wrong' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmar entrega' }));
+  expect(toast.error).toHaveBeenCalledWith('Código incorrecto');
+  expect(fetchMock).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByLabelText('Código de entrega'), { target: { value: 'abc123' } });
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmar entrega' }));
+  await waitFor(() => expect(toast.error).toHaveBeenCalledWith('No pudimos confirmar la entrega. Intentá nuevamente.'));
+  expect(refresh).not.toHaveBeenCalled();
+  expect(screen.getByRole('dialog')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmar entrega' }));
+  await waitFor(() => expect(refresh).toHaveBeenCalledTimes(1));
+  expect(fetchMock).toHaveBeenLastCalledWith(expect.stringContaining('pedido/cambiarEstado/17/pedidoEntregado'), { method: 'POST' });
+  expect(toast.success).toHaveBeenCalledWith('Pedido entregado correctamente');
+});
+
+test('map expands and returns to its initial size when reopened', async () => {
+  render(<PedidoRepartidor pedido={order} recargar={jest.fn()} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Ver mapa' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Pantalla completa' }));
+  expect(screen.getByRole('button', { name: 'Reducir mapa' })).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByRole('dialog')).toHaveClass('MuiDialog-paperFullScreen');
+  fireEvent.click(screen.getByRole('button', { name: 'Reducir mapa' }));
+  expect(screen.getByRole('dialog')).not.toHaveClass('MuiDialog-paperFullScreen');
+  fireEvent.click(screen.getByRole('button', { name: 'Pantalla completa' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Cerrar mapa' }));
+  await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  fireEvent.click(screen.getByRole('button', { name: 'Ver mapa' }));
+  expect(screen.getByRole('button', { name: 'Pantalla completa' })).toHaveAttribute('aria-pressed', 'false');
+});

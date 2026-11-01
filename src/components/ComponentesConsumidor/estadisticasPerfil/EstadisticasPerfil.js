@@ -2,6 +2,7 @@ import { useEffect, useContext, useState } from "react";
 import { UserContext } from "../../ComponentesGenerales/UserContext";
 import CardGenericaEstadistica from "./CardGenericaEstadistica";
 import "./Perfil.css";
+import ValoracionesRepartidor from "./ValoracionesRepartidor";
 
 const formatMoney = (value) => `$ ${Math.round(Number(value) || 0).toLocaleString("es-AR")}`;
 
@@ -140,6 +141,7 @@ const EstadisticasPerfil = () => {
           {state.chartError ? <p role="status">No pudimos cargar el detalle por puesto.</p> : <ActivityChart rows={state.rows} money={role === "encargado"} />}
         </div>
       </>}
+      {role === "repartidor" && consumerId != null && <ValoracionesRepartidor consumidorId={consumerId} />}
     </section>
   );
 };

@@ -9,6 +9,7 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
+import RequisitosSolicitud from "./RequisitosSolicitud";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 
 const VerSolicitudesEvento = () => {
@@ -227,7 +228,7 @@ const VerSolicitudesEvento = () => {
       </main>
       <ConfirmDialog open={confirmOpen} title={pendingAction?.title || 'Confirmar Acción'} message={pendingAction?.message || '¿Estás seguro de que deseas realizar esta acción?'} onConfirm={handleConfirm} onCancel={handleCancelConfirm} />
       <Dialog open={infoDialogOpen} onClose={handleCloseInfo} fullWidth maxWidth="sm" className="qf-request-info-dialog" aria-labelledby="request-info-title" slotProps={{ paper: { className: "qf-request-info-paper" } }}>
-        {selectedAsociacion && <><header><div><span>Detalles de la Solicitud</span><h2 id="request-info-title">{applicantName(selectedAsociacion)}</h2></div><button type="button" className="qf-request-info-close" aria-label="Cerrar información" onClick={handleCloseInfo}><FaTimes aria-hidden="true" /></button></header><div className="qf-request-info-content"><span className={`qf-event-request-state qf-event-request-state--${selectedAsociacion.estado}`}>{formatState(selectedAsociacion.estado)}</span><h3>{selectedAsociacion.puesto ? "Información del Puesto" : "Información del Repartidor"}</h3><dl><div><dt>Teléfono</dt><dd>{phone(selectedAsociacion)}</dd></div>{selectedAsociacion.puesto && <div><dt>Tipo de negocio</dt><dd>{selectedAsociacion.puesto.tipoNegocio || "Sin especificar"}</dd></div>}</dl></div><footer><button type="button" className="qf-event-request-button qf-event-request-button--primary" onClick={handleCloseInfo}>Cerrar</button></footer></>}
+        {selectedAsociacion && <><header><div><span>Detalles de la Solicitud</span><h2 id="request-info-title">{applicantName(selectedAsociacion)}</h2></div><button type="button" className="qf-request-info-close" aria-label="Cerrar información" onClick={handleCloseInfo}><FaTimes aria-hidden="true" /></button></header><div className="qf-request-info-content"><span className={`qf-event-request-state qf-event-request-state--${selectedAsociacion.estado}`}>{formatState(selectedAsociacion.estado)}</span><h3>{selectedAsociacion.puesto ? "Información del Puesto" : "Información del Repartidor"}</h3><dl><div><dt>Teléfono</dt><dd>{phone(selectedAsociacion)}</dd></div>{selectedAsociacion.puesto && <div><dt>Tipo de negocio</dt><dd>{selectedAsociacion.puesto.tipoNegocio || "Sin especificar"}</dd></div>}</dl><RequisitosSolicitud asociacionId={selectedAsociacion.id} consumidorId={user?.consumidorId} /></div><footer><button type="button" className="qf-event-request-button qf-event-request-button--primary" onClick={handleCloseInfo}>Cerrar</button></footer></>}
       </Dialog>
       <Footer />
     </PageLayout>
