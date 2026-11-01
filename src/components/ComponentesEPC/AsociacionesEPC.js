@@ -1,474 +1,82 @@
-﻿import { useEffect, useState, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaStore, FaMapMarkerAlt, FaTimes, FaLink } from "react-icons/fa";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import { useContext } from "react";
 import imgDefault from "../img/qf-new-logo-transparent.png";
 import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
-import Buscador from "../Filtros y Buscadores/Buscador";
-import Filtros from "../Filtros y Buscadores/Filtros";
-import { CircularProgress } from "@mui/material";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
+import "../ComponentesGenerales/ListFilters.css";
+import "./AsociacionesEPC.css";
+
+const formatState = (state) => state === "PendienteDeAceptacion" ? "Pendiente de aceptación" : String(state || "Sin estado").replace(/([a-z])([A-Z])/g, "$1 $2");
+const associationFor = (associations, event) => associations.find((association) => String(association.eventoId) === String(event.id));
 
 const AsociacionesEPC = () => {
   const { user } = useContext(UserContext);
-  const contentRef = useRef(null);
-  const [contentWidth, setContentWidth] = useState(999);
-  const isNarrowLayout = contentWidth <= 900;
-
-  useEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setContentWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   const [eventos, setEventos] = useState([]);
-  const [, setIsPendienteDeAceptacion] = useState(false);
   const [asociaciones, setAsociaciones] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterState, setFilterState] = useState('');
-  // helper grupo for estados
-  const estadoGroup = {
-    nombre: 'estado',
-    opciones: Array.from(new Set(asociaciones.map((a) => a.estado))).map((e) => ({
-      valor: e,
-      etiqueta: e ? e.replace(/([A-Z])/g, ' $1').trim() : e,
-    })),
-  };
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
   const [toCancelId, setToCancelId] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [cancelling, setCancelling] = useState(false);
+  const busy = useRef(false);
+  const consumerId = user?.consumidorId;
   useEffect(() => {
-    if (user) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", user.consumidorId);
-
-      setIsLoading(true);
-      fetch(
-        `${process.env?.REACT_APP_BACK_URL}asociacion/buscar/${user.consumidorId}`,
-        {
-          method: "GET",
-          headers: headers,
+    if (!consumerId) return;
+    const controller = new AbortController();
+    setLoading(true); setError(false);
+    (async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACK_URL}asociacion/buscar/${consumerId}`, { method: "GET", headers: { ConsumidorId: consumerId }, signal: controller.signal });
+        if (!response.ok) throw new Error("No se pudieron cargar las asociaciones");
+        const result = await response.json();
+        if (!controller.signal.aborted) {
+          setEventos(Array.isArray(result.data?.eventos) ? result.data.eventos : []);
+          setAsociaciones(Array.isArray(result.data?.asociaciones) ? result.data.asociaciones : []);
         }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          setEventos(data.data.eventos);
-          setAsociaciones(data.data.asociaciones);
-        })
-        .catch((error) => console.log("No existen eventos.", error))
-        .finally(() => setIsLoading(false));
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (asociaciones.length > 0) {
-      let pendienteDeAceptacion = false;
-      asociaciones.forEach((asociacion) => {
-        pendienteDeAceptacion = false;
-        if (asociacion.estado === "PendienteDeAceptacion") {
-          pendienteDeAceptacion = true;
-        }
-      });
-      setIsPendienteDeAceptacion(pendienteDeAceptacion);
-    }
-  }, [asociaciones]);
-
-  const cancelarAsociacion = (asociacionID) => {
-    // open confirmation dialog
-    setToCancelId(asociacionID);
-    setConfirmOpen(true);
+      } catch (err) { if (!controller.signal.aborted) setError(true); }
+      finally { if (!controller.signal.aborted) setLoading(false); }
+    })();
+    return () => controller.abort();
+  }, [consumerId, attempt]);
+  const doCancel = async () => {
+    if (busy.current || toCancelId == null || !asociaciones.some((association) => association.id === toCancelId && association.estado === "PendienteDeAceptacion")) return;
+    busy.current = true; setCancelling(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACK_URL}asociacion/cambiarEstado/${toCancelId}/cancelar`, { method: "POST" });
+      if (!response.ok) throw new Error("No pudimos cancelar la asociación. Intentá nuevamente.");
+      toast.success("Asociación cancelada correctamente");
+      setToCancelId(null);
+      setAttempt((value) => value + 1);
+    } catch (err) { toast.error(err.message); setToCancelId(null); }
+    finally { busy.current = false; setCancelling(false); }
   };
-
-  const doCancel = () => {
-    if (!toCancelId) return;
-    fetch(
-      `${process.env?.REACT_APP_BACK_URL}asociacion/cambiarEstado/${toCancelId}/cancelar`,
-      {
-        method: "POST",
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Asociacion Cancelada correctamente");
-          window.location.reload();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
-      })
-      .finally(() => {
-        setConfirmOpen(false);
-        setToCancelId(null);
-      });
-  };
-
-  // compute filtered list
-  const filteredEventos = eventos.filter((evento) => {
-    const asociacion = asociaciones.find((a) => a.eventoId === evento.id);
-    const matchesSearch = searchTerm
-      ? evento.nombre?.toLowerCase().includes(searchTerm.toLowerCase())
-      : true;
-    const matchesState = filterState
-      ? asociacion && asociacion.estado === filterState
-      : true;
-    return matchesSearch && matchesState;
-  });
-
-  const styles = {
-    pagina: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
-    },
-    tituloSeccion: {
-      textAlign: "center",
-      paddingTop: "1rem",
-      fontSize: "2rem",
-      color: "var(--qf-naranja)",
-      margin: 0,
-    },
-    hrFull: {
-      border: "none",
-      borderTop: "1px solid var(--qf-naranja)",
-      margin: 0,
-      width: "100%",
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-    },
-    /* Layout principal: listado + sidebar filtros */
-    mainLayout: {
-      display: "flex",
-      flexDirection: isNarrowLayout ? "column" : "row",
-      gap: "20px",
-      width: "100%",
-    },
-    listadoContainer: {
-      flex: isNarrowLayout ? "0 0 100%" : "1",
-      width: isNarrowLayout ? "100%" : "auto",
-      display: "flex",
-      flexDirection: "column",
-      gap: "16px",
-    },
-    /* Sidebar de filtros (solo modo ancho) */
-    filtersContainer: {
-      flex: "0 0 300px",
-      width: "300px",
-      borderRadius: "8px",
-      padding: "20px",
-      paddingTop: "10px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      border: `1px solid var(--qf-naranja)`,
-      boxSizing: "border-box",
-      alignSelf: "flex-start",
-    },
-    searchFilterContainer: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
-      width: "100%",
-    },
-    /* Estado vacío */
-    noAsociacionesContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      width: "100%",
-      padding: "2rem 0",
-    },
-    noAsociacionesTitle: {
-      fontSize: "1.5rem",
-      color: "var(--qf-naranja)",
-    },
-    noAsociacionesDescription: {
-      textAlign: "center",
-    },
-    linkAgregarEvento: {
-      color: "var(--qf-blue)",
-      textDecoration: "none",
-      fontWeight: "bold",
-    },
-  };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis asociaciones", url: "/misAsociacionesEPC" },
-  ];
-
-  const formatEstado = (s) =>
-    s ? s.replace(/([A-Z])/g, " $1").trim() : "";
-
-  return (
-    <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.pagina}>
-        {/* Título centrado */}
-        <h1 style={styles.tituloSeccion}>Mis Asociaciones</h1>
-
-        <hr style={styles.hrFull} />
-
-        <div className="qf-page-content">
-          <div className="qf-page-content__main">
-        {/* Breadcrumb a ancho completo */}
-        <div style={styles.breadcrumbWrapper}>
-          <Breadcrumb
-            items={breadcrumbItems}
-            style={{ width: "100%", margin: "8px 0" }}
-          />
-        </div>
-
-        {/* Layout principal */}
-        <div ref={contentRef} style={styles.mainLayout}>
-          {/* Columna izquierda: listado */}
-          <div style={styles.listadoContainer}>
-            {/* En modo angosto: buscador + filtros colapsables antes del listado */}
-            {isNarrowLayout && (
-              <div style={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "column",
-                gap: "8px",
-              }}>
-                <Buscador
-                  placeholder="Buscar eventos..."
-                  onBuscar={setSearchTerm}
-                  botonBuscar={false}
-                />
-                <Filtros
-                  gruposFiltros={[estadoGroup]}
-                  onFiltrar={(f) => setFilterState(f.estado || '')}
-                  titulo="ESTADOS"
-                  collapsible={true}
-                  defaultCollapsed={true}
-                />
-              </div>
-            )}
-
-            {isLoading ? (
-              <div style={{ display: "flex", justifyContent: "center", marginTop: "3rem" }}>
-                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-              </div>
-            ) : filteredEventos.length > 0 ? (
-              filteredEventos.map((evento, index) => {
-                const asociacion = asociaciones.find(
-                  (asoc) => asoc.eventoId === evento.id
-                );
-                return (
-                  <EventoCard
-                    key={index}
-                    evento={evento}
-                    asociacion={asociacion}
-                    onCancelar={cancelarAsociacion}
-                    formatEstado={formatEstado}
-                  />
-                );
-              })
-            ) : (
-              <div style={styles.noAsociacionesContainer}>
-                <div style={styles.noAsociacionesTitle}>
-                  <h2>Mis Asociaciones</h2>
-                </div>
-                <div style={styles.noAsociacionesDescription}>
-                  <p>
-                    Con Quickfood, asocia tu evento para hacerlo mejor.
-                    Descubre nuestras increíbles características y ofrece una
-                    experiencia única a tus consumidores.
-                  </p>
-                </div>
-                <Link
-                  to={`/asociarPuestoAEvento`}
-                  style={styles.linkAgregarEvento}
-                >
-                  Asociarme a Evento
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar de filtros (solo en modo ancho) */}
-          {!isNarrowLayout && (
-            <div style={styles.filtersContainer}>
-              <div style={styles.searchFilterContainer}>
-                <Buscador
-                  placeholder="Buscar eventos..."
-                  onBuscar={setSearchTerm}
-                  botonBuscar={false}
-                />
-                <Filtros
-                  gruposFiltros={[estadoGroup]}
-                  onFiltrar={(f) => setFilterState(f.estado || '')}
-                  titulo="ESTADOS"
-                />
-              </div>
-            </div>
-          )}
-        </div>
-          </div>
-        </div>
-      </div>
-      <ConfirmDialog
-        open={confirmOpen}
-        title="Confirmar cancelación"
-        message="¿Está seguro que desea cancelar esta asociación?"
-        onConfirm={doCancel}
-        onCancel={() => setConfirmOpen(false)}
-      />
-      <Footer />
-    </PageLayout>
-  );
+  const filtered = eventos.filter((event) => (!status || associationFor(asociaciones, event)?.estado === status) && String(event.nombre || "").toLocaleLowerCase("es").includes(search.trim().toLocaleLowerCase("es")));
+  return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
+    <main className="qf-my-associations-page">
+      <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis asociaciones", url: "/misAsociacionesEPC" }]} />
+      <header className="qf-my-associations-heading"><div><h1>Mis asociaciones</h1><p>Consultá los eventos a los que te asociaste y el estado de cada solicitud.</p></div><Link className="qf-my-associations-button" to="/listado-puestos-encargado"><FaStore aria-hidden="true" /> Mis puestos</Link></header>
+      <section className="qf-list-filters qf-my-associations-filters" aria-label="Filtros de asociaciones"><label htmlFor="my-association-search">Buscar evento<input id="my-association-search" type="search" placeholder="Nombre del evento" value={search} onChange={(event) => setSearch(event.target.value)} /></label><label htmlFor="my-association-state">Estado de la asociación<select id="my-association-state" value={status} onChange={(event) => setStatus(event.target.value)}><option value="">Todos los estados</option>{[...new Set(asociaciones.map((association) => association.estado).filter(Boolean))].map((state) => <option key={state} value={state}>{formatState(state)}</option>)}</select></label></section>
+      {loading || !consumerId ? <div className="qf-my-associations-feedback" role="status">Cargando asociaciones…</div> : error ? <div className="qf-my-associations-feedback" role="alert"><h2>No pudimos cargar tus asociaciones</h2><button className="qf-my-associations-button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : <><p className="qf-my-associations-count" aria-live="polite">{filtered.length} {filtered.length === 1 ? "evento asociado" : "eventos asociados"}</p>{filtered.length ? <div className="qf-my-associations-list">{filtered.map((event) => <EventoCard key={event.id} evento={event} asociacion={associationFor(asociaciones, event)} disabled={cancelling} onCancelar={setToCancelId} />)}</div> : <div className="qf-my-associations-feedback"><FaLink aria-hidden="true" /><h2>{search || status ? "No encontramos asociaciones con esos filtros" : "Todavía no tenés asociaciones"}</h2><p>{search || status ? "Probá otro nombre o estado para encontrar tu solicitud." : "Elegí uno de tus puestos para asociarlo a un evento disponible."}</p>{search || status ? <button className="qf-my-associations-button" onClick={() => { setSearch(""); setStatus(""); }}>Limpiar filtros</button> : <Link className="qf-my-associations-button" to="/listado-puestos-encargado">Ver mis puestos</Link>}</div>}</>}
+    </main>
+    <ConfirmDialog open={toCancelId != null} title="Confirmar cancelación" message={cancelling ? "Cancelando la asociación…" : "¿Estás seguro de que querés cancelar esta asociación?"} onConfirm={doCancel} onCancel={() => { if (!busy.current) setToCancelId(null); }} />
+    <Footer />
+  </PageLayout>;
 };
 
-/* --- Subcomponente EventoCard con ResizeObserver --- */
-const EventoCard = ({ evento, asociacion, onCancelar, formatEstado }) => {
-  const cardRef = useRef(null);
-  const [cardWidth, setCardWidth] = useState(0);
-  const isNarrow = cardWidth > 0 && cardWidth < 550;
-
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
-    const observer = new ResizeObserver(([entry]) => {
-      setCardWidth(entry.contentRect.width);
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const estadoLabel = asociacion.estado === "PendienteDeAceptacion"
-    ? "Pendiente de Aceptacion"
-    : formatEstado(asociacion.estado);
-
-  return (
-    <div ref={cardRef} style={{
-      border: "1px solid var(--qf-naranja)",
-      borderRadius: "10px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      display: "flex",
-      flexDirection: "column",
-      position: "relative",
-      width: "100%",
-      boxSizing: "border-box",
-    }}>
-      {/* Card body: horizontal o vertical según isNarrow */}
-      <div style={{
-        padding: "10px",
-        width: "100%",
-        display: "flex",
-        flexDirection: isNarrow ? "column" : "row",
-        boxSizing: "border-box",
-      }}>
-        {/* Imagen */}
-        <div style={{
-          width: isNarrow ? "100%" : "200px",
-          minWidth: isNarrow ? "100%" : "200px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginBottom: isNarrow ? "10px" : "0",
-        }}>
-          <img
-            src={
-              evento?.img && !String(evento.img).includes("vendimia.mendoza.gov.ar")
-                ? evento.img
-                : imgDefault
-            }
-            alt="Logo del Evento"
-            style={{
-              width: "100%",
-              maxHeight: "200px",
-              objectFit: "cover",
-              borderRadius: "10px",
-              aspectRatio: isNarrow ? "16/9" : "auto",
-            }}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = imgDefault;
-            }}
-          />
-        </div>
-
-        {/* Texto + botón */}
-        <div style={{
-          flex: "1",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: isNarrow ? "0 10px" : "0 20px",
-        }}>
-          <h5 style={{
-            fontSize: "1.5rem",
-            fontWeight: "bold",
-            marginBottom: "0.5rem",
-            color: "var(--qf-naranja)",
-            textAlign: "center",
-            width: "100%",
-          }}>{evento.nombre}</h5>
-          <p style={{
-            color: "var(--qf-blanco-puro)",
-            width: "100%",
-            textAlign: "center",
-            margin: "0.25rem 0",
-          }}>{evento.descripcion}</p>
-          <p style={{
-            color: "var(--qf-blanco-puro)",
-            width: "100%",
-            textAlign: "center",
-            margin: "0.25rem 0",
-          }}>{formatUbicacion(evento)}</p>
-
-          {/* Botón de cancelar debajo de los datos, centrado */}
-          {asociacion.estado === "PendienteDeAceptacion" && (
-            <div style={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              marginTop: "12px",
-            }}>
-              <button
-                style={{
-                  backgroundColor: "var(--qf-rojo)",
-                  color: "var(--qf-blanco-puro)",
-                  padding: "0.5rem 1rem",
-                  border: "none",
-                  cursor: "pointer",
-                  borderRadius: "10px",
-                }}
-                onClick={() => onCancelar(asociacion.id)}
-              >
-                Cancelar Asociacion
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Etiqueta de estado en la parte superior derecha */}
-      <span style={{
-        fontWeight: "bold",
-        backgroundColor: "var(--qf-green)",
-        color: "var(--qf-blanco-puro)",
-        borderRadius: "10px",
-        padding: "5px 10px",
-        fontSize: "0.9rem",
-        position: "absolute",
-        top: "10px",
-        right: "10px",
-      }}>
-        {estadoLabel}
-      </span>
-    </div>
-  );
+const EventoCard = ({ evento, asociacion, onCancelar, disabled }) => {
+  const state = asociacion?.estado;
+  const tone = state === "PendienteDeAceptacion" ? "pending" : ["Cancelada", "Cancelado", "Rechazada", "Rechazado"].includes(state) ? "inactive" : "neutral";
+  return <article className="qf-my-association-card">
+    <div className="qf-my-association-image"><img src={evento.img && !String(evento.img).includes("vendimia.mendoza.gov.ar") ? evento.img : imgDefault} alt={evento.nombre} onError={(event) => { if (event.currentTarget.getAttribute("src") !== imgDefault) event.currentTarget.src = imgDefault; }} /></div>
+    <div className="qf-my-association-body"><div className="qf-my-association-title"><h2>{evento.nombre}</h2><span className={`qf-my-association-state qf-my-association-state--${tone}`}>{formatState(state)}</span></div><p className="qf-my-association-description">{evento.descripcion}</p><p className="qf-my-association-location"><FaMapMarkerAlt aria-hidden="true" />{formatUbicacion(evento)}</p>{state === "PendienteDeAceptacion" && <footer><span>Tu solicitud está pendiente de aceptación.</span><button type="button" className="qf-my-associations-button qf-my-association-cancel" disabled={disabled} onClick={() => onCancelar(asociacion.id)}><FaTimes aria-hidden="true" /> Cancelar asociación</button></footer>}</div>
+  </article>;
 };
-
 export default AsociacionesEPC;

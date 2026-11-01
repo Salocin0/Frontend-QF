@@ -1,178 +1,83 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaPlus, FaStore, FaEyeSlash } from "react-icons/fa";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import PuestoEncargado from "./PuestoEncargado";
 import { UserContext } from "../ComponentesGenerales/UserContext";
-import { useContext } from "react";
 import Footer from "../ComponentesGenerales/Footer";
-import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import Buscador from "../Filtros y Buscadores/Buscador";
-import Filtros from "../Filtros y Buscadores/Filtros";
-import { CircularProgress } from "@mui/material";
-import useBreakpoint from "../../useBreakpoint";
+import "../ComponentesGenerales/ListFilters.css";
+import "./MisPuestos.css";
+
+export const formatStandStatus = (value) => String(value || "Sin estado").replace(/([a-záéíóú])([A-Z])/g, "$1 $2");
+export const filterOwnedStands = (stands, search, status) => {
+  const query = search.trim().toLocaleLowerCase("es");
+  return stands.filter((stand) => (!status || stand.estado === status) &&
+    [stand.nombreCarro, stand.numeroCarro, stand.telefonoCarro].some((value) => String(value ?? "").toLocaleLowerCase("es").includes(query)));
+};
 
 const ListadoPuestosEncargado = () => {
-  const { isMobile, width } = useBreakpoint();
-  const isVeryNarrow = width < 1100;
-  const [puestos, setPuestos] = useState([]);
-  const [recargar, setRecargar] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterState, setFilterState] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-
-  const recargarComponente = () => {
-    setTimeout(() => {
-      setRecargar(recargar + 1);
-    }, 100);
-  };
+  const [puestos, setPuestos] = useState([]);
+  const [attempt, setAttempt] = useState(0);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const consumerId = user?.consumidorId ?? user?.id;
 
   useEffect(() => {
-    if (user) {
-      const headers = new Headers();
-      headers.append("ConsumidorId", user?.id);
-      headers.append("Content-Type", "application/json");
+    if (!consumerId) return;
+    const controller = new AbortController();
+    setLoading(true);
+    setError(false);
+    (async () => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACK_URL}puesto/creados`, {
+          headers: { ConsumidorId: consumerId, "Content-Type": "application/json" },
+          signal: controller.signal,
+        });
+        // The existing API returns 404 when this owner has no stands.
+        if (response.status === 404) { setPuestos([]); return; }
+        if (!response.ok) throw new Error("No se pudieron cargar los puestos");
+        const data = await response.json();
+        setPuestos(Array.isArray(data.data) ? data.data : []);
+      } catch (err) {
+        if (!controller.signal.aborted) setError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    })();
+    return () => controller.abort();
+  }, [consumerId, attempt]);
 
-      setIsLoading(true);
-      fetch(`${process.env?.REACT_APP_BACK_URL}puesto/creados`, {
-        method: "GET",
-        headers: headers,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setPuestos(data.data);
-        })
-        .catch((error) => console.log("No existen puestos.", error))
-        .finally(() => setIsLoading(false));
-    }
-  }, [user, recargar]);
-
-  const agregarNuevo = () => {
-    navigate(`/crear-puesto`);
-  };
-
-  const estadoGroup = {
-    nombre: 'estado',
-    opciones: Array.from(
-      new Set(puestos.map((p) => p.estado))
-    ).map((estado) => ({
-      valor: estado,
-      etiqueta: estado ? estado.replace(/([A-Z])/g, ' $1').trim() : estado,
-    })),
-  };
-
-  const filteredPuestos = puestos.filter((puesto) => {
-    const matchesSearch = searchTerm
-      ? JSON.stringify(puesto).toLowerCase().includes(searchTerm.toLowerCase())
-      : true;
-    const matchesState = filterState
-      ? puesto.estado === filterState
-      : true;
-    return matchesSearch && matchesState;
-  });
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis Puestos", url: "/listado-puestos-encargado" },
-  ];
-
-  const asideContent = (
-    <aside className="qf-page-content__aside" style={isVeryNarrow ? { width: "100%", margin: "0 0 10px 0", minWidth: 0, order: 0 } : undefined}>
-      <div className="qf-search-box">
-        <Buscador
-          placeholder="Buscar puestos..."
-          onBuscar={setSearchTerm}
-          botonBuscar={false}
-        />
-      </div>
-      <div className="qf-filter-box">
-        <Filtros
-          gruposFiltros={[estadoGroup]}
-          onFiltrar={(f) => setFilterState(f.estado || '')}
-          titulo="ESTADOS"
-          collapsible
-          defaultCollapsed
-        />
-      </div>
-      <button
-        onClick={agregarNuevo}
-        className="qf-btn qf-btn--primary"
-        style={{ width: "100%" }}
-      >
-        Agregar Puesto
-      </button>
-    </aside>
-  );
+  const filtered = filterOwnedStands(puestos, search, status);
+  const resetFilters = () => { setSearch(""); setStatus(""); };
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      {/* Header full-width */}
-      <div className="qf-page-header" style={{ textAlign: "center", paddingLeft: 0 }}>
-        <h1 className="qf-page-title" style={{ textAlign: "center", paddingBottom: "20px" }}>Puestos</h1>
-      </div>
-      <hr className="qf-separator" style={{ margin: "0 0 20px", width: "100%" }} />
-
-      {/* Contenido en dos columnas */}
-      <div className="qf-page-content" style={{ padding: isMobile ? "0 12px" : "0 20px", flex: 1, minHeight: 0, flexDirection: isVeryNarrow ? "column" : "row" }}>
-        {/* Columna principal: breadcrumb + aside (si es angosto) + listado */}
-        <div className="qf-page-content__main">
-          <Breadcrumb items={breadcrumbItems} style={{ width: "100%", margin: "0 0 10px 0" }} />
-          {isVeryNarrow && asideContent}
-
-          <div className="qf-scrollable" style={{ paddingBottom: "60px" }}>
-            {isLoading || !user ? (
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "3rem", height: "300px" }}>
-                <CircularProgress style={{ color: "var(--qf-naranja)" }} />
-              </div>
-            ) : filteredPuestos.length > 0 ? (
-              filteredPuestos.map((puesto, index) => (
-                <PuestoEncargado
-                  key={index}
-                  carrito={puesto}
-                  actualizarListado={recargarComponente}
-                />
-              ))
-            ) : (
-              <div style={{ textAlign: "center", padding: "40px 20px", margin: "40px" }}>
-                <div style={{ fontSize: "1.5rem", color: "var(--qf-naranja)" }}>
-                  <h2>Puestos</h2>
-                </div>
-                <div style={{ marginBottom: "20px", fontSize: "18px", color: "var(--qf-text-primary)" }}>
-                  <p>
-                    Con Quickfood, crea tus Puestos de Comida para hacerlo mejor.
-                    Descubre nuestras increíbles características y ofrece una experiencia
-                    única a tus consumidores.
-                  </p>
-                </div>
-                <Link
-                  to={`/crear-puesto`}
-                  style={{
-                    textDecoration: "none",
-                    backgroundColor: "var(--qf-naranja)",
-                    padding: "10px 20px",
-                    color: "var(--qf-text-primary)",
-                    borderRadius: "5px",
-                    fontWeight: "bold",
-                    fontSize: "18px",
-                    transition: "background-color 0.3s",
-                    display: "inline-block",
-                  }}
-                >
-                  Crear Puesto
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {!isVeryNarrow && asideContent}
-      </div>
-
+      <main className="qf-owned-stands-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis puestos", url: "/listado-puestos-encargado" }]} />
+        <header className="qf-owned-stands-heading">
+          <div><h1>Mis puestos</h1><p>Administrá tus productos, pedidos y participación en eventos.</p></div>
+          <div className="qf-owned-stands-heading-actions"><Link to="/puestos-deshabilitados"><FaEyeSlash aria-hidden="true" /> Puestos deshabilitados</Link><button className="qf-owned-primary" type="button" onClick={() => navigate("/crear-puesto")}><FaPlus aria-hidden="true" /> Agregar puesto</button></div>
+        </header>
+        <section className="qf-list-filters qf-owned-stands-filters" aria-label="Filtros de mis puestos">
+          <label htmlFor="owned-stand-search">Buscar puesto<input id="owned-stand-search" type="search" placeholder="Nombre, número o teléfono" value={search} onChange={(event) => setSearch(event.target.value)} /></label>
+          <label htmlFor="owned-stand-status">Estado<select id="owned-stand-status" value={status} onChange={(event) => setStatus(event.target.value)}><option value="">Todos los estados</option>{[...new Set(puestos.map((stand) => stand.estado).filter(Boolean))].map((state) => <option key={state} value={state}>{formatStandStatus(state)}</option>)}</select></label>
+        </section>
+        {loading || !consumerId ? <div className="qf-owned-stands-empty" role="status">Cargando tus puestos…</div> : error ? (
+          <div className="qf-owned-stands-empty" role="alert"><h2>No pudimos cargar tus puestos</h2><p>Intentá nuevamente en unos instantes.</p><button type="button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div>
+        ) : <>
+          <p className="qf-owned-stands-count" aria-live="polite">{filtered.length} {filtered.length === 1 ? "puesto" : "puestos"}{search || status ? ` de ${puestos.length}` : ""}</p>
+          {filtered.length ? <div className="qf-owned-stands-list">{filtered.map((stand) => <PuestoEncargado key={stand.id} carrito={stand} actualizarListado={() => setAttempt((value) => value + 1)} />)}</div> : (
+            <div className="qf-owned-stands-empty"><FaStore aria-hidden="true" /><h2>{puestos.length ? "No encontramos puestos con esos filtros" : "Tu próximo puesto empieza acá"}</h2><p>{puestos.length ? "Probá otro nombre o seleccioná un estado diferente." : "Creá tu puesto para cargar productos y participar en eventos."}</p><button type="button" onClick={puestos.length ? resetFilters : () => navigate("/crear-puesto")}>{puestos.length ? "Limpiar filtros" : "Crear mi primer puesto"}</button></div>
+          )}
+        </>}
+      </main>
       <Footer />
     </PageLayout>
   );
 };
-
 export default ListadoPuestosEncargado;

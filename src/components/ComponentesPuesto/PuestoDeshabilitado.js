@@ -1,98 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { Dropdown } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import React, { useContext, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { base64ToFile } from "../ComponentesGenerales/Utils/base64";
-import "./../sass/main.scss";
-
-const PuestoDeshabilitado = ({ carrito,recargar }) => {
-  const [session, setSession] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const sessionId = localStorage.getItem("sessionId");
-
-    if (sessionId) {
-      fetch(`${process.env?.REACT_APP_BACK_URL}user/session`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sessionID: sessionId }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setSession(data.data);
-        })
-        .catch((error) => console.error("Error fetching session:", error));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (carrito && carrito.img) {
-      try {
-        const file = base64ToFile(
-          carrito.img,
-          "imagen.png",
-          "image/png"
-        );
-        setImageFile(file);
-      } catch (error) {
-        console.error("Error al convertir la imagen:", error);
-      }
-    }
-  }, [carrito]);
-
-  const handleHabilitar = () => {
-    const headers = new Headers();
-    headers.append("ConsumidorId", session.consumidorId);
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}puesto/${carrito.id}/habilitacion`, {
-      method: "PUT",
-      headers: headers,
-    })
-      .then((response) => {
-        if (response.ok) {
-          toast.success("Puesto habilitado nuevamente");
-          navigate(`/listado-puestos`);
-          recargar();
-        } else {
-          response.json().then((errorData) => {
-            const errorMessage = errorData.message || "Ha ocurrido un error";
-            toast.error(errorMessage);
-          });
-        }
-      })
-      .catch((error) => console.error("Error:", error));
+import { FaIdBadge, FaPhone, FaToggleOn, FaInfoCircle } from "react-icons/fa";
+import { UserContext } from "../ComponentesGenerales/UserContext";
+import imgDefault from "../img/puestoLogoDefault.jpg";
+import "./MisPuestos.css";
+import "./PuestosDeshabilitados.css";
+const PuestoDeshabilitado = ({ carrito, recargar }) => {
+  const { user } = useContext(UserContext);
+  const [pending, setPending] = useState(false);
+  const busy = useRef(false);
+  const handleHabilitar = async () => {
+    if (busy.current) return;
+    busy.current = true; setPending(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACK_URL}puesto/${carrito.id}/habilitacion`, { method: "PUT", headers: { ConsumidorId: user?.consumidorId ?? user?.id } });
+      if (!response.ok) throw new Error("No pudimos habilitar el puesto. Intentá nuevamente.");
+      toast.success("Puesto habilitado nuevamente");
+      recargar();
+    } catch (err) { toast.error(err.message || "Error al habilitar el puesto"); }
+    finally { busy.current = false; setPending(false); }
   };
-
-  return (
-    <div className="cardlink">
-      <div className="card shadow-sm">
-        {imageFile && (
-          <img
-            src={carrito?.img}
-            className="cardimgtop"
-            alt="Thumbnail"
-          />
-        )}
-        <div className="card-body">
-          <div className="d-flex justify-content-between align-items-center">
-            <h5 className={`card-text "truncate"`} title={carrito.nombreCarro}>
-              {carrito.nombreCarro}
-            </h5>
-            <Dropdown>
-              <Dropdown.Toggle variant="danger"></Dropdown.Toggle>
-              <Dropdown.Menu>
-                  <Dropdown.Item onClick={handleHabilitar}>Habilitar Carrito</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-        </div>
-      </div>
+  return <article className="qf-owned-stand" aria-label={carrito.nombreCarro}>
+    <div className="qf-owned-stand-image"><img src={carrito.img || imgDefault} alt={`Puesto ${carrito.nombreCarro}`} onError={(event) => { if (event.currentTarget.getAttribute("src") !== imgDefault) event.currentTarget.src = imgDefault; }} /></div>
+    <div className="qf-owned-stand-body"><div className="qf-owned-stand-heading"><h2>{carrito.nombreCarro}</h2><span className="qf-owned-stand-status qf-owned-stand-status--disabled">Deshabilitado</span></div>
+      <dl className="qf-owned-stand-meta"><div><dt><FaIdBadge aria-hidden="true" /> Número de puesto</dt><dd>{carrito.numeroCarro || "Sin número"}</dd></div><div><dt><FaPhone aria-hidden="true" /> Teléfono</dt><dd>{carrito.telefonoCarro || "Sin teléfono"}</dd></div></dl>
+      <div className="qf-disabled-stand-actions"><Link className="qf-disabled-stand-link" to={`/info-puesto/${carrito.id}`} state={carrito}><FaInfoCircle aria-hidden="true" /> Información</Link><button type="button" className="qf-owned-primary" onClick={handleHabilitar} disabled={pending}><FaToggleOn aria-hidden="true" />{pending ? "Habilitando…" : "Habilitar puesto"}</button></div>
     </div>
-  );
+  </article>;
 };
-
 export default PuestoDeshabilitado;

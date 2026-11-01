@@ -1,255 +1,45 @@
-﻿import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { FaPen, FaSave, FaStore, FaPhone, FaIdBadge } from "react-icons/fa";
 import { toast } from "react-toastify";
-import useBreakpoint from "../../useBreakpoint";
-
-function FormPuestoEditar({ carrito }) {
-  const { isMobile } = useBreakpoint();
+import imgDefault from "../img/puestoLogoDefault.jpg";
+import "./PuestoInformacion.css";
+const fieldsFrom = (stand) => ({ numeroCarro: stand.numeroCarro ?? "", nombreCarro: stand.nombreCarro ?? "", tipoNegocio: stand.tipoNegocio ?? "", telefonoCarro: stand.telefonoCarro ?? "" });
+function FormPuestoEditar({ carrito, onSaved }) {
   const [editMode, setEditMode] = useState(false);
-  const [numeroCarro, setNumeroCarro] = useState("");
-  const [nombreCarro, setNombreCarro] = useState("");
-  const [tipoNegocio, setTipoNegocio] = useState("");
-  const [telefonoCarro, setTelefonoCarro] = useState("");
-  const [originalData, setOriginalData] = useState({});
-
-  useEffect(() => {
-    if (carrito) {
-      setNumeroCarro(carrito.numeroCarro);
-      setNombreCarro(carrito.nombreCarro);
-      setTipoNegocio(carrito.tipoNegocio);
-      setTelefonoCarro(carrito.telefonoCarro);
-    }
-  }, [carrito]);
-
-  const handleEditar = (e) => {
-    e.preventDefault();
-    setEditMode(true);
-    setOriginalData(carrito);
-  };
-
-  const handleSave = async (e) => {
-    e.preventDefault();
-    setEditMode(false);
-    const puesto={numeroCarro, nombreCarro, tipoNegocio, telefonoCarro}
-    const response = await fetch(
-      `${process.env?.REACT_APP_BACK_URL}puesto/${carrito.id}`,
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({puesto}),
-            }
-    )
-    if(response.ok){
-      carrito.numeroCarro=numeroCarro;
-      carrito.nombreCarro=nombreCarro;
-      carrito.tipoNegocio=tipoNegocio;
-      carrito.telefonoCarro=telefonoCarro;
-      setOriginalData(carrito);
+  const [fields, setFields] = useState(() => fieldsFrom(carrito));
+  const [saved, setSaved] = useState(() => fieldsFrom(carrito));
+  const [saving, setSaving] = useState(false);
+  const busy = useRef(false);
+  useEffect(() => { const data = fieldsFrom(carrito); setFields(data); setSaved(data); setEditMode(false); }, [carrito]);
+  const change = (event) => setFields((current) => ({ ...current, [event.target.name]: event.target.value }));
+  const cancel = () => { setFields({ ...saved }); setEditMode(false); };
+  const handleSave = async (event) => {
+    event.preventDefault();
+    if (!editMode || busy.current) return;
+    const puesto = Object.fromEntries(Object.entries(fields).map(([key, value]) => [key, String(value).trim()]));
+    if (Object.values(puesto).some((value) => !value)) { toast.error("Completá todos los datos del puesto."); return; }
+    busy.current = true; setSaving(true);
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BACK_URL}puesto/${carrito.id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ puesto }) });
+      if (!response.ok) throw new Error("No pudimos actualizar el puesto. Intentá nuevamente.");
+      setFields(puesto); setSaved(puesto); setEditMode(false);
+      onSaved?.({ ...carrito, ...puesto });
       toast.success("Puesto actualizado correctamente");
-    }else{
-      toast.error("Error al actualizar puesto");
-    }
-  }
-
-  const handleCancel = (e) => {
-    e.preventDefault();
-    setNumeroCarro(originalData.numeroCarro);
-    setNombreCarro(originalData.nombreCarro);
-    setTipoNegocio(originalData.tipoNegocio);
-    setTelefonoCarro(originalData.telefonoCarro);
-    setEditMode(false);
+    } catch (err) { toast.error(err.message || "Error al actualizar puesto"); }
+    finally { busy.current = false; setSaving(false); }
   };
-
-  const styles = {
-    form: {
-      display: "flex",
-      flexDirection: "column",
-      gap: isMobile ? "12px" : "16px",
-      border: `1px solid var(--qf-naranja)`,
-      borderRadius: "8px",
-      padding: isMobile ? "16px 12px" : "24px",
-      backgroundColor: "var(--qf-bg-secondary)",
-      position: "relative",
-      width: "100%",
-    },
-    titleRow: {
-      display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      alignItems: isMobile ? "stretch" : "center",
-      gap: "10px",
-    },
-    title: {
-      flex: 1,
-      textAlign: "center",
-      fontSize: isMobile ? "1.3em" : "1.5em",
-      fontWeight: "bold",
-      color: "var(--qf-text-primary)",
-      margin: 0,
-    },
-    buttonContainer: {
-      display: "flex",
-      gap: "10px",
-      justifyContent: isMobile ? "center" : "flex-end",
-    },
-    button: {
-      padding: isMobile ? "8px 16px" : "10px 20px",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      fontWeight: "bold",
-      fontSize: isMobile ? "0.9rem" : "1rem",
-    },
-    editButton: { backgroundColor: "var(--qf-blue)", color: "var(--qf-blanco-puro)" },
-    saveButton: { backgroundColor: "var(--qf-green)", color: "var(--qf-blanco-puro)" },
-    cancelButton: {
-      backgroundColor: "var(--qf-rojo)",
-      color: "var(--qf-blanco-puro)",
-    },
-    fieldGroup: {
-      display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      flexWrap: "wrap",
-      gap: "16px",
-    },
-    field: {
-      flex: "1",
-      minWidth: isMobile ? "100%" : "250px",
-    },
-    label: {
-      display: "block",
-      marginBottom: "6px",
-      fontWeight: "bold",
-      color: "var(--qf-text-primary)",
-      fontSize: isMobile ? "0.9rem" : "1rem",
-    },
-    input: {
-      width: "100%",
-      padding: "10px 12px",
-      border: "none",
-      borderRadius: "4px",
-      color: "var(--qf-blanco-puro)",
-      backgroundColor: "var(--qf-bg-card)",
-      fontSize: "1rem",
-      boxSizing: "border-box",
-    },
-    link: {
-      display: "inline-block",
-      padding: "10px 20px",
-      backgroundColor: "var(--qf-blue)",
-      color: "var(--qf-blanco-puro)",
-      textDecoration: "none",
-      borderRadius: "5px",
-      textAlign: "center",
-      cursor: "pointer",
-      fontWeight: "bold",
-      alignSelf: isMobile ? "stretch" : "flex-start",
-    },
-  };
-
-  return (
-    <form style={styles.form} onSubmit={(e) => e.preventDefault()}>
-      {/* Título + botones en la misma línea en desktop, apilados en mobile */}
-      <div style={styles.titleRow}>
-        <h2 style={styles.title}>Datos Puesto</h2>
-        <div style={styles.buttonContainer}>
-          {!editMode ? (
-            <button
-              style={{ ...styles.button, ...styles.editButton }}
-              onClick={(e) => handleEditar(e)}
-            >
-              Editar
-            </button>
-          ) : (
-            <>
-              <button
-                style={{ ...styles.button, ...styles.saveButton }}
-                onClick={(e) => handleSave(e)}
-              >
-                Guardar
-              </button>
-              <button
-                style={{ ...styles.button, ...styles.cancelButton }}
-                onClick={(e) => handleCancel(e)}
-              >
-                Cancelar
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Fila: ID Carro + Nombre Carro */}
-      <div style={styles.fieldGroup}>
-        <div style={styles.field}>
-          <label style={styles.label} htmlFor="idCarro">
-            N° ID Carro
-          </label>
-          <input
-            type="number"
-            id="idCarro"
-            style={styles.input}
-            onChange={(e) => setNumeroCarro(e.target.value)}
-            value={numeroCarro}
-            disabled={!editMode}
-            required
-          />
-        </div>
-        <div style={styles.field}>
-          <label style={styles.label} htmlFor="nombreCarro">
-            Nombre Carro
-          </label>
-          <input
-            type="text"
-            id="nombreCarro"
-            style={styles.input}
-            value={nombreCarro}
-            onChange={(e) => setNombreCarro(e.target.value)}
-            disabled={!editMode}
-            required
-          />
-        </div>
-      </div>
-
-      {/* Tipo de Negocio */}
-      <div>
-        <label style={styles.label} htmlFor="tipoNegocio">
-          Tipo de Negocio
-        </label>
-        <input
-          type="text"
-          id="tipoNegocio"
-          style={styles.input}
-          value={tipoNegocio}
-          onChange={(e) => setTipoNegocio(e.target.value)}
-          disabled={!editMode}
-          required
-        />
-      </div>
-
-      {/* Teléfono */}
-      <div>
-        <label style={styles.label} htmlFor="telefonoCarro">
-          Teléfono del Carro de Comida
-        </label>
-        <input
-          type="tel"
-          id="telefonoCarro"
-          style={styles.input}
-          value={telefonoCarro}
-          onChange={(e) => setTelefonoCarro(e.target.value)}
-          disabled={!editMode}
-          required
-        />
-      </div>
-
-      {/* Volver */}
-      <Link to={`/listado-puestos-encargado`} style={styles.link}>
-        Volver
-      </Link>
-    </form>
-  );
+  return <form className={`qf-stand-info-form${editMode ? " qf-stand-info-form--editing" : ""}`} onSubmit={handleSave}>
+    <div className="qf-stand-info-form-heading"><h2>Datos del puesto</h2><span>{editMode ? "Modo edición" : "Información general"}</span></div>
+    <div className="qf-stand-info-layout">
+      <aside className="qf-stand-info-identity"><img src={carrito.img || imgDefault} alt={`Puesto ${saved.nombreCarro}`} /><h3>{saved.nombreCarro}</h3>{carrito.estado && <span className="qf-stand-info-status">{String(carrito.estado).replace(/([a-z])([A-Z])/g, "$1 $2")}</span>}<p>{saved.tipoNegocio || "Puesto de comida"}</p></aside>
+      <fieldset disabled={!editMode || saving}><legend className="qf-stand-info-sr">Datos del puesto</legend><div className="qf-stand-info-fields">
+        <label htmlFor="idCarro"><span><FaIdBadge aria-hidden="true" /> N° ID Carro</span><input type="number" id="idCarro" name="numeroCarro" value={fields.numeroCarro} onChange={change} required /></label>
+        <label htmlFor="nombreCarro"><span><FaStore aria-hidden="true" /> Nombre Carro</span><input id="nombreCarro" name="nombreCarro" value={fields.nombreCarro} onChange={change} required /></label>
+        <label htmlFor="tipoNegocio"><span>Tipo de Negocio</span><input id="tipoNegocio" name="tipoNegocio" value={fields.tipoNegocio} onChange={change} placeholder="Ej.: Hamburguesería" required /></label>
+        <label htmlFor="telefonoCarro"><span><FaPhone aria-hidden="true" /> Teléfono del Carro de Comida</span><input type="tel" id="telefonoCarro" name="telefonoCarro" value={fields.telefonoCarro} onChange={change} required /></label>
+      </div></fieldset>
+    </div>
+    <footer className="qf-stand-info-form-footer"><p>{editMode ? "Guardá los cambios cuando termines de editar." : "Seleccioná Editar para modificar la información."}</p><div>{editMode ? <><button className="qf-stand-info-button" type="button" disabled={saving} onClick={cancel}>Cancelar</button><button className="qf-stand-info-button qf-stand-info-button--primary" type="submit" disabled={saving}><FaSave aria-hidden="true" />{saving ? "Guardando…" : "Guardar"}</button></> : <button className="qf-stand-info-button qf-stand-info-button--primary" type="button" onClick={() => setEditMode(true)}><FaPen aria-hidden="true" /> Editar</button>}</div></footer>
+  </form>;
 }
-
 export default FormPuestoEditar;

@@ -1,218 +1,41 @@
-﻿import React from 'react';
-import useBreakpoint from "../../useBreakpoint";
+import React from "react";
+import { Dialog } from "@mui/material";
+import { FaTimes, FaReceipt, FaUser, FaMotorcycle, FaPhone, FaEnvelope, FaCalendarAlt } from "react-icons/fa";
+import "./PedidoDetalleDialog.css";
 
-const formatStatus = (s) => {
-  if (!s) return '';
-  return s.replace(/([a-z])([A-Z])/g, '$1 $2');
-};
+const formatStatus = (value) => String(value || "").replace(/([a-z])([A-Z])/g, "$1 $2");
+const money = (value) => new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(Number(value) || 0);
+const dateLabel = (value) => { const date = new Date(value); return Number.isNaN(date.getTime()) ? "Fecha no disponible" : date.toLocaleString("es-AR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }); };
+
+function Contact({ title, icon, name, phone, email }) {
+  return <section className="qf-order-detail-contact"><h3>{icon}{title}</h3>{name && <strong>{name}</strong>}{phone && <p><FaPhone aria-hidden="true" /><span>{phone}</span></p>}{email && <p><FaEnvelope aria-hidden="true" /><span>{email}</span></p>}</section>;
+}
 
 const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
-  const { isMobile } = useBreakpoint();
-
-  if (!infoDialog.open) return null;
-
-  return (
-    <>
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: 'rgba(0,0,0,0.5)',
-          zIndex: 1099,
-        }}
-        onClick={onClose}
-      />
-      <div
-        style={{
-          position: 'fixed',
-          top: isMobile ? 'auto' : '50%',
-          left: isMobile ? 0 : '50%',
-          bottom: isMobile ? 0 : 'auto',
-          transform: isMobile ? 'none' : 'translate(-50%,-50%)',
-          background: "var(--qf-bg-main)",
-          color: "var(--qf-text-primary)",
-          padding: '20px',
-          zIndex: 1100,
-          borderRadius: isMobile ? '12px 12px 0 0' : '8px',
-          width: isMobile ? '100%' : '80%',
-          maxWidth: isMobile ? '100%' : '600px',
-          overflowY: 'auto',
-          maxHeight: '80vh',
-          boxSizing: 'border-box',
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h3 style={{ marginTop: 0, textAlign: 'center', color: 'var(--qf-naranja)' }}>
-          Pedido #{infoDialog.task.id.replace('task-', '')}
-        </h3>
-
-        {/* datos basicos card */}
-        <div
-          style={{
-            border: `1px solid var(--qf-naranja)`,
-            borderRadius: '6px',
-            padding: '10px',
-            marginBottom: '1rem',
-          }}
-        >
-          <h4 style={{ color: "var(--qf-naranja)" }}>Resumen</h4>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <tbody>
-              <tr>
-                <td><strong>Fecha:</strong></td>
-                <td>{new Date(infoDialog.task.fecha).toLocaleString('es-ES')}</td>
-              </tr>
-              <tr>
-                <td><strong>Total:</strong></td>
-                <td>${Number(infoDialog.task.total).toFixed(2)}</td>
-              </tr>
-              <tr>
-                <td><strong>Estado:</strong></td>
-                <td>{formatStatus(infoDialog.task.estado)}</td>
-              </tr>
-              {detailData?.codigoEntrega && (
-                <tr>
-                  <td><strong>Código entrega:</strong></td>
-                  <td>{detailData.codigoEntrega}</td>
-                </tr>
-              )}
-              {detailData?.fechaPreCompra && (
-                <tr>
-                  <td><strong>Fecha precompra:</strong></td>
-                  <td>{new Date(detailData.fechaPreCompra).toLocaleString('es-ES')}</td>
-                </tr>
-              )}
-              {detailData?.fechaEntrega && (
-                <tr>
-                  <td><strong>Fecha entrega:</strong></td>
-                  <td>{new Date(detailData.fechaEntrega).toLocaleString('es-ES')}</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* consumidor card */}
-        {detailData?.Consumidor && (
-          <div
-            style={{
-              border: `1px solid var(--qf-naranja)`,
-              borderRadius: '6px',
-              padding: '10px',
-              marginBottom: '1rem',
-            }}
-          >
-            <h4 style={{ color: "var(--qf-naranja)" }}>Consumidor</h4>
-            <p>
-              {detailData.Consumidor.nombre} {detailData.Consumidor.apellido}
-            </p>
-            {detailData.Consumidor.telefono && (
-              <p>Tel: {detailData.Consumidor.telefono}</p>
-            )}
-            {detailData.Consumidor.usuario?.email && (
-              <p>Email: {detailData.Consumidor.usuario.email}</p>
-            )}
-          </div>
-        )}
-        {/* repartidor card */}
-        {detailData?.repartidor && (
-          <div
-            style={{
-              border: `1px solid var(--qf-naranja)`,
-              borderRadius: '6px',
-              padding: '10px',
-              marginBottom: '1rem',
-            }}
-          >
-            <h4 style={{ color: "var(--qf-naranja)" }}>Repartidor</h4>
-            <p>
-              {detailData.repartidor?.Consumidor?.nombre || ''}{' '}
-              {detailData.repartidor?.Consumidor?.apellido || ''}
-            </p>
-            {detailData.repartidor?.Consumidor?.telefono && (
-              <p>Tel: {detailData.repartidor.Consumidor.telefono}</p>
-            )}
-            {detailData.repartidor?.Consumidor?.usuario?.email && (
-              <p>Email: {detailData.repartidor.Consumidor.usuario.email}</p>
-            )}
-          </div>
-        )}
-
-        {/* productor card */}
-        {detailData?.Evento?.Productor && (
-          <div
-            style={{
-              border: `1px solid var(--qf-naranja)`,
-              borderRadius: '6px',
-              padding: '10px',
-              marginBottom: '1rem',
-            }}
-          >
-            <h4 style={{ color: "var(--qf-naranja)" }}>Productor</h4>
-            <p>{detailData.Evento.Productor.nombre || ''}</p>
-            {detailData.Evento.Productor?.telefono && (
-              <p>Tel: {detailData.Evento.Productor.telefono}</p>
-            )}
-            {detailData.Evento.Productor?.email && (
-              <p>Email: {detailData.Evento.Productor.email}</p>
-            )}
-          </div>
-        )}
-        {/* productos card */}
-        {detailData && (
-          <div
-            style={{
-              border: `1px solid var(--qf-naranja)`,
-              borderRadius: '6px',
-              padding: '10px',
-              marginBottom: '1rem',
-            }}
-          >
-            <h4 style={{ color: "var(--qf-naranja)" }}>Productos</h4>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: 'left' }}>Cantidad</th>
-                  <th style={{ textAlign: 'left' }}>Nombre</th>
-                  <th style={{ textAlign: 'left' }}>Precio unit.</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(detailData.detalles || []).map((d) => (
-                  <tr key={d.id}>
-                    <td>{d.cantidad}</td>
-                    <td>{d.producto?.nombre || d.productoId}</td>
-                    <td>${Number(d.precio).toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <button
-            onClick={onClose}
-            style={{
-              marginTop: '10px',
-              padding: '8px 16px',
-              backgroundColor: "var(--qf-naranja)",
-              border: 'none',
-              cursor: 'pointer',
-              color: "var(--qf-text-white)",
-              borderRadius: '10px',
-              fontWeight: 'bold',
-            }}
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </>
-  );
+  if (!infoDialog.open || !infoDialog.task) return null;
+  const task = infoDialog.task;
+  const order = detailData || task;
+  const consumer = detailData?.Consumidor;
+  const courier = detailData?.repartidor?.Consumidor;
+  const producer = detailData?.Evento?.Productor;
+  const details = Array.isArray(order.detalles) ? order.detalles : [];
+  const orderId = String(task.id).replace("task-", "");
+  return <Dialog open onClose={onClose} maxWidth="sm" fullWidth className="qf-order-detail-dialog" aria-labelledby="qf-order-detail-title" slotProps={{ paper: { className: "qf-order-detail-paper" } }}>
+    <header className="qf-order-detail-header"><div className="qf-order-detail-title-icon"><FaReceipt aria-hidden="true" /></div><div><span className="qf-order-detail-eyebrow">Detalle del pedido</span><h2 id="qf-order-detail-title">Pedido #{orderId}</h2></div><button type="button" className="qf-order-detail-close" aria-label="Cerrar detalle" onClick={onClose}><FaTimes aria-hidden="true" /></button></header>
+    <div className="qf-order-detail-body">
+      <div className="qf-order-detail-summary"><div><span className="qf-order-detail-status">{formatStatus(order.estado)}</span><p><FaCalendarAlt aria-hidden="true" />{dateLabel(order.fecha)}</p></div><div className="qf-order-detail-total"><span>Total del pedido</span><strong>{money(order.total)}</strong></div></div>
+      {(order.codigoEntrega || order.fechaPreCompra || order.fechaEntrega) && <dl className="qf-order-detail-logistics">{order.codigoEntrega && <div><dt>Código de entrega</dt><dd className="qf-order-detail-code">{order.codigoEntrega}</dd></div>}{order.fechaPreCompra && <div><dt>Fecha precompra</dt><dd>{dateLabel(order.fechaPreCompra)}</dd></div>}{order.fechaEntrega && <div><dt>Fecha de entrega</dt><dd>{dateLabel(order.fechaEntrega)}</dd></div>}</dl>}
+      <section className="qf-order-detail-products" aria-labelledby="qf-order-products-title"><div className="qf-order-detail-section-heading"><h3 id="qf-order-products-title">Productos</h3><span>{details.length} {details.length === 1 ? "producto" : "productos"}</span></div>
+        {details.length > 0 ? <ul>{details.map((detail, index) => <li key={detail.id || index}><span className="qf-order-detail-quantity">{detail.cantidad}×</span><div><strong>{detail.producto?.nombre || `Producto #${detail.productoId}`}</strong><span>Precio unitario</span></div><strong className="qf-order-detail-unit-price">{money(detail.precio)}</strong></li>)}</ul> : <p className="qf-order-detail-empty">{detailData ? "No hay productos detallados en este pedido." : "Cargando los productos del pedido…"}</p>}
+      </section>
+      {!detailData && <p className="qf-order-detail-loading" role="status">Cargando información adicional…</p>}
+      {(consumer || courier || producer) && <div className="qf-order-detail-contacts">
+        {consumer && <Contact title="Consumidor" icon={<FaUser aria-hidden="true" />} name={[consumer.nombre, consumer.apellido].filter(Boolean).join(" ")} phone={consumer.telefono} email={consumer.usuario?.email} />}
+        {detailData?.repartidor && <Contact title="Repartidor" icon={<FaMotorcycle aria-hidden="true" />} name={[courier?.nombre, courier?.apellido].filter(Boolean).join(" ")} phone={courier?.telefono} email={courier?.usuario?.email} />}
+        {producer && <Contact title="Productor" icon={<FaUser aria-hidden="true" />} name={producer.nombre} phone={producer.telefono} email={producer.email} />}
+      </div>}
+    </div>
+    <footer className="qf-order-detail-footer"><button type="button" onClick={onClose}>Cerrar detalle</button></footer>
+  </Dialog>;
 };
-
 export default PedidoDetalleDialog;

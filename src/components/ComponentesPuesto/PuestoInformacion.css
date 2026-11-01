@@ -1,0 +1,38 @@
+.qf-stand-info-page { box-sizing: border-box; flex: 0 0 auto; width: 100%; min-width: 0; padding: 48px 24px 24px; color: var(--qf-text-primary); font-family: var(--qf-font-family); }
+.qf-stand-info-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 28px; }
+.qf-stand-info-heading h1 { margin: 0 0 8px; color: var(--qf-text-primary); font-size: 1.8rem; font-weight: 800; }
+.qf-stand-info-heading p { margin: 0; color: var(--qf-text-muted); text-align: left; font-size: .95rem; line-height: 1.5; }
+.page-layout .qf-stand-info-button { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 18px; border: 1px solid color-mix(in srgb, var(--qf-text-primary) 22%, transparent); border-radius: 10px; background: transparent; color: var(--qf-text-primary); font: inherit; font-size: .95rem; font-weight: 650; text-decoration: none; cursor: pointer; }
+.page-layout .qf-stand-info-button--primary { background: var(--qf-highlight-surface); border-color: var(--qf-highlight-border); color: #261c10; }
+.page-layout a.qf-stand-info-button:hover { color: var(--qf-highlight-text); border-color: var(--qf-highlight-border); }
+.qf-stand-info-heading > a { flex-shrink: 0; }
+.qf-stand-info-button:disabled { opacity: .5; cursor: wait; }
+.qf-stand-info-form { box-sizing: border-box; width: 90%; margin: 0 auto; padding: 28px; border: 1px solid color-mix(in srgb, var(--qf-highlight-border) 45%, transparent); border-radius: 18px; background: var(--qf-bg-secondary); }
+.qf-stand-info-form-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 28px; }
+.qf-stand-info-form-heading h2 { margin: 0; color: var(--qf-text-primary); font-size: 1.3rem; font-weight: 750; text-align: left; }
+.qf-stand-info-form-heading > span { font-size: .8rem; font-weight: 600; padding: 6px 12px; border-radius: 20px; color: var(--qf-highlight-text); border: 1px solid color-mix(in srgb, var(--qf-highlight-border) 35%, transparent); }
+.qf-stand-info-layout { display: grid; grid-template-columns: minmax(180px, .75fr) minmax(0, 2fr); gap: 32px; align-items: start; }
+.qf-stand-info-identity { min-width: 0; padding-right: 26px; border-right: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); }
+.qf-stand-info-identity img { width: 100%; aspect-ratio: 4 / 3; display: block; object-fit: cover; border-radius: 12px; }
+.qf-stand-info-identity h3 { font-family: inherit; color: var(--qf-text-primary); font-size: 1.3rem; font-weight: 750; line-height: 1.4; margin: 16px 0 10px; overflow-wrap: anywhere; }
+.qf-stand-info-status { display: inline-flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 650; color: var(--qf-highlight-text); }
+.qf-stand-info-status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.qf-stand-info-identity p { text-align: left; color: var(--qf-text-muted); font-size: .9rem; margin: 8px 0 0; overflow-wrap: anywhere; }
+.qf-stand-info-form fieldset { border: 0; min-width: 0; padding: 0; margin: 0; }
+.qf-stand-info-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 22px; }
+.qf-stand-info-fields label { display: flex; flex-direction: column; gap: 10px; min-width: 0; font-size: .95rem; font-weight: 600; color: var(--qf-text-primary); }
+.qf-stand-info-fields label > span { display: flex; align-items: center; gap: 8px; min-height: 2.8em; }
+.qf-stand-info-fields label svg { flex-shrink: 0; color: var(--qf-highlight-text); }
+.qf-stand-info-fields input { box-sizing: border-box; width: 100%; height: 48px; padding: 11px 13px; border: 1px solid color-mix(in srgb, var(--qf-text-primary) 22%, transparent); border-radius: 9px; background: var(--qf-bg-main); color: var(--qf-text-primary); font: inherit; font-size: 1.05rem; font-weight: 500; }
+.qf-stand-info-fields input:disabled { opacity: 1; -webkit-text-fill-color: var(--qf-text-primary); background: color-mix(in srgb, var(--qf-bg-main) 40%, transparent); border-color: color-mix(in srgb, var(--qf-text-primary) 10%, transparent); }
+.qf-stand-info-fields input::placeholder { color: var(--qf-text-muted); opacity: .75; }
+.qf-stand-info-form-footer { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-top: 24px; margin-top: 28px; border-top: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); }
+.qf-stand-info-form-footer p { margin: 0; color: var(--qf-text-muted); text-align: left; font-size: .85rem; }
+.qf-stand-info-form-footer > div { display: flex; gap: 10px; }
+.qf-stand-info-form-footer button { min-width: 125px; }
+.qf-stand-info-sr { position: absolute; height: 1px; width: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.qf-stand-info-feedback { padding: 60px 16px; text-align: center; color: var(--qf-text-primary); }
+.qf-stand-info-feedback h2 { color: var(--qf-text-primary); font-size: 1.3rem; }
+.qf-stand-info-page :focus-visible { outline: 2px solid var(--qf-highlight-border); outline-offset: 3px; }
+@media (max-width: 1100px) { .qf-stand-info-form { width: 100%; } .qf-stand-info-fields { grid-template-columns: 1fr; gap: 18px; } .qf-stand-info-fields label > span { min-height: 0; } }
+@media (max-width: 767px) { .qf-stand-info-page { padding: 0 12px 24px; } .qf-stand-info-heading { flex-direction: column; align-items: flex-start; gap: 16px; } .qf-stand-info-heading h1 { font-size: 1.6rem; } .qf-stand-info-form { padding: 20px 16px; } .qf-stand-info-layout { grid-template-columns: 1fr; gap: 24px; } .qf-stand-info-identity { padding: 0 0 20px; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); } .qf-stand-info-identity img { max-height: 200px; aspect-ratio: 16 / 9; } .qf-stand-info-form-heading { flex-wrap: wrap; gap: 10px; } .qf-stand-info-form-footer { flex-direction: column; align-items: stretch; } .qf-stand-info-form-footer > div { justify-content: flex-end; } .qf-stand-info-form-footer button { min-width: 0; flex: 1; } }

@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../ComponentesGenerales/Footer";
@@ -7,10 +7,12 @@ import { fileToBase64 } from "../ComponentesGenerales/Utils/base64";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
-import useBreakpoint from "../../useBreakpoint";
+import { FaStore, FaImage, FaFileAlt, FaSave, FaArrowLeft } from "react-icons/fa";
+import "./CrearPuesto.css";
 
 const CrearNuevoPuesto = () => {
-  const { isMobile } = useBreakpoint();
+  const [saving, setSaving] = useState(false);
+  const busy = useRef(false);
   const [numeroCarro, setNumeroCarro] = useState("");
   const [nombreCarro, setNombreCarro] = useState("");
   const [tipoNegocio, setTipoNegocio] = useState("");
@@ -23,14 +25,16 @@ const CrearNuevoPuesto = () => {
   const navigate = useNavigate();
 
   const handleLogoChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
     fileToBase64(file, (base64) => {
       setLogoBase64(base64);
     });
   };
 
   const handleBannerChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files?.[0];
+    if (!file) return;
     fileToBase64(file, (base64) => {
       setBannerBase64(base64);
     });
@@ -38,6 +42,7 @@ const CrearNuevoPuesto = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (busy.current) return;
     const formData = {
       numeroCarro,
       nombreCarro,
@@ -66,6 +71,8 @@ const CrearNuevoPuesto = () => {
       return;
     }
 
+    busy.current = true;
+    setSaving(true);
     fetch(`${process.env?.REACT_APP_BACK_URL}puesto`, {
       method: "POST",
       headers: {
@@ -85,224 +92,23 @@ const CrearNuevoPuesto = () => {
       .catch((error) => {
         console.error(error);
         toast.error("Error al registrar el carro de comida");
-      });
+      })
+      .finally(() => { busy.current = false; setSaving(false); });
   };
-
-  const styles = {
-    pagina: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "20px",
-    },
-    tituloSeccion: {
-      textAlign: "center",
-      paddingTop: "1rem",
-      fontSize: "2rem",
-      color: "var(--qf-naranja)",
-      margin: 0,
-    },
-    hrFull: {
-      border: "none",
-      borderTop: "1px solid var(--qf-naranja)",
-      margin: 0,
-      width: "100%",
-    },
-    breadcrumbWrapper: {
-      width: "100%",
-    },
-    content: {
-      display: "flex",
-      justifyContent: "center",
-      backgroundColor: "var(--qf-bg-main)",
-    },
-    cardBody: {
-      padding: "20px",
-      borderRadius: "10px",
-      flexDirection: "column",
-      backgroundColor: "var(--qf-bg-secondary)",
-      width: "100%",
-      border: `1px solid var(--qf-naranja)`,
-      boxSizing: "border-box",
-    },
-    formTitle: {
-      fontSize: "1.25rem",
-      fontWeight: "bold",
-      marginBottom: "0.5rem",
-      color: "var(--qf-naranja)",
-      textAlign: "center",
-    },
-    formLabel: {
-      margin: "0rem",
-      color: "var(--qf-blanco-puro)",
-    },
-    formInput: {
-      width: "100%",
-      padding: "0.375rem 0.75rem",
-      fontSize: "1rem",
-      lineHeight: "1",
-      borderRadius: "0.375rem",
-      border: "1px solid #ccc",
-      marginBottom: "0.25rem",
-      color: "var(--qf-blanco-puro)",
-      backgroundColor: "var(--qf-bg-secondary)",
-      boxSizing: "border-box",
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-    },
-    submitButton: {
-      backgroundColor: "var(--qf-naranja)",
-      color: "var(--qf-blanco-puro)",
-      padding: "0.5rem 1rem",
-      fontSize: "1rem",
-      fontWeight: "bold",
-      borderRadius: "0.375rem",
-      border: "none",
-      cursor: "pointer",
-      width: "100%",
-    },
-    backButton: {
-      backgroundColor: "var(--qf-blue)",
-      color: "var(--qf-blanco-puro)",
-      padding: "0.5rem 1rem",
-      fontSize: "1rem",
-      fontWeight: "bold",
-      borderRadius: "0.375rem",
-      border: "none",
-      cursor: "pointer",
-      textAlign: "center",
-      display: "block",
-      marginTop: "10px",
-      textDecoration: "none",
-    },
-    row: {
-      display: "flex",
-      flexDirection: isMobile ? "column" : "row",
-      alignItems: isMobile ? "stretch" : "center",
-      justifyContent: "space-between",
-      gap: isMobile ? "0" : "0",
-    },
-  };
-
-  const breadcrumbItems = [
-    { title: "Inicio", url: "/inicio" },
-    { title: "Mis puestos", url: "/listado-puestos-encargado" },
-    { title: "Crear puesto", url: "/crear-puesto" },
-  ];
-
-  const col3 = isMobile ? "100%" : "33%";
-  const col2 = isMobile ? "100%" : "50%";
-  const col2mr = isMobile ? "0" : "20px";
 
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
-      <div style={styles.pagina}>
-        {/* Título centrado */}
-        <h1 style={styles.tituloSeccion}>Crear un Puesto</h1>
-
-        <hr style={styles.hrFull} />
-
-        <div className="qf-page-content">
-          <div className="qf-page-content__main">
-            {/* Breadcrumb a ancho completo */}
-            <div style={styles.breadcrumbWrapper}>
-              <Breadcrumb
-                items={breadcrumbItems}
-                style={{ width: "100%", margin: "8px 0" }}
-              />
-            </div>
-
-            {/* Formulario centrado */}
-            <div style={styles.content}>
-              <div style={styles.cardBody}>
-                <h1 style={styles.formTitle}>Registrar Carro de Comida</h1>
-                <form onSubmit={handleSubmit} noValidate>
-              {/* Fila 1: N° Carro, Nombre, Teléfono */}
-              <div style={styles.row}>
-                <div className="mb-3" style={{ width: col3, marginRight: isMobile ? "0" : "10px" }}>
-                  <label style={styles.formLabel} htmlFor="idCarro">
-                    Número de Carro
-                  </label>
-                  <input
-                    type="number"
-                    id="idCarro"
-                    style={styles.formInput}
-                    min="1"
-                    value={numeroCarro}
-                    onChange={(e) => setNumeroCarro(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3" style={{ width: col3, marginRight: isMobile ? "0" : "10px" }}>
-                  <label style={styles.formLabel} htmlFor="nombreCarro">
-                    Nombre Carro
-                  </label>
-                  <input
-                    type="text"
-                    id="nombreCarro"
-                    style={styles.formInput}
-                    value={nombreCarro}
-                    onChange={(e) => setNombreCarro(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3" style={{ width: col3 }}>
-                  <label style={styles.formLabel} htmlFor="telefonoCarro">
-                    Teléfono
-                  </label>
-                  <input
-                    type="number"
-                    id="telefonoCarro"
-                    style={styles.formInput}
-                    value={telefonoCarro}
-                    onChange={(e) => setTelefonoCarro(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Fila 2: Logo, Banner */}
-              <div style={styles.row}>
-                <div className="mb-3" style={{ width: col2, marginRight: isMobile ? "0" : col2mr }}>
-                  <label style={styles.formLabel} htmlFor="logo">
-                    Logo
-                  </label>
-                  <input
-                    type="file"
-                    id="logo"
-                    style={styles.formInput}
-                    accept="image/*"
-                    onChange={handleLogoChange}
-                    required
-                  />
-                </div>
-                <div className="mb-3" style={{ width: col2 }}>
-                  <label style={styles.formLabel} htmlFor="banner">
-                    Banner
-                  </label>
-                  <input
-                    type="file"
-                    id="banner"
-                    style={styles.formInput}
-                    accept="image/*"
-                    onChange={handleBannerChange}
-                    required
-                  />
-                </div>
-              </div>
-
-              {/* Tipo de Negocio */}
-              <div className="mb-3">
-                <label style={styles.formLabel} htmlFor="tipoNegocio">
-                  Tipo de Negocio
-                </label>
-                <select
-                  id="tipoNegocio"
-                  style={styles.formInput}
-                  value={tipoNegocio}
-                  onChange={(e) => setTipoNegocio(e.target.value)}
-                  required
-                >
-                  <option value="" disabled>
-                    Seleccione un tipo de negocio
-                  </option>
+      <main className="qf-create-stand-page">
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis puestos", url: "/listado-puestos-encargado" }, { title: "Crear puesto", url: "/crear-puesto" }]} />
+        <header className="qf-create-stand-heading"><div><h1>Crear un puesto</h1><p>Completá la información y prepará la presentación de tu puesto de comida.</p></div>{!saving && <Link className="qf-create-stand-button" to="/listado-puestos-encargado"><FaArrowLeft aria-hidden="true" /> Volver</Link>}</header>
+        <form className="qf-create-stand-form" onSubmit={handleSubmit} noValidate>
+          <fieldset disabled={saving}>
+            <legend><FaStore aria-hidden="true" /> Datos del puesto</legend>
+            <p className="qf-create-stand-help">Los datos que identifican tu negocio y permiten contactarte.</p>
+            <div className="qf-create-stand-fields">
+              <label htmlFor="nombreCarro">Nombre Carro<input id="nombreCarro" value={nombreCarro} onChange={(event) => setNombreCarro(event.target.value)} placeholder="Ej.: Puesto Cuarteto" required /></label>
+              <label htmlFor="idCarro">Número de Carro<input id="idCarro" type="number" min="1" value={numeroCarro} onChange={(event) => setNumeroCarro(event.target.value)} placeholder="Número identificador" required /></label>
+              <label htmlFor="tipoNegocio">Tipo de Negocio<select id="tipoNegocio" value={tipoNegocio} onChange={(event) => setTipoNegocio(event.target.value)} required><option value="" disabled>Seleccioná un tipo de negocio</option>
                   <option value="Heladería">Heladería</option>
                   <option value="Pizzería">Pizzería</option>
                   <option value="Restaurante">Restaurante</option>
@@ -318,57 +124,30 @@ const CrearNuevoPuesto = () => {
                   <option value="Comida árabe">Comida árabe</option>
                   <option value="Sushi / Comida japonesa">Sushi / Comida japonesa</option>
                   <option value="Otros">Otros</option>
-                </select>
-              </div>
 
-              {/* Fila 3: PDFs */}
-              <div style={styles.row}>
-                <div className="mb-3" style={{ width: col2, marginRight: isMobile ? "0" : col2mr }}>
-                  <label style={styles.formLabel} htmlFor="pdfAfip">
-                    Constancia de inscripción a AFIP
-                  </label>
-                  <input
-                    type="file"
-                    id="pdfAfip"
-                    style={styles.formInput}
-                    onChange={(e) => setPdfAfip(e.target.files[0])}
-                    required
-                  />
-                </div>
-                <div className="mb-3" style={{ width: col2 }}>
-                  <label style={styles.formLabel} htmlFor="pdfCuil">
-                    Constancia de Inspección Bromatológica
-                  </label>
-                  <input
-                    type="file"
-                    id="pdfCuil"
-                    style={styles.formInput}
-                    onChange={(e) => _setPdfCuil(e.target.files[0])}
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="d-grid">
-                <button type="submit" style={styles.submitButton}>
-                  Registrar Carro de Comida
-                </button>
-              </div>
-              <Link
-                to={`/listado-puestos-encargado`}
-                style={styles.backButton}
-              >
-                Volver
-              </Link>
-            </form>
-              </div>
+              </select></label>
+              <label htmlFor="telefonoCarro">Teléfono<input id="telefonoCarro" type="tel" value={telefonoCarro} onChange={(event) => setTelefonoCarro(event.target.value)} placeholder="Ej.: 351 123 4567" required /></label>
             </div>
-          </div>
-        </div>
-      </div>
-      <Footer />
+          </fieldset>
+          <fieldset className="qf-create-stand-section" disabled={saving}>
+            <legend><FaImage aria-hidden="true" /> Imagen de tu puesto</legend>
+            <p className="qf-create-stand-help">Elegí un logo y una imagen para presentar tu negocio.</p>
+            <div className="qf-create-stand-uploads">
+              <div><div className="qf-create-stand-preview qf-create-stand-preview--logo">{logoBase64 ? <img src={logoBase64} alt="Vista previa del logo" /> : <FaStore aria-hidden="true" />}</div><label htmlFor="logo">Logo<input id="logo" type="file" accept="image/*" onChange={handleLogoChange} required /></label></div>
+              <div><div className="qf-create-stand-preview">{bannerBase64 ? <img src={bannerBase64} alt="Vista previa del banner" /> : <FaImage aria-hidden="true" />}</div><label htmlFor="banner">Banner<input id="banner" type="file" accept="image/*" onChange={handleBannerChange} required /></label></div>
+            </div>
+          </fieldset>
+          <fieldset className="qf-create-stand-section" disabled={saving}>
+            <legend><FaFileAlt aria-hidden="true" /> Documentación</legend>
+            <div className="qf-create-stand-fields qf-create-stand-documents">
+              <label htmlFor="pdfAfip">Constancia de inscripción a AFIP<input type="file" id="pdfAfip" onChange={(event) => setPdfAfip(event.target.files?.[0] || null)} required /></label>
+              <label htmlFor="pdfCuil">Constancia de Inspección Bromatológica<input type="file" id="pdfCuil" onChange={(event) => _setPdfCuil(event.target.files?.[0] || null)} required /></label>
+            </div>
+          </fieldset>
+          <footer className="qf-create-stand-footer"><span>Revisá los datos antes de registrar tu puesto.</span><button type="submit" className="qf-create-stand-button qf-create-stand-button--primary" disabled={saving}><FaSave aria-hidden="true" />{saving ? "Registrando…" : "Registrar Carro de Comida"}</button></footer>
+        </form>
+      </main><Footer />
     </PageLayout>
   );
 };
-
 export default CrearNuevoPuesto;
