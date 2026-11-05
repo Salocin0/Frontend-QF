@@ -1,7 +1,9 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { UserContext } from "./UserContext";
-import "./AsignacionRepartidorAlert.css";
+import { Dialog } from "@mui/material";
+// Reuses the delivery dialog styles so the offer looks like the rest of the courier screens.
+import "../ComponentesPedido/PedidosRepartidor/PedidosRepartidor.css";
 
 const POLL_INTERVAL_MS = 5000;
 // Must match ASIGNACION_WINDOW_SECONDS on the backend (default 300 s).
@@ -97,22 +99,26 @@ const AsignacionRepartidorAlert = () => {
   };
 
   return (
-    <div className="qf-offer-overlay">
-      <div className="qf-offer" role="dialog" aria-modal="true" aria-labelledby="qf-offer-title">
-        <p className="qf-offer-kicker">Nueva entrega disponible</p>
-        <h2 id="qf-offer-title">Pedido #{pedido.id}</h2>
-        <dl className="qf-offer-data">
+    <Dialog open fullWidth maxWidth="sm" className="qf-delivery-dialog" aria-labelledby="qf-offer-title" slotProps={{ paper: { className: "qf-delivery-paper" } }}>
+      <header className="qf-delivery-dialog-heading">
+        <div>
+          <span className="qf-delivery-eyebrow">Nueva entrega disponible</span>
+          <h2 id="qf-offer-title">Pedido #{pedido.id}</h2>
+        </div>
+      </header>
+      <div className="qf-delivery-dialog-body">
+        <dl className="qf-delivery-data">
           <div><dt>Puesto</dt><dd>{(pedido.puesto || pedido.Puesto)?.nombreCarro || "-"}</dd></div>
           <div><dt>Cliente</dt><dd>{[consumer.nombre, consumer.apellido].filter(Boolean).join(" ") || "-"}</dd></div>
-          <div><dt>Total</dt><dd>{formatMoney(pedido.total)}</dd></div>
         </dl>
-        <p className="qf-offer-timer" role="timer" aria-live="off">Tiempo para responder: <strong>{formatRemaining(remaining)}</strong></p>
-        <div className="qf-offer-actions">
-          <button type="button" className="qf-offer-reject" disabled={busy} onClick={() => respond("rechazar")}>Rechazar</button>
-          <button type="button" className="qf-offer-accept" disabled={busy} onClick={() => respond("aceptar")}>Aceptar pedido</button>
-        </div>
+        <div className="qf-delivery-dialog-total"><span>Total del pedido</span><strong>{formatMoney(pedido.total)}</strong></div>
+        <p role="timer" aria-live="off">Tiempo para responder: <strong>{formatRemaining(remaining)}</strong></p>
+        <footer className="qf-delivery-actions">
+          <button type="button" className="qf-delivery-button" disabled={busy} onClick={() => respond("rechazar")}>Rechazar</button>
+          <button type="button" className="qf-delivery-button qf-delivery-button--primary" disabled={busy} onClick={() => respond("aceptar")}>Aceptar pedido</button>
+        </footer>
       </div>
-    </div>
+    </Dialog>
   );
 };
 
