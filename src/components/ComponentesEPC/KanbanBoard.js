@@ -8,6 +8,7 @@ import { useContext } from 'react';
 import { FaEye } from 'react-icons/fa';
 import useBreakpoint from '../../useBreakpoint';
 import './KanbanVisual.css';
+import { ESTADO_POR_COLUMNA, MOVIMIENTOS_PERMITIDOS, cambiarEstadoPedido } from './pedidoEstado';
 
 const initialData = {
   tasks: {},
@@ -133,44 +134,17 @@ const KanbanBoard = ({id}) => {
     }
   }, [user, recargar,id]);
 
-  const updatePedidoState = (taskId, newColumnId) => {
-
-    const taskId2 = taskId.split('-')[1];
-
-    const newState = {
-      'column-1': 'Pendiente',
-      'column-2': 'Aceptado',
-      'column-3': 'En Preparación',
-      'column-4': 'En Camino',
-      'column-5': 'Entregado',
-      'column-6': 'Cancelado',
-    };
-
-    const newEstado = newState[newColumnId];
-
-    fetch(`${process.env?.REACT_APP_BACK_URL}pedido/cambiarEstado/${taskId2}/${newEstado}`, {
-      method: "POST",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        toast.success(`Pedido ${newEstado}`);
-        recargarComponente();
-      })
-      .catch((error) => console.error("Error updating pedido state:", error));
+  const updatePedidoState = async (taskId, newColumnId) => {
+    const pedidoId = taskId.split('-')[1];
+    const newEstado = ESTADO_POR_COLUMNA[newColumnId];
+    const result = await cambiarEstadoPedido(process.env?.REACT_APP_BACK_URL, pedidoId, newEstado);
+    if (result.ok) toast.success(`Pedido ${newEstado}`);
+    else toast.error(result.message);
+    // Reload either way so the board always shows the real state stored in the backend.
+    recargarComponente();
   };
 
-
-
-
-
-  const allowedMovesMap = {
-    'Pendiente': ['column-1','column-2','column-3','column-5','column-6'],
-    'Aceptado': ['column-2','column-3','column-4','column-5','column-6'],
-    'EnPreparacion': ['column-3','column-4','column-5','column-6'],
-    'EnCamino': ['column-4','column-5','column-6'],
-    'Entregado': ['column-5'],
-    'Cancelado': ['column-6'],
-  };
+  const allowedMovesMap = MOVIMIENTOS_PERMITIDOS;
 
   const getStatusColor = (estado) => {
     switch (estado) {
@@ -254,44 +228,11 @@ const KanbanBoard = ({id}) => {
 
 
 
-  const handleDelete = (taskId) => {
-    const taskId2 = taskId.split('-')[1];
-
-    fetch(`${process.env.REACT_APP_BACK_URL}pedido/cambiarEstado/${taskId2}/Cancelado`, {
-      method: "POST",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        window.location.reload()
-
-        toast.success(`Pedido Cancelado`);
-
-        // Asegúrate de que data está definido antes de manipularlo
-        if (!data || !data.tasks || !data.columns) {
-          console.error("Datos no definidos correctamente:", data);
-          return;
-        }
-
-        const newTasks = { ...data.tasks };
-        delete newTasks[taskId];
-
-        const newColumns = { ...data.columns };
-        Object.keys(newColumns).forEach((columnId) => {
-          newColumns[columnId].taskIds = newColumns[columnId].taskIds.filter(
-            (id) => id !== taskId
-          );
-        });
-
-        const newState = {
-          ...data,
-          tasks: newTasks,
-          columns: newColumns,
-        };
-
-        setData(newState);
-
-      })
-      .catch((error) => console.error("Error canceling pedido:", error));
+  const handleDelete = async (taskId) => {
+    const result = await cambiarEstadoPedido(process.env.REACT_APP_BACK_URL, taskId.split('-')[1], 'Cancelado');
+    if (result.ok) toast.success('Pedido Cancelado');
+    else toast.error(result.message);
+    recargarComponente();
   };
 
   const sensors = useSensors(

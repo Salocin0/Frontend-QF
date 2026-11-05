@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Main from "./Main";
 import NotificationHandler from './NotificationHandler'; // Ajusta la ruta según tu estructura de proyecto
+import AsignacionRepartidorAlert from './AsignacionRepartidorAlert';
 import { UserProvider } from './UserContext';
 import './Notifications.css';
 
@@ -27,6 +28,7 @@ const App = () => {
         limit={3}
       />
       <NotificationHandler />
+      <AsignacionRepartidorAlert />
     </UserProvider>
   );
 };
