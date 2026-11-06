@@ -47,6 +47,10 @@ const initialData = {
   columnOrder: ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'],
 };
 
+// Cada cuánto se vuelven a pedir los pedidos para ver los nuevos y los cambios hechos por el
+// consumidor o el repartidor sin recargar la página.
+export const PEDIDOS_POLLING_MS = 4000;
+
 const KanbanBoard = ({id}) => {
   const scrollRef = useRef(null);
   const [data, setData] = useState(initialData);
@@ -63,7 +67,25 @@ const KanbanBoard = ({id}) => {
     setRecargar(prevRecargar => prevRecargar + 1);
   };
 
+  // No se refresca el tablero mientras se arrastra una tarjeta (la tarjeta "saltaría").
+  const draggingRef = useRef(false);
+  draggingRef.current = Boolean(activeTask);
+  // Ids ya mostrados: permite avisar de los pedidos que llegan mientras el tablero está abierto.
+  const pedidosConocidos = useRef(null);
+
   useEffect(() => {
+    pedidosConocidos.current = null;
+  }, [id]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!document.hidden && !draggingRef.current) recargarComponente();
+    }, PEDIDOS_POLLING_MS);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    let vigente = true;
     if (user) {
       const headers = new Headers();
       headers.append('ConsumidorId', user.consumidorId);
@@ -74,7 +96,15 @@ const KanbanBoard = ({id}) => {
       })
         .then((response) => response.json())
         .then((data) => {
+          // Respuesta vieja (llegó otra más nueva) o el usuario está arrastrando: se espera a la próxima.
+          if (!vigente || draggingRef.current) return;
           const pedidos = data.data;
+          if (pedidosConocidos.current) {
+            pedidos
+              .filter((pedido) => !pedidosConocidos.current.has(pedido.id) && pedido.estado === 'Pendiente')
+              .forEach((pedido) => toast.info(`Nuevo pedido #${pedido.id}`));
+          }
+          pedidosConocidos.current = new Set(pedidos.map((pedido) => pedido.id));
           const newTasks = {};
           pedidos.forEach((pedido) => {
             // construct consumer name if available
@@ -132,6 +162,9 @@ const KanbanBoard = ({id}) => {
         })
         .catch((error) => console.log('No existen pedidos.', error));
     }
+    return () => {
+      vigente = false;
+    };
   }, [user, recargar,id]);
 
   const updatePedidoState = async (taskId, newColumnId) => {
