@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import imgDefault from "../img/qf-new-logo-transparent.png";
 import { FaInfoCircle, FaPen, FaClipboardList, FaCheck, FaPlay, FaPause, FaStop, FaTimes, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import "./EventosProductor.css";
+import { seguirPreparando } from "./seguirPreparando";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
@@ -296,7 +297,8 @@ const EventoProductor = ({ evento, recargarComponente }) => {
           <button className="qf-producer-event-button" type="button" onClick={() => navigate(`/evento/${evento.id}`)}><FaPen aria-hidden="true" /> Editar evento</button>
           {!isEnCurso && <button className="qf-producer-event-button" type="button" onClick={verSolicitudes}><FaClipboardList aria-hidden="true" /> Ver Solicitudes</button>}
           {isEnPreparacion && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={confirmarEvento}><FaCheck aria-hidden="true" /> Confirmar Evento</button>}
-          {isBorrador && <p className="qf-producer-event-hint" role="note">Faltan completar datos del evento. Editalo para poder confirmarlo.</p>}
+          {isBorrador && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={() => seguirPreparando(evento, navigate)}><FaPlay aria-hidden="true" /> Seguir preparando</button>}
+          {isBorrador && <p className="qf-producer-event-hint" role="note">Faltan completar datos del evento. Seguí preparándolo para poder confirmarlo.</p>}
           {isPausado && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={continuarEvento}><FaPlay aria-hidden="true" /> Continuar Evento</button>}
           {isPausado && <button className="qf-producer-event-button qf-producer-event-button--danger" type="button" onClick={cancelarEvento}><FaTimes aria-hidden="true" /> Cancelar Evento</button>}
           {isConfirmado && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={iniciarEvento}><FaPlay aria-hidden="true" /> Iniciar Evento</button>}

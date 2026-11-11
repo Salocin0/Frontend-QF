@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
@@ -12,22 +12,27 @@ import "./EventoDetalleWeb.css";
 import useBreakpoint from "../../useBreakpoint";
 import imgDefault from "../img/qf-new-logo-transparent.png";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
+import { seguirPreparando } from "./seguirPreparando";
 
 // El valor de "action" viaja tal cual a POST evento/cambiarEstado/:id/:accion
 // y el backend lo usa para invocar el método homónimo del estado actual
 // (ver BackendNode-QF/src/estados/estadosConcretosEventos/*.state.js), que
 // siempre tiene el sufijo "Evento" (confirmarEvento, cancelarEvento, etc.).
+const SEGUIR_PREPARANDO = "seguirPreparando";
+
 const STATE_ACTIONS = {
   EnPreparacion: [
     { label: "Confirmar Evento", action: "confirmarEvento", className: "qf-btn qf-btn--primary" },
     { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
   ],
+  // A draft cannot be confirmed yet: it resumes the creation wizard at its pending step.
   EnPreparacion1: [
-    { label: "Confirmar Evento", action: "confirmarEvento", className: "qf-btn qf-btn--primary" },
+    { label: "Seguir preparando", action: SEGUIR_PREPARANDO, className: "qf-btn qf-btn--primary" },
     { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
   ],
+  // A draft cannot be confirmed yet: it resumes the creation wizard at its pending step.
   EnPreparacion2: [
-    { label: "Confirmar Evento", action: "confirmarEvento", className: "qf-btn qf-btn--primary" },
+    { label: "Seguir preparando", action: SEGUIR_PREPARANDO, className: "qf-btn qf-btn--primary" },
     { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
   ],
   EnPreparacion3: [
@@ -69,6 +74,7 @@ const formatDateShort = (dateOrStr) => {
 
 const EventoDetalleWeb = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { isMobile } = useBreakpoint();
   const { user } = useContext(UserContext);
 
@@ -121,6 +127,10 @@ const EventoDetalleWeb = () => {
   }, [fetchData, user]);
 
   const handleStateAction = (action, label) => {
+    if (action === SEGUIR_PREPARANDO) {
+      seguirPreparando(evento, navigate);
+      return;
+    }
     setConfirmDialog({
       open: true,
       title: label,

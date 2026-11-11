@@ -14,8 +14,8 @@ afterEach(() => { if (global.fetch.mockRestore) global.fetch.mockRestore(); jest
 
 test.each([
   ['EnPreparacion', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Confirmar Evento']],
-  ['EnPreparacion1', ['Ver Info', 'Editar evento', 'Ver Solicitudes']],
-  ['EnPreparacion2', ['Ver Info', 'Editar evento', 'Ver Solicitudes']],
+  ['EnPreparacion1', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Seguir preparando']],
+  ['EnPreparacion2', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Seguir preparando']],
   ['EnPreparacion3', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Confirmar Evento']],
   ['Confirmado', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Iniciar Evento', 'Pausar Evento']],
   ['Pausado', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Continuar Evento', 'Cancelar Evento']],
@@ -63,7 +63,7 @@ test('each event card exposes a direct edit action', () => {
 test.each(['EnPreparacion1', 'EnPreparacion2'])('a draft in %s cannot be confirmed and says data is missing', (state) => {
   render(<EventoProductor evento={{ ...event, estado: state }} recargarComponente={jest.fn()} />);
   expect(screen.queryByRole('button', { name: /Confirmar Evento/ })).not.toBeInTheDocument();
-  expect(screen.getByRole('note')).toHaveTextContent('Faltan completar datos del evento. Editalo para poder confirmarlo.');
+  expect(screen.getByRole('note')).toHaveTextContent('Faltan completar datos del evento. Seguí preparándolo para poder confirmarlo.');
 });
 
 test('a rejected confirmation shows the backend reason instead of a success message', async () => {
@@ -76,4 +76,10 @@ test('a rejected confirmation shows the backend reason instead of a success mess
   await waitFor(() => expect(toast.error).toHaveBeenCalledWith('No se puede confirmar el evento: faltan completar pasos de su creación. Editalo y completá todos los datos.'));
   expect(toast.success).not.toHaveBeenCalled();
   expect(recargar).not.toHaveBeenCalled();
+});
+
+test('"Seguir preparando" on a draft in EnPreparacion1 opens its pending step 2', () => {
+  render(<EventoProductor evento={{ ...event, id: 19, estado: 'EnPreparacion1' }} recargarComponente={jest.fn()} />);
+  fireEvent.click(screen.getByRole('button', { name: /Seguir preparando/ }));
+  expect(mockNavigate).toHaveBeenCalledWith('/registrar-evento3', { state: { eventoId: 19 } });
 });

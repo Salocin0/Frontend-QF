@@ -297,6 +297,28 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
     expect(screen.queryByText('Finalizar Evento')).toBeNull();
   });
 
+  // ── A draft cannot be confirmed: it offers to resume the wizard at its pending step ──
+  test.each([
+    ['EnPreparacion1', {}, '/registrar-evento3'],
+    ['EnPreparacion2', { fechaHoraInicio: '2026-12-01T18:00:00.000Z', fechaHoraFin: '2026-12-02T23:00:00.000Z' }, '/registrar-evento4/2'],
+  ])('a draft in %s shows "Seguir preparando" instead of Confirmar and opens its pending step', async (estado, fechas, path) => {
+    const { useNavigate } = require('react-router-dom');
+    const mockNavigate = jest.fn();
+    useNavigate.mockReturnValue(mockNavigate);
+    fetchSpy
+      .mockResolvedValueOnce(mockFetchResponse({ status: 'success', data: { ...fullEvent, id: 42, estado, ...fechas } }))
+      .mockResolvedValueOnce(mockFetchResponse({ status: 'success', data: [] }));
+
+    renderWithContext(<EventoDetalleWeb />);
+    await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
+
+    expect(screen.queryByText('Confirmar Evento')).toBeNull();
+    expect(screen.getByText('Cancelar Evento')).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Seguir preparando'));
+    expect(mockNavigate).toHaveBeenCalledWith(path, { state: { eventoId: 42 } });
+    expect(screen.queryByText(/¿Está seguro/)).toBeNull();
+  });
+
   // ── Triangulation: Pausado state shows Cancelar, Preparar, Continuar ──
   test('shows Cancelar, Preparar, and Continuar buttons for Pausado state', async () => {
     fetchSpy

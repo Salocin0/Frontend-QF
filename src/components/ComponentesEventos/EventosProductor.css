@@ -29,7 +29,7 @@
 .qf-producer-event-dates dt { display: flex; align-items: center; gap: 7px; font-size: .75rem; font-weight: 500; color: var(--qf-text-muted); margin-bottom: 5px; }
 .qf-producer-event-dates dd { color: var(--qf-text-primary); font-size: .85rem; font-weight: 600; margin: 0; font-variant-numeric: tabular-nums; }
 .qf-producer-event-actions { display: flex; align-items: stretch; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 18px; border-top: 1px solid color-mix(in srgb, var(--qf-text-primary) 10%, transparent); }
-.qf-producer-event-hint { flex-basis: 100%; margin: 0; font-size: .9rem; color: var(--qf-text-secondary, var(--qf-text-primary)); }
+.qf-producer-event-hint { flex-basis: 100%; margin: 0; padding: 8px 12px; border: 1px solid var(--qf-highlight-border); border-left-width: 4px; border-radius: 8px; font-size: .9rem; font-weight: 600; color: var(--qf-highlight-text); }
 .qf-producer-events-feedback { text-align: center; padding: 64px 16px; color: var(--qf-text-primary); }
 .qf-producer-events-feedback > svg { font-size: 36px; color: var(--qf-highlight-text); margin-bottom: 18px; }
 .qf-producer-events-feedback h2 { font-size: 1.3rem; color: var(--qf-text-primary); }
