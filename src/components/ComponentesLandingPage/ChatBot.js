@@ -14,7 +14,8 @@ const suggestionsForUser = suggestions.filter((text) => !text.includes("registro
 
 const Chatbot = () => {
   const { user } = useContext(UserContext);
-  const isGuest = !user?.nombre;
+  const isGuest = !user?.id;
+  const displayName = [user?.nombre, user?.apellido].filter(Boolean).join(" ") || user?.usuario;
   const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -36,6 +37,11 @@ const Chatbot = () => {
     setIsSending(true);
     const controller = new AbortController();
     requestRef.current = controller;
+    let timedOut = false;
+    const timeoutId = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, 45000);
     try {
       const response = await fetch(`${process.env.REACT_APP_BACK_URL}chatbot`, {
         method: "POST",
@@ -48,12 +54,15 @@ const Chatbot = () => {
       if (typeof data?.data?.chat_response !== "string") throw new Error("Invalid response");
       setMessages((prev) => [...prev, { message: data.data.chat_response, sender: "bot" }]);
     } catch (error) {
-      if (error.name !== "AbortError") {
+      if (timedOut) {
+        setMessages((prev) => [...prev, { message: "Foody tardó demasiado en responder. Revisá tu conexión e intentá de nuevo.", sender: "bot", error: true }]);
+      } else if (error.name !== "AbortError") {
         setMessages((prev) => [...prev, { message: error.message || "No pude responder en este momento. Intentá de nuevo en unos minutos.", sender: "bot", error: true }]);
       }
     } finally {
+      clearTimeout(timeoutId);
       requestRef.current = null;
-      if (!controller.signal.aborted) {
+      if (!controller.signal.aborted || timedOut) {
         setIsSending(false);
         inputRef.current?.focus();
       }
@@ -133,7 +142,7 @@ const Chatbot = () => {
       <div className="qf-chat__messages" ref={chatBoxRef} role="log" aria-label="Conversación con Foody" aria-live="polite" aria-relevant="additions">
         <div className="qf-chat__message qf-chat__message--bot">
           <span className="qf-chat__sender">Foody</span>
-          <p>¡Hola{user?.nombre ? `, ${user.nombre}` : ""}! 👋 Soy Foody. Te ayudo con eventos, pedidos y tus primeros pasos en QuickFood. ¿Qué necesitás?</p>
+          <p>¡Hola{displayName ? `, ${displayName}` : ""}! 👋 Soy Foody. Te ayudo con eventos, pedidos y tus primeros pasos en QuickFood. ¿Qué necesitás?</p>
         </div>
         {!isGuest && messages.length === 0 && (
           <div className="qf-chat__suggestions" aria-label="Consultas sugeridas">

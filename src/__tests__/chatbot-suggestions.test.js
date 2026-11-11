@@ -31,6 +31,19 @@ describe('Chatbot — suggested questions', () => {
     expect(screen.getByPlaceholderText(/Escribí tu consulta/i)).toBeEnabled();
   });
 
+  test('greets with the profile first and last name instead of the login handle', () => {
+    renderChat({ id: 4, usuario: 'consumidor', nombre: 'Romina', apellido: 'Aguirre', tipoUsuario: 'consumidor' });
+
+    expect(screen.getByText(/Hola, Romina Aguirre/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Hola, consumidor/i)).not.toBeInTheDocument();
+  });
+
+  test('falls back to the login handle when the profile has no name', () => {
+    renderChat({ id: 4, usuario: 'consumidor', tipoUsuario: 'consumidor' });
+
+    expect(screen.getByText(/Hola, consumidor/i)).toBeInTheDocument();
+  });
+
   test('a guest sees the login prompt and a disabled composer', () => {
     renderChat(null);
 
