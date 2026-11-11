@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import ProcesoRegistro from "../ComponenteRegister/ProcesoRegistro/ProcesoRegistro";
@@ -6,26 +6,6 @@ import RegistroEncargado from "../ComponenteRegister/RegistrarEncargado";
 import RegistroProductor from "../ComponenteRegister/RegistrarProductor";
 import RegistroRepartidor from "../ComponenteRegister/RegistrarRepartidor";
 import SeleccionRegister from "../ComponenteRegister/SeleccionRegister";
-import AdquirirNuevoRolR from "../ComponenteRepartidor/AdquirirNuevoRolR";
-import AsociarRepartidorAEvento from "../ComponenteRepartidor/AsociarRepartidorAEvento";
-import FormDinamicoRestricciones from "../ComponenteRepartidor/FormDinamicoRestricciones";
-import AsociacionesR from "../ComponenteRepartidor/VerAsociacionesR";
-import Carrito from "../ComponentesCarrito/Carrito";
-import ConsultarUsuarioPrueba from "../ComponentesConsumidor/ConsultarUsuarioPrueba";
-import Notificaciones from "../ComponentesConsumidor/Notificaciones";
-import AdquirirNuevoRolEPC from "../ComponentesEPC/AdquirirNuevoRolEPC";
-import AsociacionesEPC from "../ComponentesEPC/AsociacionesEPC";
-import ConsultarEvento from "../ComponentesEventos/ConsultarEvento";
-import EventoDetalleWeb from "../ComponentesEventos/EventoDetalleWeb";
-import EventoPrueba from "../ComponentesEventos/EventoPrueba";
-import ListadoEventosUsers from "../ComponentesEventos/ListadoEventoUsers";
-import ListadoEventosProductor from "../ComponentesEventos/ListadoEventosProductor";
-import RegistrarEvento from "../ComponentesEventos/RegistrarEvento";
-import RegistrarEvento2 from "../ComponentesEventos/RegistrarEvento2";
-import RegistrarEvento3 from "../ComponentesEventos/RegistrarEvento3";
-import RegistrarEvento4 from "../ComponentesEventos/RegistrarEvento4";
-import RegistrarEvento5 from "../ComponentesEventos/RegistrarEvento5";
-import VerSolicitudesEvento from "../ComponentesEventos/VerSolicitudes";
 import LandingPage from "../ComponentesLandingPage/LandingPage";
 import CambiarContraseña from "../ComponentesLogin/CambiarContraseña";
 import HabilitarUsuario from "../ComponentesLogin/HabilitarUsuario";
@@ -33,31 +13,58 @@ import Login from "../ComponentesLogin/Login";
 import RecuperarContraseña from "../ComponentesLogin/RecuperarContraseña";
 import ValidarEmail from "../ComponentesLogin/ValidarEmail";
 import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
-import ListadoPedidos from "../ComponentesPedido/ListadoPedidos";
-import ListadoPedidosEncargado from "../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado";
-import ListadoPedidosRepartidor from "../ComponentesPedido/PedidosRepartidor/ListadoPedidosRepartidor";
-import ConsultarProducto from "../ComponentesProducto/ConsultarProducto";
-import ListadoProducto from "../ComponentesProducto/ListadoProducto";
-import ListadoProductoDeshabilitado from "../ComponentesProducto/ListadoProductoDeshabilitado";
-import ListadoProductoUser from "../ComponentesProducto/ListadoProductoUser";
-import RegistrarProductos from "../ComponentesProducto/RegistrarProductos";
-import AdquirirNuevoRolPE from "../ComponentesProductorDeEventos/AdquirirNuevoRolPE";
-import AsociarPuestoAEvento from "../ComponentesPuesto/AsociarPuestoAEvento";
-import ConsultarPuesto from "../ComponentesPuesto/ConsultarPuesto";
-import ConsultarPuestoSolicitud from "../ComponentesPuesto/ConsultarPuestoSolicitud";
-import CrearNuevoPuesto from "../ComponentesPuesto/CrearPuesto";
-import ListadoPuestosEncargado from "../ComponentesPuesto/ListadoPuestosEncargado";
-import ListadoPuestosUser from "../ComponentesPuesto/ListadoPuestosUser";
-import ListadoPuestosDeshabilitados from "../ComponentesPuesto/PuestoDeshabilitados.js";
-import PanelEncargado from "../PanelesDatos/PanelEncargado/PanelEncargado";
-import PanelProductor from "../PanelesDatos/PanelProductor/PanelProductor";
-import DocumentUpload from "./DocumentUpload";
-import Inicio from "./Inicio";
-import Sidebar from "./Sidebar";
-import Preventa from "../ComponentesEventos/Preventa";
+
+const AdquirirNuevoRolR = lazy(() => import("../ComponenteRepartidor/AdquirirNuevoRolR"));
+const AsociarRepartidorAEvento = lazy(() => import("../ComponenteRepartidor/AsociarRepartidorAEvento"));
+const FormDinamicoRestricciones = lazy(() => import("../ComponenteRepartidor/FormDinamicoRestricciones"));
+const AsociacionesR = lazy(() => import("../ComponenteRepartidor/VerAsociacionesR"));
+const Carrito = lazy(() => import("../ComponentesCarrito/Carrito"));
+const ConsultarUsuarioPrueba = lazy(() => import("../ComponentesConsumidor/ConsultarUsuarioPrueba"));
+const Notificaciones = lazy(() => import("../ComponentesConsumidor/Notificaciones"));
+const AdquirirNuevoRolEPC = lazy(() => import("../ComponentesEPC/AdquirirNuevoRolEPC"));
+const AsociacionesEPC = lazy(() => import("../ComponentesEPC/AsociacionesEPC"));
+const ConsultarEvento = lazy(() => import("../ComponentesEventos/ConsultarEvento"));
+const EventoDetalleWeb = lazy(() => import("../ComponentesEventos/EventoDetalleWeb"));
+const EventoPrueba = lazy(() => import("../ComponentesEventos/EventoPrueba"));
+const ListadoEventosUsers = lazy(() => import("../ComponentesEventos/ListadoEventoUsers"));
+const ListadoEventosProductor = lazy(() => import("../ComponentesEventos/ListadoEventosProductor"));
+const RegistrarEvento = lazy(() => import("../ComponentesEventos/RegistrarEvento"));
+const RegistrarEvento2 = lazy(() => import("../ComponentesEventos/RegistrarEvento2"));
+const RegistrarEvento3 = lazy(() => import("../ComponentesEventos/RegistrarEvento3"));
+const RegistrarEvento4 = lazy(() => import("../ComponentesEventos/RegistrarEvento4"));
+const RegistrarEvento5 = lazy(() => import("../ComponentesEventos/RegistrarEvento5"));
+const VerSolicitudesEvento = lazy(() => import("../ComponentesEventos/VerSolicitudes"));
+const ListadoPedidos = lazy(() => import("../ComponentesPedido/ListadoPedidos"));
+const ListadoPedidosEncargado = lazy(() => import("../ComponentesPedido/PedidosEncargado/ListadoPedidosEncargado"));
+const ListadoPedidosRepartidor = lazy(() => import("../ComponentesPedido/PedidosRepartidor/ListadoPedidosRepartidor"));
+const ConsultarProducto = lazy(() => import("../ComponentesProducto/ConsultarProducto"));
+const ListadoProducto = lazy(() => import("../ComponentesProducto/ListadoProducto"));
+const ListadoProductoDeshabilitado = lazy(() => import("../ComponentesProducto/ListadoProductoDeshabilitado"));
+const ListadoProductoUser = lazy(() => import("../ComponentesProducto/ListadoProductoUser"));
+const RegistrarProductos = lazy(() => import("../ComponentesProducto/RegistrarProductos"));
+const AdquirirNuevoRolPE = lazy(() => import("../ComponentesProductorDeEventos/AdquirirNuevoRolPE"));
+const AsociarPuestoAEvento = lazy(() => import("../ComponentesPuesto/AsociarPuestoAEvento"));
+const ConsultarPuesto = lazy(() => import("../ComponentesPuesto/ConsultarPuesto"));
+const ConsultarPuestoSolicitud = lazy(() => import("../ComponentesPuesto/ConsultarPuestoSolicitud"));
+const CrearNuevoPuesto = lazy(() => import("../ComponentesPuesto/CrearPuesto"));
+const ListadoPuestosEncargado = lazy(() => import("../ComponentesPuesto/ListadoPuestosEncargado"));
+const ListadoPuestosUser = lazy(() => import("../ComponentesPuesto/ListadoPuestosUser"));
+const ListadoPuestosDeshabilitados = lazy(() => import("../ComponentesPuesto/PuestoDeshabilitados.js"));
+const PanelEncargado = lazy(() => import("../PanelesDatos/PanelEncargado/PanelEncargado"));
+const PanelProductor = lazy(() => import("../PanelesDatos/PanelProductor/PanelProductor"));
+const DocumentUpload = lazy(() => import("./DocumentUpload"));
+const Inicio = lazy(() => import("./Inicio"));
+const Sidebar = lazy(() => import("./Sidebar"));
+const Preventa = lazy(() => import("../ComponentesEventos/Preventa"));
+
+// Public pre-login screens are imported eagerly; every other screen is loaded on demand (React.lazy), so the
+// login and landing pages do not wait for the charts, maps, PDF and payment libraries of the private screens.
+const isRenderable = (Component) => typeof Component === 'function' || Boolean(Component?.$$typeof);
+
+const RouteFallback = () => <div className="qf-route-loading" role="status" aria-live="polite">Cargando…</div>;
 
 const SafeRoute = ({ component: Component, name }) => {
-  if (typeof Component === 'function') {
+  if (isRenderable(Component)) {
     return <Component />;
   } else {
     console.error(`ERROR: El componente "${name}" no es una función válida. Revisa su importación en Main.js`);
@@ -70,6 +77,7 @@ const ALL_ROLES = ["consumidor", "repartidor", "encargado", "productor"];
 const Main = () => {
   return (
     <main>
+      <Suspense fallback={<RouteFallback />}>
       <Routes>
         {/* ─── Públicas (sin protección) ─── */}
         <Route path="/registrarse/:tipoUsuario" element={<SafeRoute component={ProcesoRegistro} name="ProcesoRegistro" />} />
@@ -142,6 +150,7 @@ const Main = () => {
         <Route path="/puestos-deshabilitados" element={<PrivateRoute requiredRoles={["encargado"]}><SafeRoute component={ListadoPuestosDeshabilitados} name="ListadoPuestosDeshabilitados" /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+      </Suspense>
     </main>
   );
 };

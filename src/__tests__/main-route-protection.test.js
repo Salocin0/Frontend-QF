@@ -84,7 +84,7 @@ describe('Main — route protection', () => {
   };
 
   // ── Public routes render without auth ──
-  test('public route /login renders Login component without auth', () => {
+  test('public route /login renders Login component without auth', async () => {
     renderRoute('/login', null);
     expect(screen.getByTestId('comp-Login')).toBeInTheDocument();
     expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
@@ -116,45 +116,45 @@ describe('Main — route protection', () => {
   });
 
   // ── Protected: /inicio renders when authenticated ──
-  test('protected route /inicio renders Inicio for consumidor', () => {
+  test('protected route /inicio renders Inicio for consumidor', async () => {
     renderRoute('/inicio', { tipoUsuario: 'consumidor', nombre: 'Test' });
-    expect(screen.getByTestId('comp-Inicio')).toBeInTheDocument();
+    expect(await screen.findByTestId('comp-Inicio')).toBeInTheDocument();
     expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
   });
 
   // /pedidos está habilitada para ALL_ROLES en Main.js (todos los tipos de
   // usuario pueden comprar y ver su historial de pedidos como consumidores),
   // así que un repartidor también debe poder acceder.
-  test('protected route /pedidos renders for repartidor (shared consumer route)', () => {
+  test('protected route /pedidos renders for repartidor (shared consumer route)', async () => {
     renderRoute('/pedidos', { tipoUsuario: 'repartidor', nombre: 'Test' });
-    expect(screen.getByTestId('comp-ListadoPedidos')).toBeInTheDocument();
+    expect(await screen.findByTestId('comp-ListadoPedidos')).toBeInTheDocument();
     expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
   });
 
-  test('protected route /pedidos renders for consumidor', () => {
+  test('protected route /pedidos renders for consumidor', async () => {
     renderRoute('/pedidos', { tipoUsuario: 'consumidor', nombre: 'Test' });
-    expect(screen.getByTestId('comp-ListadoPedidos')).toBeInTheDocument();
+    expect(await screen.findByTestId('comp-ListadoPedidos')).toBeInTheDocument();
     expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
   });
 
   // ── Repartidor-exclusive ──
-  test('protected route /pedidos-asignados renders for repartidor', () => {
+  test('protected route /pedidos-asignados renders for repartidor', async () => {
     renderRoute('/pedidos-asignados', { tipoUsuario: 'repartidor', nombre: 'Test' });
-    expect(screen.getByTestId('comp-ListadoPedidosRepartidor')).toBeInTheDocument();
+    expect(await screen.findByTestId('comp-ListadoPedidosRepartidor')).toBeInTheDocument();
     expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
   });
 
   // ── Productor-exclusive ──
-  test('protected route /registrar-evento renders for productor', () => {
+  test('protected route /registrar-evento renders for productor', async () => {
     renderRoute('/registrar-evento', { tipoUsuario: 'productor', nombre: 'Test' });
-    expect(screen.getByTestId('comp-RegistrarEvento')).toBeInTheDocument();
+    expect(await screen.findByTestId('comp-RegistrarEvento')).toBeInTheDocument();
     expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
   });
 
   // ── Encargado-exclusive ──
-  test('protected route /crear-puesto renders for encargado', () => {
+  test('protected route /crear-puesto renders for encargado', async () => {
     renderRoute('/crear-puesto', { tipoUsuario: 'encargado', nombre: 'Test' });
-    expect(screen.getByTestId('comp-CrearNuevoPuesto')).toBeInTheDocument();
+    expect(await screen.findByTestId('comp-CrearNuevoPuesto')).toBeInTheDocument();
     expect(screen.queryByTestId('mock-navigate')).not.toBeInTheDocument();
   });
 });
