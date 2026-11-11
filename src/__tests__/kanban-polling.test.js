@@ -74,3 +74,20 @@ test('no consulta mientras la pestaña está oculta', async () => {
   await avanzarPolling();
   expect(global.fetch.mock.calls.length).toBe(llamadas + 1);
 });
+
+test('una respuesta más lenta que el intervalo de consulta igual se muestra en el tablero', async () => {
+  let resolverLenta;
+  global.fetch
+    .mockReturnValueOnce(new Promise((resolve) => { resolverLenta = resolve; }))
+    .mockReturnValue(new Promise(() => {}));
+  renderBoard();
+
+  await avanzarPolling();
+  await avanzarPolling();
+  expect(global.fetch).toHaveBeenCalledTimes(1);
+
+  await act(async () => {
+    resolverLenta({ json: async () => ({ data: [pedido(7)] }) });
+  });
+  expect(await screen.findByText('Pedido #7')).toBeInTheDocument();
+});

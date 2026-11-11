@@ -72,6 +72,9 @@ const KanbanBoard = ({id}) => {
   draggingRef.current = Boolean(activeTask);
   // Ids ya mostrados: permite avisar de los pedidos que llegan mientras el tablero está abierto.
   const pedidosConocidos = useRef(null);
+  // A poll is skipped while the previous request is still running: a slow response would otherwise
+  // be discarded as stale on every tick and the board would never update.
+  const requestEnCurso = useRef(false);
 
   useEffect(() => {
     pedidosConocidos.current = null;
@@ -79,7 +82,7 @@ const KanbanBoard = ({id}) => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (!document.hidden && !draggingRef.current) recargarComponente();
+      if (!document.hidden && !draggingRef.current && !requestEnCurso.current) recargarComponente();
     }, PEDIDOS_POLLING_MS);
     return () => clearInterval(timer);
   }, []);
@@ -90,6 +93,7 @@ const KanbanBoard = ({id}) => {
       const headers = new Headers();
       headers.append('ConsumidorId', user.consumidorId);
 
+      requestEnCurso.current = true;
       fetch(`${process.env?.REACT_APP_BACK_URL}pedido/puesto/${id}`, {
         method: 'GET',
         headers: headers,
@@ -160,9 +164,13 @@ const KanbanBoard = ({id}) => {
 
           setData(newState);
         })
-        .catch((error) => console.log('No existen pedidos.', error));
+        .catch((error) => console.log('No existen pedidos.', error))
+        .finally(() => {
+          if (vigente) requestEnCurso.current = false;
+        });
     }
     return () => {
+      requestEnCurso.current = false;
       vigente = false;
     };
   }, [user, recargar,id]);
