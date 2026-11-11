@@ -27,6 +27,25 @@ import useBreakpoint from "../../useBreakpoint";
  *     {children}
  *   </PageLayout>
  */
+// Menu links are plain <a href> (full page loads), so the desktop collapsed state is kept in localStorage
+// to survive navigation. Storage can be unavailable (private mode, blocked site data): fall back silently.
+const SIDEBAR_COLLAPSED_KEY = "qf-sidebar-collapsed";
+const leerCollapsedGuardado = (fallback) => {
+  try {
+    const value = window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
+    return value === null ? fallback : value === "true";
+  } catch {
+    return fallback;
+  }
+};
+const guardarCollapsed = (value) => {
+  try {
+    window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, String(value));
+  } catch {
+    // Preference just isn't remembered.
+  }
+};
+
 const PageLayout = ({
   children,
   sidebarProps = {},
@@ -36,7 +55,7 @@ const PageLayout = ({
 }) => {
   const { isMobile } = useBreakpoint();
   const [isOpen, setIsOpen] = useState(false);     // drawer mobile
-  const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed); // desktop collapse
+  const [isCollapsed, setIsCollapsed] = useState(() => leerCollapsedGuardado(defaultCollapsed)); // desktop collapse
 
   // Sincronizar collapsed con el exterior si hay callback
   useEffect(() => {
@@ -47,7 +66,10 @@ const PageLayout = ({
   const closeSidebar = () => setIsOpen(false);
 
   const toggleCollapsed = () => {
-    setIsCollapsed((prev) => !prev);
+    setIsCollapsed((prev) => {
+      guardarCollapsed(!prev);
+      return !prev;
+    });
   };
 
   // En mobile, el sidebar se superpone como drawer
