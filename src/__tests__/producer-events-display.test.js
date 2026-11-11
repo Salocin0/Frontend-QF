@@ -14,8 +14,8 @@ afterEach(() => { if (global.fetch.mockRestore) global.fetch.mockRestore(); jest
 
 test.each([
   ['EnPreparacion', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Confirmar Evento']],
-  ['EnPreparacion1', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Confirmar Evento']],
-  ['EnPreparacion2', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Confirmar Evento']],
+  ['EnPreparacion1', ['Ver Info', 'Editar evento', 'Ver Solicitudes']],
+  ['EnPreparacion2', ['Ver Info', 'Editar evento', 'Ver Solicitudes']],
   ['EnPreparacion3', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Confirmar Evento']],
   ['Confirmado', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Iniciar Evento', 'Pausar Evento']],
   ['Pausado', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Continuar Evento', 'Cancelar Evento']],
@@ -58,4 +58,22 @@ test('each event card exposes a direct edit action', () => {
   render(<EventoProductor evento={event} recargarComponente={jest.fn()} />);
   fireEvent.click(screen.getByRole('button', { name: 'Editar evento' }));
   expect(mockNavigate).toHaveBeenCalledWith('/evento/9');
+});
+
+test.each(['EnPreparacion1', 'EnPreparacion2'])('a draft in %s cannot be confirmed and says data is missing', (state) => {
+  render(<EventoProductor evento={{ ...event, estado: state }} recargarComponente={jest.fn()} />);
+  expect(screen.queryByRole('button', { name: /Confirmar Evento/ })).not.toBeInTheDocument();
+  expect(screen.getByRole('note')).toHaveTextContent('Faltan completar datos del evento. Editalo para poder confirmarlo.');
+});
+
+test('a rejected confirmation shows the backend reason instead of a success message', async () => {
+  const { toast } = require('react-toastify');
+  const recargar = jest.fn();
+  global.fetch = jest.fn(() => Promise.resolve({ ok: false, status: 400, json: async () => ({ message: 'No se puede confirmar el evento: faltan completar pasos de su creación. Editalo y completá todos los datos.' }) }));
+  render(<EventoProductor evento={{ ...event, estado: 'EnPreparacion' }} recargarComponente={recargar} />);
+  fireEvent.click(screen.getByRole('button', { name: /Confirmar Evento/ }));
+  fireEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
+  await waitFor(() => expect(toast.error).toHaveBeenCalledWith('No se puede confirmar el evento: faltan completar pasos de su creación. Editalo y completá todos los datos.'));
+  expect(toast.success).not.toHaveBeenCalled();
+  expect(recargar).not.toHaveBeenCalled();
 });
