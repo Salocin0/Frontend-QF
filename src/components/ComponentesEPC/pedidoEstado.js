@@ -12,6 +12,7 @@ export const ESTADO_POR_COLUMNA = {
 // and "Entregado" is reached only by the courier confirming the delivery code.
 export const MOVIMIENTOS_PERMITIDOS = {
   Pendiente: ['column-1', 'column-2', 'column-6'],
+  Precomprado: ['column-1', 'column-2'],
   Aceptado: ['column-2', 'column-3', 'column-6'],
   EnPreparacion: ['column-3', 'column-4'],
   EnCamino: ['column-4'],

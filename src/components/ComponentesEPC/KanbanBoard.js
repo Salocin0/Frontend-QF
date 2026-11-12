@@ -15,7 +15,7 @@ const initialData = {
   columns: {
     'column-1': {
       id: 'column-1',
-      title: 'Pendiente',
+      title: 'Pendiente / Precompra',
       taskIds: [],
     },
     'column-2': {
@@ -137,7 +137,7 @@ const KanbanBoard = ({id}) => {
               ...initialData.columns,
               'column-1': {
                 ...initialData.columns['column-1'],
-                taskIds: Object.keys(newTasks).filter(key => newTasks[key].estado === 'Pendiente'),
+                taskIds: Object.keys(newTasks).filter(key => ['Pendiente', 'Precomprado'].includes(newTasks[key].estado)),
               },
               'column-2': {
                 ...initialData.columns['column-2'],
@@ -191,6 +191,8 @@ const KanbanBoard = ({id}) => {
     switch (estado) {
       case 'Pendiente':
         return '#FFC107'; // Amarillo
+      case 'Precomprado':
+        return '#FF9800'; // Naranja
       case 'EnPreparacion':
         return 'lightblue'; // Azul
       case 'EnCamino':
