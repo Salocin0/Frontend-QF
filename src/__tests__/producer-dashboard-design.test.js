@@ -12,15 +12,16 @@ const wrapper = ({ children }) => <UserContext.Provider value={{ user: { id: 99,
 afterEach(() => { if (global.fetch.mockRestore) global.fetch.mockRestore(); });
 const api = async (url) => ({ ok: true, json: async () => ({ status: 'success', data: url.includes('evento/all') ? [{ id: 9, nombre: 'Cuarteto', fechaHoraInicio: '2099-02-01' }, { id: 8, nombre: 'Feria', fechaHoraInicio: '2099-01-01' }] : url.includes('total-recaudado-por-puesto') ? [{ idpuesto: 1, nombre: 'Pizzas Demo', cantidadpedidos: 2, total: '3500' }] : url.includes('valoracion') ? '4.6' : '3500' }) });
 
-test('keeps chronological initial selection, PDF filter and a single shared ranking request', async () => {
+test('starts on "Todos los eventos", lists events chronologically and keeps the PDF filter in sync', async () => {
   const fetchMock = jest.spyOn(global, 'fetch').mockImplementation(api);
   render(<PanelProductor />, { wrapper });
   await screen.findByRole('option', { name: 'Feria' });
-  await waitFor(() => expect(screen.getByLabelText('Evento')).toHaveValue('8'));
-  expect(screen.getByText('4,6 / 5')).toBeInTheDocument();
-  expect(screen.getByTestId('producer-pie-chart')).toHaveTextContent('Pizzas Demo');
-  expect(screen.getByRole('button', { name: 'Descargar PDF' })).toHaveAttribute('data-event', '8');
-  expect(fetchMock.mock.calls.filter(([url]) => url.includes('total-recaudado-por-puesto-en-evento/8'))).toHaveLength(1);
+  expect(screen.getAllByRole('option').map((option) => option.textContent)).toEqual(['Todos los eventos', 'Feria', 'Cuarteto']);
+  expect(screen.getByLabelText('Evento')).toHaveValue('Todos');
+  expect(screen.getByRole('button', { name: 'Descargar PDF' })).toHaveAttribute('data-event', 'Todos');
+  await waitFor(() => expect(screen.getByText('4,6 / 5')).toBeInTheDocument());
+  expect(fetchMock.mock.calls.filter(([url]) => url.includes('total-recaudado-por-puesto-en-evento/Todos'))).toHaveLength(1);
+  expect(fetchMock.mock.calls.filter(([url]) => url.includes('total-recaudado-por-puesto-en-evento/8'))).toHaveLength(0);
   fireEvent.change(screen.getByLabelText('Evento'), { target: { value: '9' } });
   await waitFor(() => expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('total-recaudado-evento/9'), expect.any(Object)));
   expect(screen.getByTestId('producer-bar-chart')).toHaveTextContent('9');

@@ -32,7 +32,7 @@ const PanelProductor = () => {
         const data = await response.json();
         const startOf = (event) => { const time = new Date(event.fechaHoraInicio).getTime(); return Number.isNaN(time) ? Number.MAX_SAFE_INTEGER : time; };
         const list = Array.isArray(data.data) ? [...data.data].sort((a, b) => startOf(a) - startOf(b)) : [];
-        if (!controller.signal.aborted) { setEvents(list); setSelected(list[0]?.id || "Todos"); }
+        if (!controller.signal.aborted) setEvents(list); // The dashboard starts on "Todos los eventos"; the list only feeds the filter.
       } catch (err) { if (!controller.signal.aborted) setError(true); }
       finally { if (!controller.signal.aborted) setLoading(false); }
     })();

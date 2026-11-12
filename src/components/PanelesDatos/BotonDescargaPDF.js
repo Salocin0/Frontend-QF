@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import html2canvas from "html2canvas";
+import { normalizarColoresParaCaptura, crearConversorCanvas } from "./coloresCaptura";
 import jsPDF from "jspdf";
 
 /**
@@ -125,6 +126,13 @@ const BotonDescargaPDF = ({
           useCORS: true,
           backgroundColor: "#1a1a1a",
           logging: false,
+          // Runs on html2canvas' copy of the page, so the visible dashboard is not touched.
+          onclone: (clonedDoc, clonedRoot) => {
+            normalizarColoresParaCaptura(clonedRoot, {
+              getComputedStyle: (element) => clonedDoc.defaultView.getComputedStyle(element),
+              convertir: crearConversorCanvas(clonedDoc),
+            });
+          },
         });
         chartImgData = canvas.toDataURL("image/jpeg", 0.85);
         chartAspect = canvas.width / canvas.height;
