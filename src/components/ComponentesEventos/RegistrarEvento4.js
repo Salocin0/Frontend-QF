@@ -11,6 +11,7 @@ import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FaArrowLeft, FaArrowRight, FaCheck, FaCalendarAlt } from "react-icons/fa";
 import "./RegistrarEvento.css";
+import { esModoEditar, estadoPaso, MODO_EDITAR, toDatetimeLocal } from "./editarEvento";
 
 const RegistrarEvento4 = () => {
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
@@ -23,6 +24,7 @@ const RegistrarEvento4 = () => {
   const location = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useContext(UserContext);
+  const modoEditar = esModoEditar(location.state);
 
   useEffect(() => {
     const storedEvent = JSON.parse(localStorage.getItem("eventoDatos"));
@@ -70,6 +72,33 @@ const RegistrarEvento4 = () => {
       navigate("/registrar-evento3");
     }
   }, [diferenciaDiasEvento, navigate]);
+
+  // Edit mode: each day keeps its saved hours when the event still has the same number of days.
+  useEffect(() => {
+    const idEditar = location.state?.eventoId || localStorage.getItem(EVENTO_CREACION_ID_KEY);
+    if (!modoEditar || !idEditar) return;
+    fetch(`${process.env.REACT_APP_BACK_URL}evento/${idEditar}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const guardados = Array.isArray(data?.data?.diaEventos) ? [...data.data.diaEventos] : [];
+        guardados.sort((a, b) => new Date(a.fechaHoraInicioDiaEvento) - new Date(b.fechaHoraInicioDiaEvento));
+        setHorasPorDia((dias) => {
+          if (dias.length === 0 || guardados.length !== dias.length) return dias;
+          return dias.map((dia, index) => {
+            const horaInicio = toDatetimeLocal(guardados[index].fechaHoraInicioDiaEvento);
+            const horaFin = toDatetimeLocal(guardados[index].fechaHoraFinDiaEvento);
+            return horaInicio && horaFin ? { ...dia, horaInicio, horaFin } : dia;
+          });
+        });
+      })
+      .catch(() => {
+        // Without the saved days the generated hours stay editable.
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleInputChange = (dia, campo, value) => {
     setHorasPorDia((horasAnteriores) =>
@@ -138,7 +167,9 @@ const RegistrarEvento4 = () => {
       const updateData = await updateResponse.json();
 
       if (updateResponse.ok) {
-        navigate(`/registrar-evento5/${eventoId}/${diferenciaDiasEvento}`);
+        const paso4 = `/registrar-evento5/${eventoId}/${diferenciaDiasEvento}`;
+        if (modoEditar) navigate(paso4, { state: { modo: MODO_EDITAR } });
+        else navigate(paso4);
       } else {
         toast.error(updateData.message || "Error al registrar el evento");
       }
@@ -151,7 +182,7 @@ const RegistrarEvento4 = () => {
   };
 
   const handleVolver = (e) => {
-    navigate(`/registrar-evento3`, { state: { eventoId } });
+    navigate(`/registrar-evento3`, { state: estadoPaso(eventoId, modoEditar) });
   };
 
   const dayLabel = (value) => {
@@ -161,8 +192,8 @@ const RegistrarEvento4 = () => {
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <main className="qf-event-registration-page">
-        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Crear un evento · Días", url: `/registrar-evento4/${diferenciaDiasEvento}` }]} />
-        <header className="qf-event-registration-heading"><h1>Crear un Evento</h1><p>Revisá las fechas y los horarios de cada día antes de continuar.</p></header>
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: modoEditar ? "Editar evento · Días" : "Crear un evento · Días", url: `/registrar-evento4/${diferenciaDiasEvento}` }]} />
+        <header className="qf-event-registration-heading"><h1>{modoEditar ? "Editar evento" : "Crear un Evento"}</h1><p>Revisá las fechas y los horarios de cada día antes de continuar.</p></header>
         <ol className="qf-event-registration-steps" aria-label="Progreso del registro">{["Información", "Configuración", "Días del evento", "Puntos de encuentro"].map((step, index) => <li key={step} aria-current={index === 2 ? "step" : undefined} className={index < 2 ? "qf-event-step-completed" : ""}><span>{index < 2 ? <FaCheck aria-hidden="true" /> : index + 1}</span><div><small>Paso {index + 1}</small><strong>{step}</strong></div></li>)}</ol>
         <form className="qf-event-registration-form qf-event-days-form" onSubmit={handleSiguienteClick} noValidate>
           <div className="qf-event-days-heading"><div><h2><FaCalendarAlt aria-hidden="true" /> Días del evento</h2><p>Podés ajustar los horarios de cada jornada.</p></div><span>{horasPorDia.length} {horasPorDia.length === 1 ? "día" : "días"}</span></div>

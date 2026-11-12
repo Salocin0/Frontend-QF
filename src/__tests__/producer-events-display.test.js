@@ -17,12 +17,12 @@ test.each([
   ['EnPreparacion1', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Seguir preparando']],
   ['EnPreparacion2', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Seguir preparando']],
   ['EnPreparacion3', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Confirmar Evento']],
-  ['Confirmado', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Iniciar Evento', 'Pausar Evento']],
+  ['Confirmado', ['Ver Info', 'Ver Solicitudes', 'Iniciar Evento', 'Pausar Evento']],
   ['Pausado', ['Ver Info', 'Editar evento', 'Ver Solicitudes', 'Continuar Evento', 'Cancelar Evento']],
-  ['EnCurso', ['Ver Info', 'Editar evento', 'Finalizar Evento']],
-  ['Finalizado', ['Ver Info', 'Editar evento', 'Ver Solicitudes']],
-  ['Cancelado', ['Ver Info', 'Editar evento', 'Ver Solicitudes']],
-])('state %s retains exactly its original actions', (state, buttons) => {
+  ['EnCurso', ['Ver Info', 'Finalizar Evento']],
+  ['Finalizado', ['Ver Info', 'Ver Solicitudes']],
+  ['Cancelado', ['Ver Info', 'Ver Solicitudes']],
+])('state %s shows exactly its actions ("Editar evento" only while editable)', (state, buttons) => {
   render(<EventoProductor evento={{ ...event, estado: state }} recargarComponente={jest.fn()} />);
   expect(screen.getAllByRole('button').map((button) => button.textContent.trim())).toEqual(buttons);
   expect(screen.queryByText('A 1km de distancia')).not.toBeInTheDocument();
@@ -54,10 +54,12 @@ test('list handles empty API payloads and uses the same create route as the main
   expect(screen.getByRole('link', { name: 'Agregar evento' })).toHaveAttribute('href', '/registrar-evento2');
 });
 
-test('each event card exposes a direct edit action', () => {
-  render(<EventoProductor evento={event} recargarComponente={jest.fn()} />);
+test.each(['EnPreparacion1', 'EnPreparacion', 'Pausado'])('"Editar evento" on a %s event opens the creation wizard preloaded', (estado) => {
+  localStorage.clear();
+  render(<EventoProductor evento={{ ...event, estado }} recargarComponente={jest.fn()} />);
   fireEvent.click(screen.getByRole('button', { name: 'Editar evento' }));
-  expect(mockNavigate).toHaveBeenCalledWith('/evento/9');
+  expect(mockNavigate).toHaveBeenCalledWith('/registrar-evento2', { state: { eventoId: 9, modo: 'editar' } });
+  expect(localStorage.getItem('eventoCreacionId')).toBe('9');
 });
 
 test.each(['EnPreparacion1', 'EnPreparacion2'])('a draft in %s cannot be confirmed and says data is missing', (state) => {

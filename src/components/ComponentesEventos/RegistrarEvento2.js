@@ -12,6 +12,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { FaArrowLeft, FaArrowRight, FaImage, FaMapMarkerAlt, FaRegSave } from "react-icons/fa";
 import "./RegistrarEvento.css";
 import { TIPOS_EVENTO, TIPOS_PAGO } from "../../constants/eventos";
+import { esEventoEditable, esModoEditar, estadoPaso, MENSAJE_NO_EDITABLE } from "./editarEvento";
 
 const DRAFT_ESTADOS = ["EnPreparacion1", "EnPreparacion2", "EnPreparacion3"];
 
@@ -39,11 +40,15 @@ const RegistrarEvento2 = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
+  // Edit mode: the wizard was opened from "Editar evento" to change an existing (non-draft) event.
+  const modoEditar = esModoEditar(location.state);
+  // Address and coordinates loaded from the saved event: kept when the address is not changed.
+  const savedLocationRef = useRef(null);
   // Saved draft awaiting the user decision (continue it or start a new event).
   const [pendingDraft, setPendingDraft] = useState(null);
   // False while a stored draft id is still being verified: saving is blocked until it resolves.
   const [draftCheckDone, setDraftCheckDone] = useState(
-    () => !localStorage.getItem(EVENTO_CREACION_ID_KEY)
+    () => !modoEditar && !localStorage.getItem(EVENTO_CREACION_ID_KEY)
   );
   const geocodeDebounceRef = useRef(null);
 
@@ -157,6 +162,13 @@ const RegistrarEvento2 = () => {
       let lat = result?.geometry?.lat ?? null;
       let lng = result?.geometry?.lng ?? null;
 
+      // Unchanged address of a saved event: keep its stored coordinates instead of geocoding it again.
+      const saved = savedLocationRef.current;
+      if ((lat === null || lng === null) && saved && saved.latitud != null && saved.longitud != null && saved.ubicacion.trim().toLowerCase() === normalizedUbicacion) {
+        lat = saved.latitud;
+        lng = saved.longitud;
+      }
+
       // No coordinates from the autocomplete: one bounded geocoding attempt. The browser geolocation
       // fallback was removed: it blocked the save for up to 5 s (permission prompt) and stored the
       // user's position instead of the event's.
@@ -186,14 +198,16 @@ const RegistrarEvento2 = () => {
         provincia: prov || selectedProvince || provincia,
         tipoEvento,
         tipoPago,
-        estado: "EnPreparacion1",
+        // Editing never sends a state: the backend keeps the event's own state (a draft still advances).
+        ...(modoEditar ? {} : { estado: "EnPreparacion1" }),
         latitud: lat,
         longitud: lng,
         consumidorId: user?.consumidorId || user?.consumidoreId || user?.id,
         productorId: user?.productorId || user?.productoreId,
       };
 
-      const existingEventoId = localStorage.getItem(EVENTO_CREACION_ID_KEY);
+      const existingEventoId =
+        localStorage.getItem(EVENTO_CREACION_ID_KEY) || (modoEditar && location.state?.eventoId ? String(location.state.eventoId) : null);
       let endpoint = existingEventoId
         ? `${process.env?.REACT_APP_BACK_URL}evento/preparacion/${existingEventoId}`
         : `${process.env?.REACT_APP_BACK_URL}evento`;
@@ -216,7 +230,7 @@ const RegistrarEvento2 = () => {
       // El borrador guardado en localStorage puede apuntar a un evento que ya
       // no existe (por ejemplo, si se reseteó la base de datos). En ese caso
       // reintentamos creando uno nuevo en vez de dejar al usuario trabado.
-      if (saveResponse.status === 404 && existingEventoId) {
+      if (saveResponse.status === 404 && existingEventoId && !modoEditar) {
         localStorage.removeItem(EVENTO_CREACION_ID_KEY);
         endpoint = `${process.env?.REACT_APP_BACK_URL}evento`;
         method = "POST";
@@ -231,7 +245,7 @@ const RegistrarEvento2 = () => {
         if (eventoId) {
           localStorage.setItem(EVENTO_CREACION_ID_KEY, String(eventoId));
         }
-        navigate("/registrar-evento3", { state: { eventoId } });
+        navigate("/registrar-evento3", { state: estadoPaso(eventoId, modoEditar) });
       } else {
         toast.error(saveData?.msg || "Error al guardar el evento");
       }
@@ -335,6 +349,7 @@ const RegistrarEvento2 = () => {
     setSelectedOptionPago(ev.tipoPago || null);
     setImagenEvento(ev.img || null);
     setCroquis(ev.croquis || null);
+    savedLocationRef.current = { ubicacion: ev.ubicacion || "", latitud: ev.latitud ?? null, longitud: ev.longitud ?? null };
   };
 
   const handleContinueDraft = () => {
@@ -348,7 +363,8 @@ const RegistrarEvento2 = () => {
   };
 
   useEffect(() => {
-    const storedEventoId = localStorage.getItem(EVENTO_CREACION_ID_KEY);
+    const storedEventoId =
+      localStorage.getItem(EVENTO_CREACION_ID_KEY) || (modoEditar && location.state?.eventoId ? String(location.state.eventoId) : null);
     if (!storedEventoId) {
       setDraftCheckDone(true);
       return;
@@ -368,6 +384,18 @@ const RegistrarEvento2 = () => {
       .then((res) => res.json())
       .then((data) => {
         const ev = data?.data;
+        if (modoEditar) {
+          // Editing preloads any editable event (drafts, EnPreparacion, Pausado); the rest must be paused first.
+          if (ev?.id && esEventoEditable(ev)) {
+            localStorage.setItem(EVENTO_CREACION_ID_KEY, String(storedEventoId));
+            applyDraft(ev);
+          } else {
+            discardStaleKey();
+            toast.error(MENSAJE_NO_EDITABLE);
+            navigate("/listado-eventos-productor");
+          }
+          return;
+        }
         // Only unfinished drafts can be resumed ("EnPreparacion" without suffix is a completed event).
         if (!ev || !DRAFT_ESTADOS.includes(ev.estado)) {
           discardStaleKey();
@@ -398,8 +426,8 @@ const RegistrarEvento2 = () => {
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <main className="qf-event-registration-page">
-        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Crear un evento", url: "/registrar-evento2" }]} />
-        <header className="qf-event-registration-heading"><h1>Crear un Evento</h1><p>Empezá con la información general y la ubicación. Después vas a configurar las fechas y los puntos de encuentro.</p></header>
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: modoEditar ? "Editar evento" : "Crear un evento", url: "/registrar-evento2" }]} />
+        <header className="qf-event-registration-heading"><h1>{modoEditar ? "Editar evento" : "Crear un Evento"}</h1><p>{modoEditar ? "Revisá la información general y la ubicación. Después vas a revisar las fechas y los puntos de encuentro." : "Empezá con la información general y la ubicación. Después vas a configurar las fechas y los puntos de encuentro."}</p></header>
         <ol className="qf-event-registration-steps" aria-label="Progreso del registro">{["Información", "Configuración", "Días del evento", "Puntos de encuentro"].map((step, index) => <li key={step} aria-current={index === 0 ? "step" : undefined}><span>{index + 1}</span><div><small>Paso {index + 1}</small><strong>{step}</strong></div></li>)}</ol>
         {pendingDraft && <aside className="qf-event-draft-banner" role="alert"><div><FaRegSave aria-hidden="true" /><p>Tenés un borrador sin terminar: <strong>{pendingDraft.nombre || "Evento sin nombre"}</strong>.<br />Si continuás con el borrador, se van a editar sus datos.</p></div><div><button type="button" className="qf-event-registration-button qf-event-registration-button--primary" onClick={handleContinueDraft}>Continuar borrador</button><button type="button" className="qf-event-registration-button" onClick={handleDiscardDraft}>Empezar uno nuevo</button></div></aside>}
         <form className="qf-event-registration-form" onSubmit={handleSiguienteClick} noValidate>
@@ -416,7 +444,7 @@ const RegistrarEvento2 = () => {
             </div>
             <aside className="qf-event-registration-photo"><h2>Imagen del evento</h2><p>Elegí una imagen que ayude a reconocerlo.</p><div className="qf-event-registration-preview">{imagenEvento ? <img src={imagenEvento} alt="Vista previa del evento" /> : <div><FaImage aria-hidden="true" /><span>Tu evento empieza a verse acá</span></div>}</div><label htmlFor="imagen">Imagen del Evento<input type="file" id="imagen" accept="image/*" onChange={handleImagenEventoChange} /></label><span className="qf-event-photo-help">Usá una foto clara, con el contenido principal en el centro.</span></aside>
           </fieldset>
-          <footer className="qf-event-registration-footer"><span>Paso 1 de 4 · Tu avance se guarda al continuar.</span><div><button type="button" className="qf-event-registration-button" onClick={handleVolver} disabled={isSubmitting}><FaArrowLeft aria-hidden="true" /> Volver</button><button type="submit" className="qf-event-registration-button qf-event-registration-button--primary" disabled={isSubmitting}>{isSubmitting ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Guardando...</> : <>Siguiente <FaArrowRight aria-hidden="true" /></>}</button></div></footer>
+          <footer className="qf-event-registration-footer"><span>Paso 1 de 4 · {modoEditar ? "Tus cambios se guardan al continuar." : "Tu avance se guarda al continuar."}</span><div><button type="button" className="qf-event-registration-button" onClick={handleVolver} disabled={isSubmitting}><FaArrowLeft aria-hidden="true" /> Volver</button><button type="submit" className="qf-event-registration-button qf-event-registration-button--primary" disabled={isSubmitting}>{isSubmitting ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Guardando...</> : <>Siguiente <FaArrowRight aria-hidden="true" /></>}</button></div></footer>
         </form>
       </main><Footer />
     </PageLayout>

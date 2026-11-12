@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
@@ -10,6 +10,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { FaArrowLeft, FaArrowRight, FaCalendarAlt, FaCheck, FaTicketAlt } from "react-icons/fa";
 import "./RegistrarEvento.css";
 import Footer from "../ComponentesGenerales/Footer";
+import { esModoEditar, estadoPaso, toDatetimeLocal } from "./editarEvento";
 
 const RegistrarEvento3 = () => {
   const EVENTO_CREACION_ID_KEY = "eventoCreacionId";
@@ -67,46 +68,48 @@ const RegistrarEvento3 = () => {
     usuario: "",
   });
 
-  const { id } = useParams();
   const navigate = useNavigate();
+  const modoEditar = esModoEditar(location.state);
+  // Start date loaded from the saved event: an unchanged (possibly past) start of a paused event stays valid.
+  const [fechaInicioGuardada, setFechaInicioGuardada] = useState(null);
 
+  // Edit mode preloads every field of this step from the saved event (backend field names).
   useEffect(() => {
-    if (id) {
-      fetch(`${process.env.REACT_APP_BACK_URL}evento/${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.success) {
-            const evento = data.evento;
-            setEventoData(evento);
-            setFechaInicioEvento(evento.fechaInicio || "");
-            setFechaFinEvento(evento.fechaFin || "");
-            setTieneButacas(evento.tieneButacas || false);
-            setTienePreventa(evento.tienePreventa || false);
-            setDiasAntesInicioPreventa(evento.diasAntesInicioPreventa || "");
-            setHorasAntesInicioEvento(evento.horasAntesInicioEvento || "");
-            setTodosLosDiasPreventa(evento.todosLosDiasPreventa || "");
-            setCantidadPuestos(evento.cantidadPuestos || "");
-            setTieneRepartidores(evento.tieneRepartidores || true);
-            setCantidadRepartidores(evento.cantidadRepartidores || "");
-            setCapacidadMaxima(evento.capacidadMaxima || "");
-            setLinkVentaEntradas(evento.linkVentaEntradas || "");
-            setRestricciones(evento.restricciones || []);
-            setEventoId(evento._id);
-          } else {
-            toast.error("Error al cargar el evento");
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching event data:", error);
+    const idEditar = location.state?.eventoId || localStorage.getItem(EVENTO_CREACION_ID_KEY);
+    if (!modoEditar || !idEditar) return;
+    const toText = (value) => (value === null || value === undefined ? "" : String(value));
+    fetch(`${process.env.REACT_APP_BACK_URL}evento/${idEditar}`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${user?.token}` },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const ev = data?.data;
+        if (!ev?.id) {
           toast.error("Error al cargar el evento");
-        });
-    }
-  }, [id]);
+          return;
+        }
+        const inicio = toDatetimeLocal(ev.fechaHoraInicio);
+        setFechaInicioEvento(inicio);
+        setFechaInicioGuardada(inicio);
+        setFechaFinEvento(toDatetimeLocal(ev.fechaHoraFin));
+        setTienePreventa(Boolean(ev.tienePreventa));
+        setSelectedOptionPreventa(ev.tienePreventa ? 1 : 2);
+        setTieneRepartidores(ev.conRepartidor !== false);
+        setSelectedOptionRepartidores(ev.conRepartidor === false ? 2 : 1);
+        setTieneButacas(Boolean(ev.conButaca));
+        setSelectedOptionButacas(ev.conButaca ? 1 : 2);
+        setCapacidadMaxima(toText(ev.capacidadMaxima));
+        setCantidadPuestos(toText(ev.cantidadPuestos));
+        setCantidadRepartidores(toText(ev.cantidadRepartidores));
+        setLinkVentaEntradas(toText(ev.linkVentaEntradas));
+      })
+      .catch((error) => {
+        console.error("Error fetching event data:", error);
+        toast.error("Error al cargar el evento");
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (location.state && location.state.eventoId) {
@@ -190,7 +193,8 @@ const RegistrarEvento3 = () => {
     const finEvento = new Date(fechaHoraFinEvento);
 
     // Validaciones
-    if (inicioEvento <= now) {
+    const inicioSinCambios = modoEditar && fechaInicioGuardada !== null && fechaHoraInicioEvento === fechaInicioGuardada;
+    if (inicioEvento <= now && !inicioSinCambios) {
       toast.error(
         "La fecha de inicio del evento debe ser posterior a la fecha actual."
       );
@@ -233,10 +237,13 @@ const RegistrarEvento3 = () => {
       cantidadRepartidores: cantidadRepartidores === "" ? undefined : cantidadRepartidores,
       conButaca: tieneButacas === true,
       capacidadMaxima: capacidadMaxima === "" ? undefined : capacidadMaxima,
+      // Only creates new rows on the backend: it never removes the event's existing restrictions.
       restricciones,
       cantidadDiasEvento: Math.ceil(
         (finEvento - inicioEvento) / (1000 * 60 * 60 * 24)
       ),
+      // Editing also saves the ticket link it preloaded (creation keeps its original payload).
+      ...(modoEditar ? { linkVentaEntradas } : {}),
     };
 
     localStorage.setItem("eventoDatos", JSON.stringify(eventoDatos));
@@ -261,7 +268,7 @@ const RegistrarEvento3 = () => {
       if (updateResponse.ok) {
         toast.success("Evento actualizado correctamente");
         navigate(`/registrar-evento4/${eventoDatos.cantidadDiasEvento}`, {
-          state: { eventoId },
+          state: estadoPaso(eventoId, modoEditar),
         });
       } else {
         toast.error(updateData.message || "Error al actualizar el evento");
@@ -275,7 +282,7 @@ const RegistrarEvento3 = () => {
   };
 
   const handleVolver = () => {
-    navigate(`/registrar-evento2`, { state: { eventoId } });
+    navigate(`/registrar-evento2`, { state: estadoPaso(eventoId, modoEditar) });
   };
 
   const handleOptionClickPreventa = (option) => {
@@ -306,8 +313,8 @@ const RegistrarEvento3 = () => {
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <main className="qf-event-registration-page">
-        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Crear un evento · Configuración", url: "/registrar-evento3" }]} />
-        <header className="qf-event-registration-heading"><h1>Crear un Evento</h1><p>Definí las fechas, la preventa y la configuración de tu evento.</p></header>
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: modoEditar ? "Editar evento · Configuración" : "Crear un evento · Configuración", url: "/registrar-evento3" }]} />
+        <header className="qf-event-registration-heading"><h1>{modoEditar ? "Editar evento" : "Crear un Evento"}</h1><p>Definí las fechas, la preventa y la configuración de tu evento.</p></header>
         <ol className="qf-event-registration-steps" aria-label="Progreso del registro">{["Información", "Configuración", "Días del evento", "Puntos de encuentro"].map((step, index) => <li key={step} aria-current={index === 1 ? "step" : undefined} className={index === 0 ? "qf-event-step-completed" : ""}><span>{index === 0 ? <FaCheck aria-hidden="true" /> : index + 1}</span><div><small>Paso {index + 1}</small><strong>{step}</strong></div></li>)}</ol>
         <form className="qf-event-registration-form qf-event-configuration-form" onSubmit={handleSiguienteClick} noValidate>
           <fieldset disabled={isSubmitting} className="qf-event-configuration-sections"><legend className="qf-event-registration-sr">Configuración del evento</legend>

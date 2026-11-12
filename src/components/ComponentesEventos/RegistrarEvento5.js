@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import L from "leaflet";
 import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
@@ -15,6 +15,7 @@ import { Dialog } from "@mui/material";
 import { FaArrowLeft, FaCheck, FaPlus, FaMapMarkerAlt, FaPen, FaTrash, FaTimes, FaLocationArrow } from "react-icons/fa";
 import "./RegistrarEvento.css";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import { esModoEditar, estadoPaso } from "./editarEvento";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -58,6 +59,7 @@ const RegistrarEvento5 = () => {
   const { eventoId, diferenciaDiasEvento } = useParams();
   const effectiveEventoId = eventoId || localStorage.getItem(EVENTO_CREACION_ID_KEY);
   const navigate = useNavigate();
+  const modoEditar = esModoEditar(useLocation().state);
 
   const [puntos, setPuntos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -353,13 +355,13 @@ const RegistrarEvento5 = () => {
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <main className="qf-event-registration-page">
-        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Crear un evento · Puntos de encuentro", url: `/registrar-evento5/${effectiveEventoId}/${diferenciaDiasEvento}` }]} />
-        <header className="qf-event-registration-heading"><h1>Crear un Evento</h1><p>Definí dónde se encontrarán los asistentes y los repartidores para entregar sus pedidos.</p></header>
+        <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: modoEditar ? "Editar evento · Puntos de encuentro" : "Crear un evento · Puntos de encuentro", url: `/registrar-evento5/${effectiveEventoId}/${diferenciaDiasEvento}` }]} />
+        <header className="qf-event-registration-heading"><h1>{modoEditar ? "Editar evento" : "Crear un Evento"}</h1><p>Definí dónde se encontrarán los asistentes y los repartidores para entregar sus pedidos.</p></header>
         <ol className="qf-event-registration-steps" aria-label="Progreso del registro">{["Información", "Configuración", "Días del evento", "Puntos de encuentro"].map((step, index) => <li key={step} aria-current={index === 3 ? "step" : undefined} className={index < 3 ? "qf-event-step-completed" : ""}><span>{index < 3 ? <FaCheck aria-hidden="true" /> : index + 1}</span><div><small>Paso {index + 1}</small><strong>{step}</strong></div></li>)}</ol>
         <section className="qf-event-registration-form qf-event-meeting-section">
           <header className="qf-event-meeting-heading"><div><h2><FaMapMarkerAlt aria-hidden="true" /> Puntos de Encuentro</h2><p>Agregá al menos uno para completar el registro.</p></div><button type="button" className="qf-event-registration-button qf-event-registration-button--primary" onClick={() => openModal("create")} disabled={isFinishing}><FaPlus aria-hidden="true" /> Crear Punto de Encuentro</button></header>
           {loading ? <div className="qf-event-meeting-empty" role="status">Cargando puntos de encuentro…</div> : !puntos.length ? <div className="qf-event-meeting-empty"><FaMapMarkerAlt aria-hidden="true" /><h3>Todavía no agregaste puntos de encuentro</h3><p>Elegí lugares fáciles de reconocer, como una entrada o un sector señalizado del evento.</p></div> : <><p className="qf-event-meeting-count">{puntos.length} {puntos.length === 1 ? "punto de encuentro" : "puntos de encuentro"}</p><ul className="qf-event-meeting-list">{puntos.map((punto, index) => <li key={punto.id}><span className="qf-event-meeting-number">{String(index + 1).padStart(2, "0")}</span><div><h3>{punto.nombre}</h3><p><span>Latitud: {punto.latitud}</span><span>Longitud: {punto.longitud}</span></p></div><div className="qf-event-meeting-actions"><button type="button" className="qf-event-registration-button" onClick={() => openModal("edit", punto)} disabled={isFinishing}><FaPen aria-hidden="true" /> Editar</button><button type="button" className="qf-event-registration-button" onClick={() => handleDelete(punto)} disabled={isFinishing}><FaTrash aria-hidden="true" /> Eliminar</button></div></li>)}</ul></>}
-          <footer className="qf-event-registration-footer"><span>Paso 4 de 4 · {puntos.length ? "Todo listo para completar el registro." : "Agregá un punto de encuentro antes de finalizar."}</span><div><button type="button" className="qf-event-registration-button" onClick={() => navigate(`/registrar-evento4/${diferenciaDiasEvento}`, { state: { eventoId } })} disabled={isFinishing}><FaArrowLeft aria-hidden="true" /> Volver</button><button type="button" className="qf-event-registration-button qf-event-registration-button--primary" onClick={handleFinish} disabled={isFinishing}>{isFinishing ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Finalizando...</> : <><FaCheck aria-hidden="true" /> Finalizar Registro</>}</button></div></footer>
+          <footer className="qf-event-registration-footer"><span>Paso 4 de 4 · {puntos.length ? "Todo listo para completar el registro." : "Agregá un punto de encuentro antes de finalizar."}</span><div><button type="button" className="qf-event-registration-button" onClick={() => navigate(`/registrar-evento4/${diferenciaDiasEvento}`, { state: estadoPaso(eventoId, modoEditar) })} disabled={isFinishing}><FaArrowLeft aria-hidden="true" /> Volver</button><button type="button" className="qf-event-registration-button qf-event-registration-button--primary" onClick={handleFinish} disabled={isFinishing}>{isFinishing ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Finalizando...</> : <><FaCheck aria-hidden="true" /> {modoEditar ? "Finalizar edición" : "Finalizar Registro"}</>}</button></div></footer>
         </section>
       </main>
       <Dialog open={showModal} onClose={() => { if (!isSaving) closeModal(); }} fullWidth maxWidth="md" className="qf-event-point-dialog" aria-labelledby="event-point-dialog-title" slotProps={{ paper: { className: "qf-event-point-paper" } }}>
@@ -375,7 +377,7 @@ const RegistrarEvento5 = () => {
           <footer><button type="button" className="qf-event-registration-button" onClick={closeModal} disabled={isSaving}>Cancelar</button><button type="submit" className="qf-event-registration-button qf-event-registration-button--primary" disabled={isSaving}>{isSaving ? <><CircularProgress size={18} style={{ color: "inherit" }} /> Guardando...</> : "Guardar"}</button></footer>
         </form>}
       </Dialog>
-      <Dialog open={successOpen} fullWidth maxWidth="xs" className="qf-event-registration-success-dialog" aria-labelledby="event-registration-success-title" slotProps={{ paper: { className: "qf-event-registration-success" } }}><FaCheck aria-hidden="true" /><h2 id="event-registration-success-title">¡Registro Exitoso!</h2><p>El evento quedó creado y con puntos de encuentro configurados.</p></Dialog>
+      <Dialog open={successOpen} fullWidth maxWidth="xs" className="qf-event-registration-success-dialog" aria-labelledby="event-registration-success-title" slotProps={{ paper: { className: "qf-event-registration-success" } }}><FaCheck aria-hidden="true" /><h2 id="event-registration-success-title">{modoEditar ? "¡Cambios guardados!" : "¡Registro Exitoso!"}</h2><p>{modoEditar ? "Los cambios del evento quedaron guardados." : "El evento quedó creado y con puntos de encuentro configurados."}</p></Dialog>
       <Footer />
     </PageLayout>
   );

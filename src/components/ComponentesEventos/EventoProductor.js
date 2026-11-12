@@ -5,6 +5,7 @@ import imgDefault from "../img/qf-new-logo-transparent.png";
 import { FaInfoCircle, FaPen, FaClipboardList, FaCheck, FaPlay, FaPause, FaStop, FaTimes, FaMapMarkerAlt, FaCalendarAlt } from "react-icons/fa";
 import "./EventosProductor.css";
 import { seguirPreparando } from "./seguirPreparando";
+import { editarEvento, esEventoEditable } from "./editarEvento";
 import ConfirmDialog from "../ComponentesGenerales/ConfirmDialog";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 
@@ -294,7 +295,7 @@ const EventoProductor = ({ evento, recargarComponente }) => {
         {(start || end) && <dl className="qf-producer-event-dates">{start && <div><dt><FaCalendarAlt aria-hidden="true" /> Inicio</dt><dd>{start}</dd></div>}{end && <div><dt><FaCalendarAlt aria-hidden="true" /> Finalización</dt><dd>{end}</dd></div>}</dl>}
         <div className="qf-producer-event-actions">
           <button className="qf-producer-event-button" type="button" onClick={() => navigate(`/evento-detalle/${evento.id}`)}><FaInfoCircle aria-hidden="true" /> Ver Info</button>
-          <button className="qf-producer-event-button" type="button" onClick={() => navigate(`/evento/${evento.id}`)}><FaPen aria-hidden="true" /> Editar evento</button>
+          {esEventoEditable(evento) && <button className="qf-producer-event-button" type="button" onClick={() => editarEvento(evento, navigate)}><FaPen aria-hidden="true" /> Editar evento</button>}
           {!isEnCurso && <button className="qf-producer-event-button" type="button" onClick={verSolicitudes}><FaClipboardList aria-hidden="true" /> Ver Solicitudes</button>}
           {isEnPreparacion && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={confirmarEvento}><FaCheck aria-hidden="true" /> Confirmar Evento</button>}
           {isBorrador && <button className="qf-producer-event-button qf-producer-event-button--primary" type="button" onClick={() => seguirPreparando(evento, navigate)}><FaPlay aria-hidden="true" /> Seguir preparando</button>}

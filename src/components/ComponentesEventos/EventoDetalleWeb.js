@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useContext } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import PageLayout from "../ComponentesGenerales/PageLayout";
 import Footer from "../ComponentesGenerales/Footer";
@@ -13,12 +13,14 @@ import useBreakpoint from "../../useBreakpoint";
 import imgDefault from "../img/qf-new-logo-transparent.png";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 import { seguirPreparando } from "./seguirPreparando";
+import { editarEvento, esEventoEditable } from "./editarEvento";
 
 // El valor de "action" viaja tal cual a POST evento/cambiarEstado/:id/:accion
 // y el backend lo usa para invocar el método homónimo del estado actual
 // (ver BackendNode-QF/src/estados/estadosConcretosEventos/*.state.js), que
 // siempre tiene el sufijo "Evento" (confirmarEvento, cancelarEvento, etc.).
 const SEGUIR_PREPARANDO = "seguirPreparando";
+const EDITAR_EVENTO = "editarEvento";
 
 const STATE_ACTIONS = {
   EnPreparacion: [
@@ -49,7 +51,8 @@ const STATE_ACTIONS = {
   ],
   Pausado: [
     { label: "Cancelar Evento", action: "cancelarEvento", className: "qf-btn qf-btn--danger" },
-    { label: "Preparar Evento", action: "reprogramarEvento", className: "qf-btn qf-btn--primary" },
+    // Editing a paused event opens the creation wizard preloaded; saving its days leaves it EnPreparacion.
+    { label: "Editar evento", action: EDITAR_EVENTO, className: "qf-btn qf-btn--primary" },
     { label: "Continuar Evento", action: "continuarEvento", className: "qf-btn qf-btn--success" },
   ],
 };
@@ -131,6 +134,10 @@ const EventoDetalleWeb = () => {
       seguirPreparando(evento, navigate);
       return;
     }
+    if (action === EDITAR_EVENTO) {
+      editarEvento(evento, navigate);
+      return;
+    }
     setConfirmDialog({
       open: true,
       title: label,
@@ -196,7 +203,7 @@ const EventoDetalleWeb = () => {
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <main className="qf-event-detail-page">
         <Breadcrumb items={breadcrumbItems} />
-        <header className="qf-event-detail-page-heading"><div><h1>Detalle del evento</h1><p>Información general, días y puntos de encuentro.</p></div><div className="qf-event-detail-header-actions">{String(user?.tipoUsuario).toLowerCase() === "productor" && <Link className="qf-event-detail-button qf-event-detail-edit" to={`/evento/${id}`}><FaPen aria-hidden="true" /> Editar evento</Link>}<button className="qf-event-detail-button" type="button" onClick={() => window.history.back()}><FaArrowLeft aria-hidden="true" /> Volver</button></div></header>
+        <header className="qf-event-detail-page-heading"><div><h1>Detalle del evento</h1><p>Información general, días y puntos de encuentro.</p></div><div className="qf-event-detail-header-actions">{String(user?.tipoUsuario).toLowerCase() === "productor" && esEventoEditable(evento) && !actions.some((act) => act.action === EDITAR_EVENTO) && <button type="button" className="qf-event-detail-button qf-event-detail-edit" onClick={() => editarEvento(evento, navigate)}><FaPen aria-hidden="true" /> Editar evento</button>}<button className="qf-event-detail-button" type="button" onClick={() => window.history.back()}><FaArrowLeft aria-hidden="true" /> Volver</button></div></header>
         {actions.length > 0 && <section className="qf-event-detail-actions" aria-label="Acciones del evento"><div><h2>Administrar evento</h2><p>Acciones disponibles según su estado actual.</p></div><div className="qf-event-detail-action-buttons">{actions.map((act) => <button type="button" key={act.action} className={`${act.className} qf-event-detail-button`} onClick={() => handleStateAction(act.action, act.label)}>{act.label}</button>)}</div></section>}
         <section className="qf-event-detail-hero" aria-labelledby="event-name">
           <div className="qf-event-detail-image"><img src={imageSrc} alt={evento.nombre} onError={(event) => { if (event.currentTarget.getAttribute("src") !== imgDefault) event.currentTarget.src = imgDefault; }} /></div>

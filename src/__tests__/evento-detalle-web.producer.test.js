@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 // Mock useBreakpoint
@@ -319,8 +319,11 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
     expect(screen.queryByText(/¿Está seguro/)).toBeNull();
   });
 
-  // ── Triangulation: Pausado state shows Cancelar, Preparar, Continuar ──
-  test('shows Cancelar, Preparar, and Continuar buttons for Pausado state', async () => {
+  // ── S3: a paused event offers Cancelar, Editar evento (middle) and Continuar ──
+  test('shows Cancelar, Editar evento and Continuar for Pausado, and Editar evento opens the wizard without confirming', async () => {
+    const { useNavigate } = require('react-router-dom');
+    const mockNavigate = jest.fn();
+    useNavigate.mockReturnValue(mockNavigate);
     fetchSpy
       .mockResolvedValueOnce(mockFetchResponse({ status: 'success', data: { ...fullEvent, estado: 'Pausado' } }))
       .mockResolvedValueOnce(mockFetchResponse({ status: 'success', data: [] }));
@@ -329,9 +332,15 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
 
     await waitFor(() => expect(screen.getByRole('heading', { name: 'Feria Gastronomica' })).toBeInTheDocument());
 
-    expect(screen.getByText('Cancelar Evento')).toBeInTheDocument();
-    expect(screen.getByText('Preparar Evento')).toBeInTheDocument();
-    expect(screen.getByText('Continuar Evento')).toBeInTheDocument();
+    const acciones = screen.getByRole('region', { name: 'Acciones del evento' });
+    expect(within(acciones).getAllByRole('button').map((b) => b.textContent.trim())).toEqual(['Cancelar Evento', 'Editar evento', 'Continuar Evento']);
+    expect(screen.queryByText('Preparar Evento')).toBeNull();
+
+    fireEvent.click(within(acciones).getByRole('button', { name: 'Editar evento' }));
+    expect(mockNavigate).toHaveBeenCalledWith('/registrar-evento2', { state: { eventoId: 42, modo: 'editar' } });
+    expect(localStorage.getItem('eventoCreacionId')).toBe('42');
+    expect(screen.queryByText(/¿Está seguro/)).toBeNull();
+    expect(fetchSpy.mock.calls.find((call) => String(call[0]).includes('cambiarEstado'))).toBeUndefined();
   });
   test('opens the selected meeting point map and closes the accessible dialog', async () => {
     fetchSpy
@@ -346,17 +355,31 @@ describe('EventoDetalleWeb - producer view (TDD)', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 
-  test('producer has a direct edit link from event detail', async () => {
-    fetchSpy.mockResolvedValueOnce(mockFetchResponse({ data: fullEvent })).mockResolvedValueOnce(mockFetchResponse({ data: [] }));
+  test('producer edits an event in preparation from the detail header through the creation wizard', async () => {
+    const { useNavigate } = require('react-router-dom');
+    const mockNavigate = jest.fn();
+    useNavigate.mockReturnValue(mockNavigate);
+    fetchSpy.mockResolvedValueOnce(mockFetchResponse({ data: { ...fullEvent, estado: 'EnPreparacion' } })).mockResolvedValueOnce(mockFetchResponse({ data: [] }));
     renderWithContext(<EventoDetalleWeb />);
-    expect(await screen.findByRole('link', { name: 'Editar evento' })).toHaveAttribute('href', expect.stringMatching(/\/evento\//));
+    fireEvent.click(await screen.findByRole('button', { name: 'Editar evento' }));
+    expect(mockNavigate).toHaveBeenCalledWith('/registrar-evento2', { state: { eventoId: 42, modo: 'editar' } });
+    expect(screen.queryByRole('link', { name: 'Editar evento' })).not.toBeInTheDocument();
   });
 
-  test('encargado does not see the producer edit link', async () => {
-    fetchSpy.mockResolvedValueOnce(mockFetchResponse({ data: fullEvent })).mockResolvedValueOnce(mockFetchResponse({ data: [] }));
+  test.each(['Confirmado', 'EnCurso'])('a %s event cannot be edited: "Editar evento" does not appear', async (estado) => {
+    fetchSpy.mockResolvedValueOnce(mockFetchResponse({ data: { ...fullEvent, estado } })).mockResolvedValueOnce(mockFetchResponse({ data: [] }));
+    renderWithContext(<EventoDetalleWeb />);
+    await screen.findByRole('heading', { name: fullEvent.nombre });
+    expect(screen.queryByRole('button', { name: 'Editar evento' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Editar evento' })).not.toBeInTheDocument();
+  });
+
+  test('encargado does not see the producer edit action', async () => {
+    fetchSpy.mockResolvedValueOnce(mockFetchResponse({ data: { ...fullEvent, estado: 'EnPreparacion' } })).mockResolvedValueOnce(mockFetchResponse({ data: [] }));
     renderWithContext(<EventoDetalleWeb />, { userOverride: { consumidorId: 2, tipoUsuario: 'encargado' } });
     await screen.findByRole('heading', { name: fullEvent.nombre });
     expect(screen.queryByRole('link', { name: 'Editar evento' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Editar evento' })).not.toBeInTheDocument();
   });
 
 });
