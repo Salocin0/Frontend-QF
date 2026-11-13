@@ -12,6 +12,7 @@ import "./RegistrarEvento.css";
 import "./EditarEvento.css";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import { TIPOS_EVENTO, TIPOS_PAGO } from "../../constants/eventos";
+import LoadingSpinner from "../ComponentesGenerales/LoadingSpinner";
 
 const datePart = (value) => {
   if (!value) return "";
@@ -343,7 +344,7 @@ const ConsultarEvento = () => {
       <main className="qf-event-registration-page qf-event-editor-page">
         <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis eventos", url: "/listado-eventos-productor" }, { title: "Editar evento", url: `/evento/${id}` }]} />
         <header className="qf-event-editor-heading"><div className="qf-event-registration-heading"><h1>Editar evento</h1><p>Consultá y actualizá la información, la configuración y las restricciones.</p></div><Link className="qf-event-registration-button" to={`/evento-detalle/${id}`}><FaArrowLeft aria-hidden="true" /> Volver al detalle</Link></header>
-        {loadingEvent && <p role="status">Cargando los datos del evento…</p>}
+        {loadingEvent && <p role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando los datos del evento…" /> /></p>}
         {loadError && <div role="alert" className="qf-event-editor-load-error"><p>No pudimos cargar los datos del evento. La edición está bloqueada para evitar guardar información vacía.</p><button type="button" className="qf-event-registration-button" onClick={() => setLoadAttempt((value) => value + 1)}>Reintentar</button></div>}
         <form className={`qf-event-registration-form qf-event-editor-form${editMode ? " qf-event-editor-form--editing" : ""}`} onSubmit={handleSaveChanges}>
           <div className="qf-event-editor-title"><h2>{nombre || "Información del evento"}</h2><span>{editMode ? "Modo edición" : "Solo lectura"}</span></div>

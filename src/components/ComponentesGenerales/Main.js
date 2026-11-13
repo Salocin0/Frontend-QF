@@ -13,6 +13,7 @@ import Login from "../ComponentesLogin/Login";
 import RecuperarContraseña from "../ComponentesLogin/RecuperarContraseña";
 import ValidarEmail from "../ComponentesLogin/ValidarEmail";
 import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
+import LoadingSpinner from "./LoadingSpinner";
 
 const AdquirirNuevoRolR = lazy(() => import("../ComponenteRepartidor/AdquirirNuevoRolR"));
 const AsociarRepartidorAEvento = lazy(() => import("../ComponenteRepartidor/AsociarRepartidorAEvento"));
@@ -61,7 +62,7 @@ const Preventa = lazy(() => import("../ComponentesEventos/Preventa"));
 // login and landing pages do not wait for the charts, maps, PDF and payment libraries of the private screens.
 const isRenderable = (Component) => typeof Component === 'function' || Boolean(Component?.$$typeof);
 
-const RouteFallback = () => <div className="qf-route-loading" role="status" aria-live="polite">Cargando…</div>;
+const RouteFallback = () => <div className="qf-route-loading" role="status" aria-live="polite"><LoadingSpinner label=<LoadingSpinner label="Cargando…" /> /></div>;
 
 const SafeRoute = ({ component: Component, name }) => {
   if (isRenderable(Component)) {

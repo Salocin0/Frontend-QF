@@ -14,6 +14,7 @@ import imgDefault from "../img/qf-new-logo-transparent.png";
 import { formatUbicacion } from "../ComponentesGenerales/Utils/formatUbicacion";
 import { seguirPreparando } from "./seguirPreparando";
 import { editarEvento, esEventoEditable } from "./editarEvento";
+import LoadingSpinner from "../ComponentesGenerales/LoadingSpinner";
 
 // El valor de "action" viaja tal cual a POST evento/cambiarEstado/:id/:accion
 // y el backend lo usa para invocar el método homónimo del estado actual
@@ -196,7 +197,7 @@ const EventoDetalleWeb = () => {
     { title: evento?.nombre || "Evento", url: `/evento-detalle/${id}` },
   ];
 
-  if (loading) return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}><main className="qf-event-detail-page"><p className="qf-event-detail-feedback" role="status">Cargando...</p></main><Footer /></PageLayout>;
+  if (loading) return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}><main className="qf-event-detail-page"><p className="qf-event-detail-feedback" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando..." /> /></p></main><Footer /></PageLayout>;
   if (error || !evento) return <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}><main className="qf-event-detail-page"><div className="qf-event-detail-feedback" role="alert"><p>{error || "Error al cargar los datos del evento"}</p><button className="qf-event-detail-button" type="button" onClick={fetchData}>Reintentar</button></div></main><Footer /></PageLayout>;
 
   return (

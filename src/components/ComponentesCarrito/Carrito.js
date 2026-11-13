@@ -12,6 +12,7 @@ import "./Carrito.css";
 import useTheme from "../../useTheme";
 import logoDark from "../img/qf-new-logo-solid.png";
 import logoLight from "../img/qf-new-logo-transparent.png";
+import LoadingSpinner from "../ComponentesGenerales/LoadingSpinner";
 
 export const groupCartItems = (items) => {
   if (!Array.isArray(items)) return [];
@@ -66,7 +67,7 @@ const Carrito = () => {
       <main className="qf-cart-page">
         <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mi carrito", url: "/carrito" }]} />
         <header className="qf-cart-heading"><div><h1><FaShoppingCart aria-hidden="true" /> Mi carrito</h1><p>Revisá tus productos y pagá todos tus pedidos juntos.</p></div><button type="button" className="qf-cart-secondary" onClick={() => navigate("/Listado-eventos")}><FaArrowLeft aria-hidden="true" /> Ver eventos</button></header>
-        {loading ? <p className="qf-cart-empty" role="status">Cargando carrito…</p> : error ? <div className="qf-cart-empty" role="alert"><h2>No pudimos cargar tu carrito</h2><button className="qf-cart-primary" onClick={refresh}>Reintentar</button></div> : groups.length ? (
+        {loading ? <p className="qf-cart-empty" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando carrito…" /> /></p> : error ? <div className="qf-cart-empty" role="alert"><h2>No pudimos cargar tu carrito</h2><button className="qf-cart-primary" onClick={refresh}>Reintentar</button></div> : groups.length ? (
           <div className="qf-cart-overview-layout"><div className="qf-cart-groups">{groups.map(({ key, productos }) => <RenderizarTarjeta key={key} groupKey={key} onItemsChange={updateItems} externalCheckout onCheckoutChange={updateCheckout} checkoutLocked={checkoutLocked} productos={productos} evento={productos[0].eventoId ?? productos[0].evento?.id} recargarComponente={refresh} />)}</div><CartOverview groups={summaryGroups} checkoutControl={<CheckoutAll consumerId={consumerId} disabled={summaryGroups.some((group) => !group.checkout || group.checkout.disabled)} onComplete={refresh} onLockChange={setCheckoutLocked} />} /></div>
         ) : <section className="qf-cart-empty qf-cart-empty--welcome" aria-labelledby="empty-cart-title">
           <img className="qf-cart-empty-logo" src={isDark ? logoDark : logoLight} alt="QuickFood" />

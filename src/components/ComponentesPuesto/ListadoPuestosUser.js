@@ -9,6 +9,7 @@ import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
 import "./PuestosListado.css";
 import eventPlaceholder from "../img/qf-new-logo-transparent.png";
+import LoadingSpinner from "../ComponentesGenerales/LoadingSpinner";
 
 export const filterStands = (stands, { name, stars, time }) => stands.filter((stand) => {
   const query = name.trim().toLocaleLowerCase();
@@ -81,7 +82,7 @@ const ListadoPuestosUser = () => {
           <button type="button" onClick={reset} disabled={!active}>Limpiar filtros</button>
         </section>
         <p className="qf-stands-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "puesto disponible" : "puestos disponibles"}`}</p>
-        {loading ? <p className="qf-stands-empty" role="status">Cargando puestos…</p> : error ? <div className="qf-stands-empty" role="alert"><h2>No pudimos cargar los puestos</h2><button type="button" className="qf-btn qf-btn--primary" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : filtered.length ? (
+        {loading ? <p className="qf-stands-empty" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando puestos…" /> /></p> : error ? <div className="qf-stands-empty" role="alert"><h2>No pudimos cargar los puestos</h2><button type="button" className="qf-btn qf-btn--primary" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : filtered.length ? (
           <div className="qf-stands-grid">{filtered.map((stand) => <PuestoUser key={stand.id} carrito={stand} selectedDay={selectedDay} evento={evento} />)}</div>
         ) : <div className="qf-stands-empty"><h2>{active ? "No encontramos puestos con estos filtros" : "No hay puestos en este momento."}</h2>{active && <button type="button" className="qf-btn qf-btn--primary" onClick={reset}>Ver todos los puestos</button>}</div>}
       </main>

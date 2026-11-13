@@ -7,6 +7,7 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import "./ProductosGestion.css";
+import LoadingSpinner from "../ComponentesGenerales/LoadingSpinner";
 
 const RegistrarProductos = () => {
   const [nombre, setNombre] = useState("");
@@ -63,7 +64,7 @@ const RegistrarProductos = () => {
               <label className="qf-product-photo-label" htmlFor="imagen">Foto del producto</label>
               <div className="qf-product-photo-preview">{imagen ? <img src={imagen} alt="Vista previa del producto" /> : <div><FaImage aria-hidden="true" /><span>Mostrá lo rico que se ve</span><small>La foto aparecerá en la carta del puesto</small></div>}</div>
               <input type="file" id="imagen" aria-label="Imagen del producto" accept="image/*" onChange={handleImgChange} required aria-describedby="product-photo-help" />
-              <p id="product-photo-help" className="qf-product-field-help" role="status">{reading ? "Cargando imagen…" : "Elegí una foto clara, con el producto en el centro."}</p>
+              <p id="product-photo-help" className="qf-product-field-help" role="status">{reading ? <LoadingSpinner label="Cargando imagen…" /> : "Elegí una foto clara, con el producto en el centro."}</p>
             </section>
             <section className="qf-product-data-section" aria-label="Datos del producto">
               <div className="qf-product-entry-fields">

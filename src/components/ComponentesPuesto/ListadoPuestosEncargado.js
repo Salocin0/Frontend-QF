@@ -8,6 +8,7 @@ import Footer from "../ComponentesGenerales/Footer";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import "../ComponentesGenerales/ListFilters.css";
 import "./MisPuestos.css";
+import LoadingSpinner from "../ComponentesGenerales/LoadingSpinner";
 
 export const formatStandStatus = (value) => String(value || "Sin estado").replace(/([a-záéíóú])([A-Z])/g, "$1 $2");
 export const filterOwnedStands = (stands, search, status) => {
@@ -67,7 +68,7 @@ const ListadoPuestosEncargado = () => {
           <label htmlFor="owned-stand-search">Buscar puesto<input id="owned-stand-search" type="search" placeholder="Nombre, número o teléfono" value={search} onChange={(event) => setSearch(event.target.value)} /></label>
           <label htmlFor="owned-stand-status">Estado<select id="owned-stand-status" value={status} onChange={(event) => setStatus(event.target.value)}><option value="">Todos los estados</option>{[...new Set(puestos.map((stand) => stand.estado).filter(Boolean))].map((state) => <option key={state} value={state}>{formatStandStatus(state)}</option>)}</select></label>
         </section>
-        {loading || !consumerId ? <div className="qf-owned-stands-empty" role="status">Cargando tus puestos…</div> : error ? (
+        {loading || !consumerId ? <div className="qf-owned-stands-empty" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando tus puestos…" /> /></div> : error ? (
           <div className="qf-owned-stands-empty" role="alert"><h2>No pudimos cargar tus puestos</h2><p>Intentá nuevamente en unos instantes.</p><button type="button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div>
         ) : <>
           <p className="qf-owned-stands-count" aria-live="polite">{filtered.length} {filtered.length === 1 ? "puesto" : "puestos"}{search || status ? ` de ${puestos.length}` : ""}</p>

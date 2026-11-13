@@ -6,6 +6,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import Footer from "../ComponentesGenerales/Footer";
 import "./Pedidos.css";
+import LoadingSpinner from "../ComponentesGenerales/LoadingSpinner";
 
 export const ORDER_STATES = {
   Todos: [], Pendientes: ["Pendiente"], Aceptados: ["Aceptado", "Precomprado"],
@@ -72,7 +73,7 @@ const ListadoPedidos = () => {
           </div>
         </section>
         <p className="qf-orders-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "pedido encontrado" : "pedidos encontrados"}`}</p>
-        {loading ? <p className="qf-orders-empty" role="status">Cargando pedidos…</p> : error ? <div className="qf-orders-empty" role="alert"><h2>No pudimos cargar tus pedidos</h2><button className="qf-btn qf-btn--primary" onClick={refresh}>Reintentar</button></div> : filtered.length ? (
+        {loading ? <p className="qf-orders-empty" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando pedidos…" /> /></p> : error ? <div className="qf-orders-empty" role="alert"><h2>No pudimos cargar tus pedidos</h2><button className="qf-btn qf-btn--primary" onClick={refresh}>Reintentar</button></div> : filtered.length ? (
           <div className="qf-orders-grid">{filtered.map((pedido) => <Pedido key={pedido.id} pedido={pedido} recargar={refresh} />)}</div>
         ) : <div className="qf-orders-empty"><h2>{pedidos.length ? "No encontramos pedidos con estos filtros" : "Todavía no hiciste pedidos"}</h2>{pedidos.length > 0 && <button className="qf-btn qf-btn--primary" onClick={reset}>Ver todos los pedidos</button>}</div>}
       </main>

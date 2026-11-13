@@ -5,6 +5,7 @@ import { UserContext } from "../ComponentesGenerales/UserContext";
 import CardNotificaciones from "./CardNotificaicones";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { CircularProgress } from "@mui/material";
+import LoadingSpinner from "../ComponentesGenerales/LoadingSpinner";
 
 const Notificaciones = () => {
   const { user } = useContext(UserContext);
@@ -88,7 +89,7 @@ const Notificaciones = () => {
         {isLoading ? (
           <div style={styles.loadingContainer}>
             <CircularProgress style={{ color: "var(--qf-naranja)" }} size={50} />
-            <div style={styles.loadingText}>Cargando notificaciones...</div>
+            <div style={styles.loadingText}><LoadingSpinner label=<LoadingSpinner label="Cargando notificaciones..." /> /></div>
           </div>
         ) : notificaciones.length > 0 ? (
           notificaciones.map((notificacion) => (
