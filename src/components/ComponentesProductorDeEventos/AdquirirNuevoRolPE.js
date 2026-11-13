@@ -7,11 +7,13 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import { useRolAdquirido } from "../Hooks/useRolAdquirido";
 const AdquirirNuevoRolPE = () => {
   const [cuit, setCuit] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
   const [condicionIva, setCondicionIva] = useState("");
   const navigate = useNavigate();
+  const rolAdquirido = useRolAdquirido();
   const { user } = useContext(UserContext);
 
   const handleCondicionIvaChange = (e) => {
@@ -45,8 +47,7 @@ const AdquirirNuevoRolPE = () => {
       );
 
       if (response.ok) {
-        toast.success("Actualizado a productor de eventos");
-        navigate(`/login`);
+        rolAdquirido("productor", "Actualizado a productor de eventos");
       } else {
         toast.error("Error al actualizar a productor de eventos");
       }

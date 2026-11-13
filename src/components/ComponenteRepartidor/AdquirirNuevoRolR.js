@@ -7,34 +7,15 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useContext } from "react";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import { useRolAdquirido } from "../Hooks/useRolAdquirido";
 
 const AdquirirNuevoRolR = () => {
-  const navigate = useNavigate();
   const [confirmacionMayorDeEdad, setConfirmacionMayorDeEdad] = useState(false);
   const [,setNuevorol] = useState(false);
-  const { user,updateUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const rolAdquirido = useRolAdquirido();
+  const navigate = useNavigate();
 
-  const handleLogout = () => {
-      if (user.id) {
-        fetch(`${process.env?.REACT_APP_BACK_URL}user/cerrarWeb`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: user.id }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            updateUser({});
-            navigate("/login");
-            toast.success("Sesión cerrada");
-          })
-          .catch((error) => {
-            console.log(error);
-            toast.error("Error al cerrar sesion");
-          });
-      }
-    };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -48,9 +29,8 @@ const AdquirirNuevoRolR = () => {
         );
 
         if (response.ok) {
-          toast.success("Actualizado a repartidor");
           setNuevorol(true);
-          handleLogout()
+          rolAdquirido("repartidor", "Actualizado a repartidor");
         } else {
           toast.error("Error al actualizar a repartidor");
         }

@@ -6,11 +6,13 @@ import PageLayout from "../ComponentesGenerales/PageLayout";
 import Breadcrumb from "../ComponentesGenerales/Breadcrumb";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../ComponentesGenerales/UserContext";
+import { useRolAdquirido } from "../Hooks/useRolAdquirido";
 
 const AdquirirNuevoRolEPC = () => {
   const [cuit, setCuit] = useState("");
   const [razonSocial, setRazonSocial] = useState("");
   const [condicionIva, setCondicionIva] = useState("");
+  const rolAdquirido = useRolAdquirido();
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
 
@@ -37,8 +39,7 @@ const AdquirirNuevoRolEPC = () => {
       );
 
       if (response.ok) {
-        toast.success("Actualizado a Encargado de Puesto");
-        navigate(`/login`);
+        rolAdquirido("encargado", "Actualizado a Encargado de Puesto");
       } else {
         toast.error("Error al actualizar a Encargado de Puesto");
       }
