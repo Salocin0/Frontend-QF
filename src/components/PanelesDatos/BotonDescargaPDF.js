@@ -1,12 +1,26 @@
 import React, { useState } from "react";
 import html2canvas from "html2canvas";
 import { normalizarColoresParaCaptura, crearConversorCanvas } from "./coloresCaptura";
+import {
+  agregarCapturaPaginada,
+  dibujarGraficoComparativo,
+  obtenerCortesSeguros,
+  tieneGraficoComparativo,
+} from "./informePdf";
 import jsPDF from "jspdf";
+
+const esTituloRendimiento = (titulo) =>
+  titulo
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .startsWith("ANALISIS DE RENDIMIENTO");
 
 /**
  * Botón que genera un PDF con:
- *  - Captura del panel de gráficas (html2canvas)
- *  - Análisis ejecutivo generado por GPT-4o (backend)
+ *  - Captura del panel de gráficas (html2canvas), paginada sin deformarla
+ *  - Gráfico comparativo (percentiles frente a la referencia) en "ANÁLISIS DE RENDIMIENTO"
+ *  - Análisis ejecutivo generado por el LLM (backend)
  *
  * Props:
  *  - dashboardRef   : ref al div que contiene los gráficos
@@ -60,8 +74,7 @@ const BotonDescargaPDF = ({
     return lines;
   };
 
-  const renderAnalysisText = (pdf, text, startY, pageWidth, marginLeft, maxWidth) => {
-    const sections = text.split(/\n(?=[A-ZÁÉÍÓÚ ]{4,}$)/m);
+  const renderAnalysisText = (pdf, text, startY, pageWidth, marginLeft, maxWidth, { despuesDeTitulo } = {}) => {
     let y = startY;
     const lineHeight = 5.5;
     const pageHeight = pdf.internal.pageSize.getHeight();
@@ -96,6 +109,7 @@ const BotonDescargaPDF = ({
         pdf.setLineWidth(0.3);
         pdf.line(marginLeft, y - 1, pageWidth - marginLeft, y - 1);
         y += 3;
+        if (despuesDeTitulo) y = despuesDeTitulo(trimmed, y);
       } else {
         pdf.setFont("helvetica", "normal");
         pdf.setFontSize(9.5);
@@ -132,10 +146,11 @@ const BotonDescargaPDF = ({
       const analisisTexto = result?.data?.analisis || "No se pudo generar el análisis.";
 
       // 2. Capturar el dashboard con html2canvas
-      let chartImgData = null;
-      let chartAspect = 16 / 9;
+      let canvasPanel = null;
+      let cortesPx = [];
       if (dashboardRef?.current) {
-        const canvas = await html2canvas(dashboardRef.current, {
+        const raiz = dashboardRef.current;
+        canvasPanel = await html2canvas(raiz, {
           scale: 1.5,
           useCORS: true,
           backgroundColor: "#1a1a1a",
@@ -148,8 +163,8 @@ const BotonDescargaPDF = ({
             });
           },
         });
-        chartImgData = canvas.toDataURL("image/jpeg", 0.85);
-        chartAspect = canvas.width / canvas.height;
+        const escala = canvasPanel.width / (raiz.getBoundingClientRect().width || canvasPanel.width);
+        cortesPx = obtenerCortesSeguros(raiz).map((yPx) => yPx * escala);
       }
 
       // 3. Construir PDF
@@ -189,17 +204,27 @@ const BotonDescargaPDF = ({
       let currentY = 34;
 
       // — Gráficos —
-      if (chartImgData) {
+      if (canvasPanel) {
         pdf.setFont("helvetica", "bold");
         pdf.setFontSize(12);
         pdf.setTextColor(230, 95, 0);
         pdf.text("PANEL DE ESTADÍSTICAS", marginLeft, currentY);
         currentY += 5;
 
-        const imgWidth = contentWidth;
-        const imgHeight = Math.min(imgWidth / chartAspect, 110);
-        pdf.addImage(chartImgData, "JPEG", marginLeft, currentY, imgWidth, imgHeight);
-        currentY += imgHeight + 8;
+        // Keeps the capture's aspect ratio; tall dashboards continue on the next page.
+        currentY = agregarCapturaPaginada(pdf, canvasPanel, {
+          y: currentY,
+          marginLeft,
+          contentWidth,
+          topMargin: 15,
+          bottomMargin: 15,
+          cortesPx,
+        });
+        currentY += 8;
+        if (currentY > pageHeight - 40) {
+          pdf.addPage();
+          currentY = 20;
+        }
       }
 
       // — Separador —
@@ -215,7 +240,30 @@ const BotonDescargaPDF = ({
       pdf.text("INFORME EJECUTIVO  (Generado con FoodyAnalyst)", marginLeft, currentY);
       currentY += 7;
 
-      currentY = renderAnalysisText(pdf, analisisTexto, currentY, pageWidth, marginLeft, contentWidth);
+      // — Gráfico comparativo: va al inicio de "ANÁLISIS DE RENDIMIENTO" y el texto del LLM lo explica debajo —
+      const contexto = result?.data?.contextoComparativo;
+      let graficoDibujado = !tieneGraficoComparativo(contexto);
+      const asegurarEspacio = (y, alto) => {
+        if (y + alto > pageHeight - 20) {
+          pdf.addPage();
+          return 20;
+        }
+        return y;
+      };
+      const dibujarComparativo = (y) => {
+        graficoDibujado = true;
+        return dibujarGraficoComparativo(pdf, contexto, { y: y + 1, marginLeft, contentWidth, asegurarEspacio });
+      };
+
+      currentY = renderAnalysisText(pdf, analisisTexto, currentY, pageWidth, marginLeft, contentWidth, {
+        despuesDeTitulo: (titulo, y) => (!graficoDibujado && esTituloRendimiento(titulo) ? dibujarComparativo(y) : y),
+      });
+
+      if (!graficoDibujado) {
+        currentY = renderAnalysisText(pdf, "ANÁLISIS COMPARATIVO", currentY + 2, pageWidth, marginLeft, contentWidth, {
+          despuesDeTitulo: (_titulo, y) => dibujarComparativo(y),
+        });
+      }
 
       // — Metodología (determinística, armada por el backend, no por el LLM) —
       const metodologia = result?.data?.metodologia;
