@@ -5,7 +5,7 @@ import { UserContext } from '../components/ComponentesGenerales/UserContext';
 const mockBoardMount = jest.fn();
 jest.mock('../components/ComponentesGenerales/PageLayout', () => ({ children }) => <div>{children}</div>);
 jest.mock('../components/ComponentesGenerales/Footer', () => () => null);
-jest.mock('react-router-dom', () => ({ useParams: () => ({ id: '1' }), useLocation: () => ({ state: { id: 1, nombreCarro: 'Papas' } }) }));
+jest.mock('react-router-dom', () => ({ useParams: () => ({ id: '1' }), useLocation: () => ({ state: { id: 1, nombreCarro: 'Papas' } }), Link: ({ children, to }) => <a href={to}>{children}</a> }));
 jest.mock('../components/ComponentesEPC/KanbanBoard', () => function Board() { const React = require('react'); React.useEffect(() => { mockBoardMount(); }, []); return <div>Tablero original</div>; });
 const renderPanel = () => render(<UserContext.Provider value={{ user: { consumidorId: 7 } }}><ListadoPedidosEncargado /></UserContext.Provider>);
 beforeEach(() => { jest.spyOn(global, 'fetch').mockResolvedValue({ json: async () => ({ data: [{ id: 1, total: 100, estado: 'Pendiente' }] }) }); });

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Logo from "../img/qf-new-logo-solid.png";
 import LogoTransparent from "../img/qf-new-logo-transparent.png";
 import MenuItems from "./MenuItems";
@@ -41,9 +42,9 @@ const Sidebar = ({ tipoUsuario, onClose, isCollapsed }) => {
       )}
 
       <div className="logocontainer">
-        <a href="/inicio">
+        <Link to="/inicio">
           <img src={isDark ? Logo : LogoTransparent} alt="QuickFood" className="logo" style={{ borderRadius: "10px", width: isCollapsed && !isMobile ? "56px" : "120px", height: "auto", maxWidth: "100%", objectFit: "contain" }} />
-        </a>
+        </Link>
 
       </div>
       <div className="menu-container">

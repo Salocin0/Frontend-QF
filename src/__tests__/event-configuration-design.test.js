@@ -4,7 +4,7 @@ import RegistrarEvento3 from '../components/ComponentesEventos/RegistrarEvento3'
 import { UserContext } from '../components/ComponentesGenerales/UserContext';
 import { toast } from 'react-toastify';
 const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useLocation: () => ({ state: { eventoId: 19 } }), useParams: () => ({}) }));
+jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useLocation: () => ({ state: { eventoId: 19 } }), useParams: () => ({}), Link: ({ children, to }) => <a href={to}>{children}</a> }));
 jest.mock('../components/ComponentesGenerales/PageLayout', () => ({ children }) => <div>{children}</div>);
 jest.mock('../components/ComponentesGenerales/Footer', () => () => null);
 jest.mock('react-toastify', () => ({ toast: { success: jest.fn(), error: jest.fn() } }));

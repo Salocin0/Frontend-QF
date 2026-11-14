@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { UserContext } from '../components/ComponentesGenerales/UserContext';
 import { toast } from 'react-toastify';
-jest.mock('react-router-dom', () => ({ useNavigate: () => jest.fn(), useLocation: () => ({ state: null }), useParams: () => ({ eventoId: '19', diferenciaDiasEvento: '2' }) }));
+jest.mock('react-router-dom', () => ({ useNavigate: () => jest.fn(), useLocation: () => ({ state: null }), useParams: () => ({ eventoId: '19', diferenciaDiasEvento: '2' }), Link: ({ children, to }) => <a href={to}>{children}</a> }));
 jest.mock('../components/ComponentesGenerales/PageLayout', () => ({ children }) => <div>{children}</div>);
 jest.mock('../components/ComponentesGenerales/Footer', () => () => null);
 jest.mock('leaflet/dist/images/marker-icon-2x.png', () => 'mock-icon-2x', { virtual: true });

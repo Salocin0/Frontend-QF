@@ -51,13 +51,7 @@
   background-color: var(--qf-bg-main, #f3f1ed);
 }
 
-/* Fast loads finish before the logo and spinner fade in, so they never flicker. */
-.qf-route-loading__logo,
-.qf-route-loading .qf-loading-spinner {
-  opacity: 0;
-  animation: qf-route-loading-in 0.25s ease 0.2s forwards;
-}
-
+/* Shown right away (no fade-in delay) so it continues the boot loader of index.html. */
 .qf-route-loading__logo {
   width: min(180px, 45vw);
   height: auto;
@@ -67,12 +61,6 @@
   width: 2.75rem;
   height: 2.75rem;
   border-width: 4px;
-}
-
-@keyframes qf-route-loading-in {
-  to {
-    opacity: 1;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import useBreakpoint from '../../useBreakpoint';
 
@@ -82,9 +83,13 @@ const Breadcrumb = ({ items, style }) => {
               item.title
             ) : (
               <>
-                <a href={item.url} style={styles.breadcrumbItemLink}>
-                  {item.title}
-                </a>
+                {item.url ? (
+                  <Link to={item.url} style={styles.breadcrumbItemLink}>
+                    {item.title}
+                  </Link>
+                ) : (
+                  item.title
+                )}
                 <span style={styles.breadcrumbDivider}>{'>'}</span>
               </>
             )}

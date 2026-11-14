@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import RegistrarEvento2 from '../components/ComponentesEventos/RegistrarEvento2';
 import { UserContext } from '../components/ComponentesGenerales/UserContext';
 const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useLocation: () => ({ state: null }) }));
+jest.mock('react-router-dom', () => ({ useNavigate: () => mockNavigate, useLocation: () => ({ state: null }), Link: ({ children, to }) => <a href={to}>{children}</a> }));
 jest.mock('../components/ComponentesGenerales/PageLayout', () => ({ children }) => <div>{children}</div>);
 jest.mock('../components/ComponentesGenerales/Footer', () => () => null);
 jest.mock('react-toastify', () => ({ toast: { success: jest.fn(), error: jest.fn(), info: jest.fn() } }));
