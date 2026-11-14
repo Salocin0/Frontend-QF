@@ -81,13 +81,14 @@ const Chatbot = () => {
       if (response.status === 404) response = await fetch(`${process.env.REACT_APP_BACK_URL}chatbot`, options);
       if (!response.ok) {
         const data = await response.json().catch(() => ({}));
-        throw new Error(data?.msg || "No pude responder en este momento. Intentá de nuevo en unos minutos.");
+        // Server texts only for 4xx (e.g. rate limit); 5xx always get our own Spanish message.
+        throw new Error(response.status < 500 && data?.msg ? data.msg : "No pude responder en este momento. Intentá de nuevo en unos minutos.");
       }
 
       const reader = response.body?.getReader?.();
       if (!reader) {
         const data = await response.json().catch(() => ({}));
-        if (typeof data?.data?.chat_response !== "string") throw new Error("Invalid response");
+        if (typeof data?.data?.chat_response !== "string") throw new Error("No pude responder en este momento. Intentá de nuevo en unos minutos.");
         setMessages((prev) => [...prev, { message: data.data.chat_response, sender: "bot", animar: true }]);
       } else {
         // Show the answer while Foody writes it instead of all at once at the end.
@@ -104,7 +105,7 @@ const Chatbot = () => {
           setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, message: snapshot } : m)));
         }
         text += decoder.decode();
-        if (!text.trim()) throw new Error("Invalid response");
+        if (!text.trim()) throw new Error("No pude responder en este momento. Intentá de nuevo en unos minutos.");
         setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, message: text } : m)));
       }
     } catch (error) {

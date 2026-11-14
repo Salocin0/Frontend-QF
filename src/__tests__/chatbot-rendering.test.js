@@ -129,6 +129,21 @@ describe('Chatbot — message rendering', () => {
     restore();
   });
 
+  test('never shows a raw server error text on a 500 (shows the Spanish message)', async () => {
+    const restore = mockFetch(async () => ({
+      ok: false,
+      status: 500,
+      json: async () => ({ status: 'error', msg: 'something went wrong :(' }),
+    }));
+
+    renderChat();
+    ask('hola');
+
+    expect(await screen.findByText(/No pude responder en este momento/i)).toBeInTheDocument();
+    expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
+    restore();
+  });
+
   test('shows the backend error message instead of failing silently', async () => {
     const restore = mockFetch(async () => ({
       ok: false,
