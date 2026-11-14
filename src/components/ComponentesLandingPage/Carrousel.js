@@ -5,9 +5,19 @@ import { Link } from "react-router-dom";
 import Logo from "../img/qf-new-logo-transparent.png";
 import villaMariaPoster from "../img/villamaria.jpg";
 import cosquinRockPoster from "../img/cosquinrock.jpeg";
+import fiestaPatronalPoster from "../img/landing-fiesta-patronal.png";
+import cuartetazoPoster from "../img/landing-cuartetazo.png";
+import kermesPoster from "../img/landing-kermes.png";
+import villaGourmetPoster from "../img/landing-villa-gourmet.png";
 import { formatDateAR } from "../ComponentesGenerales/Utils/formatDate";
 
 const MAX_EVENTOS = 5;
+const EVENT_POSTERS = [
+  { name: "patronal", image: fiestaPatronalPoster },
+  { name: "cuartetazo", image: cuartetazoPoster },
+  { name: "kermes", image: kermesPoster },
+  { name: "villa gourmet", image: villaGourmetPoster },
+];
 
 // Next events first; finished ones, already-ended ones and events without a date are dropped.
 // "Already ended" matters because an event can stay in EnCurso/Confirmado after its last
@@ -40,7 +50,8 @@ const EventSlide = ({ evento }) => {
   const normalizedName = (evento.nombre || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
   const isVillaMaria = normalizedName.includes("cosquin") && /villa\s*maria/.test(normalizedName);
   const eventName = isVillaMaria ? "58° Festival Internacional de Peñas — Villa María" : evento.nombre;
-  const eventImage = isVillaMaria ? villaMariaPoster : evento.img;
+  const eventPoster = EVENT_POSTERS.find(({ name }) => normalizedName.includes(name))?.image;
+  const eventImage = eventPoster || (isVillaMaria ? villaMariaPoster : evento.img);
   return (
     <div className={`qf-event-slide${isVillaMaria ? " qf-event-slide--cover" : ""}`}>
       {eventImage && !imageFailed ? (
