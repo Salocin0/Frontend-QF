@@ -33,6 +33,20 @@ const BotonDescargaPDF = ({
     const lines = [];
     let currentLine = "";
     for (const word of words) {
+      if (pdf.getTextWidth(word) > maxWidth) {
+        // Palabras sin espacios más anchas que la página (p. ej. URLs): se cortan por caracteres.
+        if (currentLine) lines.push(currentLine);
+        currentLine = "";
+        for (const ch of word) {
+          if (pdf.getTextWidth(currentLine + ch) > maxWidth) {
+            lines.push(currentLine);
+            currentLine = ch;
+          } else {
+            currentLine += ch;
+          }
+        }
+        continue;
+      }
       const testLine = currentLine ? `${currentLine} ${word}` : word;
       const testWidth = pdf.getTextWidth(testLine);
       if (testWidth > maxWidth && currentLine) {
@@ -202,6 +216,19 @@ const BotonDescargaPDF = ({
       currentY += 7;
 
       currentY = renderAnalysisText(pdf, analisisTexto, currentY, pageWidth, marginLeft, contentWidth);
+
+      // — Metodología (determinística, armada por el backend, no por el LLM) —
+      const metodologia = result?.data?.metodologia;
+      if (Array.isArray(metodologia) && metodologia.length) {
+        currentY = renderAnalysisText(
+          pdf,
+          ["METODOLOGÍA Y FUENTES", ...metodologia].join("\n"),
+          currentY + 2,
+          pageWidth,
+          marginLeft,
+          contentWidth
+        );
+      }
 
       // — Pie de página en cada página —
       const totalPages = pdf.internal.getNumberOfPages();
