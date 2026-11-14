@@ -120,3 +120,19 @@ export const parseChatText = (text) => {
   closeList();
   return blocks;
 };
+
+/**
+ * While an answer is still being written, hides the unfinished markdown at its end
+ * ("**neg", "[Burger de len", "[Burger](https://qf.app/prod") so it never flashes as
+ * raw symbols and then jumps into a link or bold text.
+ */
+export const recortarMarkdownIncompleto = (texto) => {
+  let t = typeof texto === 'string' ? texto : '';
+  const ultimoCorchete = t.lastIndexOf('[');
+  if (ultimoCorchete !== -1 && !/^\[[^\]]*\]\([^)\s]*\)/.test(t.slice(ultimoCorchete))) {
+    t = t.slice(0, ultimoCorchete);
+  }
+  const marcas = t.match(/\*\*/g);
+  if (marcas && marcas.length % 2 === 1) t = t.slice(0, t.lastIndexOf('**'));
+  return t.replace(/(^|[^*])\*$/, '$1');
+};

@@ -5,6 +5,10 @@ import botImageURL from "../bot-img.png";
 import { UserContext } from "../ComponentesGenerales/UserContext";
 import "./chat.scss";
 import { parseChatText } from "./chatRichText";
+import useTextoSuave from "./useTextoSuave";
+
+// Bot text revealed smoothly while it streams (render prop keeps the hook per message).
+const TextoBot = ({ texto, animar, render }) => render(useTextoSuave(texto, animar));
 
 const suggestions = ["¿Cómo hago un pedido?", "¿Qué eventos hay?", "¿Cómo me registro?"];
 
@@ -24,10 +28,13 @@ const Chatbot = () => {
   const requestRef = useRef(null);
 
   useEffect(() => () => requestRef.current?.abort(), []);
+  // Scroll only when a new message (or the typing indicator) appears, never while an
+  // answer is being written, so the user can read at their own pace and scroll down.
+  const visibleCount = messages.filter((msg) => msg.sender !== "bot" || msg.message !== "").length;
   useEffect(() => {
     const box = chatBoxRef.current;
     if (box) box.scrollTop = box.scrollHeight;
-  }, [messages, isSending]);
+  }, [visibleCount]);
 
   const sendMessage = async (text = draft) => {
     const message = text.trim();
@@ -61,13 +68,13 @@ const Chatbot = () => {
       if (!reader) {
         const data = await response.json().catch(() => ({}));
         if (typeof data?.data?.chat_response !== "string") throw new Error("Invalid response");
-        setMessages((prev) => [...prev, { message: data.data.chat_response, sender: "bot" }]);
+        setMessages((prev) => [...prev, { message: data.data.chat_response, sender: "bot", animar: true }]);
       } else {
         // Show the answer while Foody writes it instead of all at once at the end.
         const id = `bot-${Date.now()}`;
         const decoder = new TextDecoder();
         let text = "";
-        setMessages((prev) => [...prev, { id, message: "", sender: "bot" }]);
+        setMessages((prev) => [...prev, { id, message: "", sender: "bot", animar: true }]);
         for (;;) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -183,7 +190,7 @@ const Chatbot = () => {
         {messages.filter((msg) => msg.sender !== "bot" || msg.message !== "").map((msg, index) => (
           <div key={msg.id || index} className={`qf-chat__message qf-chat__message--${msg.sender}${msg.error ? " qf-chat__message--error" : ""}`}>
             <span className="qf-chat__sender">{msg.sender === "user" ? "Vos" : "Foody"}</span>
-            <div className="qf-chat__body">{msg.sender === "bot" ? renderRichText(msg.message) : <p>{msg.message}</p>}</div>
+            <div className="qf-chat__body">{msg.sender === "bot" ? <TextoBot texto={msg.message} animar={Boolean(msg.animar)} render={renderRichText} /> : <p>{msg.message}</p>}</div>
           </div>
         ))}
         {isSending && <div className="qf-chat__typing" role="status"><span /><span /><span /><small>Foody está escribiendo…</small></div>}
