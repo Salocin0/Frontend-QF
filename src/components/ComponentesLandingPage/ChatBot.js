@@ -8,7 +8,22 @@ import { parseChatText } from "./chatRichText";
 import useTextoSuave from "./useTextoSuave";
 
 // Bot text revealed smoothly while it streams (render prop keeps the hook per message).
-const TextoBot = ({ texto, animar, render }) => render(useTextoSuave(texto, animar));
+// While Foody is still writing (or part of the text is not shown yet) the bubble ends
+// with the typing dots, so pauses between chunks never look frozen.
+const TextoBot = ({ texto, animar, escribiendo, render }) => {
+  const visible = useTextoSuave(texto, animar);
+  const pendiente = Boolean(escribiendo) || visible.length < (texto || "").length;
+  return (
+    <>
+      {render(visible)}
+      {pendiente && (
+        <span className="qf-chat__typing qf-chat__typing--inline" aria-hidden="true">
+          <span /><span /><span />
+        </span>
+      )}
+    </>
+  );
+};
 
 const suggestions = ["¿Cómo hago un pedido?", "¿Qué eventos hay?", "¿Cómo me registro?"];
 
@@ -38,6 +53,11 @@ const Chatbot = () => {
 
   const sendMessage = async (text = draft) => {
     const message = text.trim();
+    // Short memory: the last 3 exchanges travel with the question (the server re-validates them).
+    const historial = messages
+      .filter((m) => !m.error && typeof m.message === "string" && m.message.trim())
+      .map((m) => ({ rol: m.sender === "user" ? "usuario" : "foody", texto: m.message }))
+      .slice(-6);
     if (isGuest || !message || requestRef.current) return;
     setMessages((prev) => [...prev, { message, sender: "user" }]);
     setDraft("");
@@ -52,7 +72,7 @@ const Chatbot = () => {
     try {
       const options = {
         method: "POST",
-        body: new URLSearchParams({ userMessage: message }),
+        body: new URLSearchParams(historial.length ? { userMessage: message, historial: JSON.stringify(historial) } : { userMessage: message }),
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         signal: controller.signal,
       };
@@ -74,7 +94,7 @@ const Chatbot = () => {
         const id = `bot-${Date.now()}`;
         const decoder = new TextDecoder();
         let text = "";
-        setMessages((prev) => [...prev, { id, message: "", sender: "bot", animar: true }]);
+        setMessages((prev) => [...prev, { id, message: "", sender: "bot", animar: true, streaming: true }]);
         for (;;) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -96,6 +116,7 @@ const Chatbot = () => {
     } finally {
       clearTimeout(timeoutId);
       requestRef.current = null;
+      setMessages((prev) => (prev.some((m) => m.streaming) ? prev.map((m) => (m.streaming ? { ...m, streaming: false } : m)) : prev));
       if (!controller.signal.aborted || timedOut) {
         setIsSending(false);
         inputRef.current?.focus();
@@ -190,10 +211,10 @@ const Chatbot = () => {
         {messages.filter((msg) => msg.sender !== "bot" || msg.message !== "").map((msg, index) => (
           <div key={msg.id || index} className={`qf-chat__message qf-chat__message--${msg.sender}${msg.error ? " qf-chat__message--error" : ""}`}>
             <span className="qf-chat__sender">{msg.sender === "user" ? "Vos" : "Foody"}</span>
-            <div className="qf-chat__body">{msg.sender === "bot" ? <TextoBot texto={msg.message} animar={Boolean(msg.animar)} render={renderRichText} /> : <p>{msg.message}</p>}</div>
+            <div className="qf-chat__body">{msg.sender === "bot" ? <TextoBot texto={msg.message} animar={Boolean(msg.animar)} escribiendo={msg.streaming} render={renderRichText} /> : <p>{msg.message}</p>}</div>
           </div>
         ))}
-        {isSending && <div className="qf-chat__typing" role="status"><span /><span /><span /><small>Foody está escribiendo…</small></div>}
+        {isSending && !messages.some((m) => m.streaming && m.message) && <div className="qf-chat__typing" role="status"><span /><span /><span /><small>Foody está escribiendo…</small></div>}
       </div>
       {!user?.nombre && <div className="qf-chat__account"><Link to="/login">Podés loguearte</Link><span>o</span><Link to="/seleccion-perfil">crearte una cuenta</Link></div>}
       <form className="qf-chat__composer" onSubmit={(event) => { event.preventDefault(); sendMessage(); }}>

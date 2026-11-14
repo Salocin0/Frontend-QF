@@ -106,6 +106,29 @@ describe('Chatbot — message rendering', () => {
     restore();
   });
 
+  test('sends the recent conversation with the next question (short memory)', async () => {
+    const restore = mockFetch(async () => ({
+      ok: true,
+      json: async () => ({ status: 'Activo', data: { chat_response: 'Sí: [Burger](https://qf.app/p?evento=1&producto=7).' } }),
+    }));
+
+    renderChat();
+    ask('¿hay algo vegano?');
+    await screen.findByRole('link', { name: 'Burger' });
+    const firstBody = global.fetch.mock.calls[0][1].body;
+    expect(firstBody.get('historial')).toBeNull();
+
+    ask('¿y cuánto sale?');
+    await waitFor(() => expect(global.fetch.mock.calls.length).toBeGreaterThan(1));
+    const body = global.fetch.mock.calls[global.fetch.mock.calls.length - 1][1].body;
+    expect(body.get('userMessage')).toBe('¿y cuánto sale?');
+    expect(JSON.parse(body.get('historial'))).toEqual([
+      { rol: 'usuario', texto: '¿hay algo vegano?' },
+      { rol: 'foody', texto: 'Sí: [Burger](https://qf.app/p?evento=1&producto=7).' },
+    ]);
+    restore();
+  });
+
   test('shows the backend error message instead of failing silently', async () => {
     const restore = mockFetch(async () => ({
       ok: false,
@@ -146,8 +169,11 @@ describe('Chatbot — message rendering', () => {
 
     expect(await screen.findByText(/Hola/)).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Cosquín' })).not.toBeInTheDocument();
+    // While Foody keeps writing, the bubble ends with the typing dots.
+    expect(document.querySelector('.qf-chat__typing--inline')).not.toBeNull();
     release();
     expect(await screen.findByRole('link', { name: 'Cosquín' })).toBeInTheDocument();
+    await waitFor(() => expect(document.querySelector('.qf-chat__typing--inline')).toBeNull());
     expect(global.fetch.mock.calls[0][0]).toMatch(/chatbot\/stream$/);
     restore();
   });
