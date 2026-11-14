@@ -126,7 +126,7 @@ const EstadisticasPerfil = () => {
         <div><span className="qf-profile-eyebrow">TU ACTIVIDAD</span><h2 id="profile-stats-title">Estadísticas de tu perfil</h2></div>
         <span className="qf-profile-period">Total acumulado</span>
       </header>
-      {state.loading ? <p role="status" className="qf-profile-empty"><LoadingSpinner label=<LoadingSpinner label="Cargando estadísticas…" /> /></p> : state.error ? (
+      {state.loading ? <p role="status" className="qf-profile-empty"><LoadingSpinner label="Cargando estadísticas…" /></p> : state.error ? (
         <div role="alert" className="qf-profile-empty"><p>No pudimos cargar tus estadísticas.</p><button className="qf-btn qf-btn--primary" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div>
       ) : <>
         <div className="qf-profile-metrics">

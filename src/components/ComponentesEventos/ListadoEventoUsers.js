@@ -152,7 +152,7 @@ const ListadoEventosUsers = () => {
           {locationStatus === "error" && <p className="qf-events-location-hint" role="status">No pudimos obtener tu ubicación. Podés buscar por nombre y preventa o volver a intentarlo.</p>}
         </section>
         <div className="qf-events-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "evento disponible" : "eventos disponibles"}`}</div>
-        {loading ? <p className="qf-events-empty" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando eventos…" /> /></p> : error ? (
+        {loading ? <p className="qf-events-empty" role="status"><LoadingSpinner label="Cargando eventos…" /></p> : error ? (
           <div className="qf-events-empty" role="alert"><h2>No pudimos cargar los eventos</h2><p>Intentá nuevamente en unos momentos.</p><button className="qf-btn qf-btn--primary" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div>
         ) : filtered.length ? (
           <div className="qf-events-grid">{filtered.map((event) => <EventoUser key={event.id} evento={event} />)}</div>

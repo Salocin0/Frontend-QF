@@ -29,7 +29,7 @@ const PedidoDetalleDialog = ({ infoDialog, detailData, onClose }) => {
       <section className="qf-order-detail-products" aria-labelledby="qf-order-products-title"><div className="qf-order-detail-section-heading"><h3 id="qf-order-products-title">Productos</h3><span>{details.length} {details.length === 1 ? "producto" : "productos"}</span></div>
         {details.length > 0 ? <ul>{details.map((detail, index) => <li key={detail.id || index}><span className="qf-order-detail-quantity">{detail.cantidad}×</span><div><strong>{detail.producto?.nombre || `Producto #${detail.productoId}`}</strong><span>Precio unitario</span></div><strong className="qf-order-detail-unit-price">{money(detail.precio)}</strong></li>)}</ul> : <p className="qf-order-detail-empty">{detailData ? "No hay productos detallados en este pedido." : <LoadingSpinner label="Cargando los productos del pedido…" />}</p>}
       </section>
-      {!detailData && <p className="qf-order-detail-loading" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando información adicional…" /> /></p>}
+      {!detailData && <p className="qf-order-detail-loading" role="status"><LoadingSpinner label="Cargando información adicional…" /></p>}
       {(consumer || courier || producer) && <div className="qf-order-detail-contacts">
         {consumer && <Contact title="Consumidor" icon={<FaUser aria-hidden="true" />} name={[consumer.nombre, consumer.apellido].filter(Boolean).join(" ")} phone={consumer.telefono} email={consumer.usuario?.email} />}
         {detailData?.repartidor && <Contact title="Repartidor" icon={<FaMotorcycle aria-hidden="true" />} name={[courier?.nombre, courier?.apellido].filter(Boolean).join(" ")} phone={courier?.telefono} email={courier?.usuario?.email} />}

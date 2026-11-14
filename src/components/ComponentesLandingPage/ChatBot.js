@@ -43,16 +43,43 @@ const Chatbot = () => {
       controller.abort();
     }, 45000);
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACK_URL}chatbot`, {
+      const options = {
         method: "POST",
         body: new URLSearchParams({ userMessage: message }),
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         signal: controller.signal,
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data?.msg || "No pude responder en este momento. Intentá de nuevo en unos minutos.");
-      if (typeof data?.data?.chat_response !== "string") throw new Error("Invalid response");
-      setMessages((prev) => [...prev, { message: data.data.chat_response, sender: "bot" }]);
+      };
+      let response = await fetch(`${process.env.REACT_APP_BACK_URL}chatbot/stream`, options);
+      // Backends without the streaming route answer 404: use the classic endpoint.
+      if (response.status === 404) response = await fetch(`${process.env.REACT_APP_BACK_URL}chatbot`, options);
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data?.msg || "No pude responder en este momento. Intentá de nuevo en unos minutos.");
+      }
+
+      const reader = response.body?.getReader?.();
+      if (!reader) {
+        const data = await response.json().catch(() => ({}));
+        if (typeof data?.data?.chat_response !== "string") throw new Error("Invalid response");
+        setMessages((prev) => [...prev, { message: data.data.chat_response, sender: "bot" }]);
+      } else {
+        // Show the answer while Foody writes it instead of all at once at the end.
+        const id = `bot-${Date.now()}`;
+        const decoder = new TextDecoder();
+        let text = "";
+        setMessages((prev) => [...prev, { id, message: "", sender: "bot" }]);
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          clearTimeout(timeoutId);
+          text += decoder.decode(value, { stream: true });
+          const snapshot = text;
+          setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, message: snapshot } : m)));
+        }
+        text += decoder.decode();
+        if (!text.trim()) throw new Error("Invalid response");
+        setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, message: text } : m)));
+      }
     } catch (error) {
       if (timedOut) {
         setMessages((prev) => [...prev, { message: "Foody tardó demasiado en responder. Revisá tu conexión e intentá de nuevo.", sender: "bot", error: true }]);
@@ -116,11 +143,14 @@ const Chatbot = () => {
       if (block.type === "list") {
         return (
           <ul key={key} className="qf-chat__richList">
-            {block.items.map((item, i) => (
-              <li key={`${key}-i${i}`} className="qf-chat__richListItem">
-                {renderSpans(item, `${key}-i${i}`)}
-              </li>
-            ))}
+            {block.items.map((item, i) => {
+              const level = block.levels?.[i] || 0;
+              return (
+                <li key={`${key}-i${i}`} className={`qf-chat__richListItem${level ? ` qf-chat__richListItem--l${level}` : ""}`}>
+                  {renderSpans(item, `${key}-i${i}`)}
+                </li>
+              );
+            })}
           </ul>
         );
       }
@@ -150,8 +180,8 @@ const Chatbot = () => {
           </div>
         )}
         {isGuest && <div className="qf-chat__message qf-chat__message--bot"><p>No detecto que estés logueado o registrado. Para consultarme, ingresá con tu cuenta o creá una gratis.</p></div>}
-        {messages.map((msg, index) => (
-          <div key={index} className={`qf-chat__message qf-chat__message--${msg.sender}${msg.error ? " qf-chat__message--error" : ""}`}>
+        {messages.filter((msg) => msg.sender !== "bot" || msg.message !== "").map((msg, index) => (
+          <div key={msg.id || index} className={`qf-chat__message qf-chat__message--${msg.sender}${msg.error ? " qf-chat__message--error" : ""}`}>
             <span className="qf-chat__sender">{msg.sender === "user" ? "Vos" : "Foody"}</span>
             <div className="qf-chat__body">{msg.sender === "bot" ? renderRichText(msg.message) : <p>{msg.message}</p>}</div>
           </div>

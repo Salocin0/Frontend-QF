@@ -33,6 +33,48 @@
   }
 }
 
+/* Route-level loader (Suspense fallback in Main.js): covers the viewport with the
+   theme background so navigating never flashes a white page. */
+.qf-route-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background-color: var(--qf-bg-main, #1a1a1a);
+}
+
+[data-theme="light"] .qf-route-loading {
+  background-color: var(--qf-bg-main, #f3f1ed);
+}
+
+/* Fast loads finish before the logo and spinner fade in, so they never flicker. */
+.qf-route-loading__logo,
+.qf-route-loading .qf-loading-spinner {
+  opacity: 0;
+  animation: qf-route-loading-in 0.25s ease 0.2s forwards;
+}
+
+.qf-route-loading__logo {
+  width: min(180px, 45vw);
+  height: auto;
+}
+
+.qf-route-loading .qf-loading-spinner__ring {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-width: 4px;
+}
+
+@keyframes qf-route-loading-in {
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .qf-loading-spinner__ring {
     animation-duration: 2.4s;

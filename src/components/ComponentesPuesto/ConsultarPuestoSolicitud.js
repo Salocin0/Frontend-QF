@@ -38,7 +38,7 @@ const ConsultarPuestoSolicitud = () => {
     <main className="qf-stand-info-page">
       <Breadcrumb items={[{ title: "Inicio", url: "/inicio" }, { title: "Mis puestos", url: "/listado-puestos-encargado" }, { title: "Información de mi puesto", url: `/info-puesto/${id}` }]} />
       <header className="qf-stand-info-heading"><div><h1>Información del puesto</h1><p>Consultá y actualizá los datos de tu puesto de comida.</p></div><Link className="qf-stand-info-button" to="/listado-puestos-encargado"><FaArrowLeft aria-hidden="true" /> Mis puestos</Link></header>
-      {loading ? <p className="qf-stand-info-feedback" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando información del puesto…" /> /></p> : error ? <div className="qf-stand-info-feedback" role="alert"><h2>No pudimos cargar el puesto</h2><button type="button" className="qf-stand-info-button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : <FormPuestoEditar key={carrito.id} carrito={carrito} onSaved={setCarrito} />}
+      {loading ? <p className="qf-stand-info-feedback" role="status"><LoadingSpinner label="Cargando información del puesto…" /></p> : error ? <div className="qf-stand-info-feedback" role="alert"><h2>No pudimos cargar el puesto</h2><button type="button" className="qf-stand-info-button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : <FormPuestoEditar key={carrito.id} carrito={carrito} onSaved={setCarrito} />}
     </main><Footer />
   </PageLayout>;
 };

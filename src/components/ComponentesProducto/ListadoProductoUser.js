@@ -108,7 +108,7 @@ const ListadoProductoUser = () => {
           <label>Ordenar por<select value={sort} onChange={(e) => setSort(e.target.value)}><option value="default">Orden del puesto</option><option value="price-up">Menor precio</option><option value="price-down">Mayor precio</option><option value="name">Nombre</option></select></label>
         </section>
         <p className="qf-products-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "producto disponible" : "productos disponibles"}`}</p>
-        {loading ? <p className="qf-products-empty" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando productos…" /> /></p> : error ? <div className="qf-products-empty" role="alert"><h2>No pudimos cargar los productos</h2><button type="button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : filtered.length ? (
+        {loading ? <p className="qf-products-empty" role="status"><LoadingSpinner label="Cargando productos…" /></p> : error ? <div className="qf-products-empty" role="alert"><h2>No pudimos cargar los productos</h2><button type="button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : filtered.length ? (
           <div className="qf-products-grid">{filtered.map((product) => <ProductoUser key={product.id} producto={product} user={user} selectedDay={selectedDay} evento={evento} destacado={String(product.id) === productoDestacado} />)}</div>
         ) : <div className="qf-products-empty"><h2>{search ? "No encontramos productos con ese nombre" : "Todavía no hay productos en este puesto"}</h2>{search && <button type="button" onClick={() => setSearch("")}>Limpiar búsqueda</button>}</div>}
       </main>

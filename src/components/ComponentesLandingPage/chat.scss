@@ -56,7 +56,12 @@
   &__richHeading { font-weight: 800; font-size: 1rem; margin-bottom: 8px; }
   &__richParagraph { margin: 0 0 8px; }
   &__richList { padding-left: 20px; margin: 6px 0; }
-  &__richListItem { margin-bottom: 5px; }
+  &__richListItem { margin-bottom: 5px; text-align: left; }
+  &__richListItem::marker { color: var(--chat-link); }
+  // Nested bullets: evento/puesto (0) > producto (1) > detalle (2)
+  &__richListItem--l1 { margin-left: 18px; list-style-type: circle; font-size: 0.88rem; }
+  &__richListItem--l1::marker { color: var(--chat-muted); }
+  &__richListItem--l2 { margin-left: 36px; list-style-type: square; font-size: 0.85rem; }
   &__body { font-size: 0.92rem; line-height: 1.65; overflow-wrap: anywhere; }
   &__body > :last-child { margin-bottom: 0; }
   &__composer input:disabled { opacity: 0.65; cursor: not-allowed; }

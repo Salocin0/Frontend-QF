@@ -1,5 +1,13 @@
 import { parseChatText, parseInline } from '../components/ComponentesLandingPage/chatRichText';
 
+describe('parseChatText nesting', () => {
+  test('records the nesting level of indented bullets', () => {
+    const blocks = parseChatText('- Puesto\n  - Producto\n      - Detalle\n- Otro puesto');
+    expect(blocks[0].type).toBe('list');
+    expect(blocks[0].levels).toEqual([0, 1, 2, 0]);
+  });
+});
+
 describe('parseInline', () => {
   test('splits bold spans', () => {
     expect(parseInline('La **fecha** es hoy')).toEqual([

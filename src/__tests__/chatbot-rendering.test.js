@@ -120,6 +120,71 @@ describe('Chatbot — message rendering', () => {
     restore();
   });
 
+  test('shows the streamed answer progressively from /chatbot/stream', async () => {
+    const encoder = new TextEncoder();
+    const pieces = ['Hola ', 'Ana, ', 'mirá [Cosquín](https://qf.app/listado-puestos/10).'];
+    let release;
+    const gate = new Promise((resolve) => { release = resolve; });
+    const restore = mockFetch(async () => ({
+      ok: true,
+      status: 200,
+      body: {
+        getReader: () => {
+          let i = 0;
+          return {
+            read: async () => {
+              if (i === 1) await gate;
+              return i < pieces.length ? { done: false, value: encoder.encode(pieces[i++]) } : { done: true };
+            },
+          };
+        },
+      },
+    }));
+
+    renderChat();
+    ask('eventos?');
+
+    expect(await screen.findByText(/Hola/)).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: 'Cosquín' })).not.toBeInTheDocument();
+    release();
+    expect(await screen.findByRole('link', { name: 'Cosquín' })).toBeInTheDocument();
+    expect(global.fetch.mock.calls[0][0]).toMatch(/chatbot\/stream$/);
+    restore();
+  });
+
+  test('falls back to /chatbot when the backend has no streaming route', async () => {
+    const restore = mockFetch(async (url) =>
+      /stream$/.test(url)
+        ? { ok: false, status: 404, json: async () => ({}) }
+        : { ok: true, status: 200, json: async () => ({ status: 'Activo', data: { chat_response: 'Respuesta clásica' } }) }
+    );
+
+    renderChat();
+    ask('hola');
+
+    expect(await screen.findByText('Respuesta clásica')).toBeInTheDocument();
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    restore();
+  });
+
+  test('nests producto bullets under their puesto', async () => {
+    const restore = mockFetch(async () => ({
+      ok: true,
+      json: async () => ({
+        status: 'Activo',
+        data: { chat_response: '🎪 **[Fest](https://qf.app/listado-puestos/1)**\n- 🍽️ **[Parrilla](https://qf.app/productos-puesto/3?evento=1)**\n  - [Choripán](https://qf.app/productos-puesto/3?evento=1&producto=7): clásico. **$3500**' },
+      }),
+    }));
+
+    renderChat();
+    ask('que hay?');
+
+    const producto = await screen.findByRole('link', { name: 'Choripán' });
+    expect(producto.closest('li')).toHaveClass('qf-chat__richListItem--l1');
+    expect(screen.getByRole('link', { name: 'Parrilla' }).closest('li')).not.toHaveClass('qf-chat__richListItem--l1');
+    restore();
+  });
+
   test('guest sees the greeting with login and register links', () => {
     renderChat(null);
 

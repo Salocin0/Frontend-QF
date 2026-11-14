@@ -14,6 +14,7 @@ import RecuperarContraseña from "../ComponentesLogin/RecuperarContraseña";
 import ValidarEmail from "../ComponentesLogin/ValidarEmail";
 import ValidarUsuario from "../ComponentesLogin/ValidarUsuario";
 import LoadingSpinner from "./LoadingSpinner";
+import logoQuickFood from "../img/qf-new-logo-transparent.png";
 
 const AdquirirNuevoRolR = lazy(() => import("../ComponenteRepartidor/AdquirirNuevoRolR"));
 const AsociarRepartidorAEvento = lazy(() => import("../ComponenteRepartidor/AsociarRepartidorAEvento"));
@@ -62,7 +63,14 @@ const Preventa = lazy(() => import("../ComponentesEventos/Preventa"));
 // login and landing pages do not wait for the charts, maps, PDF and payment libraries of the private screens.
 const isRenderable = (Component) => typeof Component === 'function' || Boolean(Component?.$$typeof);
 
-const RouteFallback = () => <div className="qf-route-loading" role="status" aria-live="polite"><LoadingSpinner label=<LoadingSpinner label="Cargando…" /> /></div>;
+// Full-screen, theme-colored loader while a lazy screen downloads: without it the page
+// went white (breaking dark mode) with a tiny spinner stuck in the top-left corner.
+const RouteFallback = () => (
+  <div className="qf-route-loading" role="status" aria-live="polite">
+    <img className="qf-route-loading__logo" src={logoQuickFood} alt="" />
+    <LoadingSpinner label="Cargando…" />
+  </div>
+);
 
 const SafeRoute = ({ component: Component, name }) => {
   if (isRenderable(Component)) {

@@ -4,7 +4,7 @@
 //
 // Supported on purpose (and nothing else):
 //   ## Heading            -> heading block
-//   - item / * item / •   -> list block
+//   - item / * item / •   -> list block (indented bullets keep their nesting level)
 //   **bold**              -> bold span
 //   [label](url)          -> link span
 //   bare https://...      -> link span
@@ -14,7 +14,16 @@ const INLINE_PATTERN =
   /\*\*(.+?)\*\*|\[([^\]]+)\]\(((?:https?:\/\/|\/)[^\s)]+)\)|(https?:\/\/[^\s)]+)/g;
 
 const HEADING_PATTERN = /^\s{0,3}(#{1,6})\s+(.*)$/;
-const BULLET_PATTERN = /^\s*[-*•]\s+(.*)$/;
+const BULLET_PATTERN = /^(\s*)[-*•]\s+(.*)$/;
+
+// Nesting level (0-2) from the bullet's indentation: the model nests
+// evento > puesto > producto with 2-4 spaces per level.
+const bulletLevel = (indent) => {
+  const width = indent.replace(/\t/g, '    ').length;
+  if (width >= 6) return 2;
+  if (width >= 2) return 1;
+  return 0;
+};
 
 /**
  * Splits one line into inline spans: plain text, bold and links.
@@ -61,7 +70,8 @@ export const parseInline = (line) => {
 
 /**
  * Turns a full answer into blocks: { type:'heading'|'paragraph'|'list', ... }.
- * Consecutive bullet lines are grouped into a single list block.
+ * Consecutive bullet lines are grouped into a single list block; `levels[i]`
+ * holds the nesting level (0-2) of `items[i]`.
  */
 export const parseChatText = (text) => {
   if (typeof text !== 'string' || !text.trim()) return [];
@@ -97,8 +107,9 @@ export const parseChatText = (text) => {
 
     const bullet = BULLET_PATTERN.exec(line);
     if (bullet) {
-      if (!currentList) currentList = { type: 'list', items: [] };
-      currentList.items.push(parseInline(bullet[1]));
+      if (!currentList) currentList = { type: 'list', items: [], levels: [] };
+      currentList.items.push(parseInline(bullet[2]));
+      currentList.levels.push(bulletLevel(bullet[1]));
       continue;
     }
 
