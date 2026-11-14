@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import productoDefecto from "../img/productoDefecto.png";
 import "./ProductosListado.css";
 
-const ProductoUser = ({ producto, user, selectedDay, evento }) => {
+const ProductoUser = ({ producto, user, selectedDay, evento, destacado = false }) => {
   const [adding, setAdding] = useState(false);
   const [cantidad, setCantidad] = useState(1);
   const requestInProgress = useRef(false);
@@ -31,7 +31,7 @@ const ProductoUser = ({ producto, user, selectedDay, evento }) => {
     }
   };
   return (
-    <article className="qf-product-card">
+    <article id={`producto-${producto.id}`} className={`qf-product-card${destacado ? " qf-product-card--destacado" : ""}`}>
       <div className="qf-product-image"><img src={producto.img || productoDefecto} alt="" loading="lazy" onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = productoDefecto; }} /></div>
       <div className="qf-product-content">
       <div className="qf-product-info"><h2>{producto.nombre?.trim()}</h2><p>{producto.descripcion}</p>{producto.aderezos && <p className="qf-product-extras">Aderezos: {producto.aderezos}</p>}</div>

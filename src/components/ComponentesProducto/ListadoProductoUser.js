@@ -27,7 +27,11 @@ const ListadoProductoUser = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedDay = location.state?.selectedDay || null;
-  const evento = location.state?.evento || { id: location.state?.eventoid };
+  // Links from the chatbot open this page directly (no router state), so the event
+  // and the product to highlight also come as ?evento=…&producto=… query params.
+  const query = new URLSearchParams(location.search);
+  const evento = location.state?.evento || { id: location.state?.eventoid || query.get("evento") || undefined };
+  const productoDestacado = query.get("producto");
   const eventId = evento?.id;
   const eventName = evento?.nombre;
   const [eventInfo, setEventInfo] = useState(null);
@@ -77,6 +81,10 @@ const ListadoProductoUser = () => {
     return () => controller.abort();
   }, [id, eventId, eventName, consumerId, attempt]);
   const filtered = useMemo(() => filterProducts(products, search, sort), [products, search, sort]);
+  useEffect(() => {
+    if (loading || !productoDestacado) return;
+    document.getElementById(`producto-${productoDestacado}`)?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+  }, [loading, productoDestacado]);
   return (
     <PageLayout sidebarProps={{ tipoUsuario: user?.tipoUsuario }}>
       <main className="qf-products-page">
@@ -101,7 +109,7 @@ const ListadoProductoUser = () => {
         </section>
         <p className="qf-products-results" role="status">{!loading && !error && `${filtered.length} ${filtered.length === 1 ? "producto disponible" : "productos disponibles"}`}</p>
         {loading ? <p className="qf-products-empty" role="status"><LoadingSpinner label=<LoadingSpinner label="Cargando productos…" /> /></p> : error ? <div className="qf-products-empty" role="alert"><h2>No pudimos cargar los productos</h2><button type="button" onClick={() => setAttempt((value) => value + 1)}>Reintentar</button></div> : filtered.length ? (
-          <div className="qf-products-grid">{filtered.map((product) => <ProductoUser key={product.id} producto={product} user={user} selectedDay={selectedDay} evento={evento} />)}</div>
+          <div className="qf-products-grid">{filtered.map((product) => <ProductoUser key={product.id} producto={product} user={user} selectedDay={selectedDay} evento={evento} destacado={String(product.id) === productoDestacado} />)}</div>
         ) : <div className="qf-products-empty"><h2>{search ? "No encontramos productos con ese nombre" : "Todavía no hay productos en este puesto"}</h2>{search && <button type="button" onClick={() => setSearch("")}>Limpiar búsqueda</button>}</div>}
       </main>
       <Footer />
